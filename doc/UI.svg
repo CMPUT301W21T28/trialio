@@ -13,11 +13,11 @@
    viewBox="0 0 1189 2500"
    version="1.1"
    id="svg8"
-   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="UI v4.svg"
-   inkscape:export-filename="C:\winter2021\cmput301\UI_design_ipad_wBackground.png"
-   inkscape:export-xdpi="397.48999"
-   inkscape:export-ydpi="397.48999">
+   inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
+   sodipodi:docname="UI.svg"
+   inkscape:export-filename="UI.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs2">
     <rect
@@ -209,8 +209,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.25000001"
-     inkscape:cx="1060.61"
-     inkscape:cy="6619.9905"
+     inkscape:cx="-995.38992"
+     inkscape:cy="9399.9904"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -218,11 +218,11 @@
      units="mm"
      width="1415mm"
      inkscape:snap-nodes="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:window-width="1680"
+     inkscape:window-height="971"
+     inkscape:window-x="331"
+     inkscape:window-y="171"
+     inkscape:window-maximized="0"
      height="842mm"
      inkscape:pagecheckerboard="false" />
   <metadata
@@ -233,7 +233,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1832,7 +1832,7 @@
     <text
        xml:space="preserve"
        id="text1213"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;shape-inside:url(#rect1215);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;shape-inside:url(#rect1215);" />
     <ellipse
        style="fill:#241f1c;stroke-width:0.0378855"
        id="path1221"
@@ -7243,7 +7243,7 @@
     <text
        xml:space="preserve"
        id="text11392"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;shape-inside:url(#rect11394);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;shape-inside:url(#rect11394);" />
     <rect
        style="fill:#ffcc00;fill-opacity:1;stroke-width:0.0614539"
        id="rect11418-0"
@@ -8454,7 +8454,7 @@
     <text
        xml:space="preserve"
        id="text3295"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect3297);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect3297);" />
     <rect
        style="display:inline;fill:#ffd42a;stroke-width:1.014;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect18-9-3-0-8-5-56-4-7-6-3-8-9"
@@ -9154,7 +9154,7 @@
     <text
        xml:space="preserve"
        id="text6283"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect6285);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect6285);" />
     <text
        xml:space="preserve"
        style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.264583"
@@ -15077,7 +15077,7 @@
     <text
        xml:space="preserve"
        id="text15978"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect15980);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect15980);" />
     <text
        xml:space="preserve"
        style="font-size:7.54146px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;display:inline;stroke-width:0.188537"
@@ -18334,7 +18334,7 @@
     <text
        xml:space="preserve"
        id="text24018"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24020);fill:#d45500;"
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24020);fill:#d45500;"
        transform="translate(52.916667,3.7041667)"><tspan
          x="808.9707"
          y="1069.7004"><tspan
@@ -18367,7 +18367,7 @@
     <text
        xml:space="preserve"
        id="text24018-8"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24020-8);display:inline;fill:#d45500;"
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24020-8);display:inline;fill:#d45500;"
        transform="translate(75.573948,-104.98661)"><tspan
          x="808.9707"
          y="1069.7004"><tspan
@@ -19251,7 +19251,7 @@
     <text
        xml:space="preserve"
        id="text25047"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect25049);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect25049);" />
     <rect
        style="display:inline;fill:#ffd42a;stroke-width:0.604957;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect18-9-3-0-8-5-56-4-7-6-3-8-9-6-5"
@@ -20373,7 +20373,7 @@
     <text
        xml:space="preserve"
        id="text4681"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4683);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4683);" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2.865;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:5.73, 2.865;stroke-dashoffset:0;stroke-opacity:1"
        d="m 456.49633,737.12932 1.49673,44.15292 h -77.08054 l -5.23848,-0.74835 1.49669,226.75151 -64.35849,0.7483 32.17926,-0.7483 -1.49672,-56.87499 -211.03601,1.4967 -0.74835,34.42433 v -35.17268 h 42.65621 l 0.74836,196.06894 -35.92103,-0.7484"
@@ -20434,24 +20434,24 @@
     <text
        xml:space="preserve"
        id="text4741"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4743);"
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4743);"
        transform="matrix(1,0,0,0.95100287,0,59.220804)" />
     <text
        xml:space="preserve"
        id="text4747"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4749);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4749);" />
     <text
        xml:space="preserve"
        id="text4753"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4755);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4755);" />
     <text
        xml:space="preserve"
        id="text4759"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4761);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4761);" />
     <text
        xml:space="preserve"
        id="text4765"
-       style="font-size:8.46667px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4767);"
+       style="font-size:8.46667000000000058px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4767);"
        transform="matrix(0.90115596,0,0,1,6.1261484,-9.622243)"><tspan
          x="8.9804688"
          y="1205.0916"><tspan
@@ -21047,7 +21047,7 @@
     <text
        xml:space="preserve"
        id="text5341"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect5343);" />
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect5343);" />
     <text
        xml:space="preserve"
        style="font-size:8.46667px;line-height:1.25;font-family:sans-serif;text-align:start;letter-spacing:0px;text-anchor:start;display:inline;fill:#d45500;stroke-width:0.264583"
@@ -21286,7 +21286,7 @@
     <text
        xml:space="preserve"
        id="text4680"
-       style="font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4682);"
+       style="font-size:10.58329999999999949px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect4682);"
        transform="translate(-7.4835465,27.689122)"><tspan
          x="205.79688"
          y="1802.7141"><tspan>Will be able to slide across </tspan></tspan><tspan
