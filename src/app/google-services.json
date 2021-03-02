@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "448316686453",
+    "project_id": "trialio-5a337",
+    "storage_bucket": "trialio-5a337.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448316686453:android:def3041a3d1ed5cf2af83c",
+        "android_client_info": {
+          "package_name": "com.example.trialio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448316686453-d3m285dmla59p9v7f2614cb3iujhbeck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAor9lQ3mEg8GBewAfyudbaKbCFQbvgUtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448316686453-d3m285dmla59p9v7f2614cb3iujhbeck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
