@@ -6,8 +6,6 @@ public class Reply {
 
     private Collection<Reply> replies;
 
-    public Collection<Reply> getAllReplies() {
-        //....
-    }
+//    public Collection<Reply> getAllReplies() { }
 
 }

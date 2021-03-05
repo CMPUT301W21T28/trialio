@@ -6,22 +6,13 @@ public class BarcodeManager {
 
     public Collection<Barcode> barcodes;
 
+    // public void generateQRCode (Experiment experiment, Trial trial) { }
 
-    public generateQRCode (Experiment experiment, Trial trial) {
+    // public void registerBarcode (Experiment experiment, Trial trial, Image barcodeImage) { }
 
-    }
+    // public Collection<Barcode> getBarcodes() { }
 
-    public registerBarcode (Experiment experiment, Trial trial, Image barcodeImage) {
-
-    }
-
-    public Collection<Barcode> getBarcodes() {
-
-    }
-
-    public removeBarcode (Barcode barcode) {
-
-    }
+    // public void removeBarcode (Barcode barcode) { }
 
 
 

@@ -8,18 +8,17 @@ public class UserManager {
 
     public String generateNewUser() {
         //returns username
+        return "";
     }
 
-    public editUserProfile (String username, User user) {
+    public void editUserProfile (String username, User user) {
         //...
     }
-    public deleteUser (String username) {
+    public void deleteUser (String username) {
         //...
     }
 
-    public Collection<User> getAllUsers() {
-        //...
-    }
+//    public Collection<User> getAllUsers() { }
 
 
 }

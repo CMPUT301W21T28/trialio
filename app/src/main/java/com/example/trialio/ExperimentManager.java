@@ -6,29 +6,19 @@ import java.util.Collection;
 public class ExperimentManager {
     Collection<Experiment> experiments;
 
-    public publishExperiment (User owner, Experiment experiment) {
 
-    }
 
-    public editExperiment (User owner, String experimentid, Experiment experiment) {
+//    public publishExperiment (User owner, Experiment experiment) { }
 
-    }
-s
-    public unpublishExperiment (User owner, String experimentid) {
+//    public editExperiment (User owner, String experimentid, Experiment experiment) { }
 
-    }
+//    public unpublishExperiment (User owner, String experimentid) {}
 
-    public Collection<Experiment> getOwnedExperiment (User owner) {
+//    public Collection<Experiment> getOwnedExperiment (User owner) {}
 
-    }
+//    public Collection<Experiment> getAllExperiment() { }
 
-    public Collection<Experiment> getAllExperiment() {
-
-    }
-
-    public ArrayList<Experiment> searchByKeyword (String keyword) {
-
-    }
+//    public ArrayList<Experiment> searchByKeyword (String keyword) { }
 
 
 

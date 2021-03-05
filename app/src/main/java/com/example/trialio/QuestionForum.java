@@ -7,21 +7,19 @@ public class QuestionForum {
 
     private Collection<Question> questions;
 
-    public createQuestion (String title, String body, User user) {
+    public void createQuestion (String title, String body, User user) {
         // ... finish me ...
     }
 
-    public createReply (Question question, String body, User user) {
+    public void createReply (Question question, String body, User user) {
         //...
     }
 
-    public deletePost (Post post) {
+    public void deletePost (Post post) {
         //...
     }
 
-    public ArrayList<Question> getAllQuestions() {
-        //...
-    }
+//    public ArrayList<Question> getAllQuestions() {}
 
 
 

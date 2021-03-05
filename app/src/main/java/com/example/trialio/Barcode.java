@@ -4,9 +4,9 @@ public class Barcode {
 
     private Experiment experiment;
     private Trial trial;
-    private Image barcode;
+    private String barcode; // change type later
 
-    public setBarcodeImage(Image barcode) {
+    public void setBarcodeImage(String barcode) {
 
     }
 
