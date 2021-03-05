@@ -1,4 +1,12 @@
 package com.example.trialio;
 
-public class Post {
+public abstract class Post {
+
+    private String body;
+    private User user;
+
+    public String getBody() {
+        return this.body;
+    }
+
 }
