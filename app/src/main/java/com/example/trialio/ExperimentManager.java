@@ -1,9 +1,7 @@
 package com.example.trialio;
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +26,8 @@ public class ExperimentManager {
 
     public ExperimentManager() {
         experimentList = new ArrayList<Experiment>();
+
+        // set up a listener which calls onEvent whenever the collection is updated
         experimentsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -36,6 +36,8 @@ public class ExperimentManager {
                     Log.d(TAG, "experimentList: " + experiment.toString());
                     experimentList.add(experiment);
                 }
+
+                // if an adapter was set, tell it to update
                 if (experimentAdapter != null) {
                     experimentAdapter.notifyDataSetChanged();
                 }
@@ -43,8 +45,13 @@ public class ExperimentManager {
         });
     }
 
-    public void setAdapter(ArrayAdapter adapater) {
-        experimentAdapter = adapater;
+    /**
+     * This sets an adapter for the experiment manager
+     * @param adapter
+     * Candidate adapter to set
+     */
+    public void setAdapter(ArrayAdapter adapter) {
+        experimentAdapter = adapter;
     }
 
     /**
@@ -129,6 +136,7 @@ public class ExperimentManager {
      * Returns the list of experiments owned by owner
      */
     public ArrayList<Experiment> getOwnedExperiments (User owner) {
+        // TODO: test
         ArrayList<Experiment> ownedExperiments = new ArrayList<Experiment>();
         for (Experiment experiment : experimentList) {
             if (experiment.getSettings().getOwner() == owner) {
@@ -138,7 +146,23 @@ public class ExperimentManager {
         return ownedExperiments;
     }
 
-//    public ArrayList<Experiment> searchByKeyword (String keyword) { }
+    /**
+     * This finds the list of experiments associated with a given keyword
+     * @param keyword
+     * String keyword to search for
+     * @return
+     * Returns the list of experiments associated with keyword
+     */
+    public ArrayList<Experiment> searchByKeyword (String keyword) {
+        // TODO: test
+        ArrayList<Experiment> searchResults = new ArrayList<Experiment>();
+        for (Experiment experiment : experimentList) {
+            if (experiment.getKeywords().contains(keyword)) {
+                searchResults.add(experiment);
+            }
+        }
+        return searchResults;
+    }
 
     /**
      * This returns the current experiment list
