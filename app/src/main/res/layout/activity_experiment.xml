@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#535353"
+    tools:context=".ExperimentActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnGeoLoc"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_dialog_map"
+            android:tint="#E8B41B">
+            android:src="@android:drawable/ic_dialog_map"></ImageButton>
+
+
+        <ImageButton
+            android:id="@+id/btnLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo">
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/btnSwitch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24"
+            android:tint="#E8B41B">
+            android:src="@android:drawable/ic_menu_manage"
+        </ImageButton>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtExperimentDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitCenter"
+        android:text="Description:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/txtExperimentStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:text="Open:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentRegion" />
+
+    <TextView
+        android:id="@+id/txtExperimentRegion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:text="Region:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentType" />
+
+    <TextView
+        android:id="@+id/txtExperimentOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:text="Owner:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.405"
+        app:layout_constraintStart_toEndOf="@+id/txtExperimentDescription"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/txtSubValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:text="Subs:"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.429"
+        app:layout_constraintStart_toEndOf="@+id/btnSubscribe" />
+
+    <TextView
+        android:id="@+id/txtExperimentMinTrials"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:text="Minimum number of trials:"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentStatus" />
+
+    <TextView
+        android:id="@+id/txtExperimentType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:text="Type: "
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentDescription" />
+
+    <ImageButton
+        android:id="@+id/btnCamera"
+        android:layout_width="50dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#00FFFFFF"
+        android:tint="#000000"
+        app:layout_constraintEnd_toStartOf="@+id/btnQA"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <ImageButton
+        android:id="@+id/btnAddTrial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="28dp"
+        android:background="#EEC021"
+        android:tint="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@+id/btnTrials"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        tools:srcCompat="@android:drawable/ic_input_add" />
+
+    <Button
+        android:id="@+id/btnStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:text="Stats"
+        app:backgroundTint="#EEC021"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTrials" />
+
+    <Button
+        android:id="@+id/btnTrials"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Trials"
+        app:backgroundTint="#EEC021"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
+
+    <Button
+        android:id="@+id/btnQRCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:text="QR Codes"
+        app:backgroundTint="#EEC021"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnQA" />
+
+    <Button
+        android:id="@+id/btnQA"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Q&amp;A"
+        app:backgroundTint="#EEC021"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
+
+    <Button
+        android:id="@+id/btnSubscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="60dp"
+        android:text="Subscribe"
+        app:backgroundTint="#EEC021"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtStatsSummary"
+        android:layout_width="292dp"
+        android:layout_height="153dp"
+        android:background="#A19B9B"
+        android:text="Stats Summary:"
+        android:textColor="#B6B0B0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCamera"
+        app:layout_constraintVertical_bias="0.325" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
