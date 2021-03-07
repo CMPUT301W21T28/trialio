@@ -4,29 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#535353"
     tools:context=".ExperimentActivity">
-
-    <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="162dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="69dp"
-        android:gravity="center"
-        android:text="Trial.IO"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btnGeoLocation"
-        android:layout_width="72dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="53dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:longClickable="true"
+        app:layout_constraintEnd_toStartOf="@+id/btnLogo"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_mapmode" />
@@ -37,11 +27,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:text="Description:"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGeoLocation" />
 
     <TextView
         android:id="@+id/txtExperimentStatus"
@@ -71,13 +61,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="44dp"
         android:clickable="true"
         android:text="Owner:"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
         app:layout_constraintStart_toEndOf="@+id/txtExperimentDescription"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSwitchView" />
 
     <TextView
         android:id="@+id/txtSubValue"
@@ -115,11 +106,13 @@
 
     <ImageButton
         android:id="@+id/btnCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="48dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:background="#00FFFFFF"
+        android:tint="#000000"
         app:layout_constraintEnd_toStartOf="@+id/btnQA"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
         app:srcCompat="@android:drawable/ic_menu_camera" />
@@ -128,10 +121,11 @@
         android:id="@+id/btnAddTrial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:tint="#673AB7"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="28dp"
+        android:background="#E8B41B"
+        android:tint="#000000"
         app:layout_constraintStart_toEndOf="@+id/btnTrials"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
         app:srcCompat="@android:drawable/ic_menu_camera"
@@ -144,6 +138,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:text="Stats"
+        app:backgroundTint="#EEC021"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTrials" />
 
@@ -155,6 +150,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:text="Trials"
+        app:backgroundTint="#EEC021"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
 
@@ -165,6 +161,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:text="QR Codes"
+        app:backgroundTint="#EEC021"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnQA" />
 
@@ -176,6 +173,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:text="Q&amp;A"
+        app:backgroundTint="#EEC021"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
 
@@ -187,17 +185,22 @@
         android:layout_marginLeft="60dp"
         android:layout_marginBottom="60dp"
         android:text="Subscribe"
+        app:backgroundTint="#EEC021"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="70dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:id="@+id/btnSwitchView"
+        android:layout_width="51dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:adjustViewBounds="true"
+        android:background="#00414141"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnLogo"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/screen_shot_2021_03_06_at_10_39_16_pm" />
 
@@ -205,12 +208,31 @@
         android:id="@+id/txtStatsSummary"
         android:layout_width="292dp"
         android:layout_height="153dp"
+        android:background="#A19B9B"
         android:text="Stats Summary:"
+        android:textColor="#B6B0B0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCamera"
         app:layout_constraintVertical_bias="0.325" />
+
+    <ImageButton
+        android:id="@+id/btnLogo"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:adjustViewBounds="true"
+        android:background="#CCCECE"
+        android:focusableInTouchMode="false"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/screen_shot_2021_03_07_at_10_39_59_am" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
