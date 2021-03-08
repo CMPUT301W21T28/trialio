@@ -16,7 +16,7 @@ public class Experiment {
         this.experimentID = experimentID;
         this.settings = settings;
         this.trialManager = new TrialManager();
-        // .... finish me ...
+        this.keywords = new ArrayList<String>();  // TODO: how are we seeting keywords? is it just the description?
     }
 
     public String getExperimentID() {
