@@ -1,76 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="#747474" >
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       android:layout_weight="1"
+       android:orientation="horizontal" >
+
+       <ImageButton
+           android:src="@drawable/ic_outline_search_24"
+           android:scaleType="fitCenter"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="1"
+           android:padding="10dp">
+       </ImageButton>
+
+       <ImageButton
+           android:src="@drawable/temp_logo"
+           android:scaleType="fitCenter"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="4"
+           android:padding="15dp">
+       </ImageButton>
+
+
+       <ImageButton
+           android:src="@drawable/ic_baseline_settings_24"
+           android:scaleType="fitCenter"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="1"
+           android:padding="10dp">
+       </ImageButton>
+
+   </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".MainActivity">
-
-        <Button
-            android:id="@+id/button_userSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="User Search" />
-
-        <Button
-            android:id="@+id/button_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Trial.IO" />
-
-        <Button
-            android:id="@+id/button_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Profile" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".MainActivity">
-
-        <Button
-            android:id="@+id/button_allExperiments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="All" />
-
-        <Button
-            android:id="@+id/button_ownedExperiments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Owned" />
-
-        <Button
-            android:id="@+id/button_subcribedExperiments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Subscribed" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:background="#9c9c9c"
+        android:layout_margin="5dp"       >
+
+        <Button
+            android:text="All"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:backgroundTint="#fbd700">
+        </Button>
+
+        <Button
+            android:text="Owned"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:backgroundTint="#606060">
+        </Button>
+
+
+        <Button
+            android:backgroundTint="#606060"
+            android:text="Subs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp">
+        </Button>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75"
+        android:background="#9c9c9c"
+        android:layout_margin="5dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Search"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center">
 
         <ListView
             android:id="@+id/list_experiment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#9c9c9c">
+
+        </ListView>
     </LinearLayout>
+
 </LinearLayout>

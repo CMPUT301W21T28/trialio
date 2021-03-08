@@ -2,12 +2,14 @@ package com.example.trialio;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
+
 import com.google.firebase.installations.FirebaseInstallations;
 
 /**
  * This class represents a user of the application system.
  */
-public class User {
+public class User implements Serializable {
 
     private String id;
     private String username;

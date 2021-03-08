@@ -170,8 +170,6 @@ public class ExperimentManager {
      * Returns the list of experiments
      */
     public ArrayList<Experiment> getExperimentList() {
-        Log.d(TAG, "explist size = " + experimentList.size());
-
         return experimentList;
     }
 

@@ -1,21 +1,21 @@
 package com.example.trialio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Experiment {
+public class Experiment implements Serializable {
     private String experimentID;
     private ExperimentSettings settings;
     private TrialManager trialManager;
     private ArrayList<String> keywords;
     private QuestionForum questionForum;
 
-
     public Experiment() { }
 
     public Experiment(String experimentID, ExperimentSettings settings, String type, int minNumOfTrials) {
         this.experimentID = experimentID;
         this.settings = settings;
-        this.trialManager = new TrialManager();
+        this.trialManager = new TrialManager(type, true, minNumOfTrials);
         this.keywords = new ArrayList<String>();  // TODO: how are we seeting keywords? is it just the description?
     }
 

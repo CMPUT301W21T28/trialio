@@ -1,9 +1,10 @@
 package com.example.trialio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class QuestionForum {
+public class QuestionForum implements Serializable {
 
     private Collection<Question> questions;
 
