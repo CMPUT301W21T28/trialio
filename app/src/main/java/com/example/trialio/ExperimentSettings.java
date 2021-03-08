@@ -1,15 +1,17 @@
 package com.example.trialio;
 
-public class ExperimentSettings {
+import java.io.Serializable;
+
+public class ExperimentSettings implements Serializable {
 
     private String description;
     private Region region;
     private User owner;
-    private Boolean geoLocationRequired;
+    private boolean geoLocationRequired;
 
     public ExperimentSettings () { }
 
-    public ExperimentSettings(String description, Region region, User owner, Boolean geoLocationRequired) {
+    public ExperimentSettings(String description, Region region, User owner, boolean geoLocationRequired) {
         this.description = description;
         this.region = region;
         this.owner = owner;
@@ -40,11 +42,11 @@ public class ExperimentSettings {
         this.owner = owner;
     }
 
-    public Boolean getGeoLocationRequired() {
+    public boolean getGeoLocationRequired() {
         return geoLocationRequired;
     }
 
-    public void setGeoLocationRequired(Boolean geoLocationRequired) {
+    public void setGeoLocationRequired(boolean geoLocationRequired) {
         this.geoLocationRequired = geoLocationRequired;
     }
 }

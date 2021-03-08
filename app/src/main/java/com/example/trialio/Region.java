@@ -1,6 +1,8 @@
 package com.example.trialio;
 
-public class Region {
+import java.io.Serializable;
+
+public class Region implements Serializable {
 
     private String description;
     // private Location geoLocation;
