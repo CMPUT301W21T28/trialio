@@ -17,7 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ExperimentManager implements Serializable {
+public class ExperimentManager {
     private final String TAG = "ExperimentManager";
 
     private static CollectionReference experimentsCollection = FirebaseFirestore.getInstance().collection("experiments");
