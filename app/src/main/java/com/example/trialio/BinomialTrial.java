@@ -34,7 +34,7 @@ public class BinomialTrial extends AppCompatDialogFragment {
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int i) {
                         ((ExperimentActivity) getActivity()).fetchResult(String.valueOf((Switch.isChecked())));
                     }
                 })

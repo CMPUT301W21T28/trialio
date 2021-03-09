@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class ExperimentActivity extends AppCompatActivity {
     private Experiment experiment;
     private String trialType;
@@ -117,8 +122,22 @@ public class ExperimentActivity extends AppCompatActivity {
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
     }
 
+    /**receives result from trial fragment, create new trial and store it to its experiment's trial manager
+     *
+     * @param s
+     *  s is either True or False for binomial trials
+     */
     public void fetchResult (String s) {
-        TextView testing = findViewById(R.id.txtExperimentMinTrials);
-        testing.setText(s);
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formatted = fd.format(c);
+
+        String loc = "Edmonton TESTING";
+
+        Trial newTrial = new Trial();
+        newTrial.date = (formatted);
+        newTrial.location = loc;
+        experiment.getTrialManager().addTrial(newTrial);
+
     }
 }
