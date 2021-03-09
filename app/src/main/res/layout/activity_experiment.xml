@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnAddTrials"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#535353"
@@ -144,20 +145,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
-    <ImageButton
-        android:id="@+id/btnAddTrial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="28dp"
-        android:background="#EEC021"
-        android:tint="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/btnTrials"
-        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        tools:srcCompat="@android:drawable/ic_input_add" />
-
     <Button
         android:id="@+id/btnStats"
         android:layout_width="wrap_content"
@@ -179,6 +166,20 @@
         android:text="Trials"
         app:backgroundTint="#EEC021"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
+
+    <Button
+        android:id="@+id/btnAddTrial"
+        android:layout_width="47dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom|clip_horizontal|center|clip_vertical|start|right|center_horizontal|fill|fill_horizontal|top|left|center_vertical|fill_vertical|end"
+        android:text="+"
+        android:textSize="24sp"
+        app:backgroundTint="#E8B41B"
+        app:layout_constraintEnd_toStartOf="@+id/btnCamera"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toEndOf="@+id/btnTrials"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
 
     <Button

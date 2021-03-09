@@ -2,13 +2,9 @@ package com.example.trialio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class ExperimentActivity extends AppCompatActivity {
@@ -30,17 +26,28 @@ public class ExperimentActivity extends AppCompatActivity {
         // store the experiment type to trialType variable
         trialType = experiment.getTrialManager().getType();
 
+
+        Button addBinomial = (Button) findViewById(R.id.btnAddTrial);
+        addBinomial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBinomialTrial();
+            }
+        });
+
+
         // show fragments that match the experiment type
-        if (trialType == "Binomial"){
-            ImageButton addBinomial = (ImageButton) findViewById(R.id.btnAddTrial);
-            addBinomial.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    addBinomialTrial();
-                }
-            });
+        //if (trialType == "Binomial") {
+        //    Button addBinomial = (Button) findViewById(R.id.btnAddTrial);
+        //    addBinomial.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            addBinomialTrial();
+        //        }
+        //    });
+        //}
         //}else if (trialType == "Measurement"){
-        //    ImageButton addMeasurement = (ImageButton) findViewById(R.id.btnAddTrial);
+        //    Button addMeasurement = (Button) findViewById(R.id.btnAddTrial);
         //    addMeasurement.setOnClickListener(new View.OnClickListener(){
         //        @Override
         //        public void onClick(View v) {
@@ -48,7 +55,7 @@ public class ExperimentActivity extends AppCompatActivity {
         //        }
         //    });
         //}else if (trialType == "NonNegativeCount"){
-        //    ImageButton addNonNegativeCount = (ImageButton) findViewById(R.id.btnAddTrial);
+        //    Button addNonNegativeCount = (Button) findViewById(R.id.btnAddTrial);
         //    addNonNegativeCount.setOnClickListener(new View.OnClickListener(){
         //        @Override
         //        public void onClick(View v) {
@@ -56,7 +63,7 @@ public class ExperimentActivity extends AppCompatActivity {
         //        }
         //    });
         //}else if (trialType == "Count"){
-        //    ImageButton addCount = (ImageButton) findViewById(R.id.btnAddTrial);
+        //    Button addCount = (Button) findViewById(R.id.btnAddTrial);
         //    addCount.setOnClickListener(new View.OnClickListener(){
         //        @Override
         //        public void onClick(View v) {
@@ -80,7 +87,7 @@ public class ExperimentActivity extends AppCompatActivity {
      * addBinomialTrial
      */
     public void addBinomialTrial (){
-        BionomialTrial newTrial = new BionomialTrial();
+        BinomialTrial newTrial = new BinomialTrial();
         newTrial.show(getSupportFragmentManager(), "addBinomial");
     }
 
