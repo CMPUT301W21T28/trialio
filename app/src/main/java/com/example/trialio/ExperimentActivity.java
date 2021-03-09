@@ -2,7 +2,11 @@ package com.example.trialio;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class ExperimentActivity extends AppCompatActivity {
@@ -19,6 +23,20 @@ public class ExperimentActivity extends AppCompatActivity {
 
         // initialize all of the fields in the activity
         setFields();
+
+       ImageButton addBinomial = (ImageButton) findViewById(R.id.btnAddTrial);
+       addBinomial.setOnClickListener(new View.OnClickListener(){
+
+           @Override
+           public void onClick(View v) {
+               addBinomialTrial();
+           }
+       });
+    }
+
+    public void addBinomialTrial (){
+        BionomialTrial newTrial = new BionomialTrial();
+        newTrial.show(getSupportFragmentManager(), "example dialog");
     }
 
     /**
