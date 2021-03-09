@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,5 +54,13 @@ public class MainActivity extends AppCompatActivity {
 //        ExperimentSettings eset = new ExperimentSettings("experimentDescription5", r, u, true);
 //        Experiment e = new Experiment(ExperimentManager.getNewExperimentID(), eset, "experimentType5", 5);
 //        experimentManager.publishExperiment(e);
+    }
+
+    /** Called when the user taps the profile icon on the top right of main activity */
+    public void viewUser(View view) {
+        Intent intent = new Intent(this, ViewUserActivity.class);
+        //get info about current user
+        //send info about clicked user to activity, using
+        startActivity(intent);
     }
 }
