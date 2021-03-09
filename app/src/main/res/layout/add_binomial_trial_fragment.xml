@@ -8,6 +8,9 @@
         android:id="@+id/switchSuccessIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Success"/>
+        android:checked="true"
+        android:text="Success"
+        android:textOff="NO"
+        android:textOn="YES" />
 
 </LinearLayout>

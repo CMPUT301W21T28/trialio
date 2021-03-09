@@ -36,7 +36,10 @@ public class ExperimentActivity extends AppCompatActivity {
         });
 
 
-        // show fragments that match the experiment type
+
+        /**
+         * show fragments that match the experiment type
+         */
         //if (trialType == "Binomial") {
         //    Button addBinomial = (Button) findViewById(R.id.btnAddTrial);
         //    addBinomial.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +75,9 @@ public class ExperimentActivity extends AppCompatActivity {
         //    });
         //};
 
-
+        /**
+         * function for view trials
+         */
         //Button showTrials = (Button) findViewById(R.id.btnTrials);
         //showTrials.setOnClickListener(new View.OnClickListener() {
         //    @Override
@@ -90,14 +95,6 @@ public class ExperimentActivity extends AppCompatActivity {
         BinomialTrial newTrial = new BinomialTrial();
         newTrial.show(getSupportFragmentManager(), "addBinomial");
     }
-
-
-    /**
-     * This leads to Trials Class
-     */
-    //public void showTrials(){
-    //  Intent intent = new Intent ()
-    //}
 
     /**
      * This initializes all of the fields of the activity with data from the experiment
@@ -118,5 +115,10 @@ public class ExperimentActivity extends AppCompatActivity {
         textOwner.setText("Owner: " + experiment.getSettings().getOwner());
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+    }
+
+    public void fetchResult (String s) {
+        TextView testing = findViewById(R.id.txtExperimentMinTrials);
+        testing.setText(s);
     }
 }
