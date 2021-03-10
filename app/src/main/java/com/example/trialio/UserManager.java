@@ -29,8 +29,32 @@ public class UserManager {
 
     private static final CollectionReference userCollection = FirebaseFirestore.getInstance().collection("users");
 
+    private static String fid;
+
     private User currentUser;
+
     private ArrayList<User> userList;
+
+    /*
+     * This interface was adapted from Android callbacks such as OnCLickListener
+     * Android Developer Docs, "View.OnClickListener", 2020-09-30, Apache 2.0,
+     * https://developer.android.com/reference/android/view/View.OnClickListener
+     */
+
+    /**
+     * This interface represents an action to be taken when a User document is updated
+     * in the Firestore database.
+     */
+    public static interface OnUserUpdateListener {
+
+        /**
+         * This method will be called when the User document is updated in the database.
+         *
+         * @param user The user that has been updated in the database
+         */
+        public void onUserUpdate(User user);
+
+    }
 
     /**
      * Creates a UserManager
@@ -59,14 +83,87 @@ public class UserManager {
     }
 
     /**
-     * Gets the current user profile
+     * Set a callback to fetch the current user in the query
      *
-     * @return The User associated with the device
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
+     *     &#64;Override
+     *     public void onUserUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param listener the listener to be called when the User document is fetched
      */
-    public User getCurrentUser() {
-        return currentUser;
+    public void addCurrentUserUpdateListener(UserManager.OnUserUpdateListener listener) {
+        if (fid == null) {
+            Task<String> userIdTask = getFID();
+            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    // Once FID has been received, fetch from database with FID as userId
+                    String userId = task.getResult();
+                    // String userId = "3333"
+                    fid = userId;
+                    assert userId != null;
+                    setListenerToUserId(userId, listener);
+                }
+            });
+        } else {
+            setListenerToUserId(fid, listener);
+        }
+
+//        Task<String> userIdTask = getFID();
+//
+//        userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
+//            @Override
+//            public void onComplete(@NonNull Task<String> task) {
+//                // Once FID has been received, query the database for this FID
+//                String userId = task.getResult();
+//                // String userId = "3333";
+//                assert userId != null;
+//                Task<DocumentSnapshot> doc = userCollection.document(userId).get();
+//                userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                        assert value != null;
+//                        if (value.exists()) {
+//                            currentUser = value.toObject(User.class);
+//                            listener.onUserUpdate(currentUser);
+//                            Log.d(TAG, "Current User fetched from database: " + value.getData());
+//                        } else {
+//                            currentUser = generateNewUser(userId);
+//                            listener.onUserUpdate(currentUser);
+//                        }
+//                    }
+//                });
+
+//                doc.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        // Once the query result has been received, set currentUser
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//                            assert document != null;
+//                            if (document.exists()) {
+//                                currentUser = document.toObject(User.class);
+//                                listener.onUserUpdate(currentUser);
+//                                Log.d(TAG, "Current User found: " + document.getData());
+//                            } else {
+//                                Log.d(TAG, "No Current User found with id=" + userId);
+//                                currentUser = generateNewUser(userId);
+//                                listener.onUserUpdate(currentUser);
+//                            }
+//                        }
+//                    }
+//                });
     }
 
+    /**
+     * TODO
+     */
     public User generateNewUser(String id) {
         Log.d(TAG, String.format("Generating new User id %s.", id));
         User user = new User(id);
@@ -85,6 +182,31 @@ public class UserManager {
                     }
                 });
         return user;
+    }
+
+    /**
+     * Sets a listener to a the user identified by userId. This function sets up a listener so that
+     * listener.onUserUpdate() is called whenever the User document is update in the Firestore
+     * database.
+     * @param userId the id of the User to attach the listener to
+     * @param listener the listener with the callback function to be called when the User is updated
+     */
+    private void setListenerToUserId(String userId, UserManager.OnUserUpdateListener listener) {
+        Task<DocumentSnapshot> doc = userCollection.document(userId).get();
+        userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                assert value != null;
+                if (value.exists()) {
+                    currentUser = value.toObject(User.class);
+                    listener.onUserUpdate(currentUser);
+                    Log.d(TAG, "Current User fetched from database: " + value.getData());
+                } else {
+                    currentUser = generateNewUser(userId);
+                    listener.onUserUpdate(currentUser);
+                }
+            }
+        });
     }
 
     public void editUserProfile(String username, User user) {
@@ -144,7 +266,7 @@ public class UserManager {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 // Once FID has been received, query the database for this FID
-                 String userId = task.getResult();
+                String userId = task.getResult();
 //                String userId = "3333";
                 assert userId != null;
                 Task<DocumentSnapshot> doc = userCollection.document(userId).get();
