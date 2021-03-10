@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import com.example.trialio.ui.main.EditProfileFragment;
 
+//Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
+//by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
+// in thread https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text/46244113#46244113
+
 public class ViewUserActivity extends AppCompatActivity {
 
     @Override
