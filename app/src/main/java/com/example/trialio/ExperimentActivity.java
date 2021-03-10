@@ -15,11 +15,15 @@ import java.util.Locale;
 public class ExperimentActivity extends AppCompatActivity {
     private Experiment experiment;
     private String trialType;
-
+    private ExperimentManager experimentManager;
+    private TrialManager trialManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
+
+        experimentManager = new ExperimentManager();
+        trialManager = new TrialManager();
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -128,6 +132,7 @@ public class ExperimentActivity extends AppCompatActivity {
      *  s is either True or False for binomial trials
      */
     public void fetchResult (String s) {
+        ExperimentManager experimentManager = new ExperimentManager();
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String formatted = fd.format(c);
@@ -137,7 +142,9 @@ public class ExperimentActivity extends AppCompatActivity {
         Trial newTrial = new Trial();
         newTrial.date = (formatted);
         newTrial.location = loc;
+        newTrial.data = s;
         experiment.getTrialManager().addTrial(newTrial);
 
+        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
     }
 }
