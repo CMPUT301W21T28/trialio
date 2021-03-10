@@ -28,12 +28,12 @@ public class ViewUserActivity extends AppCompatActivity {
         //User user = intent.getSerializableExtra("CurrentUser");
 
         //setup back button functionality
-        ActionBar mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-        LayoutInflater mInflater = LayoutInflater.from(this);
+        ActionBar customActionBar = getSupportActionBar();
+        customActionBar.setDisplayShowHomeEnabled(false);
+        customActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater customizedInflater = LayoutInflater.from(this);
 
-        View mCustomView = mInflater.inflate(R.layout.custom_action_bar_layout, null);
+        View mCustomView = customizedInflater.inflate(R.layout.custom_action_bar_layout, null);
         ImageButton backButton = (ImageButton) mCustomView.findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,8 +42,8 @@ public class ViewUserActivity extends AppCompatActivity {
             }
         });
 
-        mActionBar.setCustomView(mCustomView);
-        mActionBar.setDisplayShowCustomEnabled(true);
+        customActionBar.setCustomView(mCustomView);
+        customActionBar.setDisplayShowCustomEnabled(true);
 
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);
