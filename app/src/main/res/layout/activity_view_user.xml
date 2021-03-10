@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/bckBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -20,7 +21,6 @@
             android:src="@drawable/arrow"></ImageButton>
 
         <ImageButton
-            android:id="@+id/backBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"

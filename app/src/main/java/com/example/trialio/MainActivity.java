@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user taps the profile icon on the top right of main activity */
     public void viewUser(View view) {
         Intent intent = new Intent(this, ViewUserActivity.class);
-        //get info about current user
-        //send info about clicked user to activity, using
+        //User user = UserManager.getCurrentUser();
+        //intent.putExtra("CurrentUser", user);
         startActivity(intent);
     }
 }
