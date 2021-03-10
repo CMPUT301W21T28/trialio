@@ -1,5 +1,6 @@
 package com.example.trialio;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -24,6 +25,14 @@ public class ExperimentActivity extends AppCompatActivity {
 
         experimentManager = new ExperimentManager();
         trialManager = new TrialManager();
+      
+        // Took ActionBar code.
+        // DATE:	2020-12-14
+        // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
+        // SOURCE: 	Add an up action [https://developer.android.com/training/appbar/up-action]
+        // AUTHOR: 	Android Developers [https://developer.android.com/]
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
