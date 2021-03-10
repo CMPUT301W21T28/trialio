@@ -52,7 +52,9 @@
                 android:background="#9c9c9c"
                 android:padding="15dp"
                 android:text="Post details here"
-                android:textColor="@color/black"></TextView>
+                android:textColor="@color/black">
+
+            </TextView>
 
         </LinearLayout>
 
@@ -82,6 +84,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="2.5dp"
                 android:layout_marginBottom="2.5dp">
+
             </EditText>
 
         </LinearLayout>
@@ -97,11 +100,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:text="Reply"
-                android:textSize="7"
+                android:textSize="7pt"
                 android:textColor="@color/black"
                 android:backgroundTint="#fbd700"
                 android:layout_marginLeft="2dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="10dp">
 
             </Button>
 
