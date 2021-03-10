@@ -1,9 +1,11 @@
 package com.example.trialio;
 
+import java.io.Serializable;
+
 /**
  * This class contains the contact information for a User.
  */
-public class UserContactInfo {
+public class UserContactInfo implements Serializable {
 
     /**
      * Phone number for a User stored as a string

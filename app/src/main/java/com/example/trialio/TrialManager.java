@@ -1,13 +1,24 @@
 package com.example.trialio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TrialManager {
+public class TrialManager implements Serializable {
     private String type;
     private ArrayList<Trial> trials;
-    private ArrayList<User> ignored;
+    private ArrayList<User> ignoredUsers;
     private int minNumOfTrials;
-    private Boolean open;
+    private boolean isOpen;
+
+    public TrialManager() { }
+
+    public TrialManager(String type, boolean isOpen, int minNumOfTrials) {
+        this.type = type;
+        this.trials = new ArrayList<Trial>();
+        this.ignoredUsers = new ArrayList<User>();
+        this.minNumOfTrials = minNumOfTrials;
+        this.isOpen = isOpen;
+    }
 
     public String getType() {
         return type;
@@ -25,12 +36,12 @@ public class TrialManager {
         this.trials = trials;
     }
 
-    public ArrayList<User> getIgnored() {
-        return ignored;
+    public ArrayList<User> getIgnoredUsers() {
+        return ignoredUsers;
     }
 
-    public void setIgnored(ArrayList<User> ignored) {
-        this.ignored = ignored;
+    public void setIgnoredUsers(ArrayList<User> ignoredUsers) {
+        this.ignoredUsers = ignoredUsers;
     }
 
     public int getMinNumOfTrials() {
@@ -41,11 +52,11 @@ public class TrialManager {
         this.minNumOfTrials = minNumOfTrials;
     }
 
-    public Boolean getOpen() {
-        return open;
+    public boolean getIsOpen() {
+        return isOpen;
     }
 
-    public void setOpen(Boolean open) {
-        this.open = open;
+    public void setIsOpen(boolean open) {
+        this.isOpen = open;
     }
 }
