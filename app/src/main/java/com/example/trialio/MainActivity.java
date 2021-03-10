@@ -7,16 +7,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private final String TAG = "MainActivity";
 
     private final Context context = this;
 
     private ExperimentManager experimentManager;
     private ArrayAdapterExperiment experimentAdapter;
+    ImageButton editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        editProfile = (ImageButton) findViewById(R.id.editUserBtn);
+
 
 //        // Some code to test publishing an experiment
 //        User u = new User("uid5");
@@ -62,5 +67,12 @@ public class MainActivity extends AppCompatActivity {
         //User user = UserManager.getCurrentUser();
         //intent.putExtra("CurrentUser", user);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == editProfile.getId()) {
+            viewUser(view);
+        }
     }
 }
