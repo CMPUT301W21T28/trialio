@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnAddTrials"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#535353"
@@ -34,8 +35,7 @@
             android:layout_weight="4"
             android:padding="15dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/temp_logo">
-        </ImageButton>
+            android:src="@drawable/temp_logo"></ImageButton>
 
         <ImageButton
             android:id="@+id/btnSwitch"
@@ -60,7 +60,7 @@
         android:layout_marginTop="16dp"
         android:scaleType="fitCenter"
         android:text="Description:"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
@@ -68,10 +68,10 @@
         android:id="@+id/txtExperimentStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:text="Open:"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentRegion" />
 
@@ -79,10 +79,10 @@
         android:id="@+id/txtExperimentRegion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:text="Region:"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentType" />
 
@@ -90,14 +90,13 @@
         android:id="@+id/txtExperimentOwner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:clickable="true"
         android:text="Owner:"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.405"
-        app:layout_constraintStart_toEndOf="@+id/txtExperimentDescription"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentDescription" />
 
     <TextView
         android:id="@+id/txtSubValue"
@@ -115,10 +114,10 @@
         android:id="@+id/txtExperimentMinTrials"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:text="Minimum number of trials:"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentStatus" />
 
@@ -126,12 +125,12 @@
         android:id="@+id/txtExperimentType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:text="Type: "
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtExperimentDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentOwner" />
 
     <ImageButton
         android:id="@+id/btnCamera"
@@ -145,20 +144,6 @@
         app:layout_constraintEnd_toStartOf="@+id/btnQA"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
         app:srcCompat="@android:drawable/ic_menu_camera" />
-
-    <ImageButton
-        android:id="@+id/btnAddTrial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="28dp"
-        android:background="#EEC021"
-        android:tint="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@+id/btnTrials"
-        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        tools:srcCompat="@android:drawable/ic_input_add" />
 
     <Button
         android:id="@+id/btnStats"
@@ -181,6 +166,20 @@
         android:text="Trials"
         app:backgroundTint="#EEC021"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
+
+    <Button
+        android:id="@+id/btnAddTrial"
+        android:layout_width="47dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom|clip_horizontal|center|clip_vertical|start|right|center_horizontal|fill|fill_horizontal|top|left|center_vertical|fill_vertical|end"
+        android:text="+"
+        android:textSize="24sp"
+        app:backgroundTint="#E8B41B"
+        app:layout_constraintEnd_toStartOf="@+id/btnCamera"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toEndOf="@+id/btnTrials"
         app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
 
     <Button

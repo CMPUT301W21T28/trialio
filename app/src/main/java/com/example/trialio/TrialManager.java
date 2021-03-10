@@ -24,6 +24,10 @@ public class TrialManager implements Serializable {
         return type;
     }
 
+    public void addTrial(Trial trial) {
+        trials.add(trial);
+    }
+
     public void setType(String type) {
         this.type = type;
     }
