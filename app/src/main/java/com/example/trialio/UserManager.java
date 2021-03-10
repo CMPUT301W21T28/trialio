@@ -155,21 +155,69 @@ public class UserManager {
     }
 
     /**
-     * TODO
+     * Sets a callback to fetch all Users
      *
-     * @param listener
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addAllUsersUpdateListener(new UserManager.OnAllUserUpdateListener() {
+     *     &#64;Override
+     *     public void onALlUsersUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param listener the listener to be called when the list of Users is fetched
      */
     public void addAllUserUpdateListener(UserManager.OnAllUsersUpdateListener listener) {
-
+        setListenerToCollection(listener);
     }
 
 
+    /**
+     * Updates a User in the system.
+     *
+     * @param user the User to update
+     */
     public void updateUser(User user) {
-
+        String id = user.getId();
+        userCollection.document(id)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, String.format("User %s updated successfully", id));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, String.format("Failed to update User %s", id));
+                    }
+                });
     }
 
+    /**
+     * Deletes a User from the system.
+     *
+     * @param user the user to be deleted
+     */
     public void deleteUser(User user) {
-
+        String id = user.getId();
+        userCollection.document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, String.format("User %s deleted successfully", id));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, String.format("Failed to delete User %s", id));
+                    }
+                });
     }
 
     /**
