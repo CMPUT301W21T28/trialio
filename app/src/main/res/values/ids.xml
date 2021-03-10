@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="open_switch" type="id">open_switch</item>
-    <item name="geo_switch" type="id">geo_switch</item>
+    <item name="open_switch" type="id" />
+    <item name="geo_switch" type="id" />
 </resources>
