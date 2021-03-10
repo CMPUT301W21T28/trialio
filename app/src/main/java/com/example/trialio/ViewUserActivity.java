@@ -57,7 +57,7 @@ public class ViewUserActivity extends AppCompatActivity {
         editUserProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new EditProfileFragment().show(getSupportFragmentManager(), "ADD_CITY");
+                        new EditProfileFragment().show(getSupportFragmentManager(), "EDIT_USER");
                      }
                 });
 
