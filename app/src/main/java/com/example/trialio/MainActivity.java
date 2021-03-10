@@ -3,6 +3,7 @@ package com.example.trialio;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity{
     private final String TAG = "MainActivity";
 
     private final Context context = this;
@@ -52,6 +53,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         editProfile = (ImageButton) findViewById(R.id.editUserBtn);
 
+        /** Called when the user taps the profile icon on the top right of main activity */
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewUserActivity.class);
+                //User user = UserManager.getCurrentUser();
+                //intent.putExtra("Main_Activity", 2);
+                startActivity(intent);
+            }
+        });
+
 
 //        // Some code to test publishing an experiment
 //        User u = new User("uid5");
@@ -61,18 +73,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        experimentManager.publishExperiment(e);
     }
 
-    /** Called when the user taps the profile icon on the top right of main activity */
-    public void viewUser(View view) {
-        Intent intent = new Intent(this, ViewUserActivity.class);
-        //User user = UserManager.getCurrentUser();
-        //intent.putExtra("CurrentUser", user);
-        startActivity(intent);
-    }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == editProfile.getId()) {
-            viewUser(view);
-        }
-    }
 }

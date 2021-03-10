@@ -10,8 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
         <activity android:name=".ViewUserActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.example.trialio.MainActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.trialio.MainActivity"
             />
+        </activity>
         <activity
             android:name=".ExperimentActivity"
             android:parentActivityName="com.example.trialio.MainActivity" >
