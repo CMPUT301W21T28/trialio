@@ -1,9 +1,11 @@
 package com.example.trialio;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,6 +23,22 @@ public class ViewUserActivity extends AppCompatActivity {
         //User user = intent.getSerializableExtra("CurrentUser");
 
         //setup back button functionality
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(this);
+
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar_layout, null);
+        ImageButton backButton = (ImageButton) mCustomView.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
 
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);

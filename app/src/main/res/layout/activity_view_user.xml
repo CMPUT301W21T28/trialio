@@ -5,32 +5,6 @@
     android:background="#747474"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/bckBtn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/arrow"></ImageButton>
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:padding="15dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/temp_logo"></ImageButton>
-
-
-    </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
