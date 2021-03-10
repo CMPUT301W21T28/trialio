@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class ViewUserActivity extends AppCompatActivity {
         //userPhone.setText(user.getContactInfo().getPhone());
         //UserEMail.setText(user.getContactInfo().getEmail());
 
-        final ImageButton editUserProfile = (ImageButton) findViewById(R.id.bckBtn);
+        final Button editUserProfile = (Button) findViewById(R.id.editButton);
         editUserProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
