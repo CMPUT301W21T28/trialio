@@ -20,14 +20,12 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 
 public class UserManager {
-    private final String TAG = "UserManager";
-
-    private static final CollectionReference userCollection = FirebaseFirestore.getInstance().collection("users");
+    private static final String TAG = "UserManager";
+    private static final String COLLECTION_PATH = "users";
+    // private static final String TEST_COLLECTION_PATH = "users";
+    private final CollectionReference userCollection;
 
     private static String fid;
-
-    private User currentUser;
-    private ArrayList<User> userList;
 
     /*
      * This interface design was adapted from Android callbacks such as OnCLickListener
@@ -69,23 +67,18 @@ public class UserManager {
      * Creates a UserManager
      */
     public UserManager() {
-        userList = new ArrayList<User>();
-
-        // Set up a listener which is called whenever the collection is updated
-        userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                // Update the userList
-                assert value != null;
-                ArrayList<User> updatedUserList = (ArrayList<User>) value.toObjects(User.class);
-                refreshUserList(updatedUserList);
-            }
-        });
-
+        userCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
     }
 
     /**
-     * TODO
+     * Creates a new User and adds document to the database.
+     *
+     * @param id The id of the User to create
+     * @return The User that was created.
+     * <p>
+     * Note that this User object will not track changes to the
+     * User document. If you need to receive all database updates for the User, fetch the
+     * User using UserManager#addUserUpdateListener()
      */
     public User createNewUser(String id) {
         Log.d(TAG, String.format("Generating new User with id=%s.", id));
@@ -108,7 +101,7 @@ public class UserManager {
     }
 
     /**
-     * Sets a callback to fetch the current user
+     * Sets a callback to fetch the current User
      *
      * <pre>
      * UserManager manager = new UserManager();
@@ -128,7 +121,7 @@ public class UserManager {
             userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
                 public void onComplete(@NonNull Task<String> task) {
-                    // Once FID has been received, fetch from database with FID as userId
+                    // Once FID has been received, fetch from database with userId=FID
                     String userId = task.getResult();
                     // String userId = "3333"
                     fid = userId;
@@ -142,36 +135,94 @@ public class UserManager {
     }
 
     /**
-     * TODO
+     * Sets a callback to fetch a User
      *
-     * @param userId
-     * @param listener
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addUserUpdateListener(userId, new UserManager.OnUserUpdateListener() {
+     *     &#64;Override
+     *     public void onUserUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param userId   the id of the User to be fetched
+     * @param listener the listener to be called when the User document is fetched
      */
     public void addUserUpdateListener(String userId, UserManager.OnUserUpdateListener listener) {
-
+        setListenerToUserId(userId, listener);
     }
 
     /**
-     * TODO
-     * @param listener
+     * Sets a callback to fetch all Users
+     *
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addAllUsersUpdateListener(new UserManager.OnAllUserUpdateListener() {
+     *     &#64;Override
+     *     public void onALlUsersUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param listener the listener to be called when the list of Users is fetched
      */
     public void addAllUserUpdateListener(UserManager.OnAllUsersUpdateListener listener) {
-
+        setListenerToCollection(listener);
     }
 
 
+    /**
+     * Updates a User in the system.
+     *
+     * @param user the User to update
+     */
     public void updateUser(User user) {
-
+        String id = user.getId();
+        userCollection.document(id)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, String.format("User %s updated successfully", id));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, String.format("Failed to update User %s", id));
+                    }
+                });
     }
 
+    /**
+     * Deletes a User from the system.
+     *
+     * @param user the user to be deleted
+     */
     public void deleteUser(User user) {
-
+        String id = user.getId();
+        userCollection.document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, String.format("User %s deleted successfully", id));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, String.format("Failed to delete User %s", id));
+                    }
+                });
     }
 
     /**
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
-     * listener.onUserUpdate() is called whenever the User document is update in the Firestore
-     * database.
+     * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
@@ -182,19 +233,34 @@ public class UserManager {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 assert value != null;
+                User currentUser;
                 if (value.exists()) {
-                    currentUser = value.toObject(User.class);
-                    listener.onUserUpdate(currentUser);
                     Log.d(TAG, "Current User fetched from database: " + value.getData());
+                    currentUser = value.toObject(User.class);
                 } else {
                     currentUser = createNewUser(userId);
-                    listener.onUserUpdate(currentUser);
                 }
+                listener.onUserUpdate(currentUser);
             }
         });
     }
 
-//    public Collection<User> getAllUsers() { }
+    /**
+     * Sets a listener to a the User collection. This function sets up a listener so that
+     * listener.onAllUsersUpdate() is called whenever the User collection is updated.
+     *
+     * @param listener the listener with the callback function to be called when the User
+     *                 collection is updated
+     */
+    private void setListenerToCollection(UserManager.OnAllUsersUpdateListener listener) {
+        userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                ArrayList<User> users = (ArrayList<User>) value.toObjects(User.class);
+                listener.onAllUsersUpdate(users);
+            }
+        });
+    }
 
     /**
      * Gets the Firebase Installation ID of the device installation
@@ -216,55 +282,5 @@ public class UserManager {
             }
         });
         return task;
-    }
-
-    /**
-     * Update the local userList
-     *
-     * @param updatedUserList the list of updated User's
-     */
-    private void refreshUserList(ArrayList<User> updatedUserList) {
-        Log.d(TAG, "Fetching users from cloud storage:");
-        userList.clear();
-        for (User user : updatedUserList) {
-            Log.d(TAG, "User=" + user.getId());
-            userList.add(user);
-        }
-    }
-
-    /**
-     * Update the local currentUser
-     */
-    private void refreshCurrentUser() {
-        // TODO: this can most likely be refactored with Task#continueWithTask
-        Task<String> userIdTask = getFID();         // Get the unique identifier for this device
-
-        userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                // Once FID has been received, query the database for this FID
-                String userId = task.getResult();
-//                String userId = "3333";
-                assert userId != null;
-                Task<DocumentSnapshot> doc = userCollection.document(userId).get();
-                doc.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        // Once the query result has been received, set currentUser
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            assert document != null;
-                            if (document.exists()) {
-                                currentUser = document.toObject(User.class);
-                                Log.d(TAG, "Current User found: " + document.getData());
-                            } else {
-                                Log.d(TAG, "No Current User found with id=" + userId);
-                                currentUser = createNewUser(userId);
-                            }
-                        }
-                    }
-                });
-            }
-        });
     }
 }
