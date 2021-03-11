@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class ExperimentActivity extends AppCompatActivity {
     private Experiment experiment;
-    private String trialType;
+    private int trialType;
     private ExperimentManager experimentManager;
     private TrialManager trialManager;
     @Override
