@@ -25,7 +25,6 @@ public class ViewUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_user);
 
         Intent intent = getIntent();
-        //User user = intent.getSerializableExtra("CurrentUser");
 
         //setup back button functionality
         ActionBar customActionBar = getSupportActionBar();
@@ -49,9 +48,15 @@ public class ViewUserActivity extends AppCompatActivity {
         TextView userPhone = findViewById(R.id.phoneText);
         TextView UserEMail = findViewById(R.id.emailText);
 
-        //userName.setText(user.getUsername());
-        //userPhone.setText(user.getContactInfo().getPhone());
-        //UserEMail.setText(user.getContactInfo().getEmail());
+        UserManager manager = new UserManager();
+        manager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
+            @Override
+            public void onUserUpdate(User user) {
+                userName.setText(user.getUsername());
+                userPhone.setText(user.getContactInfo().getPhone());
+                UserEMail.setText(user.getContactInfo().getEmail());
+            }
+        });
 
         final Button editUserProfile = (Button) findViewById(R.id.editButton);
         editUserProfile.setOnClickListener(new View.OnClickListener() {
