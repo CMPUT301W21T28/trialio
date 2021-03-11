@@ -5,13 +5,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,9 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.installations.FirebaseInstallations;
 
-import org.w3c.dom.Document;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class UserManager {
@@ -29,16 +24,52 @@ public class UserManager {
 
     private static final CollectionReference userCollection = FirebaseFirestore.getInstance().collection("users");
 
+    private static String fid;
+
     private User currentUser;
     private ArrayList<User> userList;
+
+    /*
+     * This interface design was adapted from Android callbacks such as OnCLickListener
+     * Android Developer Docs, "View.OnClickListener", 2020-09-30, Apache 2.0,
+     * https://developer.android.com/reference/android/view/View.OnClickListener
+     */
+
+    /**
+     * This interface represents an action to be taken when a User document is updated
+     * in the Firestore database.
+     */
+    public interface OnUserUpdateListener {
+
+        /**
+         * This method will be called when the User document is updated in the database.
+         *
+         * @param user The user that has been updated in the database
+         */
+        public void onUserUpdate(User user);
+
+    }
+
+    /**
+     * This interface represents an action to be taken when a User document is updated
+     * in the Firestore database.
+     */
+    public interface OnAllUsersUpdateListener {
+
+        /**
+         * This method will be called when the User document is updated in the database.
+         *
+         * @param userList The user that has been updated in the database
+         */
+        public void onAllUsersUpdate(ArrayList<User> userList);
+
+    }
 
     /**
      * Creates a UserManager
      */
     public UserManager() {
         userList = new ArrayList<User>();
-        currentUser = new User("TEMP");
-        refreshCurrentUser();
 
         // Set up a listener which is called whenever the collection is updated
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -48,27 +79,16 @@ public class UserManager {
                 assert value != null;
                 ArrayList<User> updatedUserList = (ArrayList<User>) value.toObjects(User.class);
                 refreshUserList(updatedUserList);
-
-                // Update the current user
-                // TODO: this can be set up to listen to only the current user document
-                refreshCurrentUser();
             }
-
         });
 
     }
 
     /**
-     * Gets the current user profile
-     *
-     * @return The User associated with the device
+     * TODO
      */
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public User generateNewUser(String id) {
-        Log.d(TAG, String.format("Generating new User id %s.", id));
+    public User createNewUser(String id) {
+        Log.d(TAG, String.format("Generating new User with id=%s.", id));
         User user = new User(id);
         userCollection.document(id)
                 .set(user)
@@ -87,12 +107,91 @@ public class UserManager {
         return user;
     }
 
-    public void editUserProfile(String username, User user) {
-        //...
+    /**
+     * Sets a callback to fetch the current user
+     *
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
+     *     &#64;Override
+     *     public void onUserUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param listener the listener to be called when the User document is fetched
+     */
+    public void addCurrentUserUpdateListener(UserManager.OnUserUpdateListener listener) {
+        if (fid == null) {
+            Task<String> userIdTask = getFID();
+            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    // Once FID has been received, fetch from database with FID as userId
+                    String userId = task.getResult();
+                    // String userId = "3333"
+                    fid = userId;
+                    assert userId != null;
+                    setListenerToUserId(userId, listener);
+                }
+            });
+        } else {
+            setListenerToUserId(fid, listener);
+        }
     }
 
-    public void deleteUser(String username) {
-        //...
+    /**
+     * TODO
+     *
+     * @param userId
+     * @param listener
+     */
+    public void addUserUpdateListener(String userId, UserManager.OnUserUpdateListener listener) {
+
+    }
+
+    /**
+     * TODO
+     * @param listener
+     */
+    public void addAllUserUpdateListener(UserManager.OnAllUsersUpdateListener listener) {
+
+    }
+
+
+    public void updateUser(User user) {
+
+    }
+
+    public void deleteUser(User user) {
+
+    }
+
+    /**
+     * Sets a listener to a the user identified by userId. This function sets up a listener so that
+     * listener.onUserUpdate() is called whenever the User document is update in the Firestore
+     * database.
+     *
+     * @param userId   the id of the User to attach the listener to
+     * @param listener the listener with the callback function to be called when the User is updated
+     */
+    private void setListenerToUserId(String userId, UserManager.OnUserUpdateListener listener) {
+        Task<DocumentSnapshot> doc = userCollection.document(userId).get();
+        userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                assert value != null;
+                if (value.exists()) {
+                    currentUser = value.toObject(User.class);
+                    listener.onUserUpdate(currentUser);
+                    Log.d(TAG, "Current User fetched from database: " + value.getData());
+                } else {
+                    currentUser = createNewUser(userId);
+                    listener.onUserUpdate(currentUser);
+                }
+            }
+        });
     }
 
 //    public Collection<User> getAllUsers() { }
@@ -144,7 +243,7 @@ public class UserManager {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 // Once FID has been received, query the database for this FID
-                 String userId = task.getResult();
+                String userId = task.getResult();
 //                String userId = "3333";
                 assert userId != null;
                 Task<DocumentSnapshot> doc = userCollection.document(userId).get();
@@ -160,14 +259,12 @@ public class UserManager {
                                 Log.d(TAG, "Current User found: " + document.getData());
                             } else {
                                 Log.d(TAG, "No Current User found with id=" + userId);
-                                currentUser = generateNewUser(userId);
+                                currentUser = createNewUser(userId);
                             }
                         }
                     }
                 });
             }
         });
-
     }
-
 }
