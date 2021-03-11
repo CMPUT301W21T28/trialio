@@ -28,6 +28,10 @@ public class TrialManager implements Serializable {
         this.type = type;
     }
 
+    public void addTrial(Trial trial) {
+        trials.add(trial);
+    }
+
     public ArrayList<Trial> getTrials() {
         return trials;
     }
