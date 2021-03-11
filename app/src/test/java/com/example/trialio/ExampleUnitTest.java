@@ -14,6 +14,7 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
+        assertTrue(true);
         assertThrows(IllegalArgumentException.class, () -> {
            throw new IllegalArgumentException();
         });
