@@ -11,4 +11,20 @@ public class Trial implements Serializable {
     protected Location location;
     protected Date date;
     //protected Image qrcode;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
