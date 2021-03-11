@@ -62,6 +62,10 @@ public class ViewUserActivity extends AppCompatActivity {
         editUserProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        Bundle args = new Bundle();
+                        //args.putSerializable("User Info", manager.getCurrentUser());
+
                         new EditProfileFragment().show(getSupportFragmentManager(), "EDIT_USER");
                      }
                 });
