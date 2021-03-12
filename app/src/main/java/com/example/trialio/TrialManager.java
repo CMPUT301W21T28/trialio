@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TrialManager implements Serializable {
-    private String type;
+    private int type;
     private ArrayList<Trial> trials;
     private ArrayList<User> ignoredUsers;
     private int minNumOfTrials;
@@ -12,7 +12,7 @@ public class TrialManager implements Serializable {
 
     public TrialManager() { }
 
-    public TrialManager(String type, boolean isOpen, int minNumOfTrials) {
+    public TrialManager(int type, boolean isOpen, int minNumOfTrials) {
         this.type = type;
         this.trials = new ArrayList<Trial>();
         this.ignoredUsers = new ArrayList<User>();
@@ -20,16 +20,16 @@ public class TrialManager implements Serializable {
         this.isOpen = isOpen;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void addTrial(Trial trial) {
         trials.add(trial);
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public ArrayList<Trial> getTrials() {
