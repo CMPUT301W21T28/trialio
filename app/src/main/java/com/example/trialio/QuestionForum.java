@@ -24,6 +24,4 @@ public class QuestionForum implements Serializable {
 
 //    public ArrayList<Question> getAllQuestions() {}
 
-
-
 }

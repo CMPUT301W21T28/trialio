@@ -3,5 +3,6 @@
 
     <item name="open_switch" type="id" />
     <item name="geo_switch" type="id" />
+    <item name="list_experiment" type="id"/>
 
 </resources>
