@@ -3,19 +3,24 @@ package com.example.trialio;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private final String TAG = "MainActivity";
 
     private final Context context = this;
 
     private ExperimentManager experimentManager;
     private ArrayAdapterExperiment experimentAdapter;
+    ImageButton editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        editProfile = (ImageButton) findViewById(R.id.editUserBtn);
+
+        /** Called when the user taps the profile icon on the top right of main activity */
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewUserActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 //        // Some code to test publishing an experiment
 //        User u = new User("uid5");
@@ -54,4 +70,6 @@ public class MainActivity extends AppCompatActivity {
 //        Experiment e = new Experiment(ExperimentManager.getNewExperimentID(), eset, "experimentType5", 5);
 //        experimentManager.publishExperiment(e);
     }
+
+
 }
