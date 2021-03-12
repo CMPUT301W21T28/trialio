@@ -8,24 +8,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-public class ExperimentActivity extends AppCompatActivity {
+public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener{
     private Experiment experiment;
-    private int trialType;
+    private String trialType;
     private ExperimentManager experimentManager;
-    private TrialManager trialManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
 
         experimentManager = new ExperimentManager();
-        trialManager = new TrialManager();
-      
+
         // Took ActionBar code.
         // DATE:	2020-12-14
         // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
@@ -44,54 +38,27 @@ public class ExperimentActivity extends AppCompatActivity {
         // store the experiment type to trialType variable
         trialType = experiment.getTrialManager().getType();
 
-
-        Button addBinomial = (Button) findViewById(R.id.btnAddTrial);
-        addBinomial.setOnClickListener(new View.OnClickListener() {
+        Button addTrial = (Button) findViewById(R.id.btnAddTrial);
+        addTrial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBinomialTrial();
+                if (ExperimentTypeUtility.isCount(trialType)) {
+                    //CountTrialFragment newTrial = new CountTrialFragment();
+                    //newTrial.show(getSupportFragmentManager(), "countTrial");
+                } else if (ExperimentTypeUtility.isBinomial(trialType)) {
+                    BinomialTrialFragment newTrial = new BinomialTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "addBinomial");
+                } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
+                    NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "nonNegativeTrial");
+                } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
+                    //MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
+                    //newTrial.show(getSupportFragmentManager(), "MeasurementTrial");
+                } else {
+                    assert (false);
+                }
             }
         });
-
-
-
-        /**
-         * show fragments that match the experiment type
-         */
-        //if (trialType == "Binomial") {
-        //    Button addBinomial = (Button) findViewById(R.id.btnAddTrial);
-        //    addBinomial.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            addBinomialTrial();
-        //        }
-        //    });
-        //}
-        //}else if (trialType == "Measurement"){
-        //    Button addMeasurement = (Button) findViewById(R.id.btnAddTrial);
-        //    addMeasurement.setOnClickListener(new View.OnClickListener(){
-        //        @Override
-        //        public void onClick(View v) {
-        //            addMeasurementTrial();
-        //        }
-        //    });
-        //}else if (trialType == "NonNegativeCount"){
-        //    Button addNonNegativeCount = (Button) findViewById(R.id.btnAddTrial);
-        //    addNonNegativeCount.setOnClickListener(new View.OnClickListener(){
-        //        @Override
-        //        public void onClick(View v) {
-        //            addNonNegativeCountTrial();
-        //        }
-        //    });
-        //}else if (trialType == "Count"){
-        //    Button addCount = (Button) findViewById(R.id.btnAddTrial);
-        //    addCount.setOnClickListener(new View.OnClickListener(){
-        //        @Override
-        //        public void onClick(View v) {
-        //            addCountTrial();
-        //        }
-        //    });
-        //};
 
         /**
          * function for view trials
@@ -103,15 +70,6 @@ public class ExperimentActivity extends AppCompatActivity {
         //        showTrials();
         //    }
         //});
-    }
-
-
-    /**
-     * addBinomialTrial
-     */
-    public void addBinomialTrial (){
-        BinomialTrial newTrial = new BinomialTrial();
-        newTrial.show(getSupportFragmentManager(), "addBinomial");
     }
 
     /**
@@ -135,26 +93,9 @@ public class ExperimentActivity extends AppCompatActivity {
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
     }
 
-    /**receives result from trial fragment, create new trial and store it to its experiment's trial manager
-     *
-     * @param s
-     *  s is either True or False for binomial trials
-     */
-    public void fetchResult (String s) {
-        ExperimentManager experimentManager = new ExperimentManager();
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String formatted = fd.format(c);
-
-        String loc = "Edmonton TESTING";
-
-        Trial newTrial = new Trial();
-        // TODO: change the data type to Location and Date
-        //newTrial.date = (formatted);
-        //newTrial.location = loc;
-        newTrial.data = s;
+    @Override
+    public void onOkPressed(Trial newTrial) {
         experiment.getTrialManager().addTrial(newTrial);
-
         experimentManager.editExperiment(experiment.getExperimentID(), experiment);
     }
 }

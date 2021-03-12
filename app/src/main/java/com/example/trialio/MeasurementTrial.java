@@ -1,15 +1,31 @@
 package com.example.trialio;
 
-public class MeasurementTrial extends Trial{
+import java.io.Serializable;
+import java.util.Date;
+
+public class MeasurementTrial extends Trial implements Serializable {
     private Double measurement;
     private String unit;
 
-    public void trialResult(Double m, String u){
-        this.measurement = m;
-        this.unit = u;
+    public MeasurementTrial(String experimenterID, com.example.trialio.Location location, Date date, Double measurement, String unit) {
+        super(experimenterID, location, date);
+        this.measurement = measurement;
+        this.unit = unit;
     }
 
-    public void getMeasurementTrial(){
-        //return a result
+    public Double getMeasurement() {
+        return measurement;
+    }
+
+    public void setMeasurement(Double measurement) {
+        this.measurement = measurement;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

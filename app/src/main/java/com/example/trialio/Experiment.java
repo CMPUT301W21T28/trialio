@@ -12,7 +12,7 @@ public class Experiment implements Serializable {
 
     public Experiment() { }
 
-    public Experiment(String experimentID, ExperimentSettings settings, int type, int minNumOfTrials) {
+    public Experiment(String experimentID, ExperimentSettings settings, String type, int minNumOfTrials) {
         this.experimentID = experimentID;
         this.settings = settings;
         this.trialManager = new TrialManager(type, true, minNumOfTrials);
