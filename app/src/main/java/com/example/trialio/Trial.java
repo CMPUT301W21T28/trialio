@@ -1,36 +1,34 @@
 package com.example.trialio;
 
-import android.location.Location;
-
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Date;
 
 public class Trial implements Serializable {
-    //protected User experimenter;
-    protected Location location;
+    protected String experimenterID;
+    protected com.example.trialio.Location location;
     protected Date date;
-    //protected Image qrcode;
-    protected String data;
 
-    // Changing these variables to type string for testing adding trials -Jeff
-    //protected String location;
-    //protected String date;
-    //protected String data;
+    public Trial() { }
 
-    public String getData() {
-        return data;
+    public Trial(String experimenterID, com.example.trialio.Location location, Date date) {
+        this.experimenterID = experimenterID;
+        this.location = location;
+        this.date = date;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public String getExperimenterID() {
+        return experimenterID;
     }
 
-    public Location getLocation() {
+    public void setExperimenterID(String experimenterID) {
+        this.experimenterID = experimenterID;
+    }
+
+    public com.example.trialio.Location getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(com.example.trialio.Location location) {
         this.location = location;
     }
 
@@ -41,8 +39,4 @@ public class Trial implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
-
-
-
-
 }

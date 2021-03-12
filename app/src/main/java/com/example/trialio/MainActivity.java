@@ -3,17 +3,14 @@ package com.example.trialio;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     private final Context context = this;
@@ -61,15 +58,5 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
-
-
-//        // Some code to test publishing an experiment
-//        User u = new User("uid5");
-//        Region r = new Region();
-//        ExperimentSettings eset = new ExperimentSettings("experimentDescription5", r, u, true);
-//        Experiment e = new Experiment(ExperimentManager.getNewExperimentID(), eset, "experimentType5", 5);
-//        experimentManager.publishExperiment(e);
     }
-
-
 }
