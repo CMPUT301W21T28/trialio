@@ -149,8 +149,9 @@ public class ExperimentActivity extends AppCompatActivity {
         String loc = "Edmonton TESTING";
 
         Trial newTrial = new Trial();
-        newTrial.date = (formatted);
-        newTrial.location = loc;
+        // TODO: change the data type to Location and Date
+        //newTrial.date = (formatted);
+        //newTrial.location = loc;
         newTrial.data = s;
         experiment.getTrialManager().addTrial(newTrial);
 
