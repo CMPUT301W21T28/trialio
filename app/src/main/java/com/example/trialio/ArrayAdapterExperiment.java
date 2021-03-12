@@ -42,7 +42,7 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
 
         // set the textviews
         textDescription.setText(experiment.getSettings().getDescription());
-        textType.setText(experiment.getTrialManager().getType());
+        textType.setText(""+experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "yes" : "no");
         textOwner.setText(experiment.getSettings().getOwner().getUsername());
 

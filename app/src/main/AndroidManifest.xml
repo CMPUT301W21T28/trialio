@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
+        <activity android:name=".ViewUserActivity"/>
         <activity
             android:name=".ExperimentActivity"
             android:parentActivityName="com.example.trialio.MainActivity" >
