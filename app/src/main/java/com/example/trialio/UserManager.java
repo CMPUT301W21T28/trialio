@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class UserManager {
     private static final String TAG = "UserManager";
     private static final String COLLECTION_PATH = "users";
-    // private static final String TEST_COLLECTION_PATH = "users";
     private final CollectionReference userCollection;
 
     private static String fid;
@@ -69,6 +68,15 @@ public class UserManager {
     public UserManager() {
         userCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
     }
+
+    /**
+     * Creates a UserManager
+     * @param collection The collection in which to store User documents
+     */
+    public UserManager(String collection) {
+        userCollection = FirebaseFirestore.getInstance().collection(collection);
+    }
+
 
     /**
      * Creates a new User and adds document to the database.
