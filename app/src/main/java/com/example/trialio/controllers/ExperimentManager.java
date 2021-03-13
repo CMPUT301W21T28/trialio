@@ -57,7 +57,6 @@ public class ExperimentManager {
                             Map location = (Map) trial.get("location");
 
                             experiment.getTrialManager().addTrial(new BinomialTrial((String)trial.get("experimenterId"), new Location((double)location.get("latitude"), (double)location.get("longitude")),((com.google.firebase.Timestamp)trial.get("date")).toDate(), (boolean)trial.get("isSuccess")));
-                            Log.d(TAG, "hi");
                         }
                     } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
                         // TODO
@@ -66,7 +65,6 @@ public class ExperimentManager {
                             Map location = (Map) trial.get("location");
 
                             experiment.getTrialManager().addTrial(new NonNegativeTrial((String)trial.get("experimenterId"), new Location((double)location.get("latitude"), (double)location.get("longitude")),((com.google.firebase.Timestamp)trial.get("date")).toDate(), ((java.lang.Long)trial.get("nonNegCount")).intValue()));
-                            Log.d(TAG, "hi");
                         }
                     } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
                         // TODO
@@ -80,7 +78,7 @@ public class ExperimentManager {
                     experimentAdapter.notifyDataSetChanged();
                 }
                 for (Experiment e : experimentList) {
-                    Log.d(TAG, "ELISTBOS " + e.toString());
+                    Log.d(TAG, "experiment in experimentList: " + e.toString());
                 }
             }
         });

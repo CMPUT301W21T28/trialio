@@ -11,6 +11,14 @@ public class QuestionForum implements Serializable {
 
     private Collection<Question> questions;
 
+    public Collection<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Collection<Question> questions) {
+        this.questions = questions;
+    }
+
     public void createQuestion (String title, String body, User user) {
         // ... finish me ...
     }
