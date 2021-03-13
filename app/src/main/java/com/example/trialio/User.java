@@ -3,6 +3,7 @@ package com.example.trialio;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.google.firebase.installations.FirebaseInstallations;
 
@@ -14,7 +15,7 @@ public class User implements Serializable {
     private String id;
     private String username;
     private UserContactInfo contactInfo;
-    // private Collection<Experiment> subscribedExperiments;
+    private ArrayList<Experiment> subscribedExperiments;
     // private BarcodeManager barcodeManager;
 
     User() {}
@@ -29,6 +30,7 @@ public class User implements Serializable {
         this.contactInfo = new UserContactInfo();
         this.contactInfo.setEmail("JonDoe@email.com");
         this.contactInfo.setPhone("780-123-4567");
+        this.subscribedExperiments = new ArrayList<Experiment>();
     }
 
     /**
@@ -61,5 +63,40 @@ public class User implements Serializable {
      */
     public UserContactInfo getContactInfo() {
         return contactInfo;
+    }
+
+    /**
+     * Gets the users subscribed experiments
+     * @return the collection of subscribed experiments
+     */
+    public ArrayList<Experiment> getSubscribedExperiments() {
+        return subscribedExperiments;
+    }
+
+    /**
+     * Sets the users subscribed experiments
+     * @param subscribedExperiments the list of subscribed Experiments
+     */
+    public void setSubscribedExperiments(ArrayList<Experiment> subscribedExperiments) {
+        this.subscribedExperiments = subscribedExperiments;
+    }
+
+    /**
+     * Adds an experiment the the users subscriptions if that experiment is not already subscribed.
+     * If the user is already subscribed to the experiment, the subscription list is unchanged.
+     * @param experiment the experiment to be subscribed
+     */
+    public void addSubscription(Experiment experiment) {
+        if (!this.subscribedExperiments.contains(experiment)) {
+            this.subscribedExperiments.add(experiment);
+        }
+    }
+
+    /**
+     * Deletes an experiment from the users subscriptions
+     * @param experiment the experiment to delete from subscriptions
+     */
+    public void deleteSubscription(Experiment experiment) {
+        this.subscribedExperiments.remove(experiment);
     }
 }
