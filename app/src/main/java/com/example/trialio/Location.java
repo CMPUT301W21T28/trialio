@@ -1,8 +1,17 @@
 package com.example.trialio;
 
-public class Location {
+import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+import androidx.annotation.NonNull;
+
+public class Location implements LocationListener{
     private double latitude;
     private double longitude;
+    protected boolean gpsOn,wifiOn;
+    private LocationManager locationManager;
+
 
     public Location() { }
 
@@ -10,6 +19,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
 
     public double getLatitude() {
         return latitude;
@@ -27,5 +37,21 @@ public class Location {
         this.longitude = longitude;
     }
 
+    @Override
+    public void onLocationChanged(@NonNull android.location.Location location) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
+    }
+
     //    public ArrayList<double> getCoord() { }
+
 }
