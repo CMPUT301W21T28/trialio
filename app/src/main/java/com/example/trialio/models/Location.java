@@ -6,7 +6,9 @@ import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
 
-public class Location implements LocationListener{
+import java.io.Serializable;
+
+public class Location implements LocationListener, Serializable {
     private double latitude;
     private double longitude;
     protected boolean gpsOn,wifiOn;
