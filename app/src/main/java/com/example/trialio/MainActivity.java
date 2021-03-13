@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -17,7 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ExperimentManager experimentManager;
     private ArrayAdapterExperiment experimentAdapter;
-    ImageButton editProfile;
+    private ImageButton editProfile;
+    private Button activeToggleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         ListView experimentListView = findViewById(R.id.list_experiment);
         experimentListView.setAdapter(experimentAdapter);
         experimentManager.setAdapter(experimentAdapter);
+
+        // Get the button for the active list
+        Button button = (Button)findViewById(R.id.btnAll);
 
         experimentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,5 +64,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Called when the Subs button is clicked
+        Button subsToggleButton = (Button) findViewById(R.id.btnSubs);
+        subsToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setExperimentListToSubs();
+            }
+        });
+    }
+
+    private void setExperimentListToSubs() {
+        Log.d(TAG, "Subs was clicked");
     }
 }

@@ -50,32 +50,32 @@
         android:layout_margin="5dp"       >
 
         <Button
-            android:text="All"
+            android:id="@+id/btnAll"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="5dp"
-            android:backgroundTint="#fbd700">
-        </Button>
+            android:layout_weight="1"
+            android:backgroundTint="#fbd700"
+            android:text="All"></Button>
 
         <Button
-            android:text="Owned"
+            android:id="@+id/btnOwned"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="5dp"
-            android:backgroundTint="#606060">
-        </Button>
-
-
-        <Button
+            android:layout_weight="1"
             android:backgroundTint="#606060"
-            android:text="Subs"
+            android:text="Owned"></Button>
+
+
+        <Button
+            android:id="@+id/btnSubs"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:layout_margin="5dp">
-        </Button>
+            android:backgroundTint="#606060"
+            android:text="Subs"></Button>
 
     </LinearLayout>
 
