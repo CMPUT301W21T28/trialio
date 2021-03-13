@@ -93,10 +93,15 @@ public class User implements Serializable {
     }
 
     /**
-     * Deletes an experiment from the users subscriptions
+     * Remove an experiment from the users subscriptions
      * @param experiment the experiment to delete from subscriptions
+     * @throws IllegalArgumentException User is not subscribed to experiment
      */
-    public void deleteSubscription(Experiment experiment) {
-        this.subscribedExperiments.remove(experiment);
+    public void removeSubscription(Experiment experiment) {
+        if (this.subscribedExperiments.contains(experiment)) {
+            this.subscribedExperiments.remove(experiment);
+        } else {
+            throw new IllegalArgumentException("User not subscribed to experiment");
+        }
     }
 }
