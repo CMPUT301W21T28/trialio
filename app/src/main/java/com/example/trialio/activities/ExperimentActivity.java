@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -78,6 +79,30 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         //        showTrials();
         //    }
         //});
+
+
+        /**
+         * function for navigation to question forum for the respective experiment
+         */
+        Button goToQuestionForum = (Button) findViewById(R.id.btnQA);
+        goToQuestionForum.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openQAF();
+            }
+        });
+
+        /**
+         * Function navigates to QuestionForum
+         * Used for readability of code
+         */
+        public void openQAF(){
+            Intent intent = new Intent(this, question_forum_activity.class);
+            startActivity(intent);
+        }
+
+
+
     }
 
     /**
