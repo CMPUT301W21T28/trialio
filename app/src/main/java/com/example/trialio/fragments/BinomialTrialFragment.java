@@ -16,6 +16,8 @@ import com.example.trialio.R;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
+import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.User;
 
 import java.util.Date;
 
@@ -35,9 +37,17 @@ public class BinomialTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         Switch s = view.findViewById(R.id.switchSuccessIndicator);
+                        boolean isSuccess = s.isChecked();
                         Location location = new Location();
                         Date date = new Date();
-                        listener.onOkPressed(new BinomialTrial("experimenterID", location, date, s.isChecked()));
+
+                        UserManager userManager = new UserManager();
+                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                            @Override
+                            public void onUserFetch(User user) {
+                                listener.onOkPressed(new BinomialTrial(user.getId(), location, date, isSuccess));
+                            }
+                        });
                     }}).create();
     }
 

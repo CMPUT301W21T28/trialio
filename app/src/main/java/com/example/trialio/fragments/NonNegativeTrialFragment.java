@@ -14,9 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Location;
+import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 
 import java.util.Date;
 
@@ -36,9 +39,17 @@ public class NonNegativeTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
+                        int nonNegCount = Integer.parseInt(tv.getText().toString());
                         Location location = new Location();
                         Date date = new Date();
-                        listener.onOkPressed(new NonNegativeTrial("experimenterID", location, date, Integer.parseInt(tv.getText().toString())));
+
+                        UserManager userManager = new UserManager();
+                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                            @Override
+                            public void onUserFetch(User user) {
+                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
+                            }
+                        });
                     }}).create();
     }
 

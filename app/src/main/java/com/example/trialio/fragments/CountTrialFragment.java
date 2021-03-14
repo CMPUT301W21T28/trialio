@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 
 import java.util.Date;
 
@@ -37,7 +39,14 @@ public class CountTrialFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int i) {
                         Location location = new Location();
                         Date date = new Date();
-                        listener.onOkPressed(new CountTrial("experimenterID", location, date));
+
+                        UserManager userManager = new UserManager();
+                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                            @Override
+                            public void onUserFetch(User user) {
+                                listener.onOkPressed(new CountTrial(user.getId(), location, date));
+                            }
+                        });
                     }}).create();
     }
 
