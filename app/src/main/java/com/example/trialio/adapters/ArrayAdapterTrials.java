@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         View view = convertView;
 
         if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.content_experiment, parent,false);
+            view = LayoutInflater.from(context).inflate(R.layout.content_trials, parent,false);
         }
 
         Trial trial = trialList.get(position);
@@ -46,12 +45,14 @@ public class ArrayAdapterTrials extends ArrayAdapter {
 
 
         // set the textviews
-        textID.setText(trial.getExperimenterID());
-        // TODO: ASK HOW TO GET TRIAL OWNER -JEFF
+        textID.setText("TEST ID");
         textOwner.setText("TEST OWNER");
-        textDate.setText(trial.getDate().toString());
-        // TODO: ASK HOW TO GET TRIAL RESULT -JEFF
+        textDate.setText("TEST DATE");
         textResult.setText("TEST RESULT");
+
+
+        // TODO: ASK HOW TO GET TRIAL OWNER -JEFF
+        // TODO: ASK HOW TO GET TRIAL RESULT -JEFF
 
         return view;
     }

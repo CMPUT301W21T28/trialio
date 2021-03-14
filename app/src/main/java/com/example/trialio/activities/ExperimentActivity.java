@@ -76,6 +76,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, TrialActivity.class);
+                intent.putExtra("Description",experiment.getSettings().getDescription());
+                intent.putExtra("Owner", experiment.getSettings().getOwner());
+                intent.putExtra("Type", experiment.getTrialManager().getType());
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("Trials", experimentManager.getExperimentList().getClass());
+                intent.putExtras(args);
                 startActivity(intent);
             }
         });
@@ -89,7 +97,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
      */
     public void setFields(){
         // get TextViews
-        TextView textDescription = findViewById(R.id.txtExperimentDescription);
+        TextView textDescription = findViewById(R.id.txtExperimentDesciption);
         TextView textType = findViewById(R.id.txtExperimentType);
         TextView textRegion = findViewById(R.id.txtExperimentRegion);
         TextView textOwner = findViewById(R.id.txtExperimentOwner);

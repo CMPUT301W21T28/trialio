@@ -68,7 +68,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtExperimentDescription"
+                android:id="@+id/txtExperimentDescriptionTrial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
@@ -76,7 +76,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/txtExperimentOwner"
+                android:id="@+id/txtExperimentOwnerTrial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -84,7 +84,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/txtExperimentType"
+                android:id="@+id/txtExperimentTypeTrial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Type: "

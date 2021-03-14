@@ -1,5 +1,8 @@
 package com.example.trialio.controllers;
 
+import android.widget.ArrayAdapter;
+
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 public class TrialManager implements Serializable {
     private String type;
     private ArrayList<Trial> trials;
+    private ArrayAdapter<Experiment> trialAdapter;
     private ArrayList<User> ignoredUsers;
     private int minNumOfTrials;
     private boolean isOpen;
@@ -65,5 +69,9 @@ public class TrialManager implements Serializable {
 
     public void setIsOpen(boolean open) {
         this.isOpen = open;
+    }
+
+    public void setAdapter(ArrayAdapter adapter) {
+        trialAdapter = adapter;
     }
 }
