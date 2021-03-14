@@ -1,26 +1,39 @@
 package com.example.trialio.models;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import com.example.trialio.activities.ExperimentActivity;
 
 import java.io.Serializable;
 
 public class Location implements LocationListener, Serializable {
+    private final Object ExperimentActivity;
     private double latitude;
     private double longitude;
-    protected boolean gpsOn,wifiOn;
+    protected boolean gpsOn, wifiOn;
     private LocationManager locationManager;
 
 
-    public Location() { }
+    public Location(Context context) {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ExperimentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 0, this);
+    }
 
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
 
 
     public double getLatitude() {
