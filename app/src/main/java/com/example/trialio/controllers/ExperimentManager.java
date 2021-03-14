@@ -29,11 +29,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ExperimentManager {
-    private final String TAG = "ExperimentManager";
+    private static final String TAG = "ExperimentManager";
+    private static final String COLLECTION_PATH = "experiments";
 
-    private static CollectionReference experimentsCollection = FirebaseFirestore.getInstance().collection("experiments");
+    private static final CollectionReference experimentsCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
 
+    // WANT TO DELETE THIS
     private ArrayList<Experiment> experimentList;
+
+    // WANT TO DELETE THIS
     private ArrayAdapter<Experiment> experimentAdapter;
 
     /**
@@ -269,11 +273,12 @@ public class ExperimentManager {
 
     /**
      * This finds the list of all experiments owned by a given user
+     * NOTICE: Temporarily private while we rewrite it.
      *
      * @param owner User for which to find all of their owned experiments
      * @return Returns the list of experiments owned by owner
      */
-    public ArrayList<Experiment> getOwnedExperiments(User owner) {
+    private ArrayList<Experiment> getOwnedExperiments(User owner) {
         // TODO: test
         ArrayList<Experiment> ownedExperiments = new ArrayList<Experiment>();
         for (Experiment experiment : experimentList) {
@@ -285,12 +290,13 @@ public class ExperimentManager {
     }
 
     /**
-     * This finds the list of experiments associated with a given keyword
+     * This finds the list of experiments associated with a given keyword.
+     * NOTICE: Temporarily private while we rewrite it.
      *
      * @param keyword String keyword to search for
      * @return Returns the list of experiments associated with keyword
      */
-    public ArrayList<Experiment> searchByKeyword(String keyword) {
+    private ArrayList<Experiment> searchByKeyword(String keyword) {
         // TODO: test
         ArrayList<Experiment> searchResults = new ArrayList<Experiment>();
         for (Experiment experiment : experimentList) {
