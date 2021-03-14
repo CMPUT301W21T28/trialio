@@ -1,13 +1,13 @@
 package com.example.trialio.controllers;
 
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Location;
@@ -20,9 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -301,19 +299,23 @@ public class ExperimentManager {
         if (ExperimentTypeUtility.isBinomial(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-
                 experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
             }
         } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
-            // TODO
+            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
+                Map location = (Map) trial.get("location");
+                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
+            }
         } else if (ExperimentTypeUtility.isNonNegative(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-
                 experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
             }
         } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
-            // TODO
+            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
+                Map location = (Map) trial.get("location");
+                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
+            }
         } else {
             assert (false);
         }

@@ -27,7 +27,6 @@ public class BinomialTrialFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_binomial_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        Switch s = view.findViewById(R.id.switchSuccessIndicator);
         return builder
                 .setView(view)
                 .setTitle("Add Binomial Trial:")
@@ -35,6 +34,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
+                        Switch s = view.findViewById(R.id.switchSuccessIndicator);
                         Location location = new Location();
                         Date date = new Date();
                         listener.onOkPressed(new BinomialTrial("experimenterID", location, date, s.isChecked()));
