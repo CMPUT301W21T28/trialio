@@ -81,6 +81,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         //});
 
 
+
+
         /**
          * function for navigation to question forum for the respective experiment
          */
@@ -88,7 +90,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         goToQuestionForum.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openQAF();
+                openQuestionForum();
             }
         });
 
@@ -96,8 +98,12 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
          * Function navigates to QuestionForum
          * Used for readability of code
          */
-        public void openQAF(){
-            Intent intent = new Intent(this, question_forum_activity.class);
+        public void openQuestionForum() {
+            Intent intent = new Intent(this, QuestionForumActivity.class);
+
+            Bundle bundle = getIntent().getExtras();
+            experiment = (Experiment) bundle.getSerializable("experiment");
+
             startActivity(intent);
         }
 
