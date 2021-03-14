@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.fragments.BinomialTrialFragment;
@@ -72,18 +74,31 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         });
 
         Button showTrials = (Button) findViewById(R.id.btnTrials);
+        //showTrials.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        Intent intent = new Intent(context, TrialActivity.class);
+        //        //intent.putExtra("Description",experiment.getSettings().getDescription());
+        //        //intent.putExtra("Owner", experiment.getSettings().getOwner());
+        //        //intent.putExtra("Type", experiment.getTrialManager().getType());
+        //        intent.putExtra("Experiment",experiment);
+        //
+        //        startActivity(intent);
+        //    }
+        //});
+
+        // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, TrialActivity.class);
-                intent.putExtra("Description",experiment.getSettings().getDescription());
-                intent.putExtra("Owner", experiment.getSettings().getOwner());
-                intent.putExtra("Type", experiment.getTrialManager().getType());
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
-                args.putSerializable("Trials", experimentManager.getExperimentList().getClass());
+                args.putSerializable("experiment_trial", experiment);
                 intent.putExtras(args);
+
+                // start an ExperimentActivity
                 startActivity(intent);
             }
         });
