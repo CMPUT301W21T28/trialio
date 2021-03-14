@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Fetch data for the list view
         UserManager userManager = new UserManager();
-        userManager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
+        userManager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
             @Override
-            public void onUserUpdate(User user) {
+            public void onUserFetch(User user) {
                 experimentList.clear();
                 experimentList.addAll(user.getSubscribedExperiments());
                 experimentAdapter.notifyDataSetChanged();
