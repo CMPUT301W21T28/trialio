@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
+import com.example.trialio.models.UserContactInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,10 +21,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users";
+    private static final String COLLECTION_PATH = "users test";
     private final CollectionReference userCollection;
 
     private static String fid;
@@ -72,6 +76,7 @@ public class UserManager {
 
     /**
      * Creates a UserManager
+     *
      * @param collection The collection in which to store User documents
      */
     public UserManager(String collection) {
@@ -92,8 +97,9 @@ public class UserManager {
     public User createNewUser(String id) {
         Log.d(TAG, String.format("Generating new User with id=%s.", id));
         User user = new User(id);
+        Map<String, Object> comp = compressUser(user);
         userCollection.document(id)
-                .set(user)
+                .set(comp)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -190,8 +196,9 @@ public class UserManager {
      */
     public void updateUser(User user) {
         String id = user.getId();
+        Map<String, Object> cu = compressUser(user);
         userCollection.document(id)
-                .set(user)
+                .set(cu)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -244,8 +251,8 @@ public class UserManager {
                 assert value != null;
                 User currentUser;
                 if (value.exists()) {
-                    Log.d(TAG, "Current User fetched from database: " + value.getData());
-                    currentUser = value.toObject(User.class);
+                    Log.d(TAG, "User fetched from database: " + value.getData());
+                    currentUser = extractUser(value);
                 } else {
                     currentUser = createNewUser(userId);
                 }
@@ -265,7 +272,10 @@ public class UserManager {
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                ArrayList<User> users = (ArrayList<User>) value.toObjects(User.class);
+                ArrayList<User> users = new ArrayList<>();
+                for (DocumentSnapshot doc : value.getDocuments()) {
+                    users.add(extractUser(doc));
+                }
                 listener.onAllUsersUpdate(users);
             }
         });
@@ -291,5 +301,62 @@ public class UserManager {
             }
         });
         return task;
+    }
+
+    /**
+     * Extracts a User from a Firestore document.
+     * @param document the user document to extract from
+     * @return the User
+     */
+    private User extractUser(DocumentSnapshot document) {
+        // https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
+        User user = new User();
+        Map<String, Object> data = document.getData();
+        assert data != null;
+
+        String id = document.getString("id");
+        String username = document.getString("username");
+        String email = document.getString("contactInfo.email");
+        String phone = document.getString("contactInfo.phone");
+//        ArrayList<String> subs = (ArrayList<String>) document.get("subs");
+
+        user.setId(id);
+        user.setUsername(username);
+        user.getContactInfo().setEmail(email);
+        user.getContactInfo().setPhone(phone);
+
+        // Broken
+        // callback is too slow
+        // need to abstract this to a SubscriptionManager or something
+//        ExperimentManager experimentManager = new ExperimentManager();
+//        for (String s : subs) {
+//            experimentManager.setOnExperimentFetchCallback(s, new ExperimentManager.OnExperimentFetchListener() {
+//                @Override
+//                public void onExperimentFetch(Experiment experiment) {
+//                    user.addSubscription(experiment);
+//                }
+//            });
+//        }
+
+        return user;
+    }
+
+    /**
+     * Compresses a User into a Map for storage in a Firestore document.
+     * @param user The User to be compressed
+     * @return A Map of fields to be stored
+     */
+    private Map<String, Object> compressUser(User user) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", user.getId());
+        userData.put("username", user.getUsername());
+        UserContactInfo info = user.getContactInfo();
+        userData.put("contactInfo", info);
+//        ArrayList<String> subs = new ArrayList<>();
+//        for (Experiment e : user.getSubscribedExperiments()) {
+//            subs.add(e.getExperimentID());
+//        }
+//        userData.put("subs", subs);
+        return userData;
     }
 }

@@ -14,7 +14,10 @@ public class User implements Serializable {
     private ArrayList<Experiment> subscribedExperiments;
     // private BarcodeManager barcodeManager;
 
-    User() {}
+    public User() {
+        this.contactInfo = new UserContactInfo();
+        this.subscribedExperiments = new ArrayList<>();
+    }
 
     /**
      * Creates a User object
@@ -22,7 +25,7 @@ public class User implements Serializable {
      */
     public User(String id) {
         this.id = id;
-        this.username = "default";
+        this.username = "new experimenter";
         this.contactInfo = new UserContactInfo();
         this.contactInfo.setEmail("JonDoe@email.com");
         this.contactInfo.setPhone("780-123-4567");
@@ -35,6 +38,14 @@ public class User implements Serializable {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Sets the if of the User
+     * @param id the id
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
