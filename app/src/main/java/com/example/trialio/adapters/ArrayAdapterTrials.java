@@ -45,6 +45,14 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         TextView textResult = view.findViewById(R.id.text_trial_result);
 
 
+        // set the textviews
+        textID.setText(trial.getExperimenterID());
+        // TODO: ASK HOW TO GET TRIAL OWNER -JEFF
+        textOwner.setText("TEST OWNER");
+        textDate.setText(trial.getDate().toString());
+        // TODO: ASK HOW TO GET TRIAL RESULT -JEFF
+        textResult.setText("TEST RESULT");
+
         return view;
     }
 }
