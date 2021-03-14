@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
-        <activity android:name=".activities.ViewUserActivity"/>
+        <activity android:name=".Trials"></activity>
+        <activity android:name=".activities.ViewUserActivity" />
         <activity
             android:name=".activities.ExperimentActivity"
-            android:parentActivityName="com.example.trialio.activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.trialio.activities.MainActivity" />
