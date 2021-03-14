@@ -52,9 +52,9 @@ public class ViewUserActivity extends AppCompatActivity {
         TextView UserEMail = findViewById(R.id.emailText);
 
         UserManager manager = new UserManager();
-        manager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
+        manager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
             @Override
-            public void onUserUpdate(User user) {
+            public void onUserFetch(User user) {
                 userName.setText(user.getUsername());
                 userPhone.setText(user.getContactInfo().getPhone());
                 UserEMail.setText(user.getContactInfo().getEmail());
