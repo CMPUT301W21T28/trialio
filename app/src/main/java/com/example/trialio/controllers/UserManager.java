@@ -38,14 +38,14 @@ public class UserManager {
      * This interface represents an action to be taken when a User document is updated
      * in the Firestore database.
      */
-    public interface OnUserUpdateListener {
+    public interface OnUserFetchListener {
 
         /**
          * This method will be called when the User document is updated in the database.
          *
          * @param user The user that has been updated in the database
          */
-        public void onUserUpdate(User user);
+        public void onUserFetch(User user);
 
     }
 
@@ -53,14 +53,14 @@ public class UserManager {
      * This interface represents an action to be taken when a User document is updated
      * in the Firestore database.
      */
-    public interface OnAllUsersUpdateListener {
+    public interface OnManyUsersFetchListener {
 
         /**
          * This method will be called when the User document is updated in the database.
          *
          * @param userList The user that has been updated in the database
          */
-        public void onAllUsersUpdate(ArrayList<User> userList);
+        public void onManyUsersFetch(ArrayList<User> userList);
 
     }
 
@@ -102,7 +102,40 @@ public class UserManager {
     }
 
     /**
-     * Sets a callback to fetch the current User
+     * Gets the current User through a callback.
+     *
+     * @param listener the callback to be called when the User is retrieved
+     */
+    public void getCurrentUser(OnUserFetchListener listener) {
+        if (fid == null) {
+            Task<String> userIdTask = getFID();
+            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                    // Once FID has been received, fetch from database with userId=FID
+                    String userId = task.getResult();
+                    // String userId = "3333"
+                    fid = userId;
+                    assert userId != null;
+                    setUserFetchListener(userId, listener);
+                }
+            });
+        } else {
+            setUserFetchListener(fid, listener);
+        }
+    }
+
+    /**
+     * Gets a User through a callback
+     * @param userId the id of the User to retrieve
+     * @param listener the callback to be called when the User is fetched
+     */
+    public void getUser(String userId, OnUserFetchListener listener) {
+        setUserFetchListener(userId, listener);
+    }
+
+    /**
+     * Sets a callback that will be called every time the current User is updated in the database.
      *
      * <pre>
      * UserManager manager = new UserManager();
@@ -116,7 +149,7 @@ public class UserManager {
      *
      * @param listener the listener to be called when the User document is fetched
      */
-    public void addCurrentUserUpdateListener(UserManager.OnUserUpdateListener listener) {
+    public void addCurrentUserUpdateListener(OnUserFetchListener listener) {
         if (fid == null) {
             Task<String> userIdTask = getFID();
             userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
@@ -151,7 +184,7 @@ public class UserManager {
      * @param userId   the id of the User to be fetched
      * @param listener the listener to be called when the User document is fetched
      */
-    public void addUserUpdateListener(String userId, UserManager.OnUserUpdateListener listener) {
+    public void addUserUpdateListener(String userId, OnUserFetchListener listener) {
         setListenerToUserId(userId, listener);
     }
 
@@ -170,7 +203,7 @@ public class UserManager {
      *
      * @param listener the listener to be called when the list of Users is fetched
      */
-    public void addAllUserUpdateListener(UserManager.OnAllUsersUpdateListener listener) {
+    public void addAllUserUpdateListener(UserManager.OnManyUsersFetchListener listener) {
         setListenerToCollection(listener);
     }
 
@@ -222,13 +255,40 @@ public class UserManager {
     }
 
     /**
+     * Sets a function to be called when a User is fetched.
+     *
+     * @param userId   the id of the User to fetch
+     * @param listener the callback with the function to call
+     */
+    private void setUserFetchListener(String userId, OnUserFetchListener listener) {
+        userCollection.document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if (doc.exists()) {
+                                User user = doc.toObject(User.class);
+                                listener.onUserFetch(user);
+                                Log.d(TAG, "User " + userId + " fetched successfully.");
+                            } else {
+                                Log.d(TAG, "No user found with id " + userId);
+                            }
+                        } else {
+                            Log.d(TAG, "User fetch failed with " + task.getException());
+                        }
+                    }
+                });
+    }
+
+    /**
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
      * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
      */
-    private void setListenerToUserId(String userId, UserManager.OnUserUpdateListener listener) {
+    private void setListenerToUserId(String userId, OnUserFetchListener listener) {
         Task<DocumentSnapshot> doc = userCollection.document(userId).get();
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -241,7 +301,7 @@ public class UserManager {
                 } else {
                     currentUser = createNewUser(userId);
                 }
-                listener.onUserUpdate(currentUser);
+                listener.onUserFetch(currentUser);
             }
         });
     }
@@ -253,12 +313,12 @@ public class UserManager {
      * @param listener the listener with the callback function to be called when the User
      *                 collection is updated
      */
-    private void setListenerToCollection(UserManager.OnAllUsersUpdateListener listener) {
+    private void setListenerToCollection(UserManager.OnManyUsersFetchListener listener) {
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 ArrayList<User> users = (ArrayList<User>) value.toObjects(User.class);
-                listener.onAllUsersUpdate(users);
+                listener.onManyUsersFetch(users);
             }
         });
     }

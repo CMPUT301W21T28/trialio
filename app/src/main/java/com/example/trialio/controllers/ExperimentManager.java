@@ -113,7 +113,7 @@ public class ExperimentManager {
      * @param experimentId the id of the experiment to fetch
      * @param listener     the function to be called when the experiment is fetched
      */
-    public void setOnExperimentFetchCallback(String experimentId, OnExperimentFetchListener listener) {
+    public void setOnExperimentFetchListener(String experimentId, OnExperimentFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
