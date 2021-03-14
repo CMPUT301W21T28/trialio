@@ -1,5 +1,10 @@
 package com.example.trialio;
 
+import com.example.trialio.models.Experiment;
+import com.example.trialio.models.ExperimentSettings;
+import com.example.trialio.models.User;
+import com.example.trialio.utils.ExperimentTypeUtility;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
