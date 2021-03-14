@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         experimentAdapter = new ArrayAdapterExperiment(this, experimentManager.getExperimentList());
 
         // Set up the adapter for the list and experiment manager
-        ListView experimentListView = findViewById(R.id.list_experiment);
+        ListView experimentListView = findViewById(R.id.list_trials);
         experimentListView.setAdapter(experimentAdapter);
         experimentManager.setAdapter(experimentAdapter);
 

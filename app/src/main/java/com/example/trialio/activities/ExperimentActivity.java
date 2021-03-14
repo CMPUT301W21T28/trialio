@@ -3,6 +3,8 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +71,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-        /**
-         * function for view trials
-         */
-        //Button showTrials = (Button) findViewById(R.id.btnTrials);
-        //showTrials.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        showTrials();
-        //    }
-        //});
+        Button showTrials = (Button) findViewById(R.id.btnTrials);
+        showTrials.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, TrialActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
     }
 
     /**
