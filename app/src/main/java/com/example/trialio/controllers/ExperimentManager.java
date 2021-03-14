@@ -32,13 +32,10 @@ public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
     private static final String COLLECTION_PATH = "experiments";
 
-    private static final CollectionReference experimentsCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
+    private final CollectionReference experimentsCollection;
 
     // WANT TO DELETE THIS
     private ArrayList<Experiment> experimentList;
-
-    // WANT TO DELETE THIS
-    private ArrayAdapter<Experiment> experimentAdapter;
 
     /**
      * This interface represents an action to be taken when an Experiment document is fetched from
@@ -71,66 +68,16 @@ public class ExperimentManager {
      * Constructor for ExperimentManager
      */
     public ExperimentManager() {
-        experimentList = new ArrayList<Experiment>();
-
-        // set up a listener which calls onEvent whenever the collection is updated
-        experimentsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                experimentList.clear();
-                for (DocumentSnapshot ds : value.getDocuments()) {
-                    // copy the entire experiment from firebase
-                    Experiment experiment = ds.toObject(Experiment.class);
-
-                    // clear the trials since they do not have subclass specific attributes
-                    experiment.getTrialManager().setTrials(new ArrayList<Trial>());
-
-                    Map data = ds.getData();
-                    Map tm = (Map) data.get("trialManager");
-
-                    // cast trials to the appropriate type and add them to the trial manager
-                    if (ExperimentTypeUtility.isBinomial(tm.get("type").toString())) {
-                        for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                            Map location = (Map) trial.get("location");
-
-                            experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
-                        }
-                    } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
-                        // TODO
-                    } else if (ExperimentTypeUtility.isNonNegative(tm.get("type").toString())) {
-                        for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                            Map location = (Map) trial.get("location");
-
-                            experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
-                        }
-                    } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
-                        // TODO
-                    } else {
-                        assert (false);
-                    }
-                    experimentList.add(experiment);
-                }
-                // if an adapter was set, tell it to update
-                if (experimentAdapter != null) {
-                    experimentAdapter.notifyDataSetChanged();
-                }
-                for (Experiment e : experimentList) {
-                    Log.d(TAG, "experiment in experimentList: " + e.toString());
-                }
-            }
-        });
+        experimentsCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
+        experimentList = new ArrayList<Experiment>(); // ONLY HERE TO AVOID BREAKING CODE
     }
 
     /**
-     * DO NOT USE THIS
-     * Use setOnExperimentListFetchListener and set the adapter manually instead.
-     * -------------------------------------------------------------------------
-     * This sets an adapter for the experiment manager
-     *
-     * @param adapter Candidate adapter to set
+     * Constructor for ExperimentManager
      */
-    public void setAdapter(ArrayAdapter adapter) {
-        experimentAdapter = adapter;
+    public ExperimentManager(String collectionPath) {
+        experimentsCollection = FirebaseFirestore.getInstance().collection(collectionPath);
+        experimentList = new ArrayList<Experiment>(); // ONLY HERE TO AVOID BREAKING CODE
     }
 
     /**
@@ -139,7 +86,7 @@ public class ExperimentManager {
      * @param experiment Candidate experiment to add to the database
      */
     public void publishExperiment(Experiment experiment) {
-        Log.d(TAG, "Adding experiment" + experiment.toString());
+        Log.d(TAG, "Adding experiment " + experiment.toString());
         String id = experiment.getExperimentID();
         experimentsCollection
                 .document(id)
@@ -167,7 +114,9 @@ public class ExperimentManager {
      * @param listener     the function to be called when the experiment is fetched
      */
     public void setOnExperimentFetchCallback(String experimentId, OnExperimentFetchListener listener) {
-        // https://firebase.google.com/docs/firestore/query-data/get-data
+        /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
+         */
         Log.d(TAG, "Fetching experiment " + experimentId);
         DocumentReference docRef = experimentsCollection.document(experimentId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -196,8 +145,10 @@ public class ExperimentManager {
      * @param listener the function to be called when the experiments are fetched
      */
     public void setOnAllExperimentsFetchCallback(OnManyExperimentsFetchListener listener) {
-        // https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
-        Log.d(TAG, "Fetching all experiment");
+        /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
+         */
+        Log.d(TAG, "Fetching all experiments from collection");
         experimentsCollection
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -236,13 +187,15 @@ public class ExperimentManager {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Data was edited!");
+                        String message = String.format("Experiment %s was edited successfully", experimentId);
+                        Log.d(TAG, message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data was not edited!" + e.toString());
+                        String message = String.format("Failed to edit experiment %s", experimentId);
+                        Log.d(TAG, message);
                     }
                 });
     }
@@ -253,20 +206,22 @@ public class ExperimentManager {
      * @param experimentId Experiment ID of the candidate experiment to delete
      */
     public void unpublishExperiment(String experimentId) {
-        Log.d(TAG, "Deleting " + experimentId);
+        Log.d(TAG, "Deleting experiment" + experimentId);
         experimentsCollection
                 .document(experimentId)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Data was deleted!");
+                        String message = String.format("Experiment %s was deleted successfully", experimentId);
+                        Log.d(TAG, message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Data was not deleted!" + e.toString());
+                        String message = String.format("Failed to delete experiment %s", experimentId);
+                        Log.d(TAG, message);
                     }
                 });
     }
@@ -322,8 +277,8 @@ public class ExperimentManager {
      *
      * @return Returns a string which is a new experiment ID
      */
-    public static String getNewExperimentID() {
-        return experimentsCollection.document().getId();
+    public String getNewExperimentID() {
+        return this.experimentsCollection.document().getId();
     }
 
     /**
@@ -364,5 +319,4 @@ public class ExperimentManager {
         }
         return experiment;
     }
-
 }

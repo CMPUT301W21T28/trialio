@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
+                experimentList.clear();
                 experimentList.addAll(experiments);
                 experimentAdapter.notifyDataSetChanged();
             }
