@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingTop="5dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp">
 
     <TextView
         android:id="@+id/text_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="0dp"
+        android:padding="3dp"
         android:text="Description"
         android:textSize="12sp"></TextView>
 
@@ -20,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
+        android:padding="3dp"
         android:text="Type"
         android:textSize="12sp"></TextView>
 
@@ -29,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
+        android:padding="3dp"
         android:text="Owner"
         android:textSize="12sp"></TextView>
 
@@ -38,9 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
+        android:padding="3dp"
         android:text="Status"
         android:textSize="12sp"></TextView>
-
 
 
 </LinearLayout>
