@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // TODO: swap this with an update listener
         // Fetch data for the list view
         experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override

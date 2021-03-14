@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.fragments.BinomialTrialFragment;
@@ -23,6 +22,7 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
+    private final String TAG = "ExperimentActivity";
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
@@ -76,18 +76,6 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         });
 
         Button showTrials = (Button) findViewById(R.id.btnTrials);
-        //showTrials.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        Intent intent = new Intent(context, TrialActivity.class);
-        //        //intent.putExtra("Description",experiment.getSettings().getDescription());
-        //        //intent.putExtra("Owner", experiment.getSettings().getOwner());
-        //        //intent.putExtra("Type", experiment.getTrialManager().getType());
-        //        intent.putExtra("Experiment",experiment);
-        //
-        //        startActivity(intent);
-        //    }
-        //});
 
         // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
@@ -104,9 +92,21 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
                 startActivity(intent);
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-
+        // TODO: swap this with an update listener
+        // when the experiment is updated, update our local experiment and reset all fields
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+            }
+        });
     }
 
     /**

@@ -12,16 +12,16 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
-import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
 public class TrialActivity extends AppCompatActivity {
-    private TrialManager trialManager;
     private ArrayAdapterTrials trialAdapter;
+    private ArrayList<Trial> trialList;
     private final Context context = this;
     private ExperimentManager experimentManager;
     private Experiment experiment;
@@ -36,17 +36,38 @@ public class TrialActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
 
-        //trialManager = new TrialManager();
-        trialManager = experiment.getTrialManager();
-        trialAdapter = new ArrayAdapterTrials(this, experiment.getTrialManager().getTrials());
+        trialList = experiment.getTrialManager().getTrials();
+        trialAdapter = new ArrayAdapterTrials(this, trialList);
 
+        experimentManager = new ExperimentManager();
 
         // Set up the adapter for the list and experiment manager
         ListView trialListView = findViewById(R.id.list_trials);
         trialListView.setAdapter(trialAdapter);
-        trialManager.setAdapter(trialAdapter);
 
+        setFields();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // TODO: swap this with an update listener
+        // when the experiment is updated, update our local experiment, reset all fields and clear/rebuild the trialList
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+
+                trialList.clear();
+                trialList.addAll(experiment.getTrialManager().getTrials());
+                trialAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void setFields() {
         TextView textDescription = findViewById(R.id.txtExperimentDescriptionTrial);
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
 
@@ -57,24 +78,3 @@ public class TrialActivity extends AppCompatActivity {
         textType.setText("Type: " + experiment.getTrialManager().getType());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
