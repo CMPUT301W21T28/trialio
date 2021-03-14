@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.fragments.BinomialTrialFragment;
+import com.example.trialio.fragments.CountTrialFragment;
+import com.example.trialio.fragments.MeasurementTrialFragment;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
 import com.example.trialio.R;
@@ -20,7 +22,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
-public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener {
+public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
@@ -56,17 +58,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
-                    //CountTrialFragment newTrial = new CountTrialFragment();
-                    //newTrial.show(getSupportFragmentManager(), "countTrial");
+                    CountTrialFragment newTrial = new CountTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "addCountTrial");
                 } else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
                 } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
-                    newTrial.show(getSupportFragmentManager(), "nonNegativeTrial");
+                    newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
                 } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
-                    //MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
-                    //newTrial.show(getSupportFragmentManager(), "MeasurementTrial");
+                    MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {
                     assert (false);
                 }

@@ -13,7 +13,7 @@ public class User implements Serializable {
     // private Collection<Experiment> subscribedExperiments;
     // private BarcodeManager barcodeManager;
 
-    User() {}
+    public User() {}
 
     /**
      * Creates a User object
