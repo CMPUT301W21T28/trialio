@@ -38,7 +38,7 @@ public class TrialActivity extends AppCompatActivity {
 
         //trialManager = new TrialManager();
         trialManager = experiment.getTrialManager();
-        trialAdapter = new ArrayAdapterTrials(this, trialManager.getTrials());
+        trialAdapter = new ArrayAdapterTrials(this, experiment.getTrialManager().getTrials());
 
 
         // Set up the adapter for the list and experiment manager
@@ -56,25 +56,6 @@ public class TrialActivity extends AppCompatActivity {
         TextView textType = findViewById(R.id.txtExperimentTypeTrial);
         textType.setText("Type: " + experiment.getTrialManager().getType());
     }
-    //@Override
-    //protected void onStart() {
-    //    super.onStart();
-    //
-    //    // Fetch data for the list view
-    //    experimentManager.setOnExperimentFetchCallback(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-    //        @Override
-    //        public void onExperimentFetch(Experiment experiment) {
-    //            this.experiment = experiment;
-    //        }
-    //
-    //        @Override
-    //        public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
-    //            experimentList.clear();
-    //            experimentList.addAll(experiments);
-    //            experimentAdapter.notifyDataSetChanged();
-    //        }
-    //    });
-    //}
 }
 
 
