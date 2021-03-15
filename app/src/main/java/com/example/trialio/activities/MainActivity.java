@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         experimentList = new ArrayList<>();
         experimentAdapter = new ArrayAdapterExperiment(this, experimentList);
 
+
         // Set up the adapter for the ListView
         ListView experimentListView = findViewById(R.id.list_experiment);
         experimentListView.setAdapter(experimentAdapter);
@@ -55,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         setExperimentListToAll();
+
     }
 
     /**

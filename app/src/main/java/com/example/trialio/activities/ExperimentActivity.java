@@ -3,7 +3,10 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,9 +22,11 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
+    private final String TAG = "ExperimentActivity";
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +75,38 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
             }
         });
 
-        /**
-         * function for view trials
-         */
-        //Button showTrials = (Button) findViewById(R.id.btnTrials);
-        //showTrials.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        showTrials();
-        //    }
-        //});
+        Button showTrials = (Button) findViewById(R.id.btnTrials);
+
+        // Called when the user clicks item in experiment list
+        showTrials.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, TrialActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_trial", experiment);
+                intent.putExtras(args);
+
+                // start an ExperimentActivity
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // TODO: swap this with an update listener
+        // when the experiment is updated, update our local experiment and reset all fields
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+            }
+        });
     }
 
     /**
@@ -87,7 +114,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
      */
     public void setFields(){
         // get TextViews
-        TextView textDescription = findViewById(R.id.txtExperimentDescription);
+        TextView textDescription = findViewById(R.id.txtExperimentDesciption);
         TextView textType = findViewById(R.id.txtExperimentType);
         TextView textRegion = findViewById(R.id.txtExperimentRegion);
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
