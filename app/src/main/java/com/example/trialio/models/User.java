@@ -14,10 +14,13 @@ public class User implements Serializable {
     private ArrayList<Experiment> subscribedExperiments;
     // private BarcodeManager barcodeManager;
 
+
     public User() {
         this.contactInfo = new UserContactInfo();
         this.subscribedExperiments = new ArrayList<>();
     }
+
+
 
     /**
      * Creates a User object

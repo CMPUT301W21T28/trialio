@@ -15,39 +15,42 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
-import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
 
-public class NonNegativeTrialFragment extends DialogFragment {
+public class MeasurementTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_non_negative_trial, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_measurement_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        Switch s = view.findViewById(R.id.switchSuccessIndicator);
         return builder
                 .setView(view)
-                .setTitle("Add Non-Negative Trial:")
+                .setTitle("Add Measurement Trial:")
                 .setNegativeButton("Cancel",null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
-                        int nonNegCount = Integer.parseInt(tv.getText().toString());
+                        TextView tv = view.findViewById(R.id.edit_measurement);
+                        Double measurement = Double.parseDouble(tv.getText().toString());
+
                         Location location = new Location();
                         Date date = new Date();
+                        String unit = "UNIT";  // TODO: change this
 
                         UserManager userManager = new UserManager();
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
+                                listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
                             }
                         });
                     }}).create();
