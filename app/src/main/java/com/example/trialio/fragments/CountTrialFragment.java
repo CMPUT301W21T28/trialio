@@ -37,7 +37,7 @@ public class CountTrialFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        Location location = new Location();
+                        Location location = new Location(getContext(), getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();

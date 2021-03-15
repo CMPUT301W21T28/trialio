@@ -40,7 +40,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
-                        Location location = new Location();
+                        Location location = new Location(getContext(), getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();

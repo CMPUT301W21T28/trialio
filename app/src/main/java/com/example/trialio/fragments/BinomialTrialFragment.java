@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.ExperimentActivity;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
@@ -38,7 +39,7 @@ public class BinomialTrialFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int i) {
                         Switch s = view.findViewById(R.id.switchSuccessIndicator);
                         boolean isSuccess = s.isChecked();
-                        Location location = new Location();
+                        Location location = new Location(getContext(), getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();
