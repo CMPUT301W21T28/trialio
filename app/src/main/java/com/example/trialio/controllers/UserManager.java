@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users test";
+    private static final String COLLECTION_PATH = "users";
     private final CollectionReference userCollection;
 
     private static String fid;
@@ -368,8 +368,8 @@ public class UserManager {
      * @param document the user document to extract from
      * @return the User
      */
+    @SuppressWarnings("unchecked")
     private User extractUser(DocumentSnapshot document) {
-        // https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
         User user = new User();
         Map<String, Object> data = document.getData();
         assert data != null;
@@ -378,25 +378,17 @@ public class UserManager {
         String username = document.getString("username");
         String email = document.getString("contactInfo.email");
         String phone = document.getString("contactInfo.phone");
-//        ArrayList<String> subs = (ArrayList<String>) document.get("subs");
+        /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
+         * 2018-05-08, CC BY-SA 4.0, https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
+         */
+        ArrayList<String> subs = (ArrayList<String>) document.get("subs");
+        /* End of cited code */
 
         user.setId(id);
         user.setUsername(username);
         user.getContactInfo().setEmail(email);
         user.getContactInfo().setPhone(phone);
-
-        // Broken
-        // callback is too slow
-        // need to abstract this to a SubscriptionManager or something
-//        ExperimentManager experimentManager = new ExperimentManager();
-//        for (String s : subs) {
-//            experimentManager.setOnExperimentFetchCallback(s, new ExperimentManager.OnExperimentFetchListener() {
-//                @Override
-//                public void onExperimentFetch(Experiment experiment) {
-//                    user.addSubscription(experiment);
-//                }
-//            });
-//        }
+        user.setSubscribedExperiments(subs);
 
         return user;
     }
@@ -412,11 +404,7 @@ public class UserManager {
         userData.put("username", user.getUsername());
         UserContactInfo info = user.getContactInfo();
         userData.put("contactInfo", info);
-//        ArrayList<String> subs = new ArrayList<>();
-//        for (Experiment e : user.getSubscribedExperiments()) {
-//            subs.add(e.getExperimentID());
-//        }
-//        userData.put("subs", subs);
+        userData.put("subscribedExperimentIds", user.getSubscribedExperiments());
         return userData;
     }
 }
