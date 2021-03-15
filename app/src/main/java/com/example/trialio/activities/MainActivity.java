@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
         userManager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                experimentList.clear();
-                experimentList.addAll(user.getSubscribedExperiments());
-                experimentAdapter.notifyDataSetChanged();
+//                experimentList.clear();
+//                experimentList.addAll(user.getSubscribedExperiments());
+//                experimentAdapter.notifyDataSetChanged();
             }
         });
     }

@@ -11,32 +11,43 @@ public class User implements Serializable {
     private String id;
     private String username;
     private UserContactInfo contactInfo;
-    private ArrayList<Experiment> subscribedExperiments;
+    private ArrayList<String> subscribedExperimentIds;
     // private BarcodeManager barcodeManager;
 
 
     public User() {
+        this.username = "experimenter#0001";
         this.contactInfo = new UserContactInfo();
-        this.subscribedExperiments = new ArrayList<>();
+        this.subscribedExperimentIds = new ArrayList<>();
     }
-
-
 
     /**
      * Creates a User object
+     *
      * @param id A unique id to identify the user
      */
     public User(String id) {
         this.id = id;
-        this.username = "new experimenter";
+        this.username = "experimenter#0001";
         this.contactInfo = new UserContactInfo();
-        this.contactInfo.setEmail("JonDoe@email.com");
-        this.contactInfo.setPhone("780-123-4567");
-        this.subscribedExperiments = new ArrayList<Experiment>();
+        this.subscribedExperimentIds = new ArrayList<>();
+    }
+
+    /**
+     * Creates a User object
+     *
+     * @param id A unique id to identify the user
+     */
+    public User(String id, String username) {
+        this.id = id;
+        this.username = username;
+        this.contactInfo = new UserContactInfo();
+        this.subscribedExperimentIds = new ArrayList<>();
     }
 
     /**
      * Gets the id of the User
+     *
      * @return the id
      */
     public String getId() {
@@ -45,6 +56,7 @@ public class User implements Serializable {
 
     /**
      * Sets the if of the User
+     *
      * @param id the id
      */
     public void setId(String id) {
@@ -53,6 +65,7 @@ public class User implements Serializable {
 
     /**
      * Gets the username of the user
+     *
      * @return the username
      */
     public String getUsername() {
@@ -61,6 +74,7 @@ public class User implements Serializable {
 
     /**
      * Sets the username of the user
+     *
      * @param username the username to be set
      */
     public void setUsername(String username) {
@@ -69,6 +83,7 @@ public class User implements Serializable {
 
     /**
      * Gets the contact information for the user
+     *
      * @return the user contact information
      */
     public UserContactInfo getContactInfo() {
@@ -76,42 +91,48 @@ public class User implements Serializable {
     }
 
     /**
-     * Gets the users subscribed experiments
+     * Gets the ids of the users subscribed experiments
+     *
      * @return the collection of subscribed experiments
      */
-    public ArrayList<Experiment> getSubscribedExperiments() {
-        return subscribedExperiments;
+    public ArrayList<String> getSubscribedExperiments() {
+        return this.subscribedExperimentIds;
     }
 
     /**
      * Sets the users subscribed experiments
-     * @param subscribedExperiments the list of subscribed Experiments
+     *
+     * @param subscribedExperiments the list Experiment ids for set as the subscriptions
      */
-    public void setSubscribedExperiments(ArrayList<Experiment> subscribedExperiments) {
-        this.subscribedExperiments = subscribedExperiments;
+    public void setSubscribedExperiments(ArrayList<String> subscribedExperiments) {
+        this.subscribedExperimentIds = subscribedExperiments;
     }
 
     /**
      * Adds an experiment the the users subscriptions if that experiment is not already subscribed.
      * If the user is already subscribed to the experiment, the subscription list is unchanged.
+     *
      * @param experiment the experiment to be subscribed
      */
     public void addSubscription(Experiment experiment) {
-        if (!this.subscribedExperiments.contains(experiment)) {
-            this.subscribedExperiments.add(experiment);
+        String id = experiment.getExperimentID();
+        if (!this.subscribedExperimentIds.contains(id)) {
+            this.subscribedExperimentIds.add(id);
         }
     }
 
     /**
      * Remove an experiment from the users subscriptions
+     *
      * @param experiment the experiment to delete from subscriptions
      * @throws IllegalArgumentException User is not subscribed to experiment
      */
     public void removeSubscription(Experiment experiment) {
-        if (this.subscribedExperiments.contains(experiment)) {
-            this.subscribedExperiments.remove(experiment);
+        String id = experiment.getExperimentID();
+        if (this.subscribedExperimentIds.contains(id)) {
+            this.subscribedExperimentIds.remove(id);
         } else {
-            throw new IllegalArgumentException("User not subscribed to experiment");
+            throw new IllegalArgumentException("User not subscribed to given experiment");
         }
     }
 }
