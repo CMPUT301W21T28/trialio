@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterExperiment;
+import com.example.trialio.adapters.QuestionArrayAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForum;
 import com.example.trialio.models.Experiment;
@@ -24,28 +26,29 @@ public class QuestionForumActivity extends AppCompatActivity {
     private final Context context = this;
 
     private QuestionForum questionForumManager;
-    private ArrayList<Question> experimentList;
-    private QuestionArrayAdapter experimentAdapter;
+    private ArrayList<Question> questionList;
+    private QuestionArrayAdapter questionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.question_forum_activity);
 
         // Initialize attributes for the activity
-        experimentManager = new ExperimentManager();
-        experimentList = new ArrayList<>();
-        experimentAdapter = new ArrayAdapterExperiment(this, experimentList);
+        questionForumManager = new QuestionForum();
+        questionList = new ArrayList<>();  // TODO: make me a colleciton if we opt to make the questionForum its own seperate sub collection
+        questionAdapter = new QuestionArrayAdapter(this, questionList);
 
         // Set up the adapter for the ListView
-        ListView experimentListView = findViewById(R.id.list_experiment);
-        experimentListView.setAdapter(experimentAdapter);
+        ListView questionsListView = findViewById(R.id.questionForumListView);
+        questionsListView.setAdapter(questionAdapter);
 
         // Set up onClick listeners
         setUpOnClickListeners();
 
     }
 
+    // TODO: How can I make this work for the question forum -> use setOna
     @Override
     protected void onStart() {
         super.onStart();
@@ -66,15 +69,16 @@ public class QuestionForumActivity extends AppCompatActivity {
      */
     private void setUpOnClickListeners() {
         // Called when the user clicks item in experiment list
-        ListView experimentListView = findViewById(R.id.list_experiment);
-        experimentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView questionForumListView = findViewById(R.id.questionForumListView);
+        questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(context, ExperimentActivity.class);
+                Intent intent = new Intent(context, QuestionForumActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
-                args.putSerializable("experiment", experimentList.get(i));
+                // TODO: how to pass in an argument for a question ???
+                // args.putSerializable("experiment", experimentList.get(i));
                 intent.putExtras(args);
 
                 // start an ExperimentActivity
@@ -82,15 +86,14 @@ public class QuestionForumActivity extends AppCompatActivity {
             }
         });
 
-        // Called when the user taps the profile icon on the top right of main activity
-        ImageButton editProfile = (ImageButton) findViewById(R.id.editUserBtn);
-        editProfile.setOnClickListener(new View.OnClickListener() {
+        // TODO: finish fragment
+        Button newQuestion = (Button) findViewById(R.id.newQuestion);
+        newQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ViewUserActivity.class);
-                startActivity(intent);
+            public void onClick(View v) {
+
             }
         });
+
     }
-}
 }
