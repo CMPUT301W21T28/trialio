@@ -5,15 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.trialio.adapters.ArrayAdapterExperiment;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ExperimentManager experimentManager;
     private ArrayList<Experiment> experimentList;
     private ArrayAdapterExperiment experimentAdapter;
+
+    private UserManager userManager = new UserManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +56,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: swap this with an update listener
-        // Fetch data for the list view
-        experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
-            @Override
-            public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
-                experimentList.clear();
-                experimentList.addAll(experiments);
-                experimentAdapter.notifyDataSetChanged();
-            }
-        });
+
+        setExperimentListToAll();
+
     }
 
     /**
@@ -90,6 +89,69 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(context, ViewUserActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        // Called when the All button is clicked
+        Button allToggleButton = (Button) findViewById(R.id.btnAll);
+        allToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "All was clicked");
+                setExperimentListToAll();
+            }
+        });
+
+        // Called when the Owned button is clicked
+        Button ownedToggleButton = (Button) findViewById(R.id.btnOwned);
+        ownedToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Owned was clicked");
+                setExperimentListToOwned();
+            }
+        });
+
+
+        // Called when the Subs button is clicked
+        Button subsToggleButton = (Button) findViewById(R.id.btnSubs);
+        subsToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Subs was clicked");
+
+                setExperimentListToSubs();
+            }
+        });
+
+    }
+
+    private void setExperimentListToAll() {
+        // Fetch data for the list view
+        experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+            @Override
+            public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
+                experimentList.clear();
+                experimentList.addAll(experiments);
+                experimentAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setExperimentListToOwned() {
+    }
+
+    private void setExperimentListToSubs() {
+        Log.d(TAG, "Subs was clicked");
+
+        // Fetch data for the list view
+        UserManager userManager = new UserManager();
+        userManager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                experimentList.clear();
+                experimentList.addAll(user.getSubscribedExperiments());
+                experimentAdapter.notifyDataSetChanged();
             }
         });
     }
