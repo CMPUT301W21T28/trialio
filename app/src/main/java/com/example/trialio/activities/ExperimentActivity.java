@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,11 +22,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
+
+        context = this;
 
         experimentManager = new ExperimentManager();
 
@@ -84,30 +88,26 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
 
         /**
-         * function for navigation to question forum for the respective experiment
+         * Function for navigation to question forum for the respective experiment
+         * Passes
          */
         Button goToQuestionForum = (Button) findViewById(R.id.btnQA);
         goToQuestionForum.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openQuestionForum();
+                Intent intentQuestionActivity = new Intent(context, QuestionForumActivity.class);
+
+                // Intent intentQuestionForum = new Intent(context, QuestionForumActivity.class);
+
+                Bundle bundleQuestion = new Bundle();
+                bundleQuestion.putSerializable("experiment", experiment);
+
+                intentQuestionActivity.putExtras(bundleQuestion);
+                // intentQuestionForum.putExtras(bundleQuestion);  *** How can I get info to BOTH QuestionForum and QuestionForumActivity --> DO you even need to do this ??
+
+                startActivity(intentQuestionActivity);
             }
         });
-
-        /**
-         * Function navigates to QuestionForum
-         * Used for readability of code
-         */
-        public void openQuestionForum() {
-            Intent intent = new Intent(this, QuestionForumActivity.class);
-
-            Bundle bundle = getIntent().getExtras();
-            experiment = (Experiment) bundle.getSerializable("experiment");
-
-            startActivity(intent);
-        }
-
-
 
     }
 
