@@ -66,7 +66,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 region.setDescription(editRegion.getText().toString());
 
                 // prepare owner
-                User owner = new User("Ryan");
+                User owner = new User();
 
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
