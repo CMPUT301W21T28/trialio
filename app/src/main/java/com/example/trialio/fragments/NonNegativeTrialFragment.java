@@ -47,7 +47,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
+                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount, String.valueOf(nonNegCount)));
                             }
                         });
                     }}).create();

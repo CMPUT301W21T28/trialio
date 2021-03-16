@@ -45,7 +45,7 @@ public class BinomialTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new BinomialTrial(user.getId(), location, date, isSuccess));
+                                listener.onOkPressed(new BinomialTrial(user.getId(), location, date, String.valueOf(isSuccess)));
                             }
                         });
                     }}).create();

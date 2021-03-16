@@ -50,7 +50,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
+                                listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit, String.valueOf(measurement)));
                             }
                         });
                     }}).create();

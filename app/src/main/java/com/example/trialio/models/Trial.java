@@ -11,10 +11,11 @@ public class Trial implements Serializable {
 
     public Trial() { }
 
-    public Trial(String experimenterID, Location location, Date date) {
+    public Trial(String experimenterID, Location location, Date date, String data) {
         this.experimenterID = experimenterID;
         this.location = location;
         this.date = date;
+        this.data = data;
     }
 
     public void setData(String data){

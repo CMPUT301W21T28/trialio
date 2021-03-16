@@ -47,7 +47,7 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         textID.setText("ID");
         textOwner.setText(trial.getExperimenterID());
         textDate.setText(trial.getDate().toString());
-        textResult.setText("TEST RESULT");
+        textResult.setText(trial.getData());
 
         return view;
     }

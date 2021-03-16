@@ -10,8 +10,8 @@ public class MeasurementTrial extends Trial implements Serializable {
     private Double measurement;
     private String unit;
 
-    public MeasurementTrial(String experimenterID, Location location, Date date, Double measurement, String unit) {
-        super(experimenterID, location, date);
+    public MeasurementTrial(String experimenterID, Location location, Date date, Double measurement, String unit, String data) {
+        super(experimenterID, location, date, data);
         this.measurement = measurement;
         this.unit = unit;
     }

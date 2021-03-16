@@ -6,8 +6,8 @@ import java.util.Date;
 public class CountTrial extends Trial implements Serializable {
     private int count;
 
-    public CountTrial(String experimenterID, Location location, Date date) {
-        super(experimenterID, location, date);
+    public CountTrial(String experimenterID, Location location, Date date, String data) {
+        super(experimenterID, location, date, data);
         this.count = 1;
     }
 
