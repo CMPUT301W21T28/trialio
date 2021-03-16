@@ -40,6 +40,7 @@ public class BinomialTrialFragment extends DialogFragment {
                         Switch s = view.findViewById(R.id.switchSuccessIndicator);
                         boolean isSuccess = s.isChecked();
                         Location location = new Location();
+                        location.findCurrentLocation(getContext(), getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();
