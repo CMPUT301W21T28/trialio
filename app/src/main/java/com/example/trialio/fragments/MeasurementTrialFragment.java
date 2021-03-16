@@ -42,7 +42,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                         TextView tv = view.findViewById(R.id.edit_measurement);
                         Double measurement = Double.parseDouble(tv.getText().toString());
 
-                        Location location = new Location(getContext(), getActivity());
+                        Location location = new Location();
                         Date date = new Date();
                         String unit = "UNIT";  // TODO: change this
 

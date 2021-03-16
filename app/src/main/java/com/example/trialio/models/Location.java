@@ -13,26 +13,32 @@ import androidx.core.app.ActivityCompat;
 
 import java.io.Serializable;
 
-public class Location implements LocationListener, Serializable {
+public class Location implements Serializable{
     private double latitude;
     private double longitude;
+    private Context context;
+    private Object parentActivity;
     protected boolean gpsOn, wifiOn;
     private LocationManager locationManager;
 
 
-    public Location(Context context, Object parentActivity) {
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
-        }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 0, this);
-        latitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
-        longitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
+    public Location() {
+        //getLocation();
     }
 
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public void getLocation () {
+        //locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        //if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        //    ActivityCompat.requestPermissions((Activity) parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
+        //}
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 0, this);
+        //latitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
+        //longitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
     }
 
 
@@ -52,22 +58,7 @@ public class Location implements LocationListener, Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
-    @Override
-    public void onLocationChanged(@NonNull android.location.Location location) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
-    }
-
+    
     //    public ArrayList<double> getCoord() { }
 
 }
