@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
@@ -25,6 +26,8 @@ public class Location implements LocationListener, Serializable {
             ActivityCompat.requestPermissions((Activity) parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 99);
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 0, this);
+        latitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude();
+        longitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude();
     }
 
     public Location(double latitude, double longitude) {
