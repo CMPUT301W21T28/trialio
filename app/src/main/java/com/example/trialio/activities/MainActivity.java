@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ExperimentManager experimentManager;
     private ArrayList<Experiment> experimentList;
     private ArrayAdapterExperiment experimentAdapter;
-
-    private UserManager userManager = new UserManager();
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
         experimentManager = new ExperimentManager();
         experimentList = new ArrayList<>();
         experimentAdapter = new ArrayAdapterExperiment(this, experimentList);
+        UserManager userManager = new UserManager();
+        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                currentUser = user;
+            }
+        });
 
 
         // Set up the adapter for the ListView
@@ -119,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Subs was clicked");
-
                 setExperimentListToSubs();
             }
         });
@@ -139,28 +144,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setExperimentListToOwned() {
+        // Fetch data for the list view
+        if (currentUser != null) {
+            experimentManager.getOwnedExperiments(currentUser, new ExperimentManager.OnManyExperimentsFetchListener() {
+                @Override
+                public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
+                    experimentList.clear();
+                    experimentList.addAll(experiments);
+                    experimentAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
     }
 
     private void setExperimentListToSubs() {
-        Log.d(TAG, "Subs was clicked");
-
         // Fetch data for the list view
-        UserManager userManager = new UserManager();
-        userManager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                ArrayList<String> expIds = user.getSubscribedExperiments();
-                experimentList.clear();
-                for (String id : expIds) {
-                    experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
-                        @Override
-                        public void onExperimentFetch(Experiment experiment) {
-                            experimentList.add(experiment);
-                            experimentAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
+        if (currentUser != null) {
+            ArrayList<String> expIds = currentUser.getSubscribedExperiments();
+            experimentList.clear();
+            for (String id : expIds) {
+                experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
+                    @Override
+                    public void onExperimentFetch(Experiment experiment) {
+                        experimentList.add(experiment);
+                        experimentAdapter.notifyDataSetChanged();
+                    }
+                });
             }
-        });
+
+        }
     }
 }

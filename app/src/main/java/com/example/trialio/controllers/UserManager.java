@@ -282,8 +282,9 @@ public class UserManager {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
+                            assert doc != null;
                             if (doc.exists()) {
-                                User user = doc.toObject(User.class);
+                                User user = extractUser(doc);
                                 listener.onUserFetch(user);
                                 Log.d(TAG, "User " + userId + " fetched successfully.");
                             } else {
