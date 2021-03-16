@@ -16,16 +16,20 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
 import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Region;
+import com.example.trialio.models.User;
 
 public class ExperimentCreateActivity extends AppCompatActivity {
     private final String TAG = "ExperimentCreateActivity";
     private Experiment experiment;
+    private ExperimentManager experimentManager;
     private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_experiment);
+
+        experimentManager = new ExperimentManager();
 
         // Took ActionBar code.
         // DATE:	2020-12-14
@@ -62,7 +66,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 region.setDescription(editRegion.getText().toString());
 
                 // prepare owner
-                // left null for now
+                User owner = new User("Ryan");
 
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
@@ -71,12 +75,11 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 // prepare Experiment object
                 //--------------------------
 
-                // generate ID TODO: why won't this work???
-                // String newID = ExperimentManager.getNewExperimentID();
-                String newID = "tempID";
+                // generate ID
+                String newID = experimentManager.getNewExperimentID();
 
                 // prepare experiment settings
-                ExperimentSettings settings = new ExperimentSettings(description, region, null, geo);
+                ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
                 String type = editType.getText().toString(); // TODO: implement dropdown menu?
@@ -89,6 +92,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 // create Experiment object
                 experiment = new Experiment(newID, settings, type, open, numTrials);
+                experimentManager.publishExperiment(experiment);
 
                 Bundle args = new Bundle();
                 args.putSerializable("experiment", experiment);
