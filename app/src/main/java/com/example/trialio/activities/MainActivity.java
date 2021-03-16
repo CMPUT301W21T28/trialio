@@ -1,9 +1,14 @@
 package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.CompoundButtonCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     private final Context context = this;
+    private Button activeListButton;
 
     private ExperimentManager experimentManager;
     private ArrayList<Experiment> experimentList;
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activeListButton = findViewById(R.id.btnAll);
 
         // Initialize attributes for the activity
         experimentManager = new ExperimentManager();
@@ -104,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "All was clicked");
+                toggleListButton(R.id.btnAll);
                 setExperimentListToAll();
             }
         });
@@ -114,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Owned was clicked");
+                toggleListButton(R.id.btnOwned);
                 setExperimentListToOwned();
             }
         });
@@ -125,9 +134,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Subs was clicked");
+                toggleListButton(R.id.btnSubs);
                 setExperimentListToSubs();
             }
         });
+
+    }
+
+    private void toggleListButton(int btn) {
+        /* Shayne3000, https://stackoverflow.com/users/8801181/shayne3000,
+         * "How to add button tint programmatically", 2018-02-13, CC BY-SA 3.0
+         * https://stackoverflow.com/questions/29801031/how-to-add-button-tint-programmatically/49259711#49259711
+         */
+
+        // Set old button to grey
+        Drawable buttonDrawable = activeListButton.getBackground();
+        buttonDrawable = DrawableCompat.wrap(buttonDrawable);
+        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.button_dark_grey));
+        activeListButton.setBackground(buttonDrawable);
+
+        // Set new button to special yellow
+        Button selectedBtn = (Button) findViewById(btn);
+        buttonDrawable = selectedBtn.getBackground();
+        buttonDrawable = DrawableCompat.wrap(buttonDrawable);
+        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.special_yellow));
+        selectedBtn.setBackground(buttonDrawable);
+
+        activeListButton = selectedBtn;
 
     }
 
