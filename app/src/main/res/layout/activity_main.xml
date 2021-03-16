@@ -77,6 +77,15 @@
             android:backgroundTint="#606060"
             android:text="Subs"></Button>
 
+        <Button
+            android:id="@+id/btnNewExperiment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="#606060"
+            android:text="+"></Button>
+
     </LinearLayout>
 
     <LinearLayout

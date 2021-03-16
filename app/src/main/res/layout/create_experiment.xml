@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,10 +54,11 @@
         android:layout_margin="5dp">
 
         <EditText
+            android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Search"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:text="Description" />
 
     </LinearLayout>
 
@@ -74,10 +76,11 @@
             android:layout_weight="1">
 
             <EditText
+                android:id="@+id/typeEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Region:" />
+                android:text="Type:" />
 
         </LinearLayout>
 
@@ -89,6 +92,7 @@
             android:layout_margin="5dp"            >
 
             <EditText
+                android:id="@+id/regionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -134,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Geo-Location" />
+                android:text="Open" />
 
         </LinearLayout>
 
@@ -151,6 +155,7 @@
         android:layout_margin="5dp">
 
         <EditText
+            android:id="@+id/numTrialsEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Minimum # of trials: "
@@ -165,6 +170,31 @@
         android:layout_weight="9" >
 
 
+        <Button
+            android:id="@+id/btnCancelNewExperiment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            app:backgroundTint="#EEC021"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
+
+        <Button
+            android:id="@+id/btnAddNewExperiment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="Create"
+            app:backgroundTint="#EEC021"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
     </LinearLayout>
 
 

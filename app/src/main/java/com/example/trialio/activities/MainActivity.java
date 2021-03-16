@@ -124,6 +124,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
+        // Called when the Add button is clicked
+        Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
+        addExperiment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Log.d(TAG, "Add was clicked");
+
+                //Intent intent = new Intent(context, ExperimentCreateActivity.class);
+                //startActivity(intent);
+            }
+        });
+
+         */
+
+        Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
+        addExperiment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Add was clicked");
+
+                Intent intent = new Intent(context, ExperimentCreateActivity.class);
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void setExperimentListToAll() {
