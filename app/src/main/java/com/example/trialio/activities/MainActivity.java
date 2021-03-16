@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Subs was clicked");
-                toggleListButton(R.id.btnSubs);
+                toggleListButton(R.id.btnSubs );
                 setExperimentListToSubs();
             }
         });
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+            experimentAdapter.notifyDataSetChanged();
 
         }
     }

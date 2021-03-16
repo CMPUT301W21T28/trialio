@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.models.UserContactInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -174,11 +173,11 @@ public class UserManager {
                     // String userId = "3333"
                     fid = userId;
                     assert userId != null;
-                    setListenerToUserId(userId, listener);
+                    setOnUpdateFetchListener(userId, listener);
                 }
             });
         } else {
-            setListenerToUserId(fid, listener);
+            setOnUpdateFetchListener(fid, listener);
         }
     }
 
@@ -199,7 +198,7 @@ public class UserManager {
      * @param listener the listener to be called when the User document is fetched
      */
     public void addUserUpdateListener(String userId, OnUserFetchListener listener) {
-        setListenerToUserId(userId, listener);
+        setOnUpdateFetchListener(userId, listener);
     }
 
     /**
@@ -289,6 +288,8 @@ public class UserManager {
                                 Log.d(TAG, "User " + userId + " fetched successfully.");
                             } else {
                                 Log.d(TAG, "No user found with id " + userId);
+                                User user = createNewUser(userId);
+                                listener.onUserFetch(user);
                             }
                         } else {
                             Log.d(TAG, "User fetch failed with " + task.getException());
@@ -304,8 +305,7 @@ public class UserManager {
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
      */
-    private void setListenerToUserId(String userId, OnUserFetchListener listener) {
-        Task<DocumentSnapshot> doc = userCollection.document(userId).get();
+    private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -382,7 +382,7 @@ public class UserManager {
         /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
          * 2018-05-08, CC BY-SA 4.0, https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
          */
-        ArrayList<String> subs = (ArrayList<String>) document.get("subs");
+        ArrayList<String> subs = (ArrayList<String>) document.get("subscribedExperimentIds");
         /* End of cited code */
 
         user.setId(id);
