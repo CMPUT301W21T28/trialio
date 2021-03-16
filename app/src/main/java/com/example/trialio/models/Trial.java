@@ -7,6 +7,7 @@ public class Trial implements Serializable {
     protected String experimenterID;
     protected Location location;
     protected Date date;
+    protected String data;
 
     public Trial() { }
 
@@ -14,6 +15,14 @@ public class Trial implements Serializable {
         this.experimenterID = experimenterID;
         this.location = location;
         this.date = date;
+    }
+
+    public void setData(String data){
+        this.data = data;
+    }
+
+    public String getData(){
+        return data;
     }
 
     public String getExperimenterID() {

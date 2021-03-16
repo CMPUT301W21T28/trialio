@@ -75,9 +75,11 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
             }
         });
 
-        Button showTrials = (Button) findViewById(R.id.btnTrials);
 
-        // Called when the user clicks item in experiment list
+        /**
+         * Sent the current experiment into TrialActivity if user presses the Trials button
+         */
+        Button showTrials = (Button) findViewById(R.id.btnTrials);
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
