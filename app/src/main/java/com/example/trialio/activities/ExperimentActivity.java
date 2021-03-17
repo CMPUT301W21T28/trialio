@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
@@ -104,15 +105,15 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         navToQuestionForum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, QuestionForumActivity.class);
+                Intent intentToActivity = new Intent(context, QuestionForumActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 args.putSerializable("experiment_info_qa", experiment);
-                intent.putExtras(args);
+                intentToActivity.putExtras(args);
 
                 // start an ExperimentActivity
-                startActivity(intent);
+                startActivity(intentToActivity);
             }
         });
 

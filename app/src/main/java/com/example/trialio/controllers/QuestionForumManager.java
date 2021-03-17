@@ -184,7 +184,7 @@ public class QuestionForumManager implements Serializable {
         /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
          */
-        Log.d(TAG, "Fetching all experiments from collection");
+        Log.d(TAG, "Fetching all questions from collection");
         questionForumCollection
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -210,13 +210,12 @@ public class QuestionForumManager implements Serializable {
                 });
     }
 
-
     /**
      * Extracts a Question object from a Firestore sub-collection (questionForum). This method assumes the document
      * hold a valid question.
      *
      * @param document the document to be extracted
-     * @return the extracted experiment
+     * @return the extracted question
      */
 
     // TODO: this seems to good to be true -> test the limitations of this function heavily
