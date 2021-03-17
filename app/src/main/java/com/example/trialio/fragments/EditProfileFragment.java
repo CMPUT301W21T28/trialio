@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.MainActivity;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 
@@ -27,13 +30,6 @@ public class EditProfileFragment extends DialogFragment {
     private EditText email;
     private OnFragmentInteractionListener listener;
     private User user;
-    private Integer integer;
-    private Bundle bundle;
-    public interface OnFragmentInteractionListener {
-        void onConfirm();
-    }
-
-
 
     @NonNull
     @Override
@@ -41,8 +37,8 @@ public class EditProfileFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.edit_profile_fragment_layout, null);
 
         // get the experiment that was passed in
-        Bundle bundle = getArguments();
-        user = (User) bundle.getSerializable("UserProfile");
+        //Bundle bundle = getArguments();
+        //user = (User) bundle.getSerializable("UserProfile");
 
         username = view.findViewById(R.id.userNameText);
         phoneNumber = view.findViewById(R.id.editUserPhone);
@@ -66,15 +62,22 @@ public class EditProfileFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
                         String UserName = username.getText().toString();
                         String UserPhone = phoneNumber.getText().toString();
                         String UserEMail = email.getText().toString();
 
+                        UserManager userManager = new UserManager();
                         user.setId(UserName);
                         user.getContactInfo().setEmail(UserEMail);
                         user.getContactInfo().setPhone(UserPhone);
-                        //confirm update to user profile
+                        userManager.updateUser(user);
+                        startActivity(intent);
+                    //confirm update to user profile
                     }}).create();
+    }
+    public interface OnFragmentInteractionListener {
+        void onConfirm();
     }
 
 }
