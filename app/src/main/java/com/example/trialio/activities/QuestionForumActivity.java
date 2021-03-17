@@ -6,19 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterExperiment;
 import com.example.trialio.adapters.QuestionArrayAdapter;
-import com.example.trialio.controllers.ExperimentManager;
-import com.example.trialio.controllers.QuestionForum;
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
-import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
 
@@ -26,17 +22,23 @@ public class QuestionForumActivity extends AppCompatActivity {
     private final String TAG = "QuestionForumActivity";
     private final Context context = this;
 
-    private QuestionForum questionForumManager;
+    private Experiment associatedExperiment;
+    private QuestionForumManager questionForumManager;
     private ArrayList<Question> questionList;
     private QuestionArrayAdapter questionAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_forum_activity);
 
+        // receive experiment info from main -> the question forum belongs to this experiment
+        Bundle bundle = getIntent().getExtras();
+        associatedExperiment = (Experiment) bundle.getSerializable("experiment_info_qa");
+
         // Initialize attributes for the activity
-        questionForumManager = new QuestionForum();
+        questionForumManager = new QuestionForumManager();
         questionList = new ArrayList<>();  // TODO: make me a colleciton if we opt to make the questionForum its own seperate sub collection
         questionAdapter = new QuestionArrayAdapter(this, questionList);
 
@@ -55,12 +57,12 @@ public class QuestionForumActivity extends AppCompatActivity {
         super.onStart();
 
         // Fetch data for the list view
-        experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+        QuestionForumManager.setOnAllQuestionsFetchCallback(new QuestionManager.OnManyQuestionsFetchListener() {
             @Override
-            public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
-                experimentList.clear();
-                experimentList.addAll(experiments);
-                experimentAdapter.notifyDataSetChanged();
+            public void onManyQuestionsFetch(ArrayList<Question> questions) {
+                questionList.clear();
+                questionList.addAll(questions);
+                questionAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -97,10 +99,11 @@ public class QuestionForumActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onOkPressed(Question newQuestion) {
-        question.getTrialManager().addTrial(newTrial);
-        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
-    }
+//    @Override
+//    public void onOkPressed(Question newQuestion) {
+//
+//        question.getTrialManager().addTrial(newTrial);
+//        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+//    }
 
 }

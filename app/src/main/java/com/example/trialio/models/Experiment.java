@@ -1,6 +1,6 @@
 package com.example.trialio.models;
 
-import com.example.trialio.controllers.QuestionForum;
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.TrialManager;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ public class Experiment implements Serializable {
     private ExperimentSettings settings;
     private TrialManager trialManager;
     private ArrayList<String> keywords;
-    private QuestionForum questionForum;
+    private QuestionForumManager questionForum;
 
     public Experiment() { }
 
@@ -54,11 +54,11 @@ public class Experiment implements Serializable {
         this.keywords = keywords;
     }
 
-    public QuestionForum getQuestionForum() {
+    public QuestionForumManager getQuestionForum() {
         return questionForum;
     }
 
-    public void setQuestionForum(QuestionForum questionForum) {
+    public void setQuestionForum(QuestionForumManager questionForum) {
         this.questionForum = questionForum;
     }
 
