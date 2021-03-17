@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/text_trial_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="0dp"
+        android:text="ID"
+        android:textSize="12sp"></TextView>
+
+    <TextView
+        android:id="@+id/text_trial_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:text="Owner"
+        android:textSize="12sp"></TextView>
+
+    <TextView
+        android:id="@+id/text_trial_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:text="Date"
+        android:textSize="12sp"></TextView>
+
+    <TextView
+        android:id="@+id/text_trial_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:text="Result"
+        android:textSize="12sp"></TextView>
+
+
+</LinearLayout>

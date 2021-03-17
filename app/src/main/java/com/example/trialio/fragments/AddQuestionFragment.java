@@ -16,9 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trialio.R;
 
 public class AddQuestionFragment extends DialogFragment {
-    private EditText username;
-    private EditText phoneNumber;
-    private EditText email;
+    private EditText questionTitle;
+    private EditText questionBody;
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener {
@@ -41,22 +40,20 @@ public class AddQuestionFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.edit_profile_fragment_layout, null);
-        username = view.findViewById(R.id.userNameText);
-        phoneNumber = view.findViewById(R.id.editUserPhone);
-        email = view.findViewById(R.id.editUserEmail);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_question, null);
+        questionTitle = view.findViewById(R.id.editQuestionTitle);
+        questionBody = view.findViewById(R.id.editQuestionBody);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Edit User Information")
+                .setTitle("New Question")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String UserName = username.getText().toString();
-                        String UserPhone = phoneNumber.getText().toString();
-                        String UserEMail = email.getText().toString();
+                        String QuestionTitle = questionTitle.getText().toString();
+                        String QuestionBody = questionBody.getText().toString();
                         //confirm update to user profile
                     }}).create();
     }

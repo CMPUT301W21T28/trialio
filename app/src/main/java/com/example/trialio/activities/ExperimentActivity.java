@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.trialio.fragments.BinomialTrialFragment;
+import com.example.trialio.fragments.CountTrialFragment;
+import com.example.trialio.fragments.MeasurementTrialFragment;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
 import com.example.trialio.R;
@@ -18,18 +21,17 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
-public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener {
+public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
+    private final String TAG = "ExperimentActivity";
     private Experiment experiment;
     private String trialType;
     private ExperimentManager experimentManager;
-    private Context context;
+    private final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
-
-        context = this;
 
         experimentManager = new ExperimentManager();
 
@@ -56,59 +58,55 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
-                    //CountTrialFragment newTrial = new CountTrialFragment();
-                    //newTrial.show(getSupportFragmentManager(), "countTrial");
+                    CountTrialFragment newTrial = new CountTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "addCountTrial");
                 } else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
                 } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
-                    newTrial.show(getSupportFragmentManager(), "nonNegativeTrial");
+                    newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
                 } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
-                    //MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
-                    //newTrial.show(getSupportFragmentManager(), "MeasurementTrial");
+                    MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
+                    newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {
                     assert (false);
                 }
             }
         });
 
-        /**
-         * function for view trials
-         */
-        //Button showTrials = (Button) findViewById(R.id.btnTrials);
-        //showTrials.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        showTrials();
-        //    }
-        //});
+        Button showTrials = (Button) findViewById(R.id.btnTrials);
 
-
-
-
-        /**
-         * Function for navigation to question forum for the respective experiment
-         * Passes
-         */
-        Button goToQuestionForum = (Button) findViewById(R.id.btnQA);
-        goToQuestionForum.setOnClickListener( new View.OnClickListener() {
+        // Called when the user clicks item in experiment list
+        showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentQuestionActivity = new Intent(context, QuestionForumActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(context, TrialActivity.class);
 
-                // Intent intentQuestionForum = new Intent(context, QuestionForumActivity.class);
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_trial", experiment);
+                intent.putExtras(args);
 
-                Bundle bundleQuestion = new Bundle();
-                bundleQuestion.putSerializable("experiment", experiment);
-
-                intentQuestionActivity.putExtras(bundleQuestion);
-                // intentQuestionForum.putExtras(bundleQuestion);  *** How can I get info to BOTH QuestionForum and QuestionForumActivity --> DO you even need to do this ??
-
-                startActivity(intentQuestionActivity);
+                // start an ExperimentActivity
+                startActivity(intent);
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // TODO: swap this with an update listener
+        // when the experiment is updated, update our local experiment and reset all fields
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+            }
+        });
     }
 
     /**
@@ -116,7 +114,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
      */
     public void setFields(){
         // get TextViews
-        TextView textDescription = findViewById(R.id.txtExperimentDescription);
+        TextView textDescription = findViewById(R.id.txtExperimentDesciption);
         TextView textType = findViewById(R.id.txtExperimentType);
         TextView textRegion = findViewById(R.id.txtExperimentRegion);
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
