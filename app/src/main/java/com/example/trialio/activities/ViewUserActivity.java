@@ -28,14 +28,15 @@ import java.io.Serializable;
 // in thread https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text/46244113#46244113
 
 public class ViewUserActivity extends AppCompatActivity {
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        User user = new User();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user);
 
 
         Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("User");
 
         //setup back button functionality
         ActionBar customActionBar = getSupportActionBar();

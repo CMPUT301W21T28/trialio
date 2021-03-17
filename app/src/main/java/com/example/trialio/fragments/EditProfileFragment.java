@@ -37,8 +37,8 @@ public class EditProfileFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.edit_profile_fragment_layout, null);
 
         // get the experiment that was passed in
-        //Bundle bundle = getArguments();
-        //user = (User) bundle.getSerializable("UserProfile");
+        Bundle bundle = getArguments();
+        user = (User) bundle.getSerializable("UserProfile");
 
         username = view.findViewById(R.id.userNameText);
         phoneNumber = view.findViewById(R.id.editUserPhone);
@@ -66,12 +66,14 @@ public class EditProfileFragment extends DialogFragment {
                         String UserName = username.getText().toString();
                         String UserPhone = phoneNumber.getText().toString();
                         String UserEMail = email.getText().toString();
+                        String UserID = user.getId();
 
-                        UserManager userManager = new UserManager();
-                        user.setId(UserName);
-                        user.getContactInfo().setEmail(UserEMail);
+                        user.setId(UserID);
+                        user.setUsername(UserName);
                         user.getContactInfo().setPhone(UserPhone);
-                        userManager.updateUser(user);
+                        user.getContactInfo().setEmail(UserEMail);
+
+                        manager.updateUser(user);
                         startActivity(intent);
                     //confirm update to user profile
                     }}).create();
