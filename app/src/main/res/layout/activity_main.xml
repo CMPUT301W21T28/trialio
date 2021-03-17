@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,8 +56,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:backgroundTint="#ffdd00"
-            android:text="All"></Button>
+            android:backgroundTint="@color/special_yellow"
+            android:text="All" />
 
         <Button
             android:id="@+id/btnOwned"
@@ -64,8 +65,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:backgroundTint="#606060"
-            android:text="Owned"></Button>
+            android:backgroundTint="@color/button_dark_grey"
+            android:text="Owned" />
 
 
         <Button
@@ -74,8 +75,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:backgroundTint="#606060"
-            android:text="Subs"></Button>
+            android:backgroundTint="@color/button_dark_grey"
+            android:text="Subs" />
 
     </LinearLayout>
 
@@ -90,7 +91,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Search"
+            android:hint="Search"
             android:padding="10dp"/>
 
     </LinearLayout>
@@ -115,5 +116,20 @@
 
         </ListView>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnNewExperiment"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:cornerRadius="20dp"></Button>
 
 </LinearLayout>

@@ -15,10 +15,10 @@ public class Experiment implements Serializable {
 
     public Experiment() { }
 
-    public Experiment(String experimentID, ExperimentSettings settings, String type, int minNumOfTrials) {
+    public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials) {
         this.experimentID = experimentID;
         this.settings = settings;
-        this.trialManager = new TrialManager(type, true, minNumOfTrials);
+        this.trialManager = new TrialManager(type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();  // TODO: how are we seeting keywords? is it just the description?
     }
 
