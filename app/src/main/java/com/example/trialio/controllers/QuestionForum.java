@@ -4,11 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Post;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.Reply;
 import com.example.trialio.models.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -28,7 +34,6 @@ public class QuestionForum implements Serializable {
 
 
     private Collection<Question> questions;
-
 
     /**
      * This interface represents an action to be taken when an Question document is fetched from the database.
@@ -76,23 +81,55 @@ public class QuestionForum implements Serializable {
 
 
     // TODO: why don't we just in a Question object instead ??
-    public void createQuestion (Question question) {
-        Question newQuestion = new Question();
-        Log.d(TAG, "Posting question " + title.toString());
+    public void createQuestion (Question newQuestion) {
+        Log.d(TAG, "Posting question " + newQuestion.getTitle());
+        questionForumCollection
+                .add(newQuestion)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Question written successfully with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding question", e);
+                    }
+                });
+    }
 
 
+    public void deleteQuestion (String questionID) {
+        Log.d(TAG, "Posting question " + questionID);
         questionForumCollection
                 .document(questionID)
-
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String message = String.format("Experiment %s was deleted successfully", questionID);
+                        Log.d(TAG, message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String message = String.format("Failed to delete experiment %s", questionID);
+                        Log.d(TAG, message);
+                    }
+                });
     }
 
     public void createReply (Question question, String body, User user) {
         //...
     }
 
-    public void deletePost (Post post) {
+    public void deleteReply (Reply reply) {
         //...
     }
+
+
 
 //    public ArrayList<Question> getAllQuestions() {}
 

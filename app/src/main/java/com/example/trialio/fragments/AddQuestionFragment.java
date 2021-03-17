@@ -36,24 +36,27 @@ public class AddQuestionFragment extends DialogFragment {
         questionBodyInput = view.findViewById(R.id.editQuestionBody);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(view);
-        builder.setTitle("New Question");
-        builder.setNegativeButton("Cancel", null);
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+
+        return builder
+            .setView(view)
+            .setTitle("New Question")
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String questionTitle = questionTitleInput.getText().toString();
                 String questionBody = questionBodyInput.getText().toString();
 
                 // Initialize empty array list of replies  *** is this a bad practice???
-                ArrayList<Reply> replies = new ArrayList<Reply>()
+                ArrayList<Reply> replies = new ArrayList<>();
 
                 //confirm update to user profile
                 UserManager userManager = new UserManager();
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        listener.onOkPressed(new Question(questionBody, user.getId(), questionTitle, replies) );
+                        listener.onOkPressed(new Question(questionBody, user, questionTitle, replies) );
                     }
                 });
             }}).create();
