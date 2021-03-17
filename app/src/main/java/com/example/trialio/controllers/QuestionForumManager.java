@@ -89,7 +89,7 @@ public class QuestionForumManager implements Serializable {
     }
 
 
-    // TODO: why don't we just in a Question object instead ??
+
     public void createQuestion (Question newQuestion) {
         Log.d(TAG, "Posting question " + newQuestion.getTitle());
         questionForumCollection
@@ -150,7 +150,7 @@ public class QuestionForumManager implements Serializable {
      * @param questionID   the id of the question to fetch
      * @param listener     the function to be called when the experiment is fetched
      */
-    public void setOnExperimentFetchListener(String questionID, QuestionForumManager.OnQuestionFetchListener listener) {
+    public void setOnQuestionFetchListener(String questionID, QuestionForumManager.OnQuestionFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
@@ -175,12 +175,13 @@ public class QuestionForumManager implements Serializable {
         });
     }
 
+
     /**
      * Sets a function to be called when all questions are fetched
      *
      * @param listener the function to be called when the questions are fetched
      */
-    public void setOnAllExperimentsFetchCallback(QuestionForumManager.OnManyQuestionsFetchListener listener) {
+    public void setOnAllQuestionsFetchCallback(QuestionForumManager.OnManyQuestionsFetchListener listener) {
         /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
          */

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 
 public class Question extends Post implements Serializable {
-
     private String title;
     private Collection<Reply> replies;
 

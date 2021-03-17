@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
+import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
@@ -27,6 +28,7 @@ public class QuestionForumActivity extends AppCompatActivity {
     private ArrayList<Question> questionList;
     private QuestionArrayAdapter questionAdapter;
 
+    String associatedExperimentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,11 @@ public class QuestionForumActivity extends AppCompatActivity {
         // receive experiment info from main -> the question forum belongs to this experiment
         Bundle bundle = getIntent().getExtras();
         associatedExperiment = (Experiment) bundle.getSerializable("experiment_info_qa");
-
+        // get id here and pass it into the constructor of the quesitonForumManager
         associatedExperimentID = associatedExperiment.getExperimentID();
 
+
         // Initialize attributes for the activity
-        questionForumManager = new QuestionForumManager();
         questionList = new ArrayList<>();  // TODO: make me a colleciton if we opt to make the questionForum its own seperate sub collection
         questionAdapter = new QuestionArrayAdapter(this, questionList);
 
@@ -53,18 +55,21 @@ public class QuestionForumActivity extends AppCompatActivity {
 
     }
 
-    // TODO: How can I make this work for the question forum -> use setOna
     @Override
     protected void onStart() {
         super.onStart();
 
-        // Fetch data for the list view
-        QuestionForumManager.setOnAllQuestionsFetchCallback(new QuestionManager.OnManyQuestionsFetchListener() {
+        // TODO: swap this with an update listener
+        // when the experiment is updated, update our local experiment, reset all fields and clear/rebuild the trialList
+        questionForumManager.setOnQuestionFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
-            public void onManyQuestionsFetch(ArrayList<Question> questions) {
-                questionList.clear();
-                questionList.addAll(questions);
-                questionAdapter.notifyDataSetChanged();
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+
+                trialList.clear();
+                trialList.addAll(experiment.getTrialManager().getTrials());
+                trialAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -97,7 +102,6 @@ public class QuestionForumActivity extends AppCompatActivity {
         newQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
     }
