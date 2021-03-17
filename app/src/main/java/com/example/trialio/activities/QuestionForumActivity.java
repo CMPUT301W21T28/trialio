@@ -18,6 +18,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForum;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,12 @@ public class QuestionForumActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
+    @Override
+    public void onOkPressed(Question newQuestion) {
+        question.getTrialManager().addTrial(newTrial);
+        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+    }
+
 }

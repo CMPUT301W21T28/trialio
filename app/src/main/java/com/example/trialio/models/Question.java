@@ -1,5 +1,7 @@
 package com.example.trialio.models;
 
+import com.example.trialio.controllers.QuestionForum;
+
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -33,4 +35,5 @@ public class Question extends Post implements Serializable {
     public void setReplies(Collection<Reply> replies) {
         this.replies = replies;
     }
+
 }

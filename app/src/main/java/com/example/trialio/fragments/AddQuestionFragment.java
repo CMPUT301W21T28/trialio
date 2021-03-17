@@ -14,17 +14,54 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.NonNegativeTrial;
+import com.example.trialio.models.Question;
+import com.example.trialio.models.Reply;
+import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
+
+import java.util.ArrayList;
 
 public class AddQuestionFragment extends DialogFragment {
-    private EditText questionTitle;
-    private EditText questionBody;
+    private EditText questionTitleInput;
+    private EditText questionBodyInput;
     private OnFragmentInteractionListener listener;
 
-    public interface OnFragmentInteractionListener {
-        //void onConfirm(); change user info
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_question, null);
+        questionTitleInput = view.findViewById(R.id.editQuestionTitle);
+        questionBodyInput = view.findViewById(R.id.editQuestionBody);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(view);
+        builder.setTitle("New Question");
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String questionTitle = questionTitleInput.getText().toString();
+                String questionBody = questionBodyInput.getText().toString();
+
+                // Initialize empty array list of replies  *** is this a bad practice???
+                ArrayList<Reply> replies = new ArrayList<Reply>()
+
+                //confirm update to user profile
+                UserManager userManager = new UserManager();
+                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        listener.onOkPressed(new Question(questionBody, user.getId(), questionTitle, replies) );
+                    }
+                });
+            }}).create();
     }
 
-    //if some user info exists, send it to the dialog box as a default value
+    public interface OnFragmentInteractionListener {
+        void onOkPressed(Question question);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -37,25 +74,6 @@ public class AddQuestionFragment extends DialogFragment {
         }
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_question, null);
-        questionTitle = view.findViewById(R.id.editQuestionTitle);
-        questionBody = view.findViewById(R.id.editQuestionBody);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
-                .setView(view)
-                .setTitle("New Question")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String QuestionTitle = questionTitle.getText().toString();
-                        String QuestionBody = questionBody.getText().toString();
-                        //confirm update to user profile
-                    }}).create();
-    }
 
 }
