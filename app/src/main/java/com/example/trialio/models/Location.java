@@ -1,4 +1,16 @@
 package com.example.trialio.models;
+/*
+Location permissions method from youtube video
+
+Video Title: Location | Getting Current location | FusedLocationProviderClient
+
+Link to Video: https://www.youtube.com/watch?v=rNYaEFl6Fms
+
+Video uploader: yoursTRULY
+
+Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+
+ */
 
 import android.Manifest;
 import android.app.Activity;
@@ -63,6 +75,7 @@ public class Location implements Serializable{
                 ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
             }
         }
+
         locClient = LocationServices.getFusedLocationProviderClient(activity);
         Task<android.location.Location> locationTask = locClient.getLastLocation();
         locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
@@ -82,8 +95,8 @@ public class Location implements Serializable{
                 Log.e(TAG, "OnFailure" + e.getLocalizedMessage());
             }
         });
-    }
 
+    }
 
     public double getLatitude() {
         return latitude;
@@ -103,10 +116,5 @@ public class Location implements Serializable{
 
 
     //    public ArrayList<double> getCoord() { }
-
-    //LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-    //lm.requestLocationUpdates(NETWORK_PROVIDER, 10000, 500, listener);
-    //location.setLongitude(lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude());
-    //location.setLatitude(lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude());
 
 }

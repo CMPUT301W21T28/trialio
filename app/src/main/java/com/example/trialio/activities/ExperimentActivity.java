@@ -40,9 +40,6 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     private String trialType;
     private ExperimentManager experimentManager;
     private final Context context = this;
-    final int REQUEST_CODE_FINE_PERMISSION = 99;
-    FusedLocationProviderClient locClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +111,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     protected void onStart() {
         super.onStart();
 
-        //getCurrentLocation();
+        //getLocationPermissions();
 
         // TODO: swap this with an update listener
         // when the experiment is updated, update our local experiment and reset all fields
@@ -126,7 +123,11 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
             }
         });
     }
+/*
+    public void getLocationPermissions() {
 
+    }
+*/
     /**
      * This initializes all of the fields of the activity with data from the experiment
      */
