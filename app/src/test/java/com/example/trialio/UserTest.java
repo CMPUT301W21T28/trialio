@@ -3,12 +3,17 @@ package com.example.trialio;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.User;
+import com.example.trialio.models.UserContactInfo;
 import com.example.trialio.utils.ExperimentTypeUtility;
 
 import org.junit.jupiter.api.Test;
 
+import java.net.ContentHandler;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This class unit test the User class
@@ -16,19 +21,38 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserTest {
 
     User mockUser() {
-        return new User("0001");
+        return new User("user1");
     }
 
     Experiment mockExperiment1() {
         String type = ExperimentTypeUtility.getBinomialType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("00001", settings, type, 10);
+        return new Experiment("exp1", settings, type, 10);
     }
 
     Experiment mockExperiment2() {
         String type = ExperimentTypeUtility.getCountType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("00002", settings, type, 12);
+        return new Experiment("exp2", settings, type, 12);
+    }
+
+    /**
+     * Test creating a new User
+     */
+    @Test
+    void testCreateUser() {
+        User u1 = new User();
+        assertEquals(u1.getClass(), User.class);
+
+        UserContactInfo info = u1.getContactInfo();
+        assertEquals(UserContactInfo.class, info.getClass());
+
+        assertNull(u1.getId());
+
+        User u2 = new User("1234", "user1");
+        assertEquals("1234", u2.getId());
+        assertEquals("user1", u2.getUsername());
+
     }
 
     /**
@@ -79,7 +103,7 @@ public class UserTest {
     void testRemoveSubscription() {
         User user = mockUser();
         Experiment e1 = mockExperiment1();
-        Experiment e2 = mockExperiment1();
+        Experiment e2 = mockExperiment2();
         user.addSubscription(e1);
         user.addSubscription(e2);
 
