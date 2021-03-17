@@ -69,6 +69,10 @@ public class EditProfileFragment extends DialogFragment {
                         String UserName = username.getText().toString();
                         String UserPhone = phoneNumber.getText().toString();
                         String UserEMail = email.getText().toString();
+
+                        user.setId(UserName);
+                        user.getContactInfo().setEmail(UserEMail);
+                        user.getContactInfo().setPhone(UserPhone);
                         //confirm update to user profile
                     }}).create();
     }
