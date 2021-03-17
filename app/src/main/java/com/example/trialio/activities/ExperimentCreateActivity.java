@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.appcompat.app.ActionBar;
@@ -41,18 +44,36 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
         Button addNewExperiment = (Button) findViewById(R.id.btnAddNewExperiment);
         addNewExperiment.setOnClickListener(new View.OnClickListener() {
+            private AdapterView.OnItemSelectedListener OnItemSelectedListener;
+
             @Override
             public void onClick(View v) {
                 // TODO: testing that this actually works
                 Intent intent = new Intent(context, ExperimentActivity.class);
 
                 EditText editDescription = (EditText) findViewById(R.id.descriptionEditText);
-                EditText editType = (EditText) findViewById(R.id.typeEditText);
+                Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
                 EditText editRegion = (EditText) findViewById(R.id.regionEditText);
                 EditText editNumTrials = (EditText) findViewById(R.id.numTrialsEditText);
 
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
+
+                /*
+                <!-- Adapted planets_array code.
+// DATE:	2021-03-17
+// LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
+// SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
+// AUTHOR: 	Android Developers [https://developer.android.com/]
+-->
+
+                 */
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                        R.array.types_array, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                selectType.setAdapter(adapter);
+
+                selectType.setOnItemSelectedListener(OnItemSelectedListener);
 
                 //----------------------------------
                 // prepare ExperimentSettings object
@@ -82,7 +103,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
-                String type = editType.getText().toString(); // TODO: implement dropdown menu?
+                String type = selectType.getSelectedItem().toString();
 
                 // prepare open
                 boolean open = openSwitch.isChecked();

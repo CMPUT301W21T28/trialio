@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Adapted from planets_array XML code.
+DATE:	    2021-03-17
+LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
+SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
+AUTHOR: 	Android Developers [https://developer.android.com/]
+-->
+<resources>
+    <string-array name="types_array">
+        <item>COUNT</item>
+        <item>BINOMIAL</item>
+        <item>NONNEGATIVE</item>
+        <item>MEASUREMENT</item>
+    </string-array>
+</resources>
