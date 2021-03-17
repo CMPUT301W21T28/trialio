@@ -37,6 +37,8 @@ public class QuestionForumActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         associatedExperiment = (Experiment) bundle.getSerializable("experiment_info_qa");
 
+        associatedExperimentID = associatedExperiment.getExperimentID();
+
         // Initialize attributes for the activity
         questionForumManager = new QuestionForumManager();
         questionList = new ArrayList<>();  // TODO: make me a colleciton if we opt to make the questionForum its own seperate sub collection
@@ -71,6 +73,7 @@ public class QuestionForumActivity extends AppCompatActivity {
      * Sets up on click listeners for the activity.
      */
     private void setUpOnClickListeners() {
+
         // Called when the user clicks item in experiment list
         ListView questionForumListView = findViewById(R.id.questionForumListView);
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

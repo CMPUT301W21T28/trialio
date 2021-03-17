@@ -97,10 +97,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         // called when user clicks on the Q&A button
         // objective:
         // - navigate to new activity
-        // - send current experiementID in intent to:
-        //      a) QuestionForumActivity
-        //      b) QuestionForumManager
-
+        // - send current experiementID in intent to QuestionForumActivity
         Button navToQuestionForum = (Button) findViewById(R.id.btnQA);
         navToQuestionForum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +113,6 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
                 startActivity(intentToActivity);
             }
         });
-
     }
 
     @Override

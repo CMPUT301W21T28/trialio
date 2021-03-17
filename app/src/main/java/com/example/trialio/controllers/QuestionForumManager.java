@@ -35,11 +35,12 @@ public class QuestionForumManager implements Serializable {
     private final CollectionReference questionForumCollection;
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
+    private String experimentID;  // NEED THIS FORM ACTIVITY
     private static final String EXPERIMENT_PATH = "experiments";
 
-    // Bundle experimentInfo = getIntent().getExtras;
+
     // TODO: send experiment id to several activities after Q&A button on experiment activity is pressed
-    String experimentID = "DXefHaVmzELGzizNq51A"; // HARDCODED FOR NOW
+    // using a bundle doesn't seem like a good idea
 
 
     private ArrayList<Question> questions;
@@ -50,7 +51,6 @@ public class QuestionForumManager implements Serializable {
     public interface OnQuestionFetchListener {
         /**
          * This method will be called when an Experiment is fetched from the database.
-         *
          * @param question the question that was fetched from the database
          */
         public void onQuestionFetch(Question question);
@@ -75,9 +75,9 @@ public class QuestionForumManager implements Serializable {
     /**
      * Constructor for QuestionForumManager
      */
-    public QuestionForumManager() {
-        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(experimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
-        questions = new ArrayList<Question>();  // TODO: is it okay to use a Colletion instead of an ArrayList here ??
+    public QuestionForumManager(String associatedExperimentID) {
+        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+        questions = new ArrayList<Question>();  // TODO: is it okay to use a Collection instead of an ArrayList here ??
     }
 
     public Collection<Question> getQuestions() {
@@ -223,9 +223,5 @@ public class QuestionForumManager implements Serializable {
         Question question = document.toObject(Question.class);
         return question;
     }
-
-
-
-
 
 }
