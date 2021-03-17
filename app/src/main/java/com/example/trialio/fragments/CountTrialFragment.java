@@ -38,6 +38,7 @@ public class CountTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         Location location = new Location();
+                        location.getCurrentLocation(getContext(),getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();

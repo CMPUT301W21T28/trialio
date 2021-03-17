@@ -1,13 +1,18 @@
 package com.example.trialio.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +28,11 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -30,13 +40,14 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     private String trialType;
     private ExperimentManager experimentManager;
     private final Context context = this;
+    final int REQUEST_CODE_FINE_PERMISSION = 99;
+    FusedLocationProviderClient locClient;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
-
 
         experimentManager = new ExperimentManager();
 
@@ -102,6 +113,8 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     @Override
     protected void onStart() {
         super.onStart();
+
+        //getCurrentLocation();
 
         // TODO: swap this with an update listener
         // when the experiment is updated, update our local experiment and reset all fields

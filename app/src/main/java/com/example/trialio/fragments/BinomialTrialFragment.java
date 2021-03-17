@@ -49,32 +49,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 Switch s = view.findViewById(R.id.switchSuccessIndicator);
                 boolean isSuccess = s.isChecked();
                 Location location = new Location();
-                CheckBox shareLocation = (CheckBox) view.findViewById(R.id.getLocation);
-                shareLocation.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final LocationListener listener = new LocationListener() {
-                            @Override
-                            public void onLocationChanged(@NonNull android.location.Location location) {
-
-                            }
-                        };
-                        if (shareLocation.isChecked()) {
-                            LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                       ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-                                   }
-                            else {
-                                lm.requestLocationUpdates(NETWORK_PROVIDER, 10000, 500, listener);
-                                location.setLongitude(lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLongitude());
-                                location.setLatitude(lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER).getLatitude());
-                            }
-
-                        }
-
-                    }
-                });
-                //location.findCurrentLocation(getContext(), getActivity());
+                location.getCurrentLocation(getContext(),getActivity());
                 Date date = new Date();
 
                 UserManager userManager = new UserManager();

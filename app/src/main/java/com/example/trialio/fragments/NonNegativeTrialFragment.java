@@ -41,6 +41,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
                         Location location = new Location();
+                        location.getCurrentLocation(getContext(),getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();
