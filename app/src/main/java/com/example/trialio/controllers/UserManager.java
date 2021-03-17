@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.models.UserContactInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users test";
+    private static final String COLLECTION_PATH = "users";
     private final CollectionReference userCollection;
 
     private static String fid;
@@ -174,11 +173,11 @@ public class UserManager {
                     // String userId = "3333"
                     fid = userId;
                     assert userId != null;
-                    setListenerToUserId(userId, listener);
+                    setOnUpdateFetchListener(userId, listener);
                 }
             });
         } else {
-            setListenerToUserId(fid, listener);
+            setOnUpdateFetchListener(fid, listener);
         }
     }
 
@@ -199,7 +198,7 @@ public class UserManager {
      * @param listener the listener to be called when the User document is fetched
      */
     public void addUserUpdateListener(String userId, OnUserFetchListener listener) {
-        setListenerToUserId(userId, listener);
+        setOnUpdateFetchListener(userId, listener);
     }
 
     /**
@@ -282,12 +281,15 @@ public class UserManager {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
+                            assert doc != null;
                             if (doc.exists()) {
-                                User user = doc.toObject(User.class);
+                                User user = extractUser(doc);
                                 listener.onUserFetch(user);
                                 Log.d(TAG, "User " + userId + " fetched successfully.");
                             } else {
                                 Log.d(TAG, "No user found with id " + userId);
+                                User user = createNewUser(userId);
+                                listener.onUserFetch(user);
                             }
                         } else {
                             Log.d(TAG, "User fetch failed with " + task.getException());
@@ -303,8 +305,7 @@ public class UserManager {
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
      */
-    private void setListenerToUserId(String userId, OnUserFetchListener listener) {
-        Task<DocumentSnapshot> doc = userCollection.document(userId).get();
+    private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -368,8 +369,8 @@ public class UserManager {
      * @param document the user document to extract from
      * @return the User
      */
+    @SuppressWarnings("unchecked")
     private User extractUser(DocumentSnapshot document) {
-        // https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
         User user = new User();
         Map<String, Object> data = document.getData();
         assert data != null;
@@ -378,25 +379,17 @@ public class UserManager {
         String username = document.getString("username");
         String email = document.getString("contactInfo.email");
         String phone = document.getString("contactInfo.phone");
-//        ArrayList<String> subs = (ArrayList<String>) document.get("subs");
+        /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
+         * 2018-05-08, CC BY-SA 4.0, https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
+         */
+        ArrayList<String> subs = (ArrayList<String>) document.get("subscribedExperimentIds");
+        /* End of cited code */
 
         user.setId(id);
         user.setUsername(username);
         user.getContactInfo().setEmail(email);
         user.getContactInfo().setPhone(phone);
-
-        // Broken
-        // callback is too slow
-        // need to abstract this to a SubscriptionManager or something
-//        ExperimentManager experimentManager = new ExperimentManager();
-//        for (String s : subs) {
-//            experimentManager.setOnExperimentFetchCallback(s, new ExperimentManager.OnExperimentFetchListener() {
-//                @Override
-//                public void onExperimentFetch(Experiment experiment) {
-//                    user.addSubscription(experiment);
-//                }
-//            });
-//        }
+        user.setSubscribedExperiments(subs);
 
         return user;
     }
@@ -412,11 +405,7 @@ public class UserManager {
         userData.put("username", user.getUsername());
         UserContactInfo info = user.getContactInfo();
         userData.put("contactInfo", info);
-//        ArrayList<String> subs = new ArrayList<>();
-//        for (Experiment e : user.getSubscribedExperiments()) {
-//            subs.add(e.getExperimentID());
-//        }
-//        userData.put("subs", subs);
+        userData.put("subscribedExperimentIds", user.getSubscribedExperiments());
         return userData;
     }
 }
