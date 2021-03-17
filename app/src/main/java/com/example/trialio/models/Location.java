@@ -74,28 +74,27 @@ public class Location implements Serializable{
                 // request permission
                 ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
             }
-        }
-
-        locClient = LocationServices.getFusedLocationProviderClient(activity);
-        Task<android.location.Location> locationTask = locClient.getLastLocation();
-        locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-            @Override
-            public void onSuccess(android.location.Location location) {
-                if (location != null) {
-                    setLatitude(location.getLatitude());
-                    setLongitude(location.getLongitude());
-                } else {
-                    Log.d(TAG, "Location was NULL");
+        } else {
+            locClient = LocationServices.getFusedLocationProviderClient(activity);
+            Task<android.location.Location> locationTask = locClient.getLastLocation();
+            locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
+                @Override
+                public void onSuccess(android.location.Location location) {
+                    if (location != null) {
+                        setLatitude(location.getLatitude());
+                        setLongitude(location.getLongitude());
+                    } else {
+                        Log.d(TAG, "Location was NULL");
+                    }
                 }
-            }
-        });
-        locationTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "OnFailure" + e.getLocalizedMessage());
-            }
-        });
-
+            });
+            locationTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "OnFailure" + e.getLocalizedMessage());
+                }
+            });
+        }
     }
 
     public double getLatitude() {
