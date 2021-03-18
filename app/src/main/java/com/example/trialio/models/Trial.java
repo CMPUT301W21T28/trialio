@@ -8,7 +8,7 @@ public class Trial implements Serializable {
     protected Location location;
     protected Date date;
 
-    public Trial(String experimenterID, Location location, Date date, String data) { }
+    public Trial() { }
 
     public Trial(String experimenterID, Location location, Date date) {
         this.experimenterID = experimenterID;
