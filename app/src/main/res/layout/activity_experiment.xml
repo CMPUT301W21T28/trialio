@@ -38,8 +38,9 @@
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo"></ImageButton>
 
+
         <ImageButton
-            android:id="@+id/btnSwitch"
+            android:id="@+id/button_experiment_settings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -49,6 +50,7 @@
             android:tint="#E8B41B">
             android:src="@android:drawable/ic_menu_manage"
         </ImageButton>
+
 
     </LinearLayout>
 
