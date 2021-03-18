@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-Adapted from planets_array XML code.
-DATE:	    2021-03-17
-LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
-AUTHOR: 	Android Developers [https://developer.android.com/]
+Adapted from class/division code.
+DATE:	    2021-03-18
+LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+SOURCE: 	Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
+AUTHOR: 	Studytonight tutorial developers
 -->
 <resources>
     <string-array name="types_array">

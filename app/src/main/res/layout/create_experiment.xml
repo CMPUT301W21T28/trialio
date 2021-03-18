@@ -79,9 +79,7 @@
                 android:id="@+id/typeDropdown"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Type"
-                android:entries="@array/types_array"
-            />
+                android:entries="@array/types_array" />
 
         </LinearLayout>
 

@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -24,16 +21,11 @@ import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class ExperimentCreateActivity extends AppCompatActivity {
     private final String TAG = "ExperimentCreateActivity";
     private Experiment experiment;
     private ExperimentManager experimentManager;
     private final Context context = this;
-
     private String selectedType = "";
 
     @Override
@@ -53,26 +45,25 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
 
-        // Class Spinner implementing onItemSelectedListener
+        // Adapted from class/division code.
+        // DATE:	2021-03-18
+        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+        // SOURCE:  Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
+        // AUTHOR: 	Studytonight tutorial developers
         selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
                 selectedType = parent.getItemAtPosition(position).toString();
-                //Toast.makeText(context, "\n Class: \t " + selectedType,Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
         Button addNewExperiment = (Button) findViewById(R.id.btnAddNewExperiment);
         addNewExperiment.setOnClickListener(new View.OnClickListener() {
-            //private AdapterView.OnItemSelectedListener OnItemSelectedListener;
 
             @Override
             public void onClick(View v) {
@@ -85,42 +76,6 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
-
-                // Adapted planets_array code.
-                // DATE:	2021-03-17
-                // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-                // SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
-                // AUTHOR: 	Android Developers [https://developer.android.com/]
-
-                /*
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                        R.array.types_array, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                selectType.setAdapter(adapter);
-
-                selectType.setOnItemSelectedListener(OnItemSelectedListener);
-
-                 */
-
-                /*
-                <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-Adapted from planets_array XML code.
-DATE:	    2021-03-17
-LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
-AUTHOR: 	Android Developers [https://developer.android.com/]
--->
-<resources>
-    <string-array name="types_array">
-        <item>COUNT</item>
-        <item>BINOMIAL</item>
-        <item>NONNEGATIVE</item>
-        <item>MEASUREMENT</item>
-    </string-array>
-</resources>
-                 */
 
                 //----------------------------------
                 // prepare ExperimentSettings object
@@ -150,15 +105,13 @@ AUTHOR: 	Android Developers [https://developer.android.com/]
                 ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
-                //String type = selectType.getSelectedItem().toString();
                 String type = selectedType;
 
                 // prepare open
                 boolean open = openSwitch.isChecked();
 
-                String int_popup = "Please enter a positive integer for minimum number of trials";
-
                 // prepare minimum number of trials
+                String int_popup = "Please enter a positive integer for minimum number of trials";
                 try {
                     int numTrials = Integer.parseInt(editNumTrials.getText().toString());
 
