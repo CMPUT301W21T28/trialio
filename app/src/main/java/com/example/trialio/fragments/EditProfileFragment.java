@@ -63,7 +63,6 @@ public class EditProfileFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(getActivity(), ViewUserActivity.class);
                         String UserName = username.getText().toString();
                         String UserPhone = phoneNumber.getText().toString();
                         String UserEMail = email.getText().toString();
@@ -75,7 +74,6 @@ public class EditProfileFragment extends DialogFragment {
                         user.getContactInfo().setEmail(UserEMail);
 
                         manager.updateUser(user);
-                        startActivity(intent);
                     //confirm update to user profile
                     }}).create();
     }
