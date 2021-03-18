@@ -49,6 +49,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 Switch s = view.findViewById(R.id.switchSuccessIndicator);
                 boolean isSuccess = s.isChecked();
                 Location location = new Location();
+                //to be added:if this trial requires geo-location, update geo location
                 location.getCurrentLocation(getContext(),getActivity());
                 Date date = new Date();
 
@@ -56,6 +57,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
+                        //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                         listener.onOkPressed(new BinomialTrial(user.getId(), location, date, isSuccess));
                     }
                 });

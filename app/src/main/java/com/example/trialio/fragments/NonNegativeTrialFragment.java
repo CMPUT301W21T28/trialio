@@ -41,6 +41,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
                         Location location = new Location();
+                        //to be added:if this trial requires geo-location, update geo location
                         location.getCurrentLocation(getContext(),getActivity());
                         Date date = new Date();
 
@@ -48,6 +49,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
+                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
                             }
                         });

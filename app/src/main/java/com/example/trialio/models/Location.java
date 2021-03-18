@@ -62,7 +62,7 @@ public class Location implements Serializable{
             if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //show user a message if user refused to give permission
                 new AlertDialog.Builder(activity)
-                        .setMessage("Geo-Location may be required for this experiment, please grant location permission")
+                        .setMessage("To ensure the accuracy of submitted trials for this experiment, please grant location permission")
                         .setCancelable(false)
                         .setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
                             @Override
