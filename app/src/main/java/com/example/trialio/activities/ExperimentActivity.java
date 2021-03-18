@@ -275,7 +275,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
      */
     public void setViewVisibility() {
         // set the experiment settings button to invisible by default
-        experimentSettings.setVisibility(View.INVISIBLE);
+        //experimentSettings.setVisibility(View.INVISIBLE);
 
         // if the current user is the owner, set the experiment settings button as visible.
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
