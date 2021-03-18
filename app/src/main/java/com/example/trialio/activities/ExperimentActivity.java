@@ -127,7 +127,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+        textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
     }
