@@ -39,7 +39,7 @@
             android:src="@drawable/temp_logo"></ImageButton>
 
         <ImageButton
-            android:id="@+id/btnSwitch"
+            android:id="@+id/button_experiment_settings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
