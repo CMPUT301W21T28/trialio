@@ -59,15 +59,11 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
 
-                /*
-                <!-- Adapted planets_array code.
-// DATE:	2021-03-17
-// LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-// SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
-// AUTHOR: 	Android Developers [https://developer.android.com/]
--->
-
-                 */
+                // Adapted planets_array code.
+                // DATE:	2021-03-17
+                // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
+                // SOURCE: 	Spinners [https://developer.android.com/training/appbar/up-action]
+                // AUTHOR: 	Android Developers [https://developer.android.com/]
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
                         R.array.types_array, android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -103,6 +99,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
+                selectType.setOnItemSelectedListener(OnItemSelectedListener);
                 String type = selectType.getSelectedItem().toString();
 
                 // prepare open
