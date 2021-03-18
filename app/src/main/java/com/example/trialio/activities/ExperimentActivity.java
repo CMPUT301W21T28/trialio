@@ -98,7 +98,6 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     protected void onStart() {
         super.onStart();
 
-        // TODO: swap this with an update listener
         // when the experiment is updated, update our local experiment and reset all fields
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
@@ -132,7 +131,13 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
 
     @Override
     public void onOkPressed(Trial newTrial) {
-        experiment.getTrialManager().addTrial(newTrial);
-        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment updated_experiment) {
+                experiment = updated_experiment;
+                experiment.getTrialManager().addTrial(newTrial);
+                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+            }
+        });
     }
 }
