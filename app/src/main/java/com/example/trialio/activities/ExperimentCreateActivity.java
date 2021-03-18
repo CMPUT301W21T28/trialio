@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +26,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
     private Experiment experiment;
     private ExperimentManager experimentManager;
     private final Context context = this;
+    private String selectedType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +43,34 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
+
+        // Adapted from class/division code.
+        // DATE:	2021-03-18
+        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+        // SOURCE:  Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
+        // AUTHOR: 	Studytonight tutorial developers
+        selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                selectedType = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
         Button addNewExperiment = (Button) findViewById(R.id.btnAddNewExperiment);
         addNewExperiment.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 // TODO: testing that this actually works
                 Intent intent = new Intent(context, ExperimentActivity.class);
 
                 EditText editDescription = (EditText) findViewById(R.id.descriptionEditText);
-                EditText editType = (EditText) findViewById(R.id.typeEditText);
                 EditText editRegion = (EditText) findViewById(R.id.regionEditText);
                 EditText editNumTrials = (EditText) findViewById(R.id.numTrialsEditText);
 
@@ -82,23 +105,32 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
-                String type = editType.getText().toString(); // TODO: implement dropdown menu?
+                String type = selectedType;
 
                 // prepare open
                 boolean open = openSwitch.isChecked();
 
                 // prepare minimum number of trials
-                int numTrials = Integer.parseInt(editNumTrials.getText().toString());
+                String int_popup = "Please enter a positive integer for minimum number of trials";
+                try {
+                    int numTrials = Integer.parseInt(editNumTrials.getText().toString());
 
-                // create Experiment object
-                experiment = new Experiment(newID, settings, type, open, numTrials);
-                experimentManager.publishExperiment(experiment);
+                    if (numTrials < 1) {
+                        Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
+                    } else {
+                        // create Experiment object
+                        experiment = new Experiment(newID, settings, type, open, numTrials);
+                        experimentManager.publishExperiment(experiment);
 
-                Bundle args = new Bundle();
-                args.putSerializable("experiment", experiment);
-                intent.putExtras(args);
+                        Bundle args = new Bundle();
+                        args.putSerializable("experiment", experiment);
+                        intent.putExtras(args);
 
-                startActivity(intent);
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
+                }
             }
         });
 
