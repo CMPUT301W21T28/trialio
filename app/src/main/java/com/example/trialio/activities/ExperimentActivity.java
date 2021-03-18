@@ -14,7 +14,6 @@ Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
  */
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,9 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -48,11 +45,6 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -90,7 +82,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         // get the important views in this activity
         experimentSettings = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
-        addTrial = (Button) findViewById(R.id.btnAddTrial);
+        addTrial = (Button) findViewById(R.id.btnAddIgnored);
 
         // set the visibility of certain views in this activity
         setViewVisibility();

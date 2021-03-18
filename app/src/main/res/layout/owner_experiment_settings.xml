@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnAddTrials"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#535353"
+    tools:context=".activities.ExperimentActivity">
+
+    <EditText
+        android:id="@+id/ignoredText"
+        android:layout_width="208dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginBottom="3dp"
+        android:gravity="center_vertical"
+        android:hint="Search Ignored Experimenter"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_experiment"
+        app:layout_constraintEnd_toStartOf="@+id/btnRmvIgnored"
+        app:layout_constraintHorizontal_bias="0.775"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <Button
+        android:id="@+id/unpublish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="77dp"
+        android:layout_marginBottom="23dp"
+        android:text="Un-Publish"
+        app:layout_constraintBottom_toTopOf="@+id/ignoredTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_dialog_map"
+            android:tint="#E8B41B">
+            android:src="@android:drawable/ic_dialog_map"></ImageButton>
+
+
+        <ImageButton
+            android:id="@+id/btnLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"></ImageButton>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_experiment"
+        android:layout_width="247dp"
+        android:layout_height="419dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="29dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginRight="136dp"
+        android:layout_marginBottom="10dp"
+        android:background="#9c9c9c"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.192"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ignoredText"></ListView>
+
+    <Button
+        android:id="@+id/btnAddIgnored"
+        android:layout_width="47dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="472dp"
+        android:gravity="bottom|clip_horizontal|center|clip_vertical|start|right|center_horizontal|fill|fill_horizontal|top|left|center_vertical|fill_vertical|end"
+        android:text="+"
+        android:textSize="24sp"
+        app:backgroundTint="#00FF00"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnRmvIgnored" />
+
+    <Button
+        android:id="@+id/btnRmvIgnored"
+        android:layout_width="48dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="474dp"
+        android:gravity="bottom|clip_horizontal|center|clip_vertical|start|right|center_horizontal|fill|fill_horizontal|top|left|center_vertical|fill_vertical|end"
+        android:text="-"
+        android:textSize="24sp"
+        app:backgroundTint="#DC143C"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddIgnored"
+        app:layout_constraintStart_toEndOf="@+id/ignoredTitle" />
+
+    <TextView
+        android:id="@+id/ignoredTitle"
+        android:layout_width="240dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginBottom="7dp"
+        android:background="#9c9c9c"
+        android:gravity="center_vertical"
+        android:text="Ignored Experimenters"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/ignoredText"
+        app:layout_constraintEnd_toStartOf="@+id/btnRmvIgnored"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unpublish"
+        tools:ignore="RtlCompat" />
+
+    <LinearLayout
+        android:layout_width="267dp"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="63dp">
+
+        <TextView
+            android:id="@+id/opentitle"
+            android:layout_width="113dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="#9c9c9c"
+            android:gravity="center_vertical"
+            android:text="Experiment Open?"
+            android:textAlignment="center"
+            tools:ignore="RtlCompat" />
+
+        <ToggleButton
+            android:id="@+id/expOpenToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/special_yellow"
+            android:textOff = "No"
+            android:textOn="Yes" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
