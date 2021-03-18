@@ -32,8 +32,11 @@ public class ExperimentManager {
 
     private final CollectionReference experimentsCollection;
 
-    // WANT TO DELETE THIS
-    private ArrayList<Experiment> experimentList;
+    /*
+     * This interface design was adapted from Android callbacks such as OnCLickListener
+     * Android Developer Docs, "View.OnClickListener", 2020-09-30, Apache 2.0,
+     * https://developer.android.com/reference/android/view/View.OnClickListener
+     */
 
     /**
      * This interface represents an action to be taken when an Experiment document is fetched from
@@ -67,7 +70,6 @@ public class ExperimentManager {
      */
     public ExperimentManager() {
         experimentsCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
-        experimentList = new ArrayList<Experiment>(); // ONLY HERE TO AVOID BREAKING CODE
     }
 
     /**
@@ -75,7 +77,6 @@ public class ExperimentManager {
      */
     public ExperimentManager(String collectionPath) {
         experimentsCollection = FirebaseFirestore.getInstance().collection(collectionPath);
-        experimentList = new ArrayList<Experiment>(); // ONLY HERE TO AVOID BREAKING CODE
     }
 
     /**
@@ -123,7 +124,7 @@ public class ExperimentManager {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        Experiment experiment = extractExperimentDocument(doc);
+                        Experiment experiment = extractExperiment(doc);
                         listener.onExperimentFetch(experiment);
                         Log.d(TAG, "Experiment " + experimentId + " fetched successfully.");
                     } else {
@@ -159,7 +160,7 @@ public class ExperimentManager {
                             QuerySnapshot qs = task.getResult();
                             ArrayList<Experiment> experimentList = new ArrayList<>();
                             for (DocumentSnapshot doc : qs.getDocuments()) {
-                                Experiment experiment = extractExperimentDocument(doc);
+                                Experiment experiment = extractExperiment(doc);
                                 experimentList.add(experiment);
                             }
                             listener.onManyExperimentsFetch(experimentList);
@@ -226,20 +227,37 @@ public class ExperimentManager {
 
     /**
      * This finds the list of all experiments owned by a given user
-     * NOTICE: Temporarily private while we rewrite it.
      *
-     * @param owner User for which to find all of their owned experiments
-     * @return Returns the list of experiments owned by owner
+     * @param owner    User for which to find all of their owned experiments
+     * @param listener the listener with the action to be taken once the experiments are fetched
      */
-    private ArrayList<Experiment> getOwnedExperiments(User owner) {
-        // TODO: test
-        ArrayList<Experiment> ownedExperiments = new ArrayList<Experiment>();
-        for (Experiment experiment : experimentList) {
-            if (experiment.getSettings().getOwner() == owner) {
-                ownedExperiments.add(experiment);
-            }
-        }
-        return ownedExperiments;
+    public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
+        String field = "settings.owner.id";
+        String id = owner.getId();
+        experimentsCollection.whereEqualTo(field, id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String message = String.format("Owned experiments for user %s fetched successfully", id);
+                            Log.d(TAG, message);
+
+                            QuerySnapshot qs = task.getResult();
+                            assert qs != null;
+                            ArrayList<Experiment> experimentList = new ArrayList<>();
+                            for (DocumentSnapshot doc : qs.getDocuments()) {
+                                Experiment experiment = extractExperiment(doc);
+                                experimentList.add(experiment);
+                            }
+
+                            listener.onManyExperimentsFetch(experimentList);
+                        } else {
+                            String message = "Failed to fetch owned experiments";
+                            Log.d(TAG, message);
+                        }
+                    }
+                });
     }
 
     /**
@@ -247,27 +265,9 @@ public class ExperimentManager {
      * NOTICE: Temporarily private while we rewrite it.
      *
      * @param keyword String keyword to search for
-     * @return Returns the list of experiments associated with keyword
      */
-    private ArrayList<Experiment> searchByKeyword(String keyword) {
-        // TODO: test
-        ArrayList<Experiment> searchResults = new ArrayList<Experiment>();
-        for (Experiment experiment : experimentList) {
-            if (experiment.getKeywords().contains(keyword)) {
-                searchResults.add(experiment);
-            }
-        }
-        return searchResults;
-    }
+    private void searchByKeyword(String keyword) {
 
-    /**
-     * DO NOT USE THIS
-     * This returns the current experiment list
-     *
-     * @return Returns the list of experiments
-     */
-    public ArrayList<Experiment> getExperimentList() {
-        return experimentList;
     }
 
     /**
@@ -286,7 +286,7 @@ public class ExperimentManager {
      * @param document the document to be extracted
      * @return the extracted experiment
      */
-    private Experiment extractExperimentDocument(DocumentSnapshot document) {
+    private Experiment extractExperiment(DocumentSnapshot document) {
         Experiment experiment = document.toObject(Experiment.class);
 
         // clear the trials since they do not have subclass specific attributes
