@@ -34,11 +34,14 @@ import static android.location.LocationManager.NETWORK_PROVIDER;
 
 public class BinomialTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
+    private boolean geoLocationReq;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_binomial_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Bundle bundle = getArguments();
+        geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
 
         builder.setView(view);
         builder.setTitle("Add Binomial Trial:");
@@ -49,8 +52,9 @@ public class BinomialTrialFragment extends DialogFragment {
                 Switch s = view.findViewById(R.id.switchSuccessIndicator);
                 boolean isSuccess = s.isChecked();
                 Location location = new Location();
-                //to be added:if this trial requires geo-location, update geo location
-                location.getCurrentLocation(getContext(),getActivity());
+                if (geoLocationReq) {
+                    location.getCurrentLocation(getContext(),getActivity());
+                }
                 Date date = new Date();
 
 

@@ -25,11 +25,14 @@ import java.util.Date;
 
 public class NonNegativeTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
+    private boolean geoLocationReq;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_non_negative_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Bundle bundle = getArguments();
+        geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
 
         return builder
                 .setView(view)
@@ -41,8 +44,9 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
                         Location location = new Location();
-                        //to be added:if this trial requires geo-location, update geo location
-                        location.getCurrentLocation(getContext(),getActivity());
+                        if (geoLocationReq) {
+                            location.getCurrentLocation(getContext(),getActivity());
+                        }
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();
