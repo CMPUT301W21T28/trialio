@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.example.trialio.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
@@ -140,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Subs was clicked");
-                toggleListButton(R.id.btnSubs );
+                toggleListButton(R.id.btnSubs);
                 setExperimentListToSubs();
             }
         });
@@ -169,6 +172,19 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // enter key was pressed
                     String text = v.getText().toString();
+                    /* BalusC, https://stackoverflow.com/users/157882/balusc, 2010-08-14, CC BY-SA
+                     * https://stackoverflow.com/a/3481842/15048024
+                     */
+                    String[] words = text.split(" ");
+                    List<String> keywords = new ArrayList<String>(Arrays.asList(words));
+                    experimentManager.searchByKeyword(keywords, new ExperimentManager.OnManyExperimentsFetchListener() {
+                        @Override
+                        public void onManyExperimentsFetch(List<Experiment> experiments) {
+                            experimentList.clear();
+                            experimentList.addAll(experiments);
+                            experimentAdapter.notifyDataSetChanged();
+                        }
+                    });
                     Log.d(TAG, "Search for " + text);
                 }
                 return false;
@@ -203,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         // Fetch data for the list view
         experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
-            public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
+            public void onManyExperimentsFetch(List<Experiment> experiments) {
                 experimentList.clear();
                 experimentList.addAll(experiments);
                 experimentAdapter.notifyDataSetChanged();
@@ -216,14 +232,13 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             experimentManager.getOwnedExperiments(currentUser, new ExperimentManager.OnManyExperimentsFetchListener() {
                 @Override
-                public void onManyExperimentsFetch(ArrayList<Experiment> experiments) {
+                public void onManyExperimentsFetch(List<Experiment> experiments) {
                     experimentList.clear();
                     experimentList.addAll(experiments);
                     experimentAdapter.notifyDataSetChanged();
                 }
             });
         }
-
     }
 
     private void setExperimentListToSubs() {

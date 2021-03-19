@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,7 +66,7 @@ public class ExperimentManager {
          *
          * @param experiments the experiments that were fetched from the database
          */
-        public void onManyExperimentsFetch(ArrayList<Experiment> experiments);
+        public void onManyExperimentsFetch(List<Experiment> experiments);
     }
 
     /**
@@ -270,7 +271,7 @@ public class ExperimentManager {
      * @param keywords String keyword to search for
      * @param listener the callback function to call once experiments have been fetched
      */
-    public void searchByKeyword(ArrayList<String> keywords, OnManyExperimentsFetchListener listener) {
+    public void searchByKeyword(List<String> keywords, OnManyExperimentsFetchListener listener) {
         /* Firebase Developer Docs, "Get data with Cloud Firestore", 2021-03-18, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/queries#array-contains-any
          */
@@ -286,6 +287,7 @@ public class ExperimentManager {
                                 Experiment exp = extractExperiment(doc);
                                 result.add(exp);
                             }
+                            listener.onManyExperimentsFetch(result);
                         } else {
                             Log.d(TAG, "get failed with " + task.getException());
                         }
