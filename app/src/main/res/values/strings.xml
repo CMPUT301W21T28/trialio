@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">trialio</string>
+    <string name="experiment_action_subscribe">Subscribe</string>
+    <string name="experiment_action_unsubscribe">Unsubscribe</string>
 </resources>

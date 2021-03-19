@@ -317,6 +317,7 @@ public class ExperimentManager {
                 experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterID"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString(), String.valueOf(trial.get("measurement"))));
             }
         } else {
+            Log.d(TAG, experiment.getExperimentID());
             assert (false);
         }
         return experiment;
