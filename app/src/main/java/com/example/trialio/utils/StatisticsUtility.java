@@ -20,6 +20,10 @@ public class StatisticsUtility {
         if(type.equals("COUNT")) {
             stats.add(1.0);
             stats.add(size);
+            stats.add(0.1);
+            stats.add(0.11);
+            stats.add(0.12);
+            stats.add(0.13);
 
             // TODO: do we actually want number of contributors? Just going to leave this for now as
             // getting the foundation working first is more crucial I think
@@ -49,6 +53,7 @@ public class StatisticsUtility {
             stats.add(success_count);
             stats.add(size - success_count);
             stats.add(success_count / size);
+            stats.add(0.222222);
         } else if(type.equals("NONNEGATIVE")) {
             ArrayList<Double> counts = new ArrayList<>();
             NonNegativeTrial nonnegative;
@@ -67,14 +72,17 @@ public class StatisticsUtility {
 
             double stdev = standard_deviation(counts, mean);
 
-            // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, mode
+            ArrayList<Double> modes = mode(counts);
+
+            // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, mode(s)
             stats.add(3.0);
             stats.add(counts.get((int)Math.floor(counts.size() / 2)));
             stats.add(mean);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
-            // TODO: i do not feel like doing mode tonight
-
+            for(int i=0; i<modes.size(); i++) {
+                stats.add(modes.get(i));
+            }
         } else if(type.equals("MEASUREMENT")) {
             ArrayList<Double> counts = new ArrayList<>();
             MeasurementTrial measurement;
@@ -93,17 +101,19 @@ public class StatisticsUtility {
 
             double stdev = standard_deviation(counts, mean);
 
-            // data stored in format of: ID = 4.0, median, mean, standard deviation, variance, mode
+            // data stored in format of: ID = 4.0, median, mean, standard deviation, variance
             stats.add(4.0);
             stats.add(counts.get((int)Math.floor(counts.size() / 2)));
             stats.add(mean);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
-            // TODO: i do not feel like doing mode tonight
+            // TODO: do we need mode for measurements? Won't they all be unique?
+            // TODO: could do a mode "box", like count instances between 2 integers (eg. 4<=x<=5)
+            stats.add(0.4444444);
         } else {
             // for testing
             stats.add(5.0);
-            stats.add(.444);
+            stats.add(0.5555555);
         }
 
         return stats;
@@ -129,6 +139,45 @@ public class StatisticsUtility {
         }
 
         return Math.sqrt(sum / size);
+    }
+
+    public ArrayList<Double> mode(ArrayList<Double> list) {
+        int size = list.size();
+        ArrayList<Double> points = new ArrayList<>();
+        ArrayList<Integer> counts = new ArrayList<>();
+
+        int index = 0;
+        for(int i=0; i<size-1; i++) {
+            if(list.get(i) != list.get(i + 1)) {
+                points.add(list.get(i));
+                counts.add(i + 1 - index);
+                if(i == size - 2) {
+                    points.add(list.get(i + 1));
+                    counts.add(1);
+                }
+                index = i + 1;
+            } else if(i == size - 2) {
+                points.add(list.get(i));
+                counts.add(i + 2 - index);
+            }
+        }
+
+        int max = 0;
+        for(int i=0; i<points.size(); i++) {
+            if(counts.get(i) > max) {
+                max = counts.get(i);
+            }
+        }
+
+        ArrayList<Double> modes = new ArrayList<>();
+        for(int i=0; i<points.size(); i++) {
+            if(counts.get(i) == max) {
+                modes.add(points.get(i));
+            }
+        }
+
+        Collections.sort(modes);
+        return modes;
     }
 
 }

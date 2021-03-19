@@ -200,12 +200,16 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // set TextViews
         //textDescription.setText("Description: " + experiment.getSettings().getDescription());
         //textType.setText("Type: " + experiment.getTrialManager().getType());
-        textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
-        textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
-        textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+        // textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+        // textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+        // textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
+        // textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
         textDescription.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(0)));
-        textType.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(1)));
+        textType.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(2)));
+        textRegion.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(3)));
+        textOwner.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(1)));
+        textStatus.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(4)));
+        textMinTrials.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(5)));
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
