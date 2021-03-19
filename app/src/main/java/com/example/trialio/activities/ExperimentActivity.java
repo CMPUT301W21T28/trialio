@@ -298,16 +298,16 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-        ImageButton scanQR = findViewById(R.id.btnCamera);
-        scanQR.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ScanQRActivity.class);
-                startActivity(intent);
-
-            }
-
-        });
+        //ImageButton scanQR = findViewById(R.id.btnCamera);
+        //scanQR.setOnClickListener(new View.OnClickListener(){
+        //    @Override
+        //    public void onClick(View v) {
+        //        Intent intent = new Intent(context, ScanQRActivity.class);
+        //        startActivity(intent);
+        //
+        //    }
+        //
+        //});
     }
 
     /**
