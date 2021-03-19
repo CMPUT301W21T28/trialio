@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
@@ -45,7 +46,9 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         // set the textviews
         textOwner.setText("Owner:"+trial.getExperimenterID());
         textDate.setText("Date:"+trial.getDate().toString());
-        textResult.setText("Result:" + trial.getData());
+        //textResult.setText("Result:" + trial.getData());
+
+
 
         return view;
     }
