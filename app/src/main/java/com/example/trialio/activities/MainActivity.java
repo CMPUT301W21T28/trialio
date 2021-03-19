@@ -11,11 +11,15 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.trialio.adapters.ArrayAdapterExperiment;
 import com.example.trialio.controllers.ExperimentManager;
@@ -23,6 +27,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -142,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Called when the Add button is clicked
-        Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
+        FloatingActionButton addExperiment = (FloatingActionButton) findViewById(R.id.btnNewExperiment);
         addExperiment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +155,23 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(context, ExperimentCreateActivity.class);
                 startActivity(intent);
+            }
+        });
+
+
+        /* Android Developer Docs, "TextView", 2021-03-17, Apache 2.0,
+         * https://developer.android.com/reference/android/widget/TextView.html#setOnEditorActionListener(android.widget.TextView.OnEditorActionListener)
+         */
+        EditText searchBar = findViewById(R.id.experiment_search_bar);
+        searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // enter key was pressed
+                    String text = v.getText().toString();
+                    Log.d(TAG, "Search for " + text);
+                }
+                return false;
             }
         });
     }
