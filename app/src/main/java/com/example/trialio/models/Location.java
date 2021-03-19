@@ -43,7 +43,7 @@ public class Location implements Serializable{
     private double longitude;
 
     final int REQUEST_CODE_FINE_PERMISSION = 99;
-    FusedLocationProviderClient locClient;
+    transient FusedLocationProviderClient locClient;
 
 
     public Location() {
