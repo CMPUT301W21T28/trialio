@@ -29,6 +29,10 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -44,4 +48,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-installations:16.3.5'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 }

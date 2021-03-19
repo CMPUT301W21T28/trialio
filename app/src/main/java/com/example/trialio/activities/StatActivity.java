@@ -10,7 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
 
@@ -21,6 +26,7 @@ public class StatActivity extends AppCompatActivity {
     private final Context context = this;
     private StatisticsUtility statisticsUtility;
     private String selectedType = "";
+    private BarChart statPlot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,33 @@ public class StatActivity extends AppCompatActivity {
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                     Math.round(stats.get(5) * 10000d) / 10000d);
+        }
+
+        // create graph of data
+        statPlot = (BarChart) findViewById(R.id.statPlot);
+
+        if(stats.get(0) == 1) {
+
+        } else if(stats.get(0) == 2) {
+            ArrayList<BarEntry> barEntries = new ArrayList<>();
+            barEntries.add(new BarEntry(stats.get(2).intValue(),0));
+            barEntries.add(new BarEntry(stats.get(3).intValue(),1));
+            BarDataSet barDataSet = new BarDataSet(barEntries,"Trials");
+
+            ArrayList<String> xTitles = new ArrayList<>();
+            xTitles.add("Successes");
+            xTitles.add("Failures");
+
+            BarData data = new BarData(xTitles, barDataSet);
+            statPlot.setData(data);
+
+            statPlot.setTouchEnabled(true);
+            statPlot.setDragEnabled(true);
+            statPlot.setScaleEnabled(true);
+        } else if(stats.get(0) == 3) {
+
+        } else if(stats.get(0) == 4) {
+
         }
     }
 
