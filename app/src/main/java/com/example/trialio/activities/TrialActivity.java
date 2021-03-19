@@ -37,7 +37,7 @@ public class TrialActivity extends AppCompatActivity {
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
 
         trialList = experiment.getTrialManager().getTrials();
-        trialAdapter = new ArrayAdapterTrials(this, trialList);
+        trialAdapter = new ArrayAdapterTrials(this, experiment);
 
         experimentManager = new ExperimentManager();
 
