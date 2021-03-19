@@ -17,6 +17,7 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.ExperimentTypeUtility;
 
 import java.util.ArrayList;
 
@@ -53,16 +54,15 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         textOwner.setText("Owner:"+trial.getExperimenterID());
         textDate.setText("Date:"+trial.getDate().toString());
 
-        if (experiment.getTrialManager().getType().equals("BINOMIAL")){
+        if (ExperimentTypeUtility.isBinomial(experiment.getTrialManager().getType())) {
             textResult.setText("Result:" + ((BinomialTrial) trial).getIsSuccess());
-        }else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
+        }else if (ExperimentTypeUtility.isMeasurement(experiment.getTrialManager().getType())) {
             textResult.setText("Result:" + ((MeasurementTrial) trial).getMeasurement() + " " + ((MeasurementTrial) trial).getUnit());
-        }else if (experiment.getTrialManager().getType().equals("COUNT")){
+        }else if (ExperimentTypeUtility.isCount(experiment.getTrialManager().getType())) {
             textResult.setText("Result:" + ((CountTrial) trial).getCount());
-        }else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
+        }else if (ExperimentTypeUtility.isNonNegative(experiment.getTrialManager().getType())){
             textResult.setText("Result:" + ((NonNegativeTrial) trial).getNonNegCount());
         }
-
 
         return view;
     }
