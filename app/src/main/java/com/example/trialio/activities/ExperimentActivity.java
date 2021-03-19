@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
@@ -219,14 +220,37 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
      */
     @Override
     public void onOkPressed(Trial newTrial) {
-        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-            @Override
-            public void onExperimentFetch(Experiment updated_experiment) {
-                experiment = updated_experiment;
-                experiment.getTrialManager().addTrial(newTrial);
-                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
-            }
-        });
+        if (experiment.getSettings().getGeoLocationRequired() && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //upload trial
+            experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment updated_experiment) {
+                    experiment = updated_experiment;
+                    experiment.getTrialManager().addTrial(newTrial);
+                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                }
+            });
+        } else if (!experiment.getSettings().getGeoLocationRequired()) {
+            //upload trial
+            experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment updated_experiment) {
+                    experiment = updated_experiment;
+                    experiment.getTrialManager().addTrial(newTrial);
+                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                }
+            });
+        } else if (experiment.getSettings().getGeoLocationRequired() && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(ExperimentActivity.this)
+                    .setMessage("Your trial was not submitted, please enable location permissions")
+                    .setCancelable(false)
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+        }
     }
 
     /**
@@ -242,15 +266,27 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
                     CountTrialFragment newTrial = new CountTrialFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
                 } else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
                 } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
                 } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {
                     assert (false);
