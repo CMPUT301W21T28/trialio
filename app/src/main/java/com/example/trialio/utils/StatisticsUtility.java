@@ -63,6 +63,14 @@ public class StatisticsUtility {
             }
             Collections.sort(counts);
 
+            double median;
+            int len = counts.size();
+            if(len % 2 == 0) {
+                median = (counts.get(len / 2) + counts.get(len / 2 - 1)) / 2;
+            } else {
+                median = counts.get((int)Math.floor(counts.size() / 2));
+            }
+
             double counts_sum = 0;
             for(int i=0; i<size; i++) {
                 counts_sum += counts.get(i);
@@ -76,7 +84,7 @@ public class StatisticsUtility {
 
             // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, mode(s)
             stats.add(3.0);
-            stats.add(counts.get((int)Math.floor(counts.size() / 2)));
+            stats.add(median);
             stats.add(mean);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
@@ -92,6 +100,14 @@ public class StatisticsUtility {
             }
             Collections.sort(counts);
 
+            double median;
+            int len = counts.size();
+            if(len % 2 == 0) {
+                median = (counts.get(len / 2) + counts.get(len / 2 - 1)) / 2;
+            } else {
+                median = counts.get((int)Math.floor(counts.size() / 2));
+            }
+
             double counts_sum = 0;
             for(int i=0; i<size; i++) {
                 counts_sum += counts.get(i);
@@ -103,7 +119,7 @@ public class StatisticsUtility {
 
             // data stored in format of: ID = 4.0, median, mean, standard deviation, variance
             stats.add(4.0);
-            stats.add(counts.get((int)Math.floor(counts.size() / 2)));
+            stats.add(median);
             stats.add(mean);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));

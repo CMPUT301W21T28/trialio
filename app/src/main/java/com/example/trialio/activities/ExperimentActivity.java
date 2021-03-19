@@ -47,6 +47,8 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 
+import java.util.ArrayList;
+
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
     private Experiment experiment;
@@ -195,21 +197,33 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        TextView textStats = findViewById(R.id.txtStatsSummary);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
-        //textDescription.setText("Description: " + experiment.getSettings().getDescription());
-        //textType.setText("Type: " + experiment.getTrialManager().getType());
-        // textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        // textOwner.setText("Owner: " + experiment.getSettings().getOwner());
-        // textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
-        // textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
-        textDescription.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(0)));
-        textType.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(2)));
-        textRegion.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(3)));
-        textOwner.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(1)));
-        textStatus.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(4)));
-        textMinTrials.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(5)));
+        textDescription.setText("Description: " + experiment.getSettings().getDescription());
+        textType.setText("Type: " + experiment.getTrialManager().getType());
+        textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+        textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
+        textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+
+        // set Stats Summary
+        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
+
+        String modes = "";
+        for(int i=5; i<stats.size(); i++) {
+            if(i == 5) {
+                modes = Double.toString(stats.get(i));
+            } else {
+                modes += ", " + stats.get(i);
+            }
+        }
+        textStats.setText("Stats Summary:\nMedian: " + stats.get(1) + "\nMean: " +
+                Math.round(stats.get(2) * 10000d) / 10000d + "\nStandard deviation: " +
+                Math.round(stats.get(3) * 10000d) / 10000d + "\nVariance: " +
+                Math.round(stats.get(4) * 10000d) / 10000d + "\nModes: " + modes);
+
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
