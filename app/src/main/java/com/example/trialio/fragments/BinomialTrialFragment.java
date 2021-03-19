@@ -53,6 +53,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 location.getCurrentLocation(getContext(),getActivity());
                 Date date = new Date();
 
+
                 UserManager userManager = new UserManager();
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
@@ -64,6 +65,7 @@ public class BinomialTrialFragment extends DialogFragment {
             }
         });
         return builder.create();
+
     }
 
     public interface OnFragmentInteractionListener {

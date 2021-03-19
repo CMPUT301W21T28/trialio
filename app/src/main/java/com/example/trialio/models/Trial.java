@@ -16,6 +16,7 @@ public class Trial implements Serializable {
         this.date = date;
     }
 
+
     public String getExperimenterID() {
         return experimenterID;
     }

@@ -258,7 +258,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+
         // Called when the user clicks item in experiment list
+
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -303,6 +305,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // set the experiment settings button to invisible by default
         //experimentSettings.setVisibility(View.INVISIBLE);
 
+
         // if the current user is the owner, set the experiment settings button as visible.
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
@@ -314,6 +317,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 }
             }
         });
+
 
         // set the addTrial button to invisible by default
         addTrial.setVisibility(View.INVISIBLE);

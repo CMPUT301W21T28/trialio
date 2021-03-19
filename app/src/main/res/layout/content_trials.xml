@@ -4,15 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/text_trial_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="0dp"
-        android:text="ID"
-        android:textSize="12sp"></TextView>
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_trial_owner"

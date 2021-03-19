@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.activities.MainActivity;
+import com.example.trialio.activities.ViewUserActivity;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -62,7 +63,6 @@ public class EditProfileFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
                         String UserName = username.getText().toString();
                         String UserPhone = phoneNumber.getText().toString();
                         String UserEMail = email.getText().toString();
@@ -74,7 +74,6 @@ public class EditProfileFragment extends DialogFragment {
                         user.getContactInfo().setEmail(UserEMail);
 
                         manager.updateUser(user);
-                        startActivity(intent);
                     //confirm update to user profile
                     }}).create();
     }
