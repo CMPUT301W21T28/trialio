@@ -83,19 +83,22 @@ public class QuestionForumActivity extends AppCompatActivity {
         ListView questionForumListView = findViewById(R.id.questionForumListView);
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(context, QuestionForumActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 // TODO: how to pass in an argument for a question ???
-                // args.putSerializable("experiment", experimentList.get(i));
+                args.putSerializable("question_details", questionList.get(position));
                 intent.putExtras(args);
 
                 // start an ExperimentActivity
                 startActivity(intent);
             }
         });
+
+
+
 
         // TODO: finish fragment
         Button newQuestion = (Button) findViewById(R.id.newQuestion);
