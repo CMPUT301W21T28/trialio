@@ -82,7 +82,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         // get the important views in this activity
         experimentSettings = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
-        addTrial = (Button) findViewById(R.id.btnAddIgnored);
+        addTrial = (Button) findViewById(R.id.btnAddTrial);
 
         // set the visibility of certain views in this activity
         setViewVisibility();
