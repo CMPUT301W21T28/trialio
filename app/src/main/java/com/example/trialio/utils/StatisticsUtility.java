@@ -155,8 +155,10 @@ public class StatisticsUtility {
         ArrayList<Integer> counts = new ArrayList<>();
 
         int index = 0;
+        int compare;
         for(int i=0; i<size-1; i++) {
-            if(list.get(i) != list.get(i + 1)) {
+            compare = Double.compare(list.get(i), list.get(i + 1));
+            if(compare != 0) {
                 points.add(list.get(i));
                 counts.add(i + 1 - index);
                 if(i == size - 2) {

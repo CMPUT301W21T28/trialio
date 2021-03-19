@@ -72,7 +72,7 @@ public class StatActivity extends AppCompatActivity {
                     "\nMean: " + stats.get(2) + "\nMedian: " +
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d + "\nModes: " + modes);
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
         } else if(stats.get(0) == 4) {
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
                     "\nMean: " + stats.get(2) + "\nMedian: " +
