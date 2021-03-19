@@ -37,7 +37,7 @@ public class ViewUserActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("User");
-
+        /*
         //setup back button functionality
         ActionBar customActionBar = getSupportActionBar();
         customActionBar.setDisplayShowHomeEnabled(false);
@@ -55,7 +55,7 @@ public class ViewUserActivity extends AppCompatActivity {
 
         customActionBar.setCustomView(mCustomView);
         customActionBar.setDisplayShowCustomEnabled(true);
-
+        */
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);
         TextView UserEMail = findViewById(R.id.emailText);
