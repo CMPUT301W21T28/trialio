@@ -219,6 +219,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 modes += ", " + stats.get(i);
             }
         }
+
         textStats.setText("Stats Summary:\nMedian: " + stats.get(1) + "\nMean: " +
                 Math.round(stats.get(2) * 10000d) / 10000d + "\nStandard deviation: " +
                 Math.round(stats.get(3) * 10000d) / 10000d + "\nVariance: " +
@@ -319,6 +320,16 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                         userManager.updateUser(user);
                     }
                 });
+            }
+        });
+
+        // Called when the user clicks the statistics button
+        Button statsButton = (Button) findViewById(R.id.btnStats);
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, StatActivity.class);
+                startActivity(intent);
             }
         });
     }
