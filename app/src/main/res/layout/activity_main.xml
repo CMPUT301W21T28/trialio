@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="5dp"
-            android:layout_weight="1.3"
+            android:layout_weight="1"
             android:background="#9c9c9c">
 
             <Button
@@ -108,7 +108,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="10"
+            android:layout_weight="8"
             android:gravity="center">
 
             <ListView
