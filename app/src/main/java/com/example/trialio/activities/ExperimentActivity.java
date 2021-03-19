@@ -209,21 +209,38 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
 
         // set Stats Summary
+        // TODO: this code is also used in StatActivity, make it so code only written once
         ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
 
-        String modes = "";
-        for(int i=5; i<stats.size(); i++) {
-            if(i == 5) {
-                modes = Double.toString(stats.get(i));
-            } else {
-                modes += ", " + stats.get(i);
+        // Took rounding code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
+        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
+        // AUTHOR: 	Stack Overflow User: asterite
+        if(stats.get(0) == 1) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
+        } else if(stats.get(0) == 2) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() + "\nSuccesses: " +
+                    stats.get(2) + "\nFailures: " + stats.get(3) + "\nSuccess Rate: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d);
+        } else if(stats.get(0) == 3) {
+            String modes = Integer.toString(stats.get(6).intValue());
+            for(int i=7; i<stats.size(); i++) {
+                modes += ", " + stats.get(i).intValue();
             }
-        }
 
-        textStats.setText("Stats Summary:\nMedian: " + stats.get(1) + "\nMean: " +
-                Math.round(stats.get(2) * 10000d) / 10000d + "\nStandard deviation: " +
-                Math.round(stats.get(3) * 10000d) / 10000d + "\nVariance: " +
-                Math.round(stats.get(4) * 10000d) / 10000d + "\nModes: " + modes);
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nModes: " + modes);
+        } else if(stats.get(0) == 4) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d);
+        }
 
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
@@ -329,6 +346,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, StatActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_stat", experiment);
+                intent.putExtras(args);
+
+                // start a StatActivity
                 startActivity(intent);
             }
         });

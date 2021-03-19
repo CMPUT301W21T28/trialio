@@ -25,6 +25,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.trialio.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.StatActivity"
+            android:parentActivityName=".activities.ExperimentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.trialio.activities.ExperimentActivity" />
+        </activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

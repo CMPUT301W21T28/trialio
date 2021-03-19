@@ -20,10 +20,6 @@ public class StatisticsUtility {
         if(type.equals("COUNT")) {
             stats.add(1.0);
             stats.add(size);
-            stats.add(0.1);
-            stats.add(0.11);
-            stats.add(0.12);
-            stats.add(0.13);
 
             // TODO: do we actually want number of contributors? Just going to leave this for now as
             // getting the foundation working first is more crucial I think
@@ -53,7 +49,6 @@ public class StatisticsUtility {
             stats.add(success_count);
             stats.add(size - success_count);
             stats.add(success_count / size);
-            stats.add(0.222222);
         } else if(type.equals("NONNEGATIVE")) {
             ArrayList<Double> counts = new ArrayList<>();
             NonNegativeTrial nonnegative;
@@ -84,8 +79,9 @@ public class StatisticsUtility {
 
             // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, mode(s)
             stats.add(3.0);
-            stats.add(median);
+            stats.add(size);
             stats.add(mean);
+            stats.add(median);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
             for(int i=0; i<modes.size(); i++) {
@@ -119,17 +115,13 @@ public class StatisticsUtility {
 
             // data stored in format of: ID = 4.0, median, mean, standard deviation, variance
             stats.add(4.0);
-            stats.add(median);
+            stats.add(size);
             stats.add(mean);
+            stats.add(median);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
             // TODO: do we need mode for measurements? Won't they all be unique?
             // TODO: could do a mode "box", like count instances between 2 integers (eg. 4<=x<=5)
-            stats.add(0.4444444);
-        } else {
-            // for testing
-            stats.add(5.0);
-            stats.add(0.5555555);
         }
 
         return stats;
