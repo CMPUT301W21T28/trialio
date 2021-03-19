@@ -135,4 +135,14 @@ public class User implements Serializable {
             throw new IllegalArgumentException("User not subscribed to given experiment");
         }
     }
+
+    /**
+     * Determines whether a User is subscribed to a given experiment.
+     * @param experiment the experiment to check
+     * @return true if the User is subscribed, false otherwise
+     */
+    public boolean isSubscribed(Experiment experiment) {
+        String id = experiment.getExperimentID();
+        return this.subscribedExperimentIds.contains(id);
+    }
 }

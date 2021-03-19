@@ -46,7 +46,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
-public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
+public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
     private Experiment experiment;
     private String trialType;
@@ -182,7 +182,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
     /**
      * This initializes all of the fields of the activity with data from the experiment
      */
-    public void setFields(){
+    public void setFields() {
         // get TextViews
         TextView textDescription = findViewById(R.id.txtExperimentDesciption);
         TextView textType = findViewById(R.id.txtExperimentType);
@@ -190,6 +190,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
@@ -198,10 +199,22 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                if (user.isSubscribed(experiment)) {
+                    subBtn.setText(R.string.experiment_action_unsubscribe);
+                } else {
+                    subBtn.setText(R.string.experiment_action_subscribe);
+                }
+            }
+        });
+
     }
 
     /**
      * This is called when the user presses confirm on one of the Trial creation fragments
+     *
      * @param newTrial The new trial that was created in the fragment
      */
     @Override
@@ -258,6 +271,27 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
 
                 // start an ExperimentActivity
                 startActivity(intent);
+            }
+        });
+
+        // Called when the user clicks the subscribe button
+        Button subBtn = findViewById(R.id.btnSubscribe);
+        subBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        if (user.isSubscribed(experiment)) {
+                            user.removeSubscription(experiment);
+                            subBtn.setText(R.string.experiment_action_subscribe);
+                        } else {
+                            user.addSubscription(experiment);
+                            subBtn.setText(R.string.experiment_action_unsubscribe);
+                        }
+                        userManager.updateUser(user);
+                    }
+                });
             }
         });
     }
