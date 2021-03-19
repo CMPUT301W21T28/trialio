@@ -55,6 +55,11 @@ public class Location implements Serializable{
         this.longitude = longitude;
     }
 
+    /**
+        This function requests the wifi or gps of the device to return the current location, and
+        double checks permission for the user location
+     */
+
     public void getCurrentLocation(Context context, Activity activity) {
         //getting location permission from the user
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
