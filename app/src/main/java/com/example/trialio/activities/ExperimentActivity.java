@@ -45,6 +45,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.StatisticsUtility;
 
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -57,6 +58,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
+    private StatisticsUtility statisticsUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // create managers important to this activity
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
+
+        // create statistics utility
+        statisticsUtility = new StatisticsUtility();
 
         // get the important views in this activity
         experimentSettings = (ImageButton) findViewById(R.id.button_experiment_settings);
@@ -193,12 +198,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
-        textDescription.setText("Description: " + experiment.getSettings().getDescription());
-        textType.setText("Type: " + experiment.getTrialManager().getType());
+        //textDescription.setText("Description: " + experiment.getSettings().getDescription());
+        //textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
+        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+        textDescription.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(0)));
+        textType.setText("     " + Double.toString(statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment).get(1)));
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
