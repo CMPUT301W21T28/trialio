@@ -58,8 +58,9 @@ public class StatActivity extends AppCompatActivity {
         if(stats.get(0) == 1) {
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
         } else if(stats.get(0) == 2) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() + "\nSuccesses: " +
-                    stats.get(2) + "\nFailures: " + stats.get(3) + "\nSuccess Rate: " +
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
+                    stats.get(3).intValue() + "\nSuccess Rate: " +
                     Math.round(stats.get(4) * 10000d) / 10000d);
         } else if(stats.get(0) == 3) {
             String modes = Integer.toString(stats.get(6).intValue());

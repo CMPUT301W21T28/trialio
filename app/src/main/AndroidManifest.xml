@@ -27,10 +27,10 @@
         </activity>
         <activity
             android:name=".activities.StatActivity"
-            android:parentActivityName=".activities.ExperimentActivity">
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.trialio.activities.ExperimentActivity" />
+                android:value="com.example.trialio.activities.MainActivity" />
         </activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
