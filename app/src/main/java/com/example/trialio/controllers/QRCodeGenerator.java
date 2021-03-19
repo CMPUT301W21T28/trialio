@@ -1,10 +1,11 @@
-package com.example.trialio;
+package com.example.trialio.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-public class QrCode extends AppCompatActivity {
+import com.example.trialio.R;
+
+public class QRCodeGenerator extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
