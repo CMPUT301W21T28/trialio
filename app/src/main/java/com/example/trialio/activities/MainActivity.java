@@ -169,14 +169,20 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                ;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // enter key was pressed
                     String text = v.getText().toString();
                     /* BalusC, https://stackoverflow.com/users/157882/balusc, 2010-08-14, CC BY-SA
                      * https://stackoverflow.com/a/3481842/15048024
                      */
-                    String[] words = text.split(" ");
+                    String[] words = text.split(" ", -1);
                     List<String> keywords = new ArrayList<String>(Arrays.asList(words));
+                    for (String k : keywords) {
+                        if (k.equals("")) {
+                            keywords.remove(k);
+                        }
+                    }
                     experimentManager.searchByKeyword(keywords, new ExperimentManager.OnManyExperimentsFetchListener() {
                         @Override
                         public void onManyExperimentsFetch(List<Experiment> experiments) {
