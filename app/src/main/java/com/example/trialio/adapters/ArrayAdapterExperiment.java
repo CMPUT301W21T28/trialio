@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,12 +43,16 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         TextView textType = view.findViewById(R.id.text_type);
         TextView textStatus = view.findViewById(R.id.text_status);
         TextView textOwner = view.findViewById(R.id.text_owner);
+        ImageView locNeed = view.findViewById(R.id.location);
 
         // set the textviews
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "yes" : "no");
         textOwner.setText(experiment.getSettings().getOwner().getUsername());
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            locNeed.setVisibility(View.GONE);
+        }
 
         return view;
     }

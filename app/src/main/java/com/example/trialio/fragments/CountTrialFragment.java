@@ -38,12 +38,15 @@ public class CountTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         Location location = new Location();
+                        //to be added:if this trial requires geo-location, update geo location
+                        location.getCurrentLocation(getContext(),getActivity());
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
+                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new CountTrial(user.getId(), location, date));
                             }
                         });

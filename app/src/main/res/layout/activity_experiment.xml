@@ -31,12 +31,13 @@
 
         <ImageButton
             android:id="@+id/btnLogo"
-            android:layout_width="0dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:padding="15dp"
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo"></ImageButton>
+
 
         <ImageButton
             android:id="@+id/button_experiment_settings"
@@ -49,6 +50,7 @@
             android:tint="#E8B41B">
             android:src="@android:drawable/ic_menu_manage"
         </ImageButton>
+
 
     </LinearLayout>
 
@@ -222,5 +224,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+
+    <Button
+        android:id="@+id/locationPerm"
+        android:layout_width="163dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="10dp"
+        android:text="Allow Location"
+        android:textColor="@color/purple_700"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSubscribe"
+        app:layout_constraintVertical_bias="0.044" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,33 @@
 package com.example.trialio.activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+/*
+Location permissions method from youtube video
 
+Video Title: Runtime Permissions Android | Required from API 23 and above
+
+Link to Video: https://www.youtube.com/watch?v=WZhEroL4P7s
+
+Video uploader: yoursTRULY
+
+Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+
+ */
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,14 +48,14 @@ import com.example.trialio.models.Trial;
 
 public class ExperimentActivity extends AppCompatActivity implements  NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
-    private final Context context = this;
-
+    private Experiment experiment;
+    private String trialType;
     private ExperimentManager experimentManager;
+    private final Context context = this;
+    final int REQUEST_CODE_FINE_PERMISSION = 99;
     private ImageButton experimentSettings;
     private UserManager userManager;
-    private Experiment experiment;
     private Button showTrials;
-    private String trialType;
     private Button addTrial;
 
     @Override
@@ -70,12 +92,25 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
 
         // set the onclick listeners for this activity
         setOnClickListeners();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        Button locPerm = findViewById(R.id.locationPerm);
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            locPerm.setVisibility(View.GONE);
+        }
+        locPerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLocationPermissions();
+            }
+        });
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locPerm.setVisibility(View.GONE);
+        }
 
         // update the experiment
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -85,6 +120,63 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
                 setFields();
             }
         });
+    }
+
+    /**
+     * This gets permission from the user to share their location
+     */
+    public void getLocationPermissions() {
+        //getting location permission from the user
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //permission is not granted so request permission
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //show user a message if user refused to give permission
+                new AlertDialog.Builder(ExperimentActivity.this)
+                        .setMessage("To ensure the accuracy of submitted trials for this experiment, please grant location permission")
+                        .setCancelable(false)
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(ExperimentActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
+                            }
+                        }).show();
+            } else {
+                // request permission
+                ActivityCompat.requestPermissions(ExperimentActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
+            }
+        }
+    }
+
+    /**
+     * This is to take action if the user has denied location permission
+     */
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_FINE_PERMISSION) {
+            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //user has granted permission
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    //The user has chosen to permanently deny location permissions, so we request them to go to app settings and enable it from there
+                    new AlertDialog.Builder(ExperimentActivity.this)
+                            .setMessage("Location permissions have been permanently denied, please go to app settings and enable location permissions")
+                            .setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", ExperimentActivity.this.getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+        }
     }
 
     /**
@@ -103,7 +195,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+        textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
     }
@@ -175,7 +267,7 @@ public class ExperimentActivity extends AppCompatActivity implements  NonNegativ
      */
     public void setViewVisibility() {
         // set the experiment settings button to invisible by default
-        experimentSettings.setVisibility(View.INVISIBLE);
+        //experimentSettings.setVisibility(View.INVISIBLE);
 
         // if the current user is the owner, set the experiment settings button as visible.
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {

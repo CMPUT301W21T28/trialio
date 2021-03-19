@@ -43,6 +43,8 @@ public class MeasurementTrialFragment extends DialogFragment {
                         Double measurement = Double.parseDouble(tv.getText().toString());
 
                         Location location = new Location();
+                        //to be added:if this trial requires geo-location, update geo location
+                        location.getCurrentLocation(getContext(),getActivity());
                         Date date = new Date();
                         String unit = "UNIT";  // TODO: change this
 
@@ -50,6 +52,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
+                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
                             }
                         });
