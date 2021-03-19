@@ -9,8 +9,8 @@ import java.util.Date;
 public class NonNegativeTrial extends Trial implements Serializable {
     private int nonNegCount;
 
-    public NonNegativeTrial(String experimenterID, Location location, Date date, int nonNegCount, String data) {
-        super(experimenterID, location, date, data);
+    public NonNegativeTrial(String experimenterID, Location location, Date date, int nonNegCount) {
+        super(experimenterID, location, date);
         this.nonNegCount = nonNegCount;
     }
 

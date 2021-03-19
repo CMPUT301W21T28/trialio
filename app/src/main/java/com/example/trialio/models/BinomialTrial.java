@@ -6,8 +6,8 @@ import java.util.Date;
 public class BinomialTrial extends Trial implements Serializable {
     private boolean isSuccess;
 
-    public BinomialTrial(String experimenterID, Location location, Date date, String data) {
-        super(experimenterID, location, date, data);
+    public BinomialTrial(String experimenterID, Location location, Date date, boolean isSuccess) {
+        super(experimenterID, location, date);
         this.isSuccess = isSuccess;
     }
 
