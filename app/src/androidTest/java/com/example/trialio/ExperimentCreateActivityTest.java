@@ -51,8 +51,7 @@ public class ExperimentCreateActivityTest {
     }
 
     /**
-     * Add a city to the listview and check the city name using assertTrue
-     * Clear all the cities from the listview and check again with assertFalse
+     * Tests creating an experiment.
      */
     @Test
     public void createExperiment() {
