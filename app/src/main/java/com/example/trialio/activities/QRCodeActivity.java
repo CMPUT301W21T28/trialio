@@ -43,7 +43,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         // Set up the adapter for the list and experiment manager
         ListView trialListView = findViewById(R.id.list_trials);
-        trialListView.setAdapter(QRAdapter);
+        //trialListView.setAdapter(QRAdapter);
 
     }
 
