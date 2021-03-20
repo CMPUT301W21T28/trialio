@@ -17,7 +17,10 @@ public class StatisticsUtility {
         double size = trials.size();
 
         System.out.println(type);
-        if(type.equals("COUNT")) {
+        if(size == 0) {
+            stats.add(1.0);
+            stats.add(size);
+        } else if(type.equals("COUNT")) {
             stats.add(1.0);
             stats.add(size);
 
