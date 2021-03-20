@@ -26,6 +26,11 @@ public class ArrayAdapterQR extends ArrayAdapter{
     private ArrayList<Trial> trialList;
     private Experiment experiment;
 
+    /**
+     * takes in experiment and store relevant information needed for listview
+     * @param context
+     * @param experiment
+     */
     public ArrayAdapterQR(Context context, Experiment experiment) {
         super(context, 0, experiment.getTrialManager().getTrials());
 
@@ -34,6 +39,14 @@ public class ArrayAdapterQR extends ArrayAdapter{
         this.experiment = experiment;
     }
 
+
+    /**
+     * this sets the field of items in listview with information retrieved from experiment
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
