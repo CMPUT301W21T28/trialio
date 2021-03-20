@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -35,7 +36,6 @@ public class QuestionForumManager implements Serializable {
     private final CollectionReference questionForumCollection;
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
-    private String experimentID;  // NEED THIS FORM ACTIVITY
     private static final String EXPERIMENT_PATH = "experiments";
 
 
@@ -53,7 +53,7 @@ public class QuestionForumManager implements Serializable {
          * This method will be called when an Experiment is fetched from the database.
          * @param question the question that was fetched from the database
          */
-        public void onQuestionFetch(Question question);
+        void onQuestionFetch(Question question);
     }
 
     /**
@@ -66,7 +66,7 @@ public class QuestionForumManager implements Serializable {
          *
          * @param questions all the questions that were fetched from the database (belong to the current experiment)
          */
-        public void onManyExperimentsFetch(ArrayList<Question> questions);
+        void onManyQuestionsFetch(ArrayList<Question> questions);
     }
 
 
@@ -77,17 +77,13 @@ public class QuestionForumManager implements Serializable {
      */
     public QuestionForumManager(String associatedExperimentID) {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
-        questions = new ArrayList<Question>();  // TODO: is it okay to use a Collection instead of an ArrayList here ??
+        questions = new ArrayList<>();  // TODO: is it okay to use a Collection instead of an ArrayList here ??
     }
 
-    public Collection<Question> getQuestions() {
-        return this.questions;
-    }
 
-    public void setQuestions(Collection<Question> questions) {
-        this.questions = (ArrayList) questions;
+    public void setQuestions(ArrayList<Question> questions) {
+        this.questions = questions;
     }
-
 
 
     public void createQuestion (Question newQuestion) {
@@ -202,7 +198,7 @@ public class QuestionForumManager implements Serializable {
                                 Question question = extractQuestionDocument(doc);
                                 questions.add(question);
                             }
-                            listener.onManyExperimentsFetch(questions);
+                            listener.onManyQuestionsFetch(questions);
                         } else {
                             String message = "Failed to fetch all questions";
                             Log.d(TAG, message);
