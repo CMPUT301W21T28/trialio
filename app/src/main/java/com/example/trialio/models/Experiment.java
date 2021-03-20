@@ -39,7 +39,7 @@ public class Experiment implements Serializable {
     private QuestionForum questionForum;
 
     /**
-     * Constructor for anExperiment
+     * Constructor for an Experiment
      */
     public Experiment() {
         this.experimentID = null;
@@ -53,7 +53,7 @@ public class Experiment implements Serializable {
     /**
      * Constructor for an Experiment
      *
-     * @param experimentID   the unique identifer of an experiment
+     * @param experimentID   the unique identifier of an experiment
      * @param settings       the settings and description of an experiment
      * @param type           the type for an experiment
      * @param isOpen         the open/close status of an experiment

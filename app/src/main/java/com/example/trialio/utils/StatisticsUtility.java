@@ -9,8 +9,19 @@ import com.example.trialio.models.Trial;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Utility class for statistics, handles the manipulation and calculation of statistics
+ */
 public class StatisticsUtility {
 
+    /**
+     * Gets the statistics for an experiment
+     *
+     * @param type       the experiment type
+     * @param experiment an experiment
+     *
+     * @return the statistics for an experiment
+     */
     public ArrayList<Double> getExperimentStatistics (String type, Experiment experiment) {
         ArrayList<Double> stats = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
@@ -18,9 +29,12 @@ public class StatisticsUtility {
 
         System.out.println(type);
         if(size == 0) {
+            // if no trials, no statistics are available
+            // data stored in format of: ID = 1.0, 0
             stats.add(1.0);
             stats.add(size);
         } else if(type.equals("COUNT")) {
+            // data stored in format of: ID = 1.0, total trials (count)
             stats.add(1.0);
             stats.add(size);
 
@@ -130,14 +144,32 @@ public class StatisticsUtility {
         return stats;
     }
 
+    /**
+     * Gets the trials histogram
+     *
+     * @return the trials histogram
+     */
     public void getTrialsHistogram (String type, Experiment experiment) {
-        //...
+        // unimplemented at the moment, one of our next steps
     }
 
+    /**
+     * Gets the trials plot
+     *
+     * @return the trials plot
+     */
     public void getTrialsPlot (String type, Experiment experiment) {
         //...
     }
 
+    /**
+     * Gets the standard deviation of trial values
+     *
+     * @param list the list of trial values
+     * @param mean the mean of trial values
+     *
+     * @return the standard deviation of trial values
+     */
     public double standard_deviation(ArrayList<Double> list, double mean) {
         int size = list.size();
         double[] mean_dist = new double[size];
@@ -152,6 +184,13 @@ public class StatisticsUtility {
         return Math.sqrt(sum / size);
     }
 
+    /**
+     * Gets the mode(s) of trial values
+     *
+     * @param list the list of trial values
+     *
+     * @return the mode(s) of trial values
+     */
     public ArrayList<Double> mode(ArrayList<Double> list) {
         ArrayList<Double> modes = new ArrayList<>();
         int size = list.size();
