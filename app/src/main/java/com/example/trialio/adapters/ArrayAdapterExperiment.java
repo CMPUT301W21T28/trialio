@@ -18,6 +18,9 @@ import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
+/**
+ * This is an ArrayAdapter which contains an experiment list. Used in MainActivity.
+ */
 public class ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;
     private ArrayList<Experiment> experimentList;
@@ -52,7 +55,7 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         // set the textviews
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
-        textStatus.setText(experiment.getTrialManager().getIsOpen() ? "yes" : "no");
+        textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
 
         // get the owner's username
         userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {

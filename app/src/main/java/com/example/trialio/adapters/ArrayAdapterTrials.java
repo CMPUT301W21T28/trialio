@@ -23,6 +23,9 @@ import com.example.trialio.utils.ExperimentTypeUtility;
 
 import java.util.ArrayList;
 
+/**
+ * This is an ArrayAdapter which contains a trial list. Used in TrialActivity.
+ */
 public class ArrayAdapterTrials extends ArrayAdapter {
     private Context context;
     private ArrayList<Trial> trialList;
