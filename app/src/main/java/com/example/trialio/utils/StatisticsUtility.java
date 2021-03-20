@@ -153,7 +153,13 @@ public class StatisticsUtility {
     }
 
     public ArrayList<Double> mode(ArrayList<Double> list) {
+        ArrayList<Double> modes = new ArrayList<>();
         int size = list.size();
+        if(size == 1) {
+            modes.add(list.get(0));
+            return modes;
+        }
+
         ArrayList<Double> points = new ArrayList<>();
         ArrayList<Integer> counts = new ArrayList<>();
 
@@ -182,7 +188,6 @@ public class StatisticsUtility {
             }
         }
 
-        ArrayList<Double> modes = new ArrayList<>();
         for(int i=0; i<points.size(); i++) {
             if(counts.get(i) == max) {
                 modes.add(points.get(i));
