@@ -189,7 +189,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        TextView textGeoWarning = findViewById(R.id.txtExperimentGeoWarning);
         Button subBtn = findViewById(R.id.btnSubscribe);
+
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
@@ -203,6 +205,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 textOwner.setText("Owner: " + user.getUsername());
             }
         });
+
+        // if this is a geo experiment, give a warning
+        if (experiment.getSettings().getGeoLocationRequired()) {
+            textGeoWarning.setText("Warning! Geo-location information is collected with trials for this experiment.");
+        } else {
+            textGeoWarning.setText("");
+        }
 
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
