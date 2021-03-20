@@ -24,8 +24,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * This class manages experiments and handles the persistence of experiment data.
+ */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
     private static final String COLLECTION_PATH = "experiments";
@@ -62,7 +66,7 @@ public class ExperimentManager {
          *
          * @param experiments the experiments that were fetched from the database
          */
-        public void onManyExperimentsFetch(ArrayList<Experiment> experiments);
+        public void onManyExperimentsFetch(List<Experiment> experiments);
     }
 
     /**
@@ -232,7 +236,7 @@ public class ExperimentManager {
      * @param listener the listener with the action to be taken once the experiments are fetched
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
-        String field = "settings.owner.id";
+        String field = "settings.ownerID";
         String id = owner.getId();
         experimentsCollection.whereEqualTo(field, id)
                 .get()
@@ -261,14 +265,43 @@ public class ExperimentManager {
     }
 
     /**
-     * This finds the list of experiments associated with a given keyword.
-     * NOTICE: Temporarily private while we rewrite it.
+     * Searches through all experiments using a list of keywords and returns the resulting
+     * experiments via a callback. This method will find experiments that match any of the
+     * specified keyword (OR operator). If no keywords are given, a standard retrieval of all
+     * experiments is performed.
      *
-     * @param keyword String keyword to search for
+     * @param keywords String keyword to search for
+     * @param listener the callback function to call once experiments have been fetched
      */
-    private void searchByKeyword(String keyword) {
-
+    public void searchByKeyword(List<String> keywords, OnManyExperimentsFetchListener listener) {
+        /* Firebase Developer Docs, "Get data with Cloud Firestore", 2021-03-18, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/queries#array-contains-any
+         */
+        if (keywords.size() == 0) {
+            // Do a standard all experiment get
+            setOnAllExperimentsFetchCallback(listener);
+        } else {
+            experimentsCollection.whereArrayContainsAny("keywords", keywords)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot query = task.getResult();
+                                ArrayList<Experiment> result = new ArrayList<>();
+                                for (DocumentSnapshot doc : query.getDocuments()) {
+                                    Experiment exp = extractExperiment(doc);
+                                    result.add(exp);
+                                }
+                                listener.onManyExperimentsFetch(result);
+                            } else {
+                                Log.d(TAG, "get failed with " + task.getException());
+                            }
+                        }
+                    });
+        }
     }
+
 
     /**
      * This generates a new unique experiment ID

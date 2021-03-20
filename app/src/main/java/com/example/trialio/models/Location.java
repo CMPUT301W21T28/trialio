@@ -43,7 +43,7 @@ public class Location implements Serializable{
     private double longitude;
 
     final int REQUEST_CODE_FINE_PERMISSION = 99;
-    FusedLocationProviderClient locClient;
+    transient FusedLocationProviderClient locClient;
 
 
     public Location() {
@@ -62,24 +62,7 @@ public class Location implements Serializable{
 
     public void getCurrentLocation(Context context, Activity activity) {
         //getting location permission from the user
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //permission is not granted so request permission
-            if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //show user a message if user refused to give permission
-                new AlertDialog.Builder(activity)
-                        .setMessage("To ensure the accuracy of submitted trials for this experiment, please grant location permission")
-                        .setCancelable(false)
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
-                            }
-                        }).show();
-            } else {
-                // request permission
-                ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_FINE_PERMISSION);
-            }
-        } else {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locClient = LocationServices.getFusedLocationProviderClient(activity);
             Task<android.location.Location> locationTask = locClient.getLastLocation();
             locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
