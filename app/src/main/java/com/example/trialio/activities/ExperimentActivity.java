@@ -40,6 +40,9 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.StatisticsUtility;
+
+import java.util.ArrayList;
 
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -52,6 +55,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
+    private StatisticsUtility statisticsUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // create managers important to this activity
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
+
+        // create statistics utility
+        statisticsUtility = new StatisticsUtility();
 
         // get the important views in this activity
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
@@ -186,12 +193,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        TextView textStats = findViewById(R.id.txtStatsSummary);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+
+
 
         // get the owner's username
         userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
@@ -213,6 +223,41 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 }
             }
         });
+
+        // set Stats Summary
+        // TODO: this code is also used in StatActivity, make it so code only written once
+        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
+
+        // Took rounding code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
+        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
+        // AUTHOR: 	Stack Overflow User: asterite
+        if(stats.get(0) == 1) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
+        } else if(stats.get(0) == 2) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
+                    stats.get(3).intValue() + "\nSuccess Rate: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d);
+        } else if(stats.get(0) == 3) {
+            String modes = Integer.toString(stats.get(6).intValue());
+            for(int i=7; i<stats.size(); i++) {
+                modes += ", " + stats.get(i).intValue();
+            }
+
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
+        } else if(stats.get(0) == 4) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d);
+        }
 
     }
 
