@@ -83,15 +83,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
-
-        // set the visibility of certain views in this activity
-        setViewVisibility();
-
-        // initialize all of the fields in the activity
-        setFields();
-
-        // set the onclick listeners for this activity
-        setOnClickListeners();
     }
 
     @Override
@@ -117,8 +108,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
                 experiment = new_experiment;
-                setFields();
+
+                // set the visibility of certain views in this activity
                 setViewVisibility();
+
+                // initialize all of the fields in the activity
+                setFields();
+
+                // set the onclick listeners for this activity
+                setOnClickListeners();
             }
         });
     }
