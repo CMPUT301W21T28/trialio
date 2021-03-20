@@ -11,12 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.net.ContentHandler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * This class unit test the User class
+ * Unit test the User class
  */
 public class UserTest {
 
@@ -27,13 +28,13 @@ public class UserTest {
     Experiment mockExperiment1() {
         String type = ExperimentTypeUtility.getBinomialType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp1", settings, type, 10);
+        return new Experiment("exp1", settings, type, true, 10);
     }
 
     Experiment mockExperiment2() {
         String type = ExperimentTypeUtility.getCountType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp2", settings, type, 12);
+        return new Experiment("exp2", settings, type, true, 12);
     }
 
     /**
@@ -43,16 +44,13 @@ public class UserTest {
     void testCreateUser() {
         User u1 = new User();
         assertEquals(u1.getClass(), User.class);
-
         UserContactInfo info = u1.getContactInfo();
         assertEquals(UserContactInfo.class, info.getClass());
 
         assertNull(u1.getId());
-
         User u2 = new User("1234", "user1");
         assertEquals("1234", u2.getId());
         assertEquals("user1", u2.getUsername());
-
     }
 
     /**
@@ -131,6 +129,28 @@ public class UserTest {
         assertThrows(IllegalArgumentException.class, () -> {
             user.removeSubscription(e);
         });
+    }
+
+    /**
+     * Test for checking to see if a user is subscribed to an experiment
+     */
+    @Test
+    void testIsSubscribed() {
+        User user = mockUser();
+        Experiment e1 = mockExperiment1();
+        Experiment e2 = mockExperiment2();
+
+        // Assert user is initially not subscribed
+        assertFalse(user.isSubscribed(e1));
+
+        // Check after adding to subs
+        user.addSubscription(e1);
+        assertTrue(user.isSubscribed(e1));
+
+        // Check with a different experiment
+        assertFalse(user.isSubscribed(e2));
+
+
     }
 
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * This class represents a user of the application system.
+ * Represents a user of the application system.
  */
 public class User implements Serializable {
 
@@ -14,21 +14,23 @@ public class User implements Serializable {
     private ArrayList<String> subscribedExperimentIds;
     // private BarcodeManager barcodeManager;
 
-
+    /**
+     * Constructor for a User
+     */
     public User() {
-        this.username = "experimenter#0001";
+        this.username = "default_username";
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
 
     /**
-     * Creates a User object
+     * Constructor for a User
      *
      * @param id A unique id to identify the user
      */
     public User(String id) {
         this.id = id;
-        this.username = "experimenter#0001";
+        this.username = "default_username";
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -36,7 +38,8 @@ public class User implements Serializable {
     /**
      * Creates a User object
      *
-     * @param id A unique id to identify the user
+     * @param username a username for the user profile
+     * @param id       A unique id to identify the user
      */
     public User(String id, String username) {
         this.id = id;
@@ -138,6 +141,7 @@ public class User implements Serializable {
 
     /**
      * Determines whether a User is subscribed to a given experiment.
+     *
      * @param experiment the experiment to check
      * @return true if the User is subscribed, false otherwise
      */
