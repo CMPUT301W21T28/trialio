@@ -1,10 +1,8 @@
 package com.example.trialio.activities;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,8 +10,10 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ public class TrialActivity extends AppCompatActivity {
     private final Context context = this;
     private ExperimentManager experimentManager;
     private Experiment experiment;
+    private UserManager userManager;
 
     @Override
     @Nullable
@@ -40,6 +41,7 @@ public class TrialActivity extends AppCompatActivity {
         trialAdapter = new ArrayAdapterTrials(this, experiment);
 
         experimentManager = new ExperimentManager();
+        userManager = new UserManager();
 
         // Set up the adapter for the list and experiment manager
         ListView trialListView = findViewById(R.id.list_trials);
@@ -52,7 +54,6 @@ public class TrialActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: swap this with an update listener
         // when the experiment is updated, update our local experiment, reset all fields and clear/rebuild the trialList
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
@@ -72,7 +73,14 @@ public class TrialActivity extends AppCompatActivity {
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
 
         TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
+
+        // get the owner's username
+        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText("Owner: " + user.getUsername());
+            }
+        });
 
         TextView textType = findViewById(R.id.txtExperimentTypeTrial);
         textType.setText("Type: " + experiment.getTrialManager().getType());
