@@ -2,15 +2,10 @@ package com.example.trialio.activities;
 
 /*
 Location permissions method from youtube video
-
 Video Title: Runtime Permissions Android | Required from API 23 and above
-
 Link to Video: https://www.youtube.com/watch?v=WZhEroL4P7s
-
 Video uploader: yoursTRULY
-
 Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
-
  */
 
 import androidx.annotation.NonNull;
@@ -45,6 +40,9 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.StatisticsUtility;
+
+import java.util.ArrayList;
 
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -59,6 +57,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private Button addTrial;
     private Button scanQR;
     private Button showQR;
+    private StatisticsUtility statisticsUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +80,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
+        // create statistics utility
+        statisticsUtility = new StatisticsUtility();
+
         // get the important views in this activity
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
@@ -95,6 +97,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
         // set the onclick listeners for this activity
         setOnClickListeners();
+
     }
 
     @Override
@@ -120,8 +123,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
                 experiment = new_experiment;
-                setFields();
+
+                // set the visibility of certain views in this activity
                 setViewVisibility();
+
+                // initialize all of the fields in the activity
+                setFields();
+
+                // set the onclick listeners for this activity
+                setOnClickListeners();
             }
         });
     }
@@ -194,12 +204,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        TextView textStats = findViewById(R.id.txtStatsSummary);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+
+
 
         // get the owner's username
         userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
@@ -221,6 +234,41 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 }
             }
         });
+
+        // set Stats Summary
+        // TODO: this code is also used in StatActivity, make it so code only written once
+        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
+
+        // Took rounding code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
+        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
+        // AUTHOR: 	Stack Overflow User: asterite
+        if(stats.get(0) == 1) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
+        } else if(stats.get(0) == 2) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
+                    stats.get(3).intValue() + "\nSuccess Rate: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d);
+        } else if(stats.get(0) == 3) {
+            String modes = Integer.toString(stats.get(6).intValue());
+            for(int i=7; i<stats.size(); i++) {
+                modes += ", " + stats.get(i).intValue();
+            }
+
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
+        } else if(stats.get(0) == 4) {
+            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
+                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
+                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                    Math.round(stats.get(5) * 10000d) / 10000d);
+        }
 
     }
 
@@ -371,7 +419,23 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 args.putSerializable("experiment", experiment);
                 intent.putExtras(args);
 
-                // start an ExperimentActivity
+                // start an ExperimentSettingsActivity
+                startActivity(intent);
+            }
+        });
+
+        Button statsButton = findViewById(R.id.btnStats);
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, StatActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_stat", experiment);
+                intent.putExtras(args);
+
+                // start a StatActivity
                 startActivity(intent);
             }
         });
