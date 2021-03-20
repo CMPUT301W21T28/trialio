@@ -31,7 +31,10 @@ import com.example.trialio.models.User;
 import java.util.Date;
 
 import static android.location.LocationManager.NETWORK_PROVIDER;
-
+/**
+ * This fragment collects data from a user to upload a binomial type trial
+ * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
+ */
 public class BinomialTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private boolean geoLocationReq;
