@@ -25,11 +25,14 @@ import java.util.Date;
 
 public class MeasurementTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
+    private boolean geoLocationReq;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_measurement_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Bundle bundle = getArguments();
+        geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
 
         Switch s = view.findViewById(R.id.switchSuccessIndicator);
         return builder
@@ -43,6 +46,9 @@ public class MeasurementTrialFragment extends DialogFragment {
                         Double measurement = Double.parseDouble(tv.getText().toString());
 
                         Location location = new Location();
+                        if (geoLocationReq) {
+                            location.getCurrentLocation(getContext(),getActivity());
+                        }
                         Date date = new Date();
                         String unit = "UNIT";  // TODO: change this
 
@@ -50,7 +56,10 @@ public class MeasurementTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
+
+                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
+
                             }
                         });
                     }}).create();

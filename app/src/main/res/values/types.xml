@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Adapted from class/division code.
+DATE:	    2021-03-18
+LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+SOURCE: 	Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
+AUTHOR: 	Studytonight tutorial developers
+-->
+<resources>
+    <string-array name="types_array">
+        <item>COUNT</item>
+        <item>BINOMIAL</item>
+        <item>NONNEGATIVE</item>
+        <item>MEASUREMENT</item>
+    </string-array>
+</resources>

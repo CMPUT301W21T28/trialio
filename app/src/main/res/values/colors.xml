@@ -11,5 +11,7 @@
     <color name="section_grey">#FF000000</color>
     <color name="background_grey">#747474</color>
     <color name="button_dark_grey">#606060</color>
+    <color name="selector_green">#00FF00</color>
+    <color name="selector_red">#DC143C</color>
 
 </resources>

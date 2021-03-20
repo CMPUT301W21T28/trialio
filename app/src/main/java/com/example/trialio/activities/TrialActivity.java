@@ -37,7 +37,7 @@ public class TrialActivity extends AppCompatActivity {
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
 
         trialList = experiment.getTrialManager().getTrials();
-        trialAdapter = new ArrayAdapterTrials(this, trialList);
+        trialAdapter = new ArrayAdapterTrials(this, experiment);
 
         experimentManager = new ExperimentManager();
 
@@ -72,7 +72,7 @@ public class TrialActivity extends AppCompatActivity {
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
 
         TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+        textOwner.setText("Owner: " + experiment.getSettings().getOwner().getUsername());
 
         TextView textType = findViewById(R.id.txtExperimentTypeTrial);
         textType.setText("Type: " + experiment.getTrialManager().getType());

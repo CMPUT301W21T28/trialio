@@ -1,9 +1,28 @@
 package com.example.trialio.activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+/*
+Location permissions method from youtube video
 
+Video Title: Runtime Permissions Android | Required from API 23 and above
+
+Link to Video: https://www.youtube.com/watch?v=WZhEroL4P7s
+
+Video uploader: yoursTRULY
+
+Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+
+ */
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -241,7 +260,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // get experiment type
         trialType = experiment.getTrialManager().getType();
 
-        Button addTrial = (Button) findViewById(R.id.btnAddTrial);
+        // set listener for addTrial button
         addTrial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,22 +330,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                         userManager.updateUser(user);
                     }
                 });
-            }
-        });
-
-        Button navToQuestionForum = (Button) findViewById(R.id.btnQA);
-        navToQuestionForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentToActivity = new Intent(context, QuestionForumActivity.class);
-
-                // pass in experiment as an argument
-                Bundle args = new Bundle();
-                args.putSerializable("experiment_info_qa", experiment);
-                intentToActivity.putExtras(args);
-
-                // start an ExperimentActivity
-                startActivity(intentToActivity);
             }
         });
     }

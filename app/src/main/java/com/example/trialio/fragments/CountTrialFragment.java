@@ -1,15 +1,20 @@
 package com.example.trialio.fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
@@ -23,11 +28,14 @@ import java.util.Date;
 
 public class CountTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
+    private boolean geoLocationReq;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_count_trial, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        Bundle bundle = getArguments();
+        geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
 
         Switch s = view.findViewById(R.id.switchSuccessIndicator);
         return builder
@@ -38,6 +46,9 @@ public class CountTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         Location location = new Location();
+                        if (geoLocationReq) {
+                            location.getCurrentLocation(getContext(),getActivity());
+                        }
                         Date date = new Date();
 
                         UserManager userManager = new UserManager();

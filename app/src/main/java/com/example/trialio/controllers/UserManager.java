@@ -84,7 +84,7 @@ public class UserManager {
 
 
     /**
-     * Creates a new User and adds document to the database.
+     * Creates a new User in the system.
      *
      * @param id The id of the User to create
      * @return The User that was created.
