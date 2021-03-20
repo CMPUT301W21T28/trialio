@@ -191,7 +191,7 @@ public class StatActivity extends AppCompatActivity {
         double max_buffer = 1.10; // extra space to the right of maximum count / measurement
         int max = (int)(list.get(list.size()-1) * max_buffer);
         double diff = max - min;
-        int numSections = 4;
+        int numSections = 10;
         int[] cutoffs = new int[numSections]; // min is not included
         for(int i=0; i<numSections; i++) {
             cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));

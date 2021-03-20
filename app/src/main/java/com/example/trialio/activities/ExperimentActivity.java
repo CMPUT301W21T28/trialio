@@ -247,13 +247,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
 
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                     Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
         } else if(stats.get(0) == 4) {
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + stats.get(2) + "\nMedian: " +
+                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                     Math.round(stats.get(5) * 10000d) / 10000d);
@@ -392,7 +392,23 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 args.putSerializable("experiment", experiment);
                 intent.putExtras(args);
 
-                // start an ExperimentActivity
+                // start an ExperimentSettingsActivity
+                startActivity(intent);
+            }
+        });
+
+        Button statsButton = findViewById(R.id.btnStats);
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, StatActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_stat", experiment);
+                intent.putExtras(args);
+
+                // start a StatActivity
                 startActivity(intent);
             }
         });
