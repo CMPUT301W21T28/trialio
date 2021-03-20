@@ -42,6 +42,12 @@ public class Experiment implements Serializable {
      * Constructor for anExperiment
      */
     public Experiment() {
+        this.experimentID = null;
+        this.settings = new ExperimentSettings();
+        this.trialManager = new TrialManager();
+        this.keywords = new ArrayList<>();
+        parseKeywords();
+
     }
 
     /**
@@ -66,17 +72,17 @@ public class Experiment implements Serializable {
      * descriptions are used to form keywords.
      */
     void parseKeywords() {
-        if (this.keywords == null) {
-            this.keywords = new ArrayList<>();
-        } else {
-            this.keywords.clear();
-        }
+        this.keywords.clear();
 
-        if (this.settings != null) {
-            if (this.settings.getDescription() != null) {
-                String[] descKeywords = this.settings.getDescription().split(" ");
-                this.keywords.addAll(Arrays.asList(descKeywords));
-            }
+        if (this.settings.getDescription() != null) {
+            String[] descKeywords = this.settings.getDescription().split(" ");
+            this.keywords.addAll(Arrays.asList(descKeywords));
+            ArrayList<String> removes = new ArrayList<>();
+            removes.add("");
+            removes.add(".");
+            removes.add(";");
+            removes.add("'");
+            this.keywords.removeAll(removes);
         }
     }
 
@@ -114,6 +120,7 @@ public class Experiment implements Serializable {
      */
     public void setSettings(ExperimentSettings settings) {
         this.settings = settings;
+        parseKeywords();
     }
 
     /**
@@ -173,6 +180,7 @@ public class Experiment implements Serializable {
 
     /**
      * Returns the string representation of the experiment
+     *
      * @return string representation of the experiment
      */
     @Override
