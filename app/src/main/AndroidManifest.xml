@@ -26,6 +26,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.trialio.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.StatActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.trialio.activities.MainActivity" />
+        </activity>
         <!-- the line android:windowSoftInputMode="adjustNothing"
         Daniel Douglas, https://stackoverflow.com/users/1247368/daniel-douglas,
         "Android: How do I prevent the soft keyboard from pushing my view up?"
