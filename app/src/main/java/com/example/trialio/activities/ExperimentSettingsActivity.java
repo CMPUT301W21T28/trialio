@@ -1,6 +1,9 @@
 package com.example.trialio.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -16,6 +19,7 @@ import javax.annotation.Nullable;
 
 public class ExperimentSettingsActivity extends AppCompatActivity {
     private final String TAG = "ExperimentSettingsActivity";
+    private Context context;
     private ExperimentManager experimentManager;
     private Experiment experiment;
     private UserManager userManager;
@@ -28,6 +32,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment_settings);
 
+        context = this;
+
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
@@ -39,10 +45,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         // get views
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
-
-        setFields();
-
-        setOnClickListeners();
     }
 
     @Override
@@ -55,6 +57,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
             public void onExperimentFetch(Experiment new_experiment) {
                 experiment = new_experiment;
                 setFields();
+                setOnClickListeners();
             }
         });
     }
@@ -77,6 +80,18 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
                         experimentManager.editExperiment(experiment.getExperimentID(), experiment);
                     }
                 });
+            }
+        });
+
+        // remove the experiment from firebase and return to the home page
+        unpublishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                experimentManager.unpublishExperiment(experiment.getExperimentID());
+                Intent intent = new Intent(context, MainActivity.class);
+
+                // start an ExperimentActivity
+                startActivity(intent);
             }
         });
     }
