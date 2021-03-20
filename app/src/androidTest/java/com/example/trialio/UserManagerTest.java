@@ -2,17 +2,22 @@ package com.example.trialio;
 
 import androidx.annotation.NonNull;
 
+import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -59,11 +64,40 @@ public class UserManagerTest {
                                 // User does not have the correct id
                                 fail();
                             }
-
                         } else {
                             // Error occurred connecting to firebase
                             fail();
                         }
+                    }
+                });
+    }
+
+    /***
+     * Test the fetching of a User from the datbase
+     */
+    @Test
+    public void testGetUser() {
+        String userId = "100001";
+        String username = "username";
+        String phone = "780-123-4567";
+        String email = "duderio@email";
+
+        HashMap<String, Object> data = new HashMap<String, Object>();
+        data.put("id", userId);
+        data.put("username", username);
+
+        FirebaseFirestore.getInstance().collection(testCollection).document(userId)
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        userManager.getUser(userId, new UserManager.OnUserFetchListener() {
+                            @Override
+                            public void onUserFetch(User user) {
+                                assertEquals(userId, user.getId());
+                                assertEquals(username, user.getUsername());
+                            }
+                        });
                     }
                 });
     }
