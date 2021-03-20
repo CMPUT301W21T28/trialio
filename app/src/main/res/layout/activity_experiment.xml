@@ -112,6 +112,13 @@
                 android:layout_height="wrap_content"
                 android:text="Minimum number of trials:"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtExperimentGeoWarning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Warning! Geo-location information is collected with trials for this experiment." />
         </LinearLayout>
     </ScrollView>
 
