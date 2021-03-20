@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
@@ -18,6 +20,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
@@ -109,10 +112,82 @@ public class StatActivity extends AppCompatActivity {
             statPlot.setDragEnabled(true);
             statPlot.setScaleEnabled(true);
         } else if(stats.get(0) == 3) {
+            ArrayList<BarEntry> barEntries = new ArrayList<>();
 
+            ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
+            ArrayList<Integer> counts = new ArrayList<>();
+            NonNegativeTrial nonnegative;
+            for(int i=0; i<trials.size(); i++) {
+                nonnegative = (NonNegativeTrial) trials.get(i);
+                counts.add(nonnegative.getNonNegCount());
+            }
+            Collections.sort(counts);
+
+            int min = 0;
+            double max_buffer = 1.10;
+            int max = (int)(counts.get(counts.size()-1) * max_buffer);
+            double diff = max - min;
+            int numSections = 4;
+            int[] cutoffs = new int[numSections]; // min is not included
+            for(int i=0; i<numSections; i++) {
+                cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));
+            }
+
+            int[] barHeight = new int[numSections];
+            //int current_cutoff = 0;
+            //int start = 0;
+            // TODO: would be nice to have a more efficient algorithm to separate data points into the bars
+            for(int i=0; i<counts.size(); i++) {
+                /*
+                if(counts.get(i) > cutoffs[current_cutoff + 1]) {
+                    if(counts.get(i) > cutoffs[current_cutoff])
+                    barHeight[current_cutoff] = i - start;
+                    current_cutoff++;
+                    start = i;
+                }
+                 */
+                for(int j=0; j<cutoffs.length; j++) {
+                    if(counts.get(i) <= cutoffs[j]) {
+                        barHeight[j]++;
+                        break;
+                    }
+                }
+            }
+
+            for(int i=0; i<numSections; i++) {
+                barEntries.add(new BarEntry(barHeight[i],i));
+            }
+            /*
+            barEntries.add(new BarEntry(barHeight[0],0));
+            barEntries.add(new BarEntry(barHeight[1],1));
+            barEntries.add(new BarEntry(barHeight[2],2));
+            barEntries.add(new BarEntry(barHeight[3],3));
+            barEntries.add(new BarEntry(barHeight[4],4));
+            barEntries.add(new BarEntry(barHeight[5],5));
+            barEntries.add(new BarEntry(barHeight[6],6));
+            barEntries.add(new BarEntry(barHeight[7],7));
+
+             */
+            BarDataSet barDataSet = new BarDataSet(barEntries,"Trials");
+
+            ArrayList<String> xTitles = new ArrayList<>();
+            xTitles.add(min + "-" + cutoffs[0]);
+
+            for(int i=0; i<numSections-1; i++) {
+                xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
+            }
+
+            BarData data = new BarData(xTitles, barDataSet);
+            statPlot.setData(data);
+
+            statPlot.setTouchEnabled(true);
+            statPlot.setDragEnabled(true);
+            statPlot.setScaleEnabled(true);
         } else if(stats.get(0) == 4) {
 
         }
+
+        statPlot.setDescription(null);
     }
 
 }
