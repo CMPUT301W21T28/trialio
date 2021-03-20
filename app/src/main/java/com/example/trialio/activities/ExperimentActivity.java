@@ -53,7 +53,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private ExperimentManager experimentManager;
     private final Context context = this;
     final int REQUEST_CODE_FINE_PERMISSION = 99;
-    private ImageButton experimentSettings;
+    private ImageButton settingsButton;
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
@@ -80,7 +80,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         userManager = new UserManager();
 
         // get the important views in this activity
-        experimentSettings = (ImageButton) findViewById(R.id.button_experiment_settings);
+        settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
 
@@ -118,6 +118,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             public void onExperimentFetch(Experiment new_experiment) {
                 experiment = new_experiment;
                 setFields();
+                setViewVisibility();
             }
         });
     }
@@ -296,6 +297,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {
+                    Log.d(TAG, "Error: invalid experiment type, see ExperimentTypeUtility.c");
                     assert (false);
                 }
             }
@@ -339,6 +341,21 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 });
             }
         });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ExperimentSettingsActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment", experiment);
+                intent.putExtras(args);
+
+                // start an ExperimentActivity
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -346,7 +363,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
      */
     public void setViewVisibility() {
         // set the experiment settings button to invisible by default
-        //experimentSettings.setVisibility(View.INVISIBLE);
+        settingsButton.setVisibility(View.INVISIBLE);
 
 
         // if the current user is the owner, set the experiment settings button as visible.
@@ -355,12 +372,11 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getId());
                 Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
-                if (user.getId() == experiment.getSettings().getOwnerID()) {
-                    experimentSettings.setVisibility(View.VISIBLE);
+                if (user.getId().equals(experiment.getSettings().getOwnerID())) {
+                    settingsButton.setVisibility(View.VISIBLE);
                 }
             }
         });
-
 
         // set the addTrial button to invisible by default
         addTrial.setVisibility(View.INVISIBLE);

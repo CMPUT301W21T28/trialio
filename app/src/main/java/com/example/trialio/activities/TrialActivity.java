@@ -54,7 +54,6 @@ public class TrialActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: swap this with an update listener
         // when the experiment is updated, update our local experiment, reset all fields and clear/rebuild the trialList
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override

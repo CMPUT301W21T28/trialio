@@ -4,7 +4,6 @@ import android.widget.ArrayAdapter;
 
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class TrialManager implements Serializable {
     private String type;
     private ArrayList<Trial> trials;
     private ArrayAdapter<Experiment> trialAdapter;
-    private ArrayList<User> ignoredUsers;
+    private ArrayList<String> ignoredUserIds;
     private int minNumOfTrials;
     private boolean isOpen;
 
@@ -22,7 +21,7 @@ public class TrialManager implements Serializable {
     public TrialManager(String type, boolean isOpen, int minNumOfTrials) {
         this.type = type;
         this.trials = new ArrayList<Trial>();
-        this.ignoredUsers = new ArrayList<User>();
+        this.ignoredUserIds = new ArrayList<String>();
         this.minNumOfTrials = minNumOfTrials;
         this.isOpen = isOpen;
     }
@@ -47,12 +46,12 @@ public class TrialManager implements Serializable {
         this.trials = trials;
     }
 
-    public ArrayList<User> getIgnoredUsers() {
-        return ignoredUsers;
+    public ArrayList<String> getIgnoredUserIds() {
+        return ignoredUserIds;
     }
 
-    public void setIgnoredUsers(ArrayList<User> ignoredUsers) {
-        this.ignoredUsers = ignoredUsers;
+    public void setIgnoredUserIds(ArrayList<String> ignoredUserIds) {
+        this.ignoredUserIds = ignoredUserIds;
     }
 
     public int getMinNumOfTrials() {
