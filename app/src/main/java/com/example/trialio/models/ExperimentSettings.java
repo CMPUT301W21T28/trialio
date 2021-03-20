@@ -6,15 +6,15 @@ public class ExperimentSettings implements Serializable {
 
     private String description;
     private Region region;
-    private User owner;
+    private String ownerID;
     private boolean geoLocationRequired;
 
     public ExperimentSettings () { }
 
-    public ExperimentSettings(String description, Region region, User owner, boolean geoLocationRequired) {
+    public ExperimentSettings(String description, Region region, String ownerID, boolean geoLocationRequired) {
         this.description = description;
         this.region = region;
-        this.owner = owner;
+        this.ownerID = ownerID;
         this.geoLocationRequired = geoLocationRequired;
     }
 
@@ -34,12 +34,12 @@ public class ExperimentSettings implements Serializable {
         this.region = region;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwnerID() {
+        return ownerID;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
     public boolean getGeoLocationRequired() {

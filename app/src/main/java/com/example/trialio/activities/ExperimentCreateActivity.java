@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
 import com.example.trialio.models.ExperimentSettings;
@@ -25,6 +26,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
     private final String TAG = "ExperimentCreateActivity";
     private Experiment experiment;
     private ExperimentManager experimentManager;
+    private UserManager userManager;
     private final Context context = this;
     private String selectedType = "";
 
@@ -34,6 +36,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         setContentView(R.layout.create_experiment);
 
         experimentManager = new ExperimentManager();
+        userManager = new UserManager();
 
         // Took ActionBar code.
         // DATE:	2020-12-14
@@ -88,9 +91,6 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 Region region = new Region();
                 region.setDescription(editRegion.getText().toString());
 
-                // prepare owner
-                User owner = new User();
-
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
 
@@ -100,9 +100,6 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 // generate ID
                 String newID = experimentManager.getNewExperimentID();
-
-                // prepare experiment settings
-                ExperimentSettings settings = new ExperimentSettings(description, region, owner, geo);
 
                 // prepare type
                 String type = selectedType;
@@ -118,15 +115,24 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                     if (numTrials < 1) {
                         Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
                     } else {
-                        // create Experiment object
-                        experiment = new Experiment(newID, settings, type, open, numTrials);
-                        experimentManager.publishExperiment(experiment);
+                        // get owner id
+                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                            @Override
+                            public void onUserFetch(User user) {
+                                // prepare experiment settings
+                                ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
-                        Bundle args = new Bundle();
-                        args.putSerializable("experiment", experiment);
-                        intent.putExtras(args);
+                                // create Experiment object
+                                experiment = new Experiment(newID, settings, type, open, numTrials);
+                                experimentManager.publishExperiment(experiment);
 
-                        startActivity(intent);
+                                Bundle args = new Bundle();
+                                args.putSerializable("experiment", experiment);
+                                intent.putExtras(args);
+
+                                startActivity(intent);
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();

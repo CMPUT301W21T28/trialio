@@ -11,20 +11,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
 public class ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;
     private ArrayList<Experiment> experimentList;
+    private UserManager userManager;
 
     public ArrayAdapterExperiment(Context context, ArrayList<Experiment> experimentList) {
         super(context, 0, experimentList);
 
         this.experimentList = experimentList;
         this.context = context;
+        userManager = new UserManager();
     }
 
     @NonNull
@@ -49,7 +53,15 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "yes" : "no");
-        textOwner.setText(experiment.getSettings().getOwner().getUsername());
+
+        // get the owner's username
+        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText(user.getUsername());
+            }
+        });
+
         if (!experiment.getSettings().getGeoLocationRequired()) {
             locNeed.setVisibility(View.GONE);
         }

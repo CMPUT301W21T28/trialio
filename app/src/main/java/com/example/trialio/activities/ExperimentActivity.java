@@ -204,7 +204,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText("Owner: " + experiment.getSettings().getOwner());
+
+        // get the owner's username
+        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText("Owner: " + user.getUsername());
+            }
+        });
+
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
 
@@ -372,8 +380,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getId());
-                Log.d(TAG, "owner: " + experiment.getSettings().getOwner().getId());
-                if (user.getId() == experiment.getSettings().getOwner().getId()) {
+                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
+                if (user.getId() == experiment.getSettings().getOwnerID()) {
                     experimentSettings.setVisibility(View.VISIBLE);
                 }
             }

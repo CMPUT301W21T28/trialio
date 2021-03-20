@@ -8,9 +8,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.controllers.ExperimentManager;
-import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
@@ -25,10 +24,8 @@ import java.util.Collections;
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
     private Experiment experiment;
-    private ExperimentManager experimentManager;
     private final Context context = this;
     private StatisticsUtility statisticsUtility;
-    private String selectedType = "";
     private BarChart statPlot;
 
     @Override
@@ -47,9 +44,6 @@ public class StatActivity extends AppCompatActivity {
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_stat");
-
-        // create managers important to this activity
-        experimentManager = new ExperimentManager();
 
         // create statistics utility
         statisticsUtility = new StatisticsUtility();
@@ -91,11 +85,17 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // create graph of data
+
+        // Adapted from Youtube tutorial code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+        // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
+        // AUTHOR: 	Youtube account: CodingWithMitch
+
         statPlot = (BarChart) findViewById(R.id.statPlot);
 
-        if(stats.get(0) == 1) {
-
-        } else if(stats.get(0) == 2) {
+        // no graph for COUNT experiments, nothing interesting to view
+        if(stats.get(0) == 2) {
             ArrayList<BarEntry> barEntries = new ArrayList<>();
             barEntries.add(new BarEntry(stats.get(2).intValue(),0));
             barEntries.add(new BarEntry(stats.get(3).intValue(),1));
@@ -115,16 +115,19 @@ public class StatActivity extends AppCompatActivity {
             ArrayList<BarEntry> barEntries = new ArrayList<>();
 
             ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
-            ArrayList<Integer> counts = new ArrayList<>();
+            ArrayList<Double> counts = new ArrayList<>();
             NonNegativeTrial nonnegative;
             for(int i=0; i<trials.size(); i++) {
                 nonnegative = (NonNegativeTrial) trials.get(i);
-                counts.add(nonnegative.getNonNegCount());
+                counts.add((double)nonnegative.getNonNegCount());
             }
+            distributionBarGraph(counts, barEntries);
+
+            /*
             Collections.sort(counts);
 
             int min = 0;
-            double max_buffer = 1.10;
+            double max_buffer = 1.10; // extra space to the right of maximum count / measurement
             int max = (int)(counts.get(counts.size()-1) * max_buffer);
             double diff = max - min;
             int numSections = 4;
@@ -136,16 +139,7 @@ public class StatActivity extends AppCompatActivity {
             int[] barHeight = new int[numSections];
             //int current_cutoff = 0;
             //int start = 0;
-            // TODO: would be nice to have a more efficient algorithm to separate data points into the bars
             for(int i=0; i<counts.size(); i++) {
-                /*
-                if(counts.get(i) > cutoffs[current_cutoff + 1]) {
-                    if(counts.get(i) > cutoffs[current_cutoff])
-                    barHeight[current_cutoff] = i - start;
-                    current_cutoff++;
-                    start = i;
-                }
-                 */
                 for(int j=0; j<cutoffs.length; j++) {
                     if(counts.get(i) <= cutoffs[j]) {
                         barHeight[j]++;
@@ -157,17 +151,7 @@ public class StatActivity extends AppCompatActivity {
             for(int i=0; i<numSections; i++) {
                 barEntries.add(new BarEntry(barHeight[i],i));
             }
-            /*
-            barEntries.add(new BarEntry(barHeight[0],0));
-            barEntries.add(new BarEntry(barHeight[1],1));
-            barEntries.add(new BarEntry(barHeight[2],2));
-            barEntries.add(new BarEntry(barHeight[3],3));
-            barEntries.add(new BarEntry(barHeight[4],4));
-            barEntries.add(new BarEntry(barHeight[5],5));
-            barEntries.add(new BarEntry(barHeight[6],6));
-            barEntries.add(new BarEntry(barHeight[7],7));
 
-             */
             BarDataSet barDataSet = new BarDataSet(barEntries,"Trials");
 
             ArrayList<String> xTitles = new ArrayList<>();
@@ -183,11 +167,76 @@ public class StatActivity extends AppCompatActivity {
             statPlot.setTouchEnabled(true);
             statPlot.setDragEnabled(true);
             statPlot.setScaleEnabled(true);
+             */
         } else if(stats.get(0) == 4) {
+            ArrayList<BarEntry> barEntries = new ArrayList<>();
 
+            ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
+            ArrayList<Double> measurements = new ArrayList<>();
+            MeasurementTrial measurement;
+            for(int i=0; i<trials.size(); i++) {
+                measurement = (MeasurementTrial) trials.get(i);
+                measurements.add(measurement.getMeasurement());
+            }
+            distributionBarGraph(measurements, barEntries);
         }
 
         statPlot.setDescription(null);
+    }
+
+    public void distributionBarGraph(ArrayList<Double> list, ArrayList<BarEntry> barEntries) {
+        Collections.sort(list);
+
+        int min = 0;
+        double max_buffer = 1.10; // extra space to the right of maximum count / measurement
+        int max = (int)(list.get(list.size()-1) * max_buffer);
+        double diff = max - min;
+        int numSections = 4;
+        int[] cutoffs = new int[numSections]; // min is not included
+        for(int i=0; i<numSections; i++) {
+            cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));
+        }
+
+        int[] barHeight = new int[numSections];
+        //int current_cutoff = 0;
+        //int start = 0;
+        // TODO: would be nice to have a more efficient algorithm to separate data points into the bars
+        for(int i=0; i<list.size(); i++) {
+                /*
+                if(counts.get(i) > cutoffs[current_cutoff + 1]) {
+                    if(counts.get(i) > cutoffs[current_cutoff])
+                    barHeight[current_cutoff] = i - start;
+                    current_cutoff++;
+                    start = i;
+                }
+                 */
+            for(int j=0; j<cutoffs.length; j++) {
+                if(list.get(i) <= cutoffs[j]) {
+                    barHeight[j]++;
+                    break;
+                }
+            }
+        }
+
+        for(int i=0; i<numSections; i++) {
+            barEntries.add(new BarEntry(barHeight[i],i));
+        }
+
+        BarDataSet barDataSet = new BarDataSet(barEntries,"Trials");
+
+        ArrayList<String> xTitles = new ArrayList<>();
+        xTitles.add(min + "-" + cutoffs[0]);
+
+        for(int i=0; i<numSections-1; i++) {
+            xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
+        }
+
+        BarData data = new BarData(xTitles, barDataSet);
+        statPlot.setData(data);
+
+        statPlot.setTouchEnabled(true);
+        statPlot.setDragEnabled(true);
+        statPlot.setScaleEnabled(true);
     }
 
 }

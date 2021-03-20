@@ -11,20 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
+import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
+import com.example.trialio.utils.ExperimentTypeUtility;
 
 import java.util.ArrayList;
 
 public class ArrayAdapterTrials extends ArrayAdapter {
     private Context context;
     private ArrayList<Trial> trialList;
+    private Experiment experiment;
+    private UserManager userManager;
 
-    public ArrayAdapterTrials(Context context, ArrayList<Trial> trialList) {
-        super(context, 0, trialList);
+    public ArrayAdapterTrials(Context context, Experiment experiment) {
+        super(context, 0, experiment.getTrialManager().getTrials());
 
-        this.trialList = trialList;
+        this.trialList = experiment.getTrialManager().getTrials();
         this.context = context;
+        this.experiment = experiment;
+
+        this.userManager = new UserManager();
     }
 
     @NonNull
@@ -44,11 +56,25 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         TextView textResult = view.findViewById(R.id.text_trial_result);
 
         // set the textviews
-        textOwner.setText("Owner:"+trial.getExperimenterID());
-        textDate.setText("Date:"+trial.getDate().toString());
-        //textResult.setText("Result:" + trial.getData());
+        // get the owner's username
+        userManager.getUser(trial.getExperimenterID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText("Experimenter: " + user.getUsername());
+            }
+        });
 
+        textDate.setText("Date: "+trial.getDate().toString());
 
+        if (ExperimentTypeUtility.isBinomial(experiment.getTrialManager().getType())) {
+            textResult.setText("Result: " + ((BinomialTrial) trial).getIsSuccess());
+        }else if (ExperimentTypeUtility.isMeasurement(experiment.getTrialManager().getType())) {
+            textResult.setText("Result: " + ((MeasurementTrial) trial).getMeasurement() + " " + ((MeasurementTrial) trial).getUnit());
+        }else if (ExperimentTypeUtility.isCount(experiment.getTrialManager().getType())) {
+            textResult.setText("Result: " + ((CountTrial) trial).getCount());
+        }else if (ExperimentTypeUtility.isNonNegative(experiment.getTrialManager().getType())){
+            textResult.setText("Result: " + ((NonNegativeTrial) trial).getNonNegCount());
+        }
 
         return view;
     }
