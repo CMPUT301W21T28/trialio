@@ -1,6 +1,11 @@
 package com.example.trialio.activities;
 
-import android.content.Context;
+// Used Philipp Jahoda's MPAndroidChart library.
+// DATE:	2021-03-19
+// LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
+// SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
+// AUTHOR: 	Philipp Jahoda
+
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -14,7 +19,6 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -25,7 +29,6 @@ import java.util.Collections;
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
     private Experiment experiment;
-    private final Context context = this;
     private StatisticsUtility statisticsUtility;
     private BarChart statPlot;
 
