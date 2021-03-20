@@ -2,9 +2,7 @@ package com.example.trialio.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,8 +40,8 @@ public class QRCodeActivity extends AppCompatActivity {
         experimentManager = new ExperimentManager();
 
         // Set up the adapter for the list and experiment manager
-        ListView trialListView = findViewById(R.id.list_trials);
-        //trialListView.setAdapter(QRAdapter);
+        ListView trialListView = findViewById(R.id.list_trials_QR);
+        trialListView.setAdapter(QRAdapter);
 
     }
 

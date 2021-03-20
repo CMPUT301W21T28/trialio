@@ -9,28 +9,26 @@
 
 
     <LinearLayout
+        android:layout_height="46dp"
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="50dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
-            android:src="@drawable/ic_outline_search_24"
-            android:scaleType="fitCenter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="10dp">
-        </ImageButton>s
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_outline_search_24"></ImageButton>s
 
         <ImageButton
-            android:src="@drawable/temp_logo"
-            android:scaleType="fitCenter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:padding="15dp">
-        </ImageButton>
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"></ImageButton>
 
 
         <ImageButton
@@ -83,12 +81,13 @@
 
         <ListView
             android:id="@+id/list_trials_QR"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="#9c9c9c">
 
         </ListView>
+
     </LinearLayout>
 
   </LinearLayout
