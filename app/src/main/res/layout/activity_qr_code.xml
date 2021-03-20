@@ -9,8 +9,8 @@
 
 
     <LinearLayout
-        android:layout_height="46dp"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -32,7 +32,7 @@
 
 
         <ImageButton
-            android:id="@+id/editUserBtnQR"
+            android:id="@+id/editUserBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -81,7 +81,7 @@
 
         <ListView
             android:id="@+id/list_trials_QR"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="#9c9c9c">
