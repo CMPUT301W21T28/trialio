@@ -14,6 +14,7 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -93,6 +94,8 @@ public class StatActivity extends AppCompatActivity {
         // AUTHOR: 	Youtube account: CodingWithMitch
 
         statPlot = (BarChart) findViewById(R.id.statPlot);
+        TextView plotText = (TextView) findViewById(R.id.plotTitle);
+
 
         // no graph for COUNT experiments, nothing interesting to view
         if(stats.get(0) == 2) {
@@ -111,6 +114,8 @@ public class StatActivity extends AppCompatActivity {
             statPlot.setTouchEnabled(true);
             statPlot.setDragEnabled(true);
             statPlot.setScaleEnabled(true);
+
+            plotText.setText("Successes vs Failures");
         } else if(stats.get(0) == 3) {
             ArrayList<BarEntry> barEntries = new ArrayList<>();
 
@@ -122,6 +127,9 @@ public class StatActivity extends AppCompatActivity {
                 counts.add((double)nonnegative.getNonNegCount());
             }
             distributionBarGraph(counts, barEntries);
+
+            plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                    "X-axis: Non-negative count\nY-axis: Frequency");
 
             /*
             Collections.sort(counts);
@@ -179,6 +187,9 @@ public class StatActivity extends AppCompatActivity {
                 measurements.add(measurement.getMeasurement());
             }
             distributionBarGraph(measurements, barEntries);
+
+            plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                    "X-axis: Measurement\nY-axis: Frequency");
         }
 
         statPlot.setDescription(null);
