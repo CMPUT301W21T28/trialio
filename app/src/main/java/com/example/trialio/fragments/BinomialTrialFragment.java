@@ -1,27 +1,19 @@
 package com.example.trialio.fragments;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Switch;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
-import com.example.trialio.activities.ExperimentActivity;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
@@ -59,7 +51,6 @@ public class BinomialTrialFragment extends DialogFragment {
                     location.getCurrentLocation(getContext(),getActivity());
                 }
                 Date date = new Date();
-
 
                 UserManager userManager = new UserManager();
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
