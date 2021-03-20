@@ -25,6 +25,10 @@ import com.example.trialio.utils.ExperimentTypeUtility;
 
 import java.io.Serializable;
 
+/**
+ * This fragment allows a user to edit their profile information, including username, phone number and e-mail
+ * it sends data back to the User manager, which then updates the user's information in the firebase database
+ */
 public class EditProfileFragment extends DialogFragment {
     private EditText username;
     private EditText phoneNumber;

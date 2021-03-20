@@ -37,6 +37,9 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.Serializable;
 
+/**
+ * Represents a location with a latitude and a longitude
+ */
 public class Location implements Serializable{
     private static final String TAG = "Location";
     private double latitude;
@@ -45,11 +48,19 @@ public class Location implements Serializable{
     final int REQUEST_CODE_FINE_PERMISSION = 99;
     transient FusedLocationProviderClient locClient;
 
-
+    /**
+     * Constructor for a Location
+     */
     public Location() {
 
     }
 
+    /**
+     * Constructor for a Location
+     *
+     * @param latitude  the latitude of a location
+     * @param longitude the longitude of a location
+     */
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -60,6 +71,13 @@ public class Location implements Serializable{
         double checks permission for the user location
      */
 
+    /**
+     * This function requests the wifi or GPS of the device to return the current location, and
+     *         double checks permission for the user location
+     *
+     * @param context  the context used by location
+     * @param activity the activity used by location
+     */
     public void getCurrentLocation(Context context, Activity activity) {
         //getting location permission from the user
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -85,18 +103,38 @@ public class Location implements Serializable{
         }
     }
 
+    /**
+     * Gets the latitude of a location
+     *
+     * @return the latitude of a location
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Sets the latitude of a location
+     *
+     * @param latitude the latitude of a location to be set
+     */
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     * Gets the longitude of a location
+     *
+     * @return the longitude of a location
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * Sets the longitude of a location
+     *
+     * @param longitude the longitude of a location to be set
+     */
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
