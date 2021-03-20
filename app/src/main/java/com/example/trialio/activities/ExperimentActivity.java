@@ -88,16 +88,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
-
-        // set the visibility of certain views in this activity
-        setViewVisibility();
-
-        // initialize all of the fields in the activity
-        setFields();
-
-        // set the onclick listeners for this activity
-        setOnClickListeners();
-
     }
 
     @Override
@@ -205,14 +195,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
         TextView textStats = findViewById(R.id.txtStatsSummary);
+        TextView textGeoWarning = findViewById(R.id.txtExperimentGeoWarning);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-
-
 
         // get the owner's username
         userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
@@ -221,6 +210,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 textOwner.setText("Owner: " + user.getUsername());
             }
         });
+
+        // if this is a geo experiment, give a warning
+        if (experiment.getSettings().getGeoLocationRequired()) {
+            textGeoWarning.setText("Warning! Geo-location information is collected with trials for this experiment.");
+        } else {
+            textGeoWarning.setText("");
+        }
 
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
