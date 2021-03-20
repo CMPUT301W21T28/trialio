@@ -37,7 +37,7 @@ public class TrialActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
 
-        trialList = experiment.getTrialManager().getTrials();
+        trialList = experiment.getTrialManager().getVisiTrials();
         trialAdapter = new ArrayAdapterTrials(this, experiment);
 
         experimentManager = new ExperimentManager();
@@ -62,7 +62,7 @@ public class TrialActivity extends AppCompatActivity {
                 setFields();
 
                 trialList.clear();
-                trialList.addAll(experiment.getTrialManager().getTrials());
+                trialList.addAll(experiment.getTrialManager().getVisibleTrials());
                 trialAdapter.notifyDataSetChanged();
             }
         });

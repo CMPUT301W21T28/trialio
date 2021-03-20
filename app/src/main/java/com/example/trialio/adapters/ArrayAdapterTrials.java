@@ -30,7 +30,7 @@ public class ArrayAdapterTrials extends ArrayAdapter {
     private UserManager userManager;
 
     public ArrayAdapterTrials(Context context, Experiment experiment) {
-        super(context, 0, experiment.getTrialManager().getTrials());
+        super(context, 0, experiment.getTrialManager().getVisibleTrials());
 
         this.trialList = experiment.getTrialManager().getTrials();
         this.context = context;
@@ -68,11 +68,11 @@ public class ArrayAdapterTrials extends ArrayAdapter {
 
         if (ExperimentTypeUtility.isBinomial(experiment.getTrialManager().getType())) {
             textResult.setText("Result: " + ((BinomialTrial) trial).getIsSuccess());
-        }else if (ExperimentTypeUtility.isMeasurement(experiment.getTrialManager().getType())) {
+        } else if (ExperimentTypeUtility.isMeasurement(experiment.getTrialManager().getType())) {
             textResult.setText("Result: " + ((MeasurementTrial) trial).getMeasurement() + " " + ((MeasurementTrial) trial).getUnit());
-        }else if (ExperimentTypeUtility.isCount(experiment.getTrialManager().getType())) {
+        } else if (ExperimentTypeUtility.isCount(experiment.getTrialManager().getType())) {
             textResult.setText("Result: " + ((CountTrial) trial).getCount());
-        }else if (ExperimentTypeUtility.isNonNegative(experiment.getTrialManager().getType())){
+        } else if (ExperimentTypeUtility.isNonNegative(experiment.getTrialManager().getType())){
             textResult.setText("Result: " + ((NonNegativeTrial) trial).getNonNegCount());
         }
 

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Location;
-import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
