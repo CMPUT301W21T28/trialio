@@ -27,6 +27,10 @@ import java.io.Serializable;
 //by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
 // in thread https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text/46244113#46244113
 
+/**
+ * This activity allows a user to view their own profile and edit it to make changes to their username and contract info
+ */
+
 public class ViewUserActivity extends AppCompatActivity {
     private User user;
     @Override

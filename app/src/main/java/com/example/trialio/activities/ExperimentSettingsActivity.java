@@ -17,6 +17,10 @@ import com.example.trialio.models.Experiment;
 
 import javax.annotation.Nullable;
 
+/**
+ * This activity allows an experiment owner to modify the settings of an experiment they own
+ */
+
 public class ExperimentSettingsActivity extends AppCompatActivity {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
@@ -25,6 +29,11 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     private UserManager userManager;
     private Button unpublishButton;
     private Switch isOpenSwitch;
+
+    /**
+     * the On create the takes in the saved instance from the experiment activity
+     * @param savedInstanceState
+     */
 
     @Override
     @Nullable
