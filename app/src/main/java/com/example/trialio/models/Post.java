@@ -14,6 +14,12 @@ public abstract class Post {
         this.user = user;
     }
 
+    public Post(String postID, String body, User user) {
+        this.postID = postID;
+        this.body = body;
+        this.user = user;
+    }
+
     public void setPostID(String id) { this.postID = id ; }
 
     public String getPostID() { return this.postID; }

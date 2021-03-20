@@ -1,20 +1,28 @@
 package com.example.trialio.activities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
+import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
+import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
 
@@ -34,7 +42,7 @@ public class QuestionForumActivity extends AppCompatActivity {
 
         // receive experiment info from main -> the question forum belongs to this experiment
         Bundle bundle = getIntent().getExtras();
-        associatedExperiment = (Experiment) bundle.getSerializable("experiment_info_qa");
+        associatedExperiment = (Experiment) bundle.getSerializable("experiment");
         // get id here and pass it into the constructor of the quesitonForumManager
         associatedExperimentID = associatedExperiment.getExperimentID();
 
@@ -93,20 +101,30 @@ public class QuestionForumActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: finish fragment
+        /**
+         * Adds new question
+         */
         Button newQuestion = findViewById(R.id.newQuestion);
         newQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(context, AddQuestionFragment.class);
+                Bundle args = new Bundle();
+                args.putSerializable("owener_experiment_info");
+                intent.putExtras(args);
+                startActivity(intent)
             }
         });
     }
 
-//    @Override
-//    public void onOkPressed(Question newQuestion) {
-//
-//        question.getTrialManager().addTrial(newTrial);
-//        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
-//    }
+    /**
+     * This is called when the user presses confirm on one of the Trial creation fragments
+     *
+     * @param question The new question that was created in the fragment
+     */
+    @Override
+    public void onOkPressed(Question question) {
+        questionForumManager.setOnQuestionFetchListener();
+    }
 
 }

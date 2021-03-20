@@ -321,6 +321,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+
         // Called when the user clicks the subscribe button
         Button subBtn = findViewById(R.id.btnSubscribe);
         subBtn.setOnClickListener(new View.OnClickListener() {
@@ -356,6 +357,23 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
+
+        Button questionForumButton = findViewById(R.id.btnQA); // move me up
+        questionForumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, QuestionForumActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment", experiment);
+                intent.putExtras(args);
+
+                // start an ExperimentActivity
+                startActivity(intent);
+            }
+        });
+
     }
 
     /**

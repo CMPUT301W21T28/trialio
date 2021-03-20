@@ -7,6 +7,7 @@ public class Question extends Post implements Serializable {
     private String title;
     private Collection<Reply> replies;
 
+
     public Question(String body, User user, String title, Collection<Reply> replies) {
         super(body, user);
         this.title = title;

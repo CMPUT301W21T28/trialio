@@ -146,11 +146,11 @@ public class QuestionForumManager implements Serializable {
      * @param questionID   the id of the question to fetch
      * @param listener     the function to be called when the experiment is fetched
      */
-    public void setOnQuestionFetchListener(String questionID, QuestionForumManager.OnQuestionFetchListener listener) {
+    public void setOnQuestionFetchListener(QuestionForumManager.OnQuestionFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
-        Log.d(TAG, "Fetching question" + questionID);
+        Log.d(TAG, "Fetching question");
         DocumentReference docRef = questionForumCollection.document(questionID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

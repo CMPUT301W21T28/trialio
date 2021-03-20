@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -28,27 +29,29 @@ public class AddQuestionFragment extends DialogFragment {
     private EditText questionBodyInput;
     private OnFragmentInteractionListener listener;
 
+
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_question, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Bundle bundle = getArguments();
+
         questionTitleInput = view.findViewById(R.id.editQuestionTitle);
         questionBodyInput = view.findViewById(R.id.editQuestionBody);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         return builder
             .setView(view)
             .setTitle("New Question")
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String questionTitle = questionTitleInput.getText().toString();
                 String questionBody = questionBodyInput.getText().toString();
-
-                // Initialize empty array list of replies  *** is this a bad practice???
                 ArrayList<Reply> replies = new ArrayList<>();
 
                 //confirm update to user profile
