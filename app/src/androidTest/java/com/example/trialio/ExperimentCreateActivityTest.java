@@ -95,7 +95,7 @@ public class ExperimentCreateActivityTest {
         assertTrue(solo.waitForText("CreateExperimentTest Region", 1, 2000));
         assertTrue(solo.waitForText("1", 1, 2000));
         assertTrue(solo.waitForText("BINOMIAL", 1, 2000));
-        assertTrue(solo.waitForText("OPEN", 1, 2000));
+        assertTrue(solo.waitForText("yes", 1, 2000));
     }
 
     /**
