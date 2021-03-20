@@ -55,6 +55,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
+    private Button scanQR;
+    private Button showQR;
     private StatisticsUtility statisticsUtility;
 
     @Override
@@ -85,6 +87,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
+        showQR = (Button) findViewById(R.id.btnQRCode) ;
+
+        // set the visibility of certain views in this activity
+        setViewVisibility();
+
+        // initialize all of the fields in the activity
+        setFields();
+
+        // set the onclick listeners for this activity
+        setOnClickListeners();
+
     }
 
     @Override
@@ -342,8 +355,24 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         });
 
 
-        // Called when the user clicks item in experiment list
+        /**
+         * This sets the onClickListener for an QRCodeActivity
+         */
+        showQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, QRCodeActivity.class);
 
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_qr", experiment);
+                intent.putExtras(args);
+
+                startActivity(intent);
+            }
+        });
+
+
+        // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
