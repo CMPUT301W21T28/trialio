@@ -252,22 +252,26 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     stats.get(3).intValue() + "\nSuccess Rate: " +
                     Math.round(stats.get(4) * 10000d) / 10000d);
         } else if(stats.get(0) == 3) {
-            String modes = Integer.toString(stats.get(6).intValue());
-            for(int i=7; i<stats.size(); i++) {
+            String modes = Integer.toString(stats.get(8).intValue());
+            for(int i=9; i<stats.size(); i++) {
                 modes += ", " + stats.get(i).intValue();
             }
 
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
+                    Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
+                    Math.round(stats.get(7) * 10000d) / 10000d + "\nMode(s): " + modes);
         } else if(stats.get(0) == 4) {
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
+                    "\nMean: " + stats.get(2) + "\nMedian: " +
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d);
+                    Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
+                    Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
+                    Math.round(stats.get(7) * 10000d) / 10000d);
         }
 
     }

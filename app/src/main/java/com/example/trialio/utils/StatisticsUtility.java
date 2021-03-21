@@ -67,7 +67,7 @@ public class StatisticsUtility {
             if(len % 2 == 0) {
                 median = (counts.get(len / 2) + counts.get(len / 2 - 1)) / 2;
             } else {
-                median = counts.get((int)Math.floor(counts.size() / 2));
+                median = counts.get((int)Math.floor(len / 2));
             }
 
             double counts_sum = 0;
@@ -79,15 +79,35 @@ public class StatisticsUtility {
 
             double stdev = standard_deviation(counts, mean);
 
+            double q1_median = -1;
+            double q3_median = -1;
+            if(size >= 4) {
+                int q1_len = (int) Math.floor(len / 2);
+                if (q1_len % 2 == 0) {
+                    q1_median = (counts.get(q1_len / 2) + counts.get(q1_len / 2 - 1)) / 2;
+                } else {
+                    q1_median = counts.get((int) Math.floor(q1_len / 2));
+                }
+
+                int q3_len = q1_len;
+                if (q3_len % 2 == 0) {
+                    q3_median = (counts.get(len - q3_len / 2) + counts.get(len - (q3_len / 2 + 1))) / 2;
+                } else {
+                    q3_median = counts.get(len - (int) Math.ceil(q3_len / 2));
+                }
+            }
+
             ArrayList<Double> modes = mode(counts);
 
-            // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, mode(s)
+            // data stored in format of: ID = 3.0, median, mean, standard deviation, variance, 1st quartile, 3rd quartile, mode(s)
             stats.add(3.0);
             stats.add(size);
             stats.add(mean);
             stats.add(median);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
+            stats.add(q1_median);
+            stats.add(q3_median);
             for(int i=0; i<modes.size(); i++) {
                 stats.add(modes.get(i));
             }
@@ -105,7 +125,7 @@ public class StatisticsUtility {
             if(len % 2 == 0) {
                 median = (counts.get(len / 2) + counts.get(len / 2 - 1)) / 2;
             } else {
-                median = counts.get((int)Math.floor(counts.size() / 2));
+                median = counts.get((int)Math.floor(len / 2));
             }
 
             double counts_sum = 0;
@@ -117,13 +137,33 @@ public class StatisticsUtility {
 
             double stdev = standard_deviation(counts, mean);
 
-            // data stored in format of: ID = 4.0, median, mean, standard deviation, variance
+            double q1_median = -1;
+            double q3_median = -1;
+            if(size >= 4) {
+                int q1_len = (int) Math.floor(len / 2);
+                if (q1_len % 2 == 0) {
+                    q1_median = (counts.get(q1_len / 2) + counts.get(q1_len / 2 - 1)) / 2;
+                } else {
+                    q1_median = counts.get((int) Math.floor(q1_len / 2));
+                }
+
+                int q3_len = q1_len;
+                if (q3_len % 2 == 0) {
+                    q3_median = (counts.get(len - q3_len / 2) + counts.get(len - (q3_len / 2 + 1))) / 2;
+                } else {
+                    q3_median = counts.get(len - (int) Math.ceil(q3_len / 2));
+                }
+            }
+
+            // data stored in format of: ID = 4.0, median, mean, standard deviation, variance, 1st quartile, 3rd quartile
             stats.add(4.0);
             stats.add(size);
             stats.add(mean);
             stats.add(median);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
+            stats.add(q1_median);
+            stats.add(q3_median);
         }
 
         return stats;

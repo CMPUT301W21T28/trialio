@@ -123,8 +123,8 @@ public class StatActivity extends AppCompatActivity {
                         Math.round(stats.get(4) * 10000d) / 10000d);
                 break;
             case 3:
-                String modes = Integer.toString(stats.get(6).intValue());
-                for(int i=7; i<stats.size(); i++) {
+                String modes = Integer.toString(stats.get(8).intValue());
+                for(int i=9; i<stats.size(); i++) {
                     modes += ", " + stats.get(i).intValue();
                 }
 
@@ -132,14 +132,18 @@ public class StatActivity extends AppCompatActivity {
                         "\nMean: " + stats.get(2) + "\nMedian: " +
                         Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                         Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                        Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
+                        Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
+                        Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
+                        Math.round(stats.get(7) * 10000d) / 10000d + "\nMode(s): " + modes);
                 break;
             case 4:
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
                         "\nMean: " + stats.get(2) + "\nMedian: " +
                         Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                         Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                        Math.round(stats.get(5) * 10000d) / 10000d);
+                        Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
+                        Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
+                        Math.round(stats.get(7) * 10000d) / 10000d);
         }
     }
 
