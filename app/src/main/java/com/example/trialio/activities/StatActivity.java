@@ -25,6 +25,7 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -73,12 +74,12 @@ public class StatActivity extends AppCompatActivity {
         displaySummaryStats(stats);
 
         // create and display histogram of results
-        displayHistogram(stats, histogram, graphTitle);
-        timePlot.setVisibility(View.GONE);
+        //displayHistogram(stats, histogram, graphTitle);
+        //timePlot.setVisibility(View.GONE);
 
         // create and display time plot of trials
-        //displayTimePlot(stats, timePlot, graphTitle);
-        //histogram.setVisibility(View.GONE);
+        displayTimePlot(stats, timePlot, graphTitle);
+        histogram.setVisibility(View.GONE);
     }
 
     public void displaySummaryStats(ArrayList<Double> stats) {
@@ -232,7 +233,130 @@ public class StatActivity extends AppCompatActivity {
     }
 
     public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
+        // Adapted from Youtube tutorial code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+        // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
+        // AUTHOR: 	Youtube account: CodingWithMitch
 
+        ArrayList<Entry> TimePlotEntries = new ArrayList<>();
+        ArrayList<String> xTitles = new ArrayList<>();
+        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
+        LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Trials");
+
+        // no graph for COUNT experiments, nothing noteworthy to view
+        switch((stats.get(0).intValue())) {
+            case 2:
+                // add these calculated heights into the histogram
+                TimePlotEntries.add(new BarEntry(stats.get(2).intValue(),0));
+                TimePlotEntries.add(new BarEntry(stats.get(3).intValue(),1));
+
+                // add the titles of both sections
+                xTitles.add("Successes");
+                xTitles.add("Failures");
+
+                // display histogram titles
+                timePlotTitle.setText("Successes vs Failures");
+                break;
+            case 3:
+                // find the non-negative count value of each trial
+                ArrayList<Double> counts = new ArrayList<>();
+                NonNegativeTrial nonnegative;
+                for(int i=0; i<trials.size(); i++) {
+                    nonnegative = (NonNegativeTrial) trials.get(i);
+                    counts.add((double)nonnegative.getNonNegCount());
+                }
+
+                // call helper method for further setup
+                setupTimePlot(counts, TimePlotEntries, xTitles);
+
+                // display histogram titles
+                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                        "X-axis: Non-negative count\nY-axis: Frequency");
+                break;
+            case 4:
+                // find the measurement value of each trial
+                ArrayList<Double> measurements = new ArrayList<>();
+                MeasurementTrial measurement;
+                for(int i=0; i<trials.size(); i++) {
+                    measurement = (MeasurementTrial) trials.get(i);
+                    measurements.add(measurement.getMeasurement());
+                }
+
+                // call helper method for further setup
+                setupTimePlot(measurements, TimePlotEntries, xTitles);
+
+                // display histogram titles
+                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                        "X-axis: Measurement\nY-axis: Frequency");
+        }
+
+        /*
+        holder.mChart.getAxisRight().setEnabled(false);
+
+            // add data
+            // note: create data is custom method
+            holder.mChart.setData(createData(10));
+
+            holder.mChart.getLegend().setEnabled(false);
+
+            // adding some animation that is some good part
+            holder.mChart.animateXY(2000, 2000);
+
+            // dont forget to refresh the drawing
+            holder.mChart.invalidate();
+         */
+
+        // display the histogram and set certain settings
+        LineData data = new LineData(xTitles, timePlotDataSet);
+        timePlot.setData(data);
+        timePlot.setTouchEnabled(true);
+        timePlot.setDragEnabled(true);
+        timePlot.setScaleEnabled(true);
+        timePlot.setDescription(null);
+    }
+
+    public void setupTimePlot(ArrayList<Double> results, ArrayList<Entry> timePlotEntries, ArrayList<String> xTitles) {
+        // important values that app administrator may want to change
+        // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
+        int numSections = 6; // the desired number of vertical bars in the histogram
+        double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
+
+        // sort the trial results from min to max
+        Collections.sort(results);
+
+        // initialize min histogram x-value, max histogram x-value, and the distance between these two
+        int min = 0;
+        int max = (int)(results.get(results.size()-1) * maxBuffer);
+        double diff = max - min;
+
+        // initialize the cutoffs based on number of vertical bars, to sort results into groups
+        int[] cutoffs = new int[numSections]; // min is not included
+        for(int i=0; i<numSections; i++) {
+            cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));
+        }
+
+        // calculate the height of each vertical bar, by finding how many results fit into that bucket
+        int[] barHeight = new int[numSections];
+        for(int i=0; i<results.size(); i++) {
+            for(int j=0; j<cutoffs.length; j++) {
+                if(results.get(i) <= cutoffs[j]) {
+                    barHeight[j]++;
+                    break;
+                }
+            }
+        }
+
+        // add these calculated heights into the histogram
+        for(int i=0; i<numSections; i++) {
+            timePlotEntries.add(new BarEntry(barHeight[i],i));
+        }
+
+        // display the min and max values of each section in the histogram
+        xTitles.add(min + "-" + cutoffs[0]);
+        for(int i=0; i<numSections-1; i++) {
+            xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
+        }
     }
 
 }
