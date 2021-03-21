@@ -6,7 +6,6 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +31,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -71,9 +71,15 @@ public class StatActivity extends AppCompatActivity {
         // display summary statistics of results
         displaySummaryStats(stats);
 
-        // display histogram by default
-        displayHistogram(stats, histogram, graphTitle);
-        timePlot.setVisibility(View.GONE);
+        if(experiment.getTrialManager().getType().equals("COUNT")) {
+            // display time plot by default if count experiment
+            displayTimePlot(stats, timePlot, graphTitle);
+            histogram.setVisibility(View.GONE);
+        } else {
+            // otherwise display histogram by default
+            displayHistogram(stats, histogram, graphTitle);
+            timePlot.setVisibility(View.GONE);
+        }
 
         Button showHistogram = findViewById(R.id.btnHistogram);
         showHistogram.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +166,7 @@ public class StatActivity extends AppCompatActivity {
                 // no graph for COUNT experiments, nothing noteworthy to view
                 histogramTitle.setText("No histogram is available for count experiments");
 
-                break;
+                return;
             case 2:
                 // add these calculated heights into the histogram
                 histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
@@ -346,8 +352,9 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // display the date cutoff for each point in the time plot
+        SimpleDateFormat dateDisplay = new SimpleDateFormat("MM/dd/yy");
         for(int i=0; i<numPoints; i++) {
-            xTitles.add("" + new Date(cutoffs[i]));
+            xTitles.add(dateDisplay.format(new Date(cutoffs[i])));
         }
 
         // display the time plot and set certain settings
