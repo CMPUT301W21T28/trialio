@@ -52,10 +52,18 @@ public class StatActivity extends AppCompatActivity {
         // create statistics utility
         statisticsUtility = new StatisticsUtility();
 
-        // set Stats Summary
-        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
-
+        // calculate the relevant stats based on experiment type
         ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
+
+        // display summary statistics of results
+        displaySummaryStats(stats);
+
+        // create and display histogram of results
+        displayHistogram(stats);
+    }
+
+    public void displaySummaryStats(ArrayList<Double> stats) {
+        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
 
         // Took rounding code.
         // DATE:	2021-03-19
@@ -68,9 +76,9 @@ public class StatActivity extends AppCompatActivity {
                 break;
             case 2:
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
-                    stats.get(3).intValue() + "\nSuccess Rate: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d);
+                        "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
+                        stats.get(3).intValue() + "\nSuccess Rate: " +
+                        Math.round(stats.get(4) * 10000d) / 10000d);
                 break;
             case 3:
                 String modes = Integer.toString(stats.get(6).intValue());
@@ -79,21 +87,21 @@ public class StatActivity extends AppCompatActivity {
                 }
 
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + stats.get(2) + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
+                        "\nMean: " + stats.get(2) + "\nMedian: " +
+                        Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                        Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                        Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
                 break;
             case 4:
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + stats.get(2) + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d);
+                        "\nMean: " + stats.get(2) + "\nMedian: " +
+                        Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
+                        Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
+                        Math.round(stats.get(5) * 10000d) / 10000d);
         }
+    }
 
-        // create histogram of results
-
+    public void displayHistogram(ArrayList<Double> stats) {
         // Adapted from Youtube tutorial code.
         // DATE:	2021-03-19
         // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
@@ -136,7 +144,7 @@ public class StatActivity extends AppCompatActivity {
 
                 // display histogram titles
                 plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                    "X-axis: Non-negative count\nY-axis: Frequency");
+                        "X-axis: Non-negative count\nY-axis: Frequency");
                 break;
             case 4:
                 // find the measurement value of each trial
@@ -152,7 +160,7 @@ public class StatActivity extends AppCompatActivity {
 
                 // display histogram titles
                 plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                    "X-axis: Measurement\nY-axis: Frequency");
+                        "X-axis: Measurement\nY-axis: Frequency");
         }
 
         // display the histogram and set certain settings

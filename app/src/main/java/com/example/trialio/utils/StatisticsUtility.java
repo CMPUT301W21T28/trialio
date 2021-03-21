@@ -25,7 +25,7 @@ public class StatisticsUtility {
             stats.add(size);
 
             // TODO: do we actually want number of contributors? Just going to leave this for now as
-            // getting the foundation working first is more crucial I think
+            // TODO: getting the foundation working first is more crucial I think
             /*
             ArrayList<String> experimenters = new ArrayList<String>();
             ArrayList<Integer> num_contributions = new ArrayList<Integer>();
@@ -123,19 +123,9 @@ public class StatisticsUtility {
             stats.add(median);
             stats.add(stdev);
             stats.add(Math.pow(stdev, 2));
-            // TODO: do we need mode for measurements? Won't they all be unique?
-            // TODO: could do a mode "box", like count instances between 2 integers (eg. 4<=x<=5)
         }
 
         return stats;
-    }
-
-    public void getTrialsHistogram (String type, Experiment experiment) {
-        //...
-    }
-
-    public void getTrialsPlot (String type, Experiment experiment) {
-        //...
     }
 
     public double standard_deviation(ArrayList<Double> list, double mean) {
