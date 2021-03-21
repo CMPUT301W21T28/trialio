@@ -149,8 +149,18 @@ public class StatActivity extends AppCompatActivity {
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
         BarDataSet histogramDataSet = new BarDataSet(histogramEntries,"Trials");
 
-        // no graph for COUNT experiments, nothing noteworthy to view
+        // cannot display histogram if there are no trials
+        if(trials.isEmpty()) {
+            histogramTitle.setText("No trial results to display");
+            return;
+        }
+
         switch((stats.get(0).intValue())) {
+            case 1:
+                // no graph for COUNT experiments, nothing noteworthy to view
+                histogramTitle.setText("No histogram is available for count experiments");
+
+                break;
             case 2:
                 // add these calculated heights into the histogram
                 histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
@@ -162,6 +172,7 @@ public class StatActivity extends AppCompatActivity {
 
                 // display histogram titles
                 histogramTitle.setText("Successes vs Failures");
+
                 break;
             case 3:
                 // find the non-negative count value of each trial
@@ -178,6 +189,7 @@ public class StatActivity extends AppCompatActivity {
                 // display histogram titles
                 histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
                         "X-axis: Non-negative count\nY-axis: Frequency");
+
                 break;
             case 4:
                 // find the measurement value of each trial
@@ -249,7 +261,7 @@ public class StatActivity extends AppCompatActivity {
     }
 
     public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
-        // Adapted from Youtube tutorial code.
+        // Also adapted from Youtube tutorial code.
         // DATE:	2021-03-19
         // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
         // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
@@ -259,6 +271,12 @@ public class StatActivity extends AppCompatActivity {
         ArrayList<String> xTitles = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
         LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Mean");
+
+        // cannot display time plot if there are no trials
+        if(trials.isEmpty()) {
+            timePlotTitle.setText("No trial results to display");
+            return;
+        }
 
         // find the dates of each trial
         ArrayList<Date> dates = new ArrayList<>();
