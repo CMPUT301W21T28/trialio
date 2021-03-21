@@ -108,42 +108,54 @@ public class StatActivity extends AppCompatActivity {
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
         BarDataSet barDataSet = new BarDataSet(barEntries,"Trials");
 
-        // no graph for COUNT experiments, nothing interesting to view
+        // no graph for COUNT experiments, nothing noteworthy to view
         switch((stats.get(0).intValue())) {
             case 2:
+                // add these calculated heights into the histogram
                 barEntries.add(new BarEntry(stats.get(2).intValue(),0));
                 barEntries.add(new BarEntry(stats.get(3).intValue(),1));
 
+                // add the titles of both sections
                 xTitles.add("Successes");
                 xTitles.add("Failures");
 
+                // display histogram titles
                 plotText.setText("Successes vs Failures");
                 break;
             case 3:
+                // find the non-negative count value of each trial
                 ArrayList<Double> counts = new ArrayList<>();
                 NonNegativeTrial nonnegative;
                 for(int i=0; i<trials.size(); i++) {
                     nonnegative = (NonNegativeTrial) trials.get(i);
                     counts.add((double)nonnegative.getNonNegCount());
                 }
-                distributionBarGraph(counts, barEntries);
 
+                // call helper method for further setup
+                setupHistogram(counts, barEntries, xTitles);
+
+                // display histogram titles
                 plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
                     "X-axis: Non-negative count\nY-axis: Frequency");
                 break;
             case 4:
+                // find the measurement value of each trial
                 ArrayList<Double> measurements = new ArrayList<>();
                 MeasurementTrial measurement;
                 for(int i=0; i<trials.size(); i++) {
                     measurement = (MeasurementTrial) trials.get(i);
                     measurements.add(measurement.getMeasurement());
                 }
-                distributionBarGraph(measurements, barEntries);
 
+                // call helper method for further setup
+                setupHistogram(measurements, barEntries, xTitles);
+
+                // display histogram titles
                 plotText.setText(experiment.getSettings().getDescription() + " histogram\n" +
                     "X-axis: Measurement\nY-axis: Frequency");
         }
 
+        // display the histogram and set certain settings
         BarData data = new BarData(xTitles, barDataSet);
         statPlot.setData(data);
         statPlot.setTouchEnabled(true);
@@ -152,19 +164,27 @@ public class StatActivity extends AppCompatActivity {
         statPlot.setDescription(null);
     }
 
-    public void distributionBarGraph(ArrayList<Double> list, ArrayList<BarEntry> barEntries) {
+    public void setupHistogram(ArrayList<Double> list, ArrayList<BarEntry> barEntries, ArrayList<String> xTitles) {
+        // important values that app administrator may want to change
+        // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
+        int numSections = 6; // the desired number of vertical bars in the histogram
+        double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
+
+        // sort the trial results from min to max
         Collections.sort(list);
 
+        // initialize min histogram x-value, max histogram x-value, and the distance between these two
         int min = 0;
-        double max_buffer = 1.10; // extra space to the right of maximum count / measurement
-        int max = (int)(list.get(list.size()-1) * max_buffer);
+        int max = (int)(list.get(list.size()-1) * maxBuffer);
         double diff = max - min;
-        int numSections = 10;
+
+        // initialize the cutoffs based on number of vertical bars, to sort results into groups
         int[] cutoffs = new int[numSections]; // min is not included
         for(int i=0; i<numSections; i++) {
             cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));
         }
 
+        // calculate the height of each vertical bar, by finding how many results fit into that bucket
         int[] barHeight = new int[numSections];
         for(int i=0; i<list.size(); i++) {
             for(int j=0; j<cutoffs.length; j++) {
@@ -175,13 +195,13 @@ public class StatActivity extends AppCompatActivity {
             }
         }
 
+        // add these calculated heights into the histogram
         for(int i=0; i<numSections; i++) {
             barEntries.add(new BarEntry(barHeight[i],i));
         }
 
-        ArrayList<String> xTitles = new ArrayList<>();
+        // display the min and max values of each section in the histogram
         xTitles.add(min + "-" + cutoffs[0]);
-        
         for(int i=0; i<numSections-1; i++) {
             xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
         }
