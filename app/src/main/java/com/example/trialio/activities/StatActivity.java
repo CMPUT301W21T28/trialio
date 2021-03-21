@@ -234,20 +234,10 @@ public class StatActivity extends AppCompatActivity {
         // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
         // AUTHOR: 	Youtube account: CodingWithMitch
 
-        // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
-        int numPoints = 100; // the desired number of points in the time plot
-        long max = new Date().getTime();
-
-        // the following line can also be used for max, to see time plot up until the most recent data point
-        // instead of the current date/time
-        // long max = (dates.get(dates.size()-1)).getTime() + 1; // +1 so max is included
-
         ArrayList<Entry> TimePlotEntries = new ArrayList<>();
         ArrayList<String> xTitles = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
         LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Mean");
-        double[] pointHeight = new double[numPoints];
 
         // find the dates of each trial
         ArrayList<Date> dates = new ArrayList<>();
@@ -255,8 +245,23 @@ public class StatActivity extends AppCompatActivity {
             dates.add(trials.get(i).getDate());
         }
 
+        // sort the dates from furthest in the past to most recent
+        Collections.sort(dates);
+
+        // important values that app administrator may want to change
+        // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
+        int numPoints = 6; // the desired number of points in the time plot
+        //long max = new Date().getTime();
+
+        // the following line can also be used for max, to see time plot up until the most recent data point
+        // instead of the current date/time
+        long max = (dates.get(dates.size()-1)).getTime() + 1; // +1 so max is included
+
         // find the cutoffs based on number of points
         long[] cutoffs = findCutoffs(dates, numPoints, max);
+
+        // set up point heights array
+        double[] pointHeight = new double[numPoints];
 
         // no graph for COUNT experiments, nothing noteworthy to view
         switch((stats.get(0).intValue())) {
@@ -305,9 +310,6 @@ public class StatActivity extends AppCompatActivity {
     }
 
     public long[] findCutoffs(ArrayList<Date> dates, int numPoints, long max) {
-        // sort the dates from furthest in the past to most recent
-        Collections.sort(dates);
-
         // initialize min time plot x-value, max time plot x-value, and the distance between these two
         long min = (dates.get(0)).getTime();
         long diff = max - min;
@@ -337,13 +339,15 @@ public class StatActivity extends AppCompatActivity {
         for(int i=0; i<cutoffs.length; i++) {
             for(int j=0; j<binomialTrials.size(); j++) {
                 if(binomialTrials.get(j).getDate().getTime() <= cutoffs[i]) {
-                    if(binomialTrials.get(i).getIsSuccess()) {
+                    if(binomialTrials.get(j).getIsSuccess()) {
                         successes++;
                     }
                     total++;
                 }
                 if(j == trials.size() - 1) {
                     pointHeight[i] = successes / total;
+                    total = 0;
+                    successes = 0;
                 }
             }
         }
