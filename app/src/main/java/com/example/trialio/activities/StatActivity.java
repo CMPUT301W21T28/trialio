@@ -14,6 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
+import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
@@ -234,8 +235,13 @@ public class StatActivity extends AppCompatActivity {
         // AUTHOR: 	Youtube account: CodingWithMitch
 
         // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numPoints? That would be cool
-        int numPoints = 6; // the desired number of points in the time plot
+        // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
+        int numPoints = 100; // the desired number of points in the time plot
+        long max = new Date().getTime();
+
+        // the following line can also be used for max, to see time plot up until the most recent data point
+        // instead of the current date/time
+        // long max = (dates.get(dates.size()-1)).getTime() + 1; // +1 so max is included
 
         ArrayList<Entry> TimePlotEntries = new ArrayList<>();
         ArrayList<String> xTitles = new ArrayList<>();
@@ -250,21 +256,17 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // find the cutoffs based on number of points
-        long[] cutoffs = findCutoffs(dates, numPoints);
+        long[] cutoffs = findCutoffs(dates, numPoints, max);
 
         // no graph for COUNT experiments, nothing noteworthy to view
         switch((stats.get(0).intValue())) {
             case 2:
-                // add these calculated heights into the histogram
-                TimePlotEntries.add(new BarEntry(stats.get(2).intValue(),0));
-                TimePlotEntries.add(new BarEntry(stats.get(3).intValue(),1));
+                // call helper method for further setup
+                pointHeight = setupBinomialTimePlot(trials, cutoffs, numPoints);
 
-                // add the titles of both sections
-                xTitles.add("Successes");
-                xTitles.add("Failures");
-
-                // display histogram titles
-                timePlotTitle.setText("Successes vs Failures");
+                // display time plot titles
+                timePlotTitle.setText(experiment.getSettings().getDescription() + " time plot\n" +
+                        "X-axis: Time\nY-axis: Success rate");
                 break;
             case 3:
                 // call helper method for further setup
@@ -302,13 +304,12 @@ public class StatActivity extends AppCompatActivity {
         timePlot.setDescription(null);
     }
 
-    public long[] findCutoffs(ArrayList<Date> dates, int numPoints) {
+    public long[] findCutoffs(ArrayList<Date> dates, int numPoints, long max) {
         // sort the dates from furthest in the past to most recent
         Collections.sort(dates);
 
         // initialize min time plot x-value, max time plot x-value, and the distance between these two
         long min = (dates.get(0)).getTime();
-        long max = (dates.get(dates.size()-1)).getTime() + 1; // +1 so max is included
         long diff = max - min;
 
         // initialize the cutoffs based on number of points, to sort results based on date
@@ -318,6 +319,36 @@ public class StatActivity extends AppCompatActivity {
         }
 
         return cutoffs;
+    }
+
+    public double[] setupBinomialTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
+        // cast the trials to binomial type
+        ArrayList<BinomialTrial> binomialTrials = new ArrayList<>();
+        BinomialTrial binomial;
+        for(int i=0; i<trials.size(); i++) {
+            binomial = (BinomialTrial) trials.get(i);
+            binomialTrials.add(binomial);
+        }
+
+        // calculate the height of each point, by finding how many results existed at that date
+        double[] pointHeight = new double[numPoints];
+        double total = 0;
+        double successes = 0;
+        for(int i=0; i<cutoffs.length; i++) {
+            for(int j=0; j<binomialTrials.size(); j++) {
+                if(binomialTrials.get(j).getDate().getTime() <= cutoffs[i]) {
+                    if(binomialTrials.get(i).getIsSuccess()) {
+                        successes++;
+                    }
+                    total++;
+                }
+                if(j == trials.size() - 1) {
+                    pointHeight[i] = successes / total;
+                }
+            }
+        }
+
+        return pointHeight;
     }
 
     public double[] setupNonNegativeTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
