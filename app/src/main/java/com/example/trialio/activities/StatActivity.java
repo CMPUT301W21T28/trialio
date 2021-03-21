@@ -7,6 +7,7 @@ package com.example.trialio.activities;
 // AUTHOR: 	Philipp Jahoda
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -30,8 +31,6 @@ public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
-    private BarChart histogram;
-    private BarChart timeplot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,8 @@ public class StatActivity extends AppCompatActivity {
         // calculate the relevant stats based on experiment type
         ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
 
-        histogram = findViewById(R.id.statPlot);
+        BarChart histogram = findViewById(R.id.histogramView);
+        BarChart timeplot = findViewById(R.id.timePlotView);
         TextView graphTitle = findViewById(R.id.plotTitle);
 
         // display summary statistics of results
@@ -64,10 +64,11 @@ public class StatActivity extends AppCompatActivity {
 
         // create and display histogram of results
         displayHistogram(stats, histogram, graphTitle);
+        timeplot.setVisibility(View.GONE);
 
-        // create and display time plot of results
-        // TODO: fix so timeplot variable is used, and so the graphs don't overlap
-        displayTimePlot(stats, histogram, graphTitle);
+        // create and display time plot of trials
+        displayTimePlot(stats, timeplot, graphTitle);
+        histogram.setVisibility(View.GONE);
     }
 
     public void displaySummaryStats(ArrayList<Double> stats) {
@@ -178,7 +179,71 @@ public class StatActivity extends AppCompatActivity {
     }
 
     public void displayTimePlot(ArrayList<Double> stats, BarChart timeplot, TextView histogramTitle) {
+        // Adapted from Youtube tutorial code.
+        // DATE:	2021-03-19
+        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
+        // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
+        // AUTHOR: 	Youtube account: CodingWithMitch
 
+        ArrayList<BarEntry> histogramEntries = new ArrayList<>();
+        ArrayList<String> xTitles = new ArrayList<>();
+        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
+        BarDataSet histogramDataSet = new BarDataSet(histogramEntries,"Trials");
+
+        // no graph for COUNT experiments, nothing noteworthy to view
+        switch((stats.get(0).intValue())) {
+            case 2:
+                // add these calculated heights into the histogram
+                histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
+                histogramEntries.add(new BarEntry(stats.get(3).intValue(),1));
+
+                // add the titles of both sections
+                xTitles.add("Successes");
+                xTitles.add("Failures");
+
+                // display histogram titles
+                histogramTitle.setText("Successes vs Failures");
+                break;
+            case 3:
+                // find the non-negative count value of each trial
+                ArrayList<Double> counts = new ArrayList<>();
+                NonNegativeTrial nonnegative;
+                for(int i=0; i<trials.size(); i++) {
+                    nonnegative = (NonNegativeTrial) trials.get(i);
+                    counts.add((double)nonnegative.getNonNegCount());
+                }
+
+                // call helper method for further setup
+                setupHistogram(counts, histogramEntries, xTitles);
+
+                // display histogram titles
+                histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                        "X-axis: Non-negative count\nY-axis: Frequency");
+                break;
+            case 4:
+                // find the measurement value of each trial
+                ArrayList<Double> measurements = new ArrayList<>();
+                MeasurementTrial measurement;
+                for(int i=0; i<trials.size(); i++) {
+                    measurement = (MeasurementTrial) trials.get(i);
+                    measurements.add(measurement.getMeasurement());
+                }
+
+                // call helper method for further setup
+                setupHistogram(measurements, histogramEntries, xTitles);
+
+                // display histogram titles
+                histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                        "X-axis: Measurement\nY-axis: Frequency");
+        }
+
+        // display the histogram and set certain settings
+        BarData data = new BarData(xTitles, histogramDataSet);
+        timeplot.setData(data);
+        timeplot.setTouchEnabled(true);
+        timeplot.setDragEnabled(true);
+        timeplot.setScaleEnabled(true);
+        timeplot.setDescription(null);
     }
 
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {

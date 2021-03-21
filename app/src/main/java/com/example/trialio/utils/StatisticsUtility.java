@@ -11,6 +11,7 @@ import java.util.Collections;
 
 public class StatisticsUtility {
 
+    // TODO: add in first and third quartiles
     public ArrayList<Double> getExperimentStatistics (String type, Experiment experiment) {
         ArrayList<Double> stats = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
