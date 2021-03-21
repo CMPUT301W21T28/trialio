@@ -73,12 +73,12 @@ public class StatActivity extends AppCompatActivity {
         displaySummaryStats(stats);
 
         // create and display histogram of results
-        //displayHistogram(stats, histogram, graphTitle);
-        //timePlot.setVisibility(View.GONE);
+        displayHistogram(stats, histogram, graphTitle);
+        timePlot.setVisibility(View.GONE);
 
         // create and display time plot of trials
-        displayTimePlot(stats, timePlot, graphTitle);
-        histogram.setVisibility(View.GONE);
+        //displayTimePlot(stats, timePlot, graphTitle);
+        //histogram.setVisibility(View.GONE);
     }
 
     public void displaySummaryStats(ArrayList<Double> stats) {
@@ -180,10 +180,8 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // display the histogram and set certain settings
-
-        //TODO: FIX these next 2 lines!
-        //BarData data = new BarData(xTitles, histogramDataSet);
-        //histogram.setData(data);
+        BarData data = new BarData(xTitles, histogramDataSet);
+        histogram.setData(data);
         histogram.setTouchEnabled(true);
         histogram.setDragEnabled(true);
         histogram.setScaleEnabled(true);
@@ -191,107 +189,7 @@ public class StatActivity extends AppCompatActivity {
     }
 
     public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
-        ArrayList<Entry> values = new ArrayList<>();
-        values.add(new Entry(1, 50));
-        values.add(new Entry(2, 100));
 
-        LineDataSet set1;
-        if (timePlot.getData() != null &&
-                timePlot.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) timePlot.getData().getDataSetByIndex(0);
-            set1.setValues(values);
-            timePlot.getData().notifyDataChanged();
-            timePlot.notifyDataSetChanged();
-        } else {
-            set1 = new LineDataSet(values, "Sample Data");
-            set1.setDrawIcons(false);
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.DKGRAY);
-            set1.setCircleColor(Color.DKGRAY);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(9f);
-            set1.setDrawFilled(true);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
-            set1.setFillColor(Color.DKGRAY);
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
-            LineData data = new LineData(dataSets);
-            timePlot.setData(data);
-        }
-
-        // Adapted from Youtube tutorial code.
-        // DATE:	2021-03-19
-        // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
-        // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
-        // AUTHOR: 	Youtube account: CodingWithMitch
-
-        /*
-        ArrayList<BarEntry> histogramEntries = new ArrayList<>();
-        ArrayList<String> xTitles = new ArrayList<>();
-        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
-        BarDataSet histogramDataSet = new BarDataSet(histogramEntries,"Trials");
-
-        // no graph for COUNT experiments, nothing noteworthy to view
-        switch((stats.get(0).intValue())) {
-            case 2:
-                // add these calculated heights into the histogram
-                histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
-                histogramEntries.add(new BarEntry(stats.get(3).intValue(),1));
-
-                // add the titles of both sections
-                xTitles.add("Successes");
-                xTitles.add("Failures");
-
-                // display histogram titles
-                timePlotTitle.setText("Successes vs Failures");
-                break;
-            case 3:
-                // find the non-negative count value of each trial
-                ArrayList<Double> counts = new ArrayList<>();
-                NonNegativeTrial nonnegative;
-                for(int i=0; i<trials.size(); i++) {
-                    nonnegative = (NonNegativeTrial) trials.get(i);
-                    counts.add((double)nonnegative.getNonNegCount());
-                }
-
-                // call helper method for further setup
-                setupHistogram(counts, histogramEntries, xTitles);
-
-                // display histogram titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Non-negative count\nY-axis: Frequency");
-                break;
-            case 4:
-                // find the measurement value of each trial
-                ArrayList<Double> measurements = new ArrayList<>();
-                MeasurementTrial measurement;
-                for(int i=0; i<trials.size(); i++) {
-                    measurement = (MeasurementTrial) trials.get(i);
-                    measurements.add(measurement.getMeasurement());
-                }
-
-                // call helper method for further setup
-                setupHistogram(measurements, histogramEntries, xTitles);
-
-                // display histogram titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Measurement\nY-axis: Frequency");
-        }
-
-        // display the histogram and set certain settings
-        BarData data = new BarData(xTitles, histogramDataSet);
-        //timePlot.setData(data);
-        timePlot.setTouchEnabled(true);
-        timePlot.setDragEnabled(true);
-        timePlot.setScaleEnabled(true);
-        timePlot.setDescription(null);
-
-         */
     }
 
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {
