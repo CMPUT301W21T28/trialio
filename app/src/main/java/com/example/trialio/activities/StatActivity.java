@@ -262,9 +262,9 @@ public class StatActivity extends AppCompatActivity {
                 // call helper method for further setup
                 setupTimePlot(trials, nonNegativeDates, TimePlotEntries, xTitles);
 
-                // display histogram titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Non-negative count\nY-axis: Frequency");
+                // display time plot titles
+                timePlotTitle.setText(experiment.getSettings().getDescription() + " time plot\n" +
+                        "X-axis: Time\nY-axis: Mean non-negative count");
                 break;
             case 4:
                 // find the dates of each trial
@@ -276,12 +276,12 @@ public class StatActivity extends AppCompatActivity {
                 // call helper method for further setup
                 setupTimePlot(trials, measurementDates, TimePlotEntries, xTitles);
 
-                // display histogram titles
+                // display time plot titles
                 timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
                         "X-axis: Measurement\nY-axis: Frequency");
         }
 
-        // display the histogram and set certain settings
+        // display the time plot and set certain settings
         LineData data = new LineData(xTitles, timePlotDataSet);
         timePlot.setData(data);
         timePlot.setTouchEnabled(true);
@@ -292,43 +292,39 @@ public class StatActivity extends AppCompatActivity {
 
     public void setupTimePlot(ArrayList<Trial> trials, ArrayList<Date> dates, ArrayList<Entry> timePlotEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
-        int numSections = 6; // the desired number of vertical bars in the histogram
+        // TODO: an extra thing would be to allow the experiment owner to set numPoints? That would be cool
+        int numPoints = 6; // the desired number of points in the time plot
 
-        // sort the trial results from min to max
+        // sort the dates from furthest in the past to most recent
         Collections.sort(dates);
 
-        // initialize min histogram x-value, max histogram x-value, and the distance between these two
+        // initialize min time plot x-value, max time plot x-value, and the distance between these two
         long min = (dates.get(0)).getTime();
-        long max = (dates.get(dates.size()-1)).getTime();
+        long max = (dates.get(dates.size()-1)).getTime() + 1; // +1 so max is included
         long diff = max - min;
-        System.out.println("MIN:" + min);
-        System.out.println("MAX:" + max);
-        System.out.println("DIFF:" + diff);
 
-        // initialize the cutoffs based on number of vertical bars, to sort results into groups
-        long[] cutoffs = new long[numSections]; // min is not included
-        for(int i=0; i<numSections; i++) {
-            cutoffs[i] = min + (diff / numSections) * (i + 1);
-            System.out.println("CUTOFFS:" + cutoffs[i]);
+        // initialize the cutoffs based on number of points, to sort results based on date
+        long[] cutoffs = new long[numPoints];
+        for(int i=0; i<numPoints; i++) {
+            cutoffs[i] = min + (diff / numPoints) * (i + 1);
         }
 
-        // calculate the height of each vertical bar, by finding how many results fit into that bucket
-        double[] barHeight = new double[numSections];
-
-
-        ArrayList<NonNegativeTrial> counts = new ArrayList<>();
+        // TODO: turn this into its own method, so it works for non-negative and measurement
+        // cast the trials to non-negative type
+        ArrayList<NonNegativeTrial> nonNegativeTrials = new ArrayList<>();
         NonNegativeTrial nonnegative;
         for(int i=0; i<trials.size(); i++) {
             nonnegative = (NonNegativeTrial) trials.get(i);
-            counts.add(nonnegative);
+            nonNegativeTrials.add(nonnegative);
         }
 
+        // calculate the height of each point, by finding how many results existed at that date
+        double[] barHeight = new double[numPoints];
         int sum = 0;
         for(int i=0; i<cutoffs.length; i++) {
-            for(int j=0; j<counts.size(); j++) {
-                if(counts.get(j).getDate().getTime() <= cutoffs[i]) {
-                    barHeight[i] += counts.get(j).getNonNegCount();
+            for(int j=0; j<nonNegativeTrials.size(); j++) {
+                if(nonNegativeTrials.get(j).getDate().getTime() <= cutoffs[i]) {
+                    barHeight[i] += nonNegativeTrials.get(j).getNonNegCount();
                     sum++;
                 }
                 if(j == trials.size() - 1) {
@@ -338,15 +334,14 @@ public class StatActivity extends AppCompatActivity {
             }
         }
 
-        // add these calculated heights into the histogram
-        for(int i=0; i<numSections; i++) {
+        // add these calculated heights into the time plot
+        for(int i=0; i<numPoints; i++) {
             timePlotEntries.add(new Entry((float)barHeight[i],i));
         }
 
-        // display the min and max values of each section in the histogram
-        xTitles.add(min + "-" + cutoffs[0]);
-        for(int i=0; i<numSections-1; i++) {
-            xTitles.add(new Date(cutoffs[i]) + "-" + new Date(cutoffs[i + 1]));
+        // display the date cutoff for each point in the time plot
+        for(int i=0; i<numPoints; i++) {
+            xTitles.add("" + new Date(cutoffs[i]));
         }
     }
 
