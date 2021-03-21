@@ -6,8 +6,10 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -69,13 +71,31 @@ public class StatActivity extends AppCompatActivity {
         // display summary statistics of results
         displaySummaryStats(stats);
 
-        // create and display histogram of results
-        //displayHistogram(stats, histogram, graphTitle);
-        //timePlot.setVisibility(View.GONE);
+        // display histogram by default
+        displayHistogram(stats, histogram, graphTitle);
+        timePlot.setVisibility(View.GONE);
 
-        // create and display time plot of trials
-        displayTimePlot(stats, timePlot, graphTitle);
-        histogram.setVisibility(View.GONE);
+        Button showHistogram = findViewById(R.id.btnHistogram);
+        showHistogram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // create and display histogram of results
+                displayHistogram(stats, histogram, graphTitle);
+                timePlot.setVisibility(View.GONE);
+                histogram.setVisibility(View.VISIBLE);
+            }
+        });
+
+        Button showTimePlot = findViewById(R.id.btnTimePlot);
+        showTimePlot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // create and display time plot of trials
+                displayTimePlot(stats, timePlot, graphTitle);
+                histogram.setVisibility(View.GONE);
+                timePlot.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     public void displaySummaryStats(ArrayList<Double> stats) {
