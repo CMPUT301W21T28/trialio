@@ -233,10 +233,24 @@ public class StatActivity extends AppCompatActivity {
         // SOURCE:  Creating a Simple Bar Graph for your Android Application (part 1/2) [https://www.youtube.com/watch?v=pi1tq-bp7uA&ab_channel=CodingWithMitch]
         // AUTHOR: 	Youtube account: CodingWithMitch
 
+        // important values that app administrator may want to change
+        // TODO: an extra thing would be to allow the experiment owner to set numPoints? That would be cool
+        int numPoints = 6; // the desired number of points in the time plot
+
         ArrayList<Entry> TimePlotEntries = new ArrayList<>();
         ArrayList<String> xTitles = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
-        LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Trials");
+        LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Mean");
+        double[] pointHeight = new double[numPoints];
+
+        // find the dates of each trial
+        ArrayList<Date> dates = new ArrayList<>();
+        for(int i=0; i<trials.size(); i++) {
+            dates.add(trials.get(i).getDate());
+        }
+
+        // find the cutoffs based on number of points
+        long[] cutoffs = findCutoffs(dates, numPoints);
 
         // no graph for COUNT experiments, nothing noteworthy to view
         switch((stats.get(0).intValue())) {
@@ -253,32 +267,30 @@ public class StatActivity extends AppCompatActivity {
                 timePlotTitle.setText("Successes vs Failures");
                 break;
             case 3:
-                // find the dates of each trial
-                ArrayList<Date> nonNegativeDates = new ArrayList<>();
-                for(int i=0; i<trials.size(); i++) {
-                    nonNegativeDates.add(trials.get(i).getDate());
-                }
-
                 // call helper method for further setup
-                setupTimePlot(trials, nonNegativeDates, TimePlotEntries, xTitles);
+                pointHeight = setupNonNegativeTimePlot(trials, cutoffs, numPoints);
 
                 // display time plot titles
                 timePlotTitle.setText(experiment.getSettings().getDescription() + " time plot\n" +
                         "X-axis: Time\nY-axis: Mean non-negative count");
                 break;
             case 4:
-                // find the dates of each trial
-                ArrayList<Date> measurementDates = new ArrayList<>();
-                for(int i=0; i<trials.size(); i++) {
-                    measurementDates.add(trials.get(i).getDate());
-                }
-
                 // call helper method for further setup
-                setupTimePlot(trials, measurementDates, TimePlotEntries, xTitles);
+                pointHeight = setupMeasurementTimePlot(trials, cutoffs, numPoints);
 
                 // display time plot titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Measurement\nY-axis: Frequency");
+                timePlotTitle.setText(experiment.getSettings().getDescription() + " time plot\n" +
+                        "X-axis: Time\nY-axis: Mean measurement");
+        }
+
+        // add the calculated heights into the time plot
+        for(int i=0; i<numPoints; i++) {
+            TimePlotEntries.add(new Entry((float)pointHeight[i],i));
+        }
+
+        // display the date cutoff for each point in the time plot
+        for(int i=0; i<numPoints; i++) {
+            xTitles.add("" + new Date(cutoffs[i]));
         }
 
         // display the time plot and set certain settings
@@ -290,11 +302,7 @@ public class StatActivity extends AppCompatActivity {
         timePlot.setDescription(null);
     }
 
-    public void setupTimePlot(ArrayList<Trial> trials, ArrayList<Date> dates, ArrayList<Entry> timePlotEntries, ArrayList<String> xTitles) {
-        // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numPoints? That would be cool
-        int numPoints = 6; // the desired number of points in the time plot
-
+    public long[] findCutoffs(ArrayList<Date> dates, int numPoints) {
         // sort the dates from furthest in the past to most recent
         Collections.sort(dates);
 
@@ -309,7 +317,10 @@ public class StatActivity extends AppCompatActivity {
             cutoffs[i] = min + (diff / numPoints) * (i + 1);
         }
 
-        // TODO: turn this into its own method, so it works for non-negative and measurement
+        return cutoffs;
+    }
+
+    public double[] setupNonNegativeTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
         // cast the trials to non-negative type
         ArrayList<NonNegativeTrial> nonNegativeTrials = new ArrayList<>();
         NonNegativeTrial nonnegative;
@@ -319,30 +330,50 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // calculate the height of each point, by finding how many results existed at that date
-        double[] barHeight = new double[numPoints];
+        double[] pointHeight = new double[numPoints];
         int sum = 0;
         for(int i=0; i<cutoffs.length; i++) {
             for(int j=0; j<nonNegativeTrials.size(); j++) {
                 if(nonNegativeTrials.get(j).getDate().getTime() <= cutoffs[i]) {
-                    barHeight[i] += nonNegativeTrials.get(j).getNonNegCount();
+                    pointHeight[i] += nonNegativeTrials.get(j).getNonNegCount();
                     sum++;
                 }
                 if(j == trials.size() - 1) {
-                    barHeight[i] /= sum;
+                    pointHeight[i] /= sum;
                     sum = 0;
                 }
             }
         }
 
-        // add these calculated heights into the time plot
-        for(int i=0; i<numPoints; i++) {
-            timePlotEntries.add(new Entry((float)barHeight[i],i));
+        return pointHeight;
+    }
+
+    public double[] setupMeasurementTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
+        // cast the trials to measurement type
+        ArrayList<MeasurementTrial> measurementTrials = new ArrayList<>();
+        MeasurementTrial measurement;
+        for(int i=0; i<trials.size(); i++) {
+            measurement = (MeasurementTrial) trials.get(i);
+            measurementTrials.add(measurement);
         }
 
-        // display the date cutoff for each point in the time plot
-        for(int i=0; i<numPoints; i++) {
-            xTitles.add("" + new Date(cutoffs[i]));
+        // calculate the height of each point, by finding how many results existed at that date
+        double[] pointHeight = new double[numPoints];
+        int sum = 0;
+        for(int i=0; i<cutoffs.length; i++) {
+            for(int j=0; j<measurementTrials.size(); j++) {
+                if(measurementTrials.get(j).getDate().getTime() <= cutoffs[i]) {
+                    pointHeight[i] += measurementTrials.get(j).getMeasurement();
+                    sum++;
+                }
+                if(j == trials.size() - 1) {
+                    pointHeight[i] /= sum;
+                    sum = 0;
+                }
+            }
         }
+
+        return pointHeight;
     }
 
 }
