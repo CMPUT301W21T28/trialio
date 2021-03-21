@@ -6,16 +6,12 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
 import com.example.trialio.models.Experiment;
@@ -25,18 +21,16 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
@@ -259,53 +253,33 @@ public class StatActivity extends AppCompatActivity {
                 timePlotTitle.setText("Successes vs Failures");
                 break;
             case 3:
-                // find the non-negative count value of each trial
-                ArrayList<Double> counts = new ArrayList<>();
-                NonNegativeTrial nonnegative;
+                // find the dates of each trial
+                ArrayList<Date> nonNegativeDates = new ArrayList<>();
                 for(int i=0; i<trials.size(); i++) {
-                    nonnegative = (NonNegativeTrial) trials.get(i);
-                    counts.add((double)nonnegative.getNonNegCount());
+                    nonNegativeDates.add(trials.get(i).getDate());
                 }
 
                 // call helper method for further setup
-                setupTimePlot(counts, TimePlotEntries, xTitles);
+                setupTimePlot(trials, nonNegativeDates, TimePlotEntries, xTitles);
 
                 // display histogram titles
                 timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
                         "X-axis: Non-negative count\nY-axis: Frequency");
                 break;
             case 4:
-                // find the measurement value of each trial
-                ArrayList<Double> measurements = new ArrayList<>();
-                MeasurementTrial measurement;
+                // find the dates of each trial
+                ArrayList<Date> measurementDates = new ArrayList<>();
                 for(int i=0; i<trials.size(); i++) {
-                    measurement = (MeasurementTrial) trials.get(i);
-                    measurements.add(measurement.getMeasurement());
+                    measurementDates.add(trials.get(i).getDate());
                 }
 
                 // call helper method for further setup
-                setupTimePlot(measurements, TimePlotEntries, xTitles);
+                setupTimePlot(trials, measurementDates, TimePlotEntries, xTitles);
 
                 // display histogram titles
                 timePlotTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
                         "X-axis: Measurement\nY-axis: Frequency");
         }
-
-        /*
-        holder.mChart.getAxisRight().setEnabled(false);
-
-            // add data
-            // note: create data is custom method
-            holder.mChart.setData(createData(10));
-
-            holder.mChart.getLegend().setEnabled(false);
-
-            // adding some animation that is some good part
-            holder.mChart.animateXY(2000, 2000);
-
-            // dont forget to refresh the drawing
-            holder.mChart.invalidate();
-         */
 
         // display the histogram and set certain settings
         LineData data = new LineData(xTitles, timePlotDataSet);
@@ -316,46 +290,63 @@ public class StatActivity extends AppCompatActivity {
         timePlot.setDescription(null);
     }
 
-    public void setupTimePlot(ArrayList<Double> results, ArrayList<Entry> timePlotEntries, ArrayList<String> xTitles) {
+    public void setupTimePlot(ArrayList<Trial> trials, ArrayList<Date> dates, ArrayList<Entry> timePlotEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
         // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
         int numSections = 6; // the desired number of vertical bars in the histogram
-        double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
 
         // sort the trial results from min to max
-        Collections.sort(results);
+        Collections.sort(dates);
 
         // initialize min histogram x-value, max histogram x-value, and the distance between these two
-        int min = 0;
-        int max = (int)(results.get(results.size()-1) * maxBuffer);
-        double diff = max - min;
+        long min = (dates.get(0)).getTime();
+        long max = (dates.get(dates.size()-1)).getTime();
+        long diff = max - min;
+        System.out.println("MIN:" + min);
+        System.out.println("MAX:" + max);
+        System.out.println("DIFF:" + diff);
 
         // initialize the cutoffs based on number of vertical bars, to sort results into groups
-        int[] cutoffs = new int[numSections]; // min is not included
+        long[] cutoffs = new long[numSections]; // min is not included
         for(int i=0; i<numSections; i++) {
-            cutoffs[i] = (int)Math.round(min + (diff / numSections) * (i + 1));
+            cutoffs[i] = min + (diff / numSections) * (i + 1);
+            System.out.println("CUTOFFS:" + cutoffs[i]);
         }
 
         // calculate the height of each vertical bar, by finding how many results fit into that bucket
-        int[] barHeight = new int[numSections];
-        for(int i=0; i<results.size(); i++) {
-            for(int j=0; j<cutoffs.length; j++) {
-                if(results.get(i) <= cutoffs[j]) {
-                    barHeight[j]++;
-                    break;
+        double[] barHeight = new double[numSections];
+
+
+        ArrayList<NonNegativeTrial> counts = new ArrayList<>();
+        NonNegativeTrial nonnegative;
+        for(int i=0; i<trials.size(); i++) {
+            nonnegative = (NonNegativeTrial) trials.get(i);
+            counts.add(nonnegative);
+        }
+
+        int sum = 0;
+        for(int i=0; i<cutoffs.length; i++) {
+            for(int j=0; j<counts.size(); j++) {
+                if(counts.get(j).getDate().getTime() <= cutoffs[i]) {
+                    barHeight[i] += counts.get(j).getNonNegCount();
+                    sum++;
+                }
+                if(j == trials.size() - 1) {
+                    barHeight[i] /= sum;
+                    sum = 0;
                 }
             }
         }
 
         // add these calculated heights into the histogram
         for(int i=0; i<numSections; i++) {
-            timePlotEntries.add(new BarEntry(barHeight[i],i));
+            timePlotEntries.add(new Entry((float)barHeight[i],i));
         }
 
         // display the min and max values of each section in the histogram
         xTitles.add(min + "-" + cutoffs[0]);
         for(int i=0; i<numSections-1; i++) {
-            xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
+            xTitles.add(new Date(cutoffs[i]) + "-" + new Date(cutoffs[i + 1]));
         }
     }
 
