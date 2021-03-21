@@ -188,10 +188,6 @@ public class StatActivity extends AppCompatActivity {
         histogram.setDescription(null);
     }
 
-    public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
-
-    }
-
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
         // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
@@ -233,6 +229,10 @@ public class StatActivity extends AppCompatActivity {
         for(int i=0; i<numSections-1; i++) {
             xTitles.add(cutoffs[i] + "-" + cutoffs[i + 1]);
         }
+    }
+
+    public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
+
     }
 
 }
