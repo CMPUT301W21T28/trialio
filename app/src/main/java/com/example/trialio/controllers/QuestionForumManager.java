@@ -24,10 +24,20 @@ import java.util.List;
 public class QuestionForumManager implements Serializable {
 
     private final CollectionReference questionForumCollection;
+    private final CollectionReference replyForumCollection;
+
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
     private static final String EXPERIMENT_PATH = "experiments";
+    private static final String REPLY_FORUM_PATH = "replyForum";
 
+
+    /**
+     * Constructor for QuestionForumManager
+     */
+    public QuestionForumManager(String associatedExperimentID) {
+        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+    }
 
 
     /**
@@ -49,6 +59,20 @@ public class QuestionForumManager implements Serializable {
         void onQuestionFetch(Question question);
     }
 
+
+    /**
+     * This interface represents an action to be taken when a Reply document is fetched from the database.
+     */
+    public interface OnReplyFetchListener {
+        /**
+         * This method will be called when a Reply is fetched from the database.
+         * @param reply the question that was fetched from the database
+         */
+        void onReplyFetch(Reply reply);
+    }
+
+
+
     /**
      * This interface represents an action to be taken when a collection of Questions is fetched
      * from the database.
@@ -63,14 +87,19 @@ public class QuestionForumManager implements Serializable {
     }
 
 
-    // TODO: how to handle the fetching of replies???
-
     /**
-     * Constructor for QuestionForumManager
+     * This interface represents an action to be taken when a collection of Questions is fetched
+     * from the database.
      */
-    public QuestionForumManager(String associatedExperimentID) {
-        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+    public interface OnManyRepliesFetchListener {
+        /**
+         * This method will be called when a sub-collection of Replies is fetched from the database.
+         *
+         * @param replies all the replies that were fetched from the database (belong to the selected question)
+         */
+        void onManyRepliesFetch(List<Reply> replies);
     }
+
 
 
 
@@ -115,15 +144,49 @@ public class QuestionForumManager implements Serializable {
     }
 
 
-    // TODO Replies
-    public void createReply (Question question, String body, User user) {
-        //...
+    public void createReply (Reply newReply, String selectedQuestionID) {
+        Log.d( TAG, "Posting reply" );
+        questionForumCollection
+                .document(selectedQuestionID)
+                .collection("Replies")
+                .add(newReply)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Reply submitted successfully with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding reply", e);
+                    }
+                });
     }
 
-    public void deleteReply (Reply reply) {
-        //...
-    }
 
+    public void deleteReply (String selectedQuestionID, String replyID) {
+        Log.d(TAG, "Posting question " + replyID);
+        questionForumCollection
+                .document(selectedQuestionID)  //
+                .collection("Replies")
+                .document(replyID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String message = String.format("Experiment %s was deleted successfully", replyID);
+                        Log.d(TAG, message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String message = String.format("Failed to delete experiment %s", replyID);
+                        Log.d(TAG, message);
+                    }
+                });
+    }
 
 
     /**

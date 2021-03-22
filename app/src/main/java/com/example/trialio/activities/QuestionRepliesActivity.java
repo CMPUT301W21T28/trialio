@@ -105,17 +105,12 @@ public class QuestionRepliesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-
         setReplyList();
-
     }
 
 
 
-
-
-    private void setQuestionList() {
+    private void setReplyList() {
         questionForumManager.setOnAllQuestionsFetchCallback(new QuestionForumManager.OnManyQuestionsFetchListener() {
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
