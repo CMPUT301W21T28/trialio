@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,21 +20,31 @@ import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class QuestionForumActivity extends AppCompatActivity {
+public class QuestionForumActivity extends AppCompatActivity implements AddQuestionFragment.OnFragmentInteractionListener {
     private final Context context = this;
+
     private Experiment associatedExperiment;
+
     private QuestionForumManager questionForumManager;
     private ArrayList<Question> questionList;
     private QuestionArrayAdapter questionAdapter;
 
     String associatedExperimentID;
+
+    private final String TAG = "QuestionForumActivity";
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +57,11 @@ public class QuestionForumActivity extends AppCompatActivity {
         // get id here and pass it into the constructor of the quesitonForumManager
         associatedExperimentID = associatedExperiment.getExperimentID();
 
-        // Initialize attributes for the activity
-        questionList = new ArrayList<>();  // TODO: make me a colleciton if we opt to make the questionForum its own seperate sub collection
-        questionAdapter = new QuestionArrayAdapter(this, questionList);
 
+        // Initialize attributes for the activity
         questionForumManager = new QuestionForumManager(associatedExperimentID);
+        questionList = new ArrayList<>();
+        questionAdapter = new QuestionArrayAdapter(this, questionList);
 
         // Set up the adapter for the ListView
         ListView questionsListView = findViewById(R.id.questionForumListView);
@@ -67,12 +78,13 @@ public class QuestionForumActivity extends AppCompatActivity {
         setQuestionList();
     }
 
+
     private void setQuestionList() {
         questionForumManager.setOnAllQuestionsFetchCallback(new QuestionForumManager.OnManyQuestionsFetchListener() {
             @Override
-            public void onManyQuestionsFetch(ArrayList<Question> questions) {
+            public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
                 questionList.clear();
-                questionList.addAll(questions);
+                questionList = (ArrayList<Question>) questions;
                 questionAdapter.notifyDataSetChanged();
             }
         });
@@ -83,8 +95,9 @@ public class QuestionForumActivity extends AppCompatActivity {
      */
     private void setUpOnClickListeners() {
 
-        // Called when the user clicks item in experiment list
+        // Called when the user clicks item in question list -> makes bundle to send to detailed question page
         ListView questionForumListView = findViewById(R.id.questionForumListView);
+
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -92,7 +105,6 @@ public class QuestionForumActivity extends AppCompatActivity {
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
-                // TODO: how to pass in an argument for a question ???
                 args.putSerializable("question_details", questionList.get(position));
                 intent.putExtras(args);
 
@@ -108,23 +120,31 @@ public class QuestionForumActivity extends AppCompatActivity {
         newQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AddQuestionFragment.class);
+                Log.d(TAG, "Add question was clicked");
+
+                AddQuestionFragment newQuestion = new AddQuestionFragment();
+
                 Bundle args = new Bundle();
-                args.putSerializable("owener_experiment_info");
-                intent.putExtras(args);
-                startActivity(intent)
+                args.putString("experimentID", associatedExperimentID);
+
+                newQuestion.setArguments(args);
+                newQuestion.show(getSupportFragmentManager(), "addQuestion");
+
             }
         });
     }
 
     /**
-     * This is called when the user presses confirm on one of the Trial creation fragments
+     * This is called when the user presses confirm on one of the Question creation fragments
      *
-     * @param question The new question that was created in the fragment
+     * @param newQuestion The new question that was created in the fragment
      */
     @Override
-    public void onOkPressed(Question question) {
-        questionForumManager.setOnQuestionFetchListener();
+    public void onOkPressed (Question newQuestion) {
+        Log.d(TAG, "QuestionAdded");
+        questionForumManager.createQuestion(newQuestion);
     }
+
+
 
 }

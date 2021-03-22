@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Question;
@@ -29,7 +30,7 @@ public class AddQuestionFragment extends DialogFragment {
     private EditText questionBodyInput;
     private OnFragmentInteractionListener listener;
 
-
+    String associatedExperimentID;
 
 
     @NonNull
@@ -37,7 +38,10 @@ public class AddQuestionFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_question, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        // Get owner experiment ID from QuestionForumActivity
         Bundle bundle = getArguments();
+        associatedExperimentID = bundle.getString("experimentID");
 
         questionTitleInput = view.findViewById(R.id.editQuestionTitle);
         questionBodyInput = view.findViewById(R.id.editQuestionBody);
@@ -54,19 +58,23 @@ public class AddQuestionFragment extends DialogFragment {
                 String questionBody = questionBodyInput.getText().toString();
                 ArrayList<Reply> replies = new ArrayList<>();
 
+                QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID);
+
+                String newQuestionID = questionForumManager.getNewPostID();
+
                 //confirm update to user profile
                 UserManager userManager = new UserManager();
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        listener.onOkPressed(new Question(questionBody, user, questionTitle, replies) );
+                        listener.onOkPressed(new Question(newQuestionID, questionBody, user, questionTitle, replies) );
                     }
                 });
             }}).create();
     }
 
     public interface OnFragmentInteractionListener {
-        void onOkPressed(Question question);
+        void onOkPressed(Question newQuestion);
     }
 
     @Override

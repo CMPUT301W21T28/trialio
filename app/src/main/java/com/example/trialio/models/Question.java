@@ -8,8 +8,8 @@ public class Question extends Post implements Serializable {
     private Collection<Reply> replies;
 
 
-    public Question(String body, User user, String title, Collection<Reply> replies) {
-        super(body, user);
+    public Question(String postID, String body, User user, String title, Collection<Reply> replies) {
+        super(postID, body, user);
         this.title = title;
         this.replies = replies;
     }
