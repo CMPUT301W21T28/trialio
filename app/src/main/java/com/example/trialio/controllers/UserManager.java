@@ -23,9 +23,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages Users in the system and is responsible for the persistence of User data. This class
+ * is used to perform create, read, update and delete functionality on Users which are to be
+ * maintained by the system. This class communicates with the Firebase database where User data is
+ * maintained.
+ */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users";
+    private static final String COLLECTION_PATH = "users-v2";
     private final CollectionReference userCollection;
 
     private static String fid;
@@ -37,28 +43,28 @@ public class UserManager {
      */
 
     /**
-     * This interface represents an action to be taken when a User document is updated
-     * in the Firestore database.
+     * This interface represents an action to be taken when a User document is fetched from the
+     * Firestore database.
      */
     public interface OnUserFetchListener {
 
         /**
-         * This method will be called when the User document is updated in the database.
+         * This method will be called when the User document is fetched from the database.
          *
-         * @param user The user that has been updated in the database
+         * @param user The user that has been fetched in the database
          */
         public void onUserFetch(User user);
 
     }
 
     /**
-     * This interface represents an action to be taken when a User document is updated
-     * in the Firestore database.
+     * This interface represents an action to be taken when a multiple User documents have been
+     * fetched from the Firestore database.
      */
     public interface OnManyUsersFetchListener {
 
         /**
-         * This method will be called when the User document is updated in the database.
+         * This method will be called when the User document is fetched from the database.
          *
          * @param userList The user that has been updated in the database
          */
@@ -85,16 +91,16 @@ public class UserManager {
 
     /**
      * Creates a new User in the system.
+     * <p>
+     * The newly created User object will not track changes to the User document. To receive all
+     * real-time updates for the User, see UserManager#addUserUpdateListener()
      *
      * @param id The id of the User to create
      * @return The User that was created.
-     * <p>
-     * Note that this User object will not track changes to the
-     * User document. If you need to receive all database updates for the User, fetch the
-     * User using UserManager#addUserUpdateListener()
      */
     public User createNewUser(String id) {
-        Log.d(TAG, String.format("Generating new User with id=%s.", id));
+        userCollection.getId();
+        Log.d(TAG, String.format("Generating new User with username %s.", id));
         User user = new User(id);
         Map<String, Object> comp = compressUser(user);
         userCollection.document(id)
@@ -115,9 +121,10 @@ public class UserManager {
     }
 
     /**
-     * Gets the current User through a callback.
+     * Gets the current User data from the database. If the current User does not exist in the
+     * system already, a new User document is created.
      *
-     * @param listener the callback to be called when the User is retrieved
+     * @param listener the callback to be called when the User object is retrieved
      */
     public void getCurrentUser(OnUserFetchListener listener) {
         if (fid == null) {
@@ -139,8 +146,10 @@ public class UserManager {
     }
 
     /**
-     * Gets a User through a callback
-     * @param userId the id of the User to retrieve
+     * Gets a User from the database. If the current User does not exist in the
+     * system already, a new User document is created.
+     *
+     * @param userId   the id of the User to retrieve
      * @param listener the callback to be called when the User is fetched
      */
     public void getUser(String userId, OnUserFetchListener listener) {
@@ -148,7 +157,9 @@ public class UserManager {
     }
 
     /**
-     * Sets a callback that will be called every time the current User is updated in the database.
+     * Add a listener to the current User document that will listen for updates to the User data.
+     * This method is used to fetch User data from the database and continue to fetch real-time
+     * data for the current User.
      *
      * <pre>
      * UserManager manager = new UserManager();
@@ -182,7 +193,9 @@ public class UserManager {
     }
 
     /**
-     * Sets a callback to fetch a User
+     * Add a listener to a User document that will listen for updates to the User data. This method
+     * is used to fetch User data from the database and continue to fetch real-time data for a
+     * User.
      *
      * <pre>
      * UserManager manager = new UserManager();
@@ -202,7 +215,9 @@ public class UserManager {
     }
 
     /**
-     * Sets a callback to fetch all Users
+     * Add a listener to a all User document that will listen for updates any User. This method is
+     * used to fetch User data for all users from the database when any User document in the
+     * database is updated.
      *
      * <pre>
      * UserManager manager = new UserManager();
@@ -366,6 +381,7 @@ public class UserManager {
 
     /**
      * Extracts a User from a Firestore document.
+     *
      * @param document the user document to extract from
      * @return the User
      */
@@ -396,6 +412,7 @@ public class UserManager {
 
     /**
      * Compresses a User into a Map for storage in a Firestore document.
+     *
      * @param user The User to be compressed
      * @return A Map of fields to be stored
      */
