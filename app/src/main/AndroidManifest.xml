@@ -16,6 +16,7 @@
         android:theme="@style/Theme.Trialio">
         <activity android:name=".activities.TrialActivity"></activity>
         <activity android:name=".activities.ExperimentSettingsActivity"></activity>
+        <activity android:name=".activities.QuestionForumActivity"></activity>
         <activity android:name=".activities.ViewUserActivity" />
         <activity
             android:name=".activities.ExperimentActivity"

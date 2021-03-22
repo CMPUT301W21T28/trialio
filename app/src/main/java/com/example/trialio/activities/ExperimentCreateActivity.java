@@ -46,6 +46,8 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
+
+
         // Took ActionBar code.
         // DATE:	2020-12-14
         // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]

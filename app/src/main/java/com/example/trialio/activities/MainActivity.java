@@ -76,10 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
         setExperimentListToAll();
-
     }
 
     /**
@@ -169,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                ;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // enter key was pressed
                     String text = v.getText().toString();

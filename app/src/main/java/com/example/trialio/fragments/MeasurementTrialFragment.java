@@ -59,10 +59,8 @@ public class MeasurementTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-
                                 //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
-
                             }
                         });
                     }}).create();

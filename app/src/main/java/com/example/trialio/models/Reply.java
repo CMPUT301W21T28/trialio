@@ -10,6 +10,10 @@ public class Reply implements Serializable {
 
     private Collection<Reply> replies;
 
+    public Reply(Collection<Reply> replies) {
+        this.replies = replies;
+    }
+
 //    public Collection<Reply> getAllReplies() { }
 
 }

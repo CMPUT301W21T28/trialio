@@ -248,40 +248,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         });
 
         // set Stats Summary
-        // TODO: this code is also used in StatActivity, make it so code only written once
         ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
-
-        // Took rounding code.
-        // DATE:	2021-03-19
-        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
-        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
-        // AUTHOR: 	Stack Overflow User: asterite
-        if(stats.get(0) == 1) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
-        } else if(stats.get(0) == 2) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
-                    stats.get(3).intValue() + "\nSuccess Rate: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d);
-        } else if(stats.get(0) == 3) {
-            String modes = Integer.toString(stats.get(6).intValue());
-            for(int i=7; i<stats.size(); i++) {
-                modes += ", " + stats.get(i).intValue();
-            }
-
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
-        } else if(stats.get(0) == 4) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d);
-        }
-
+        statisticsUtility.displaySummaryStats(stats, textStats);
     }
 
     /**
@@ -336,30 +304,36 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
+
                     CountTrialFragment newTrial = new CountTrialFragment();
+
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
-                } else if (ExperimentTypeUtility.isBinomial(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
-                } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
-                } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isMeasurement(trialType)) {
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
-                } else {
+                }
+                else {
                     Log.d(TAG, "Error: invalid experiment type, see ExperimentTypeUtility.c");
                     assert (false);
                 }
@@ -399,6 +373,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
+
 
         // Called when the user clicks the subscribe button
         Button subBtn = findViewById(R.id.btnSubscribe);
@@ -451,6 +426,23 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
+
+        Button questionForumButton = findViewById(R.id.btnQA); // move me up
+        questionForumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, QuestionForumActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment", experiment);
+                intent.putExtras(args);
+
+                // start an ExperimentActivity
+                startActivity(intent);
+            }
+        });
+
     }
 
     /**
