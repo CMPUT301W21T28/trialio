@@ -47,7 +47,7 @@ public class QuestionArrayAdapter extends ArrayAdapter {
         // set text views
         authorID.setText(question.getUser().getId());
         title.setText(question.getTitle());
-        title.setText(question.getBody());
+        body.setText(question.getBody());
 
         return view;
     }
