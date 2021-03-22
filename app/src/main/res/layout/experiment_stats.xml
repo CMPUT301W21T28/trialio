@@ -41,22 +41,22 @@
             android:background="#747474" />
 
         <Button
-            android:id="@+id/btnHistogram"
+            android:id="@+id/btnPreviousGraph"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
-            android:text="H" />
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/btnTimePlot"
+            android:id="@+id/btnNextGraph"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
-            android:text="T" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

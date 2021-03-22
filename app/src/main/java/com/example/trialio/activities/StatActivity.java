@@ -89,25 +89,43 @@ public class StatActivity extends AppCompatActivity {
             timePlot.setVisibility(View.GONE);
         }
 
-        Button showHistogram = findViewById(R.id.btnHistogram);
-        showHistogram.setOnClickListener(new View.OnClickListener() {
+        Button previous = findViewById(R.id.btnPreviousGraph);
+        previous.setText("<");
+        previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create and display histogram of results
-                displayHistogram(stats, histogram, graphTitle);
-                timePlot.setVisibility(View.GONE);
-                histogram.setVisibility(View.VISIBLE);
+                // will come in handy if we add more time plots
+                if(histogram.getVisibility() == View.VISIBLE) {
+                    // if histogram is visible, create and display time plot of trials
+                    displayTimePlot(stats, timePlot, graphTitle);
+                    histogram.setVisibility(View.GONE);
+                    timePlot.setVisibility(View.VISIBLE);
+                } else {
+                    // else create and display histogram of trials
+                    displayHistogram(stats, histogram, graphTitle);
+                    timePlot.setVisibility(View.GONE);
+                    histogram.setVisibility(View.VISIBLE);
+                }
             }
         });
 
-        Button showTimePlot = findViewById(R.id.btnTimePlot);
-        showTimePlot.setOnClickListener(new View.OnClickListener() {
+        Button next = findViewById(R.id.btnNextGraph);
+        next.setText(">");
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create and display time plot of trials
-                displayTimePlot(stats, timePlot, graphTitle);
-                histogram.setVisibility(View.GONE);
-                timePlot.setVisibility(View.VISIBLE);
+                // will come in handy if we add more time plots
+                if(histogram.getVisibility() == View.VISIBLE) {
+                    // if histogram is visible, create and display time plot of trials
+                    displayTimePlot(stats, timePlot, graphTitle);
+                    histogram.setVisibility(View.GONE);
+                    timePlot.setVisibility(View.VISIBLE);
+                } else {
+                    // else create and display histogram of trials
+                    displayHistogram(stats, histogram, graphTitle);
+                    timePlot.setVisibility(View.GONE);
+                    histogram.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
