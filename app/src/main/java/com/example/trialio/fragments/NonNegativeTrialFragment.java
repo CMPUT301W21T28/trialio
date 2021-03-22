@@ -22,7 +22,10 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
-
+/**
+ * This fragment collects data from a user to upload a non-negative type trial
+ * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
+ */
 public class NonNegativeTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private boolean geoLocationReq;

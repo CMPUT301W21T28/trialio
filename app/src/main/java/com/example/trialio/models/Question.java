@@ -1,17 +1,27 @@
 package com.example.trialio.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Question extends Post implements Serializable {
     private String title;
     private Collection<Reply> replies;
 
 
-    public Question(String body, User user, String title, Collection<Reply> replies) {
-        super(body, user);
+    public Question () {
+
+    }
+
+//    public Question(String postID, String body, User user, String title) {
+//        super(postID, body, user);
+//        this.title = title;
+//    }
+
+    public Question(String postID, String body, User user, String title) {
+        super(postID, body, user);
         this.title = title;
-        this.replies = replies;
     }
 
     public Collection<Reply> getAllReplies () {

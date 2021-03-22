@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class QuestionForumManager implements Serializable {
@@ -38,19 +39,20 @@ public class QuestionForumManager implements Serializable {
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
     private static final String EXPERIMENT_PATH = "experiments";
 
+    /**
+     * Generates a new unique question ID
+     * @return unique ID for a new question which is about to be posted
+     */
 
-    // TODO: send experiment id to several activities after Q&A button on experiment activity is pressed
-    // using a bundle doesn't seem like a good idea
+    public String getNewPostID() { return this.questionForumCollection.document().getId(); }
 
-
-    private ArrayList<Question> questions;
 
     /**
      * This interface represents an action to be taken when an Question document is fetched from the database.
      */
     public interface OnQuestionFetchListener {
         /**
-         * This method will be called when an Experiment is fetched from the database.
+         * This method will be called when a Question is fetched from the database.
          * @param question the question that was fetched from the database
          */
         void onQuestionFetch(Question question);
@@ -62,11 +64,11 @@ public class QuestionForumManager implements Serializable {
      */
     public interface OnManyQuestionsFetchListener {
         /**
-         * This method will be called when a collection of Experiments is fetched from the database.
+         * This method will be called when a collection of Questions is fetched from the database.
          *
          * @param questions all the questions that were fetched from the database (belong to the current experiment)
          */
-        void onManyQuestionsFetch(ArrayList<Question> questions);
+        void onManyQuestionsFetch(List<Question> questions);
     }
 
 
@@ -77,13 +79,8 @@ public class QuestionForumManager implements Serializable {
      */
     public QuestionForumManager(String associatedExperimentID) {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
-        questions = new ArrayList<>();  // TODO: is it okay to use a Collection instead of an ArrayList here ??
     }
 
-
-    public void setQuestions(ArrayList<Question> questions) {
-        this.questions = questions;
-    }
 
 
     public void createQuestion (Question newQuestion) {
@@ -136,22 +133,19 @@ public class QuestionForumManager implements Serializable {
         //...
     }
 
-    // TODO seems redundant, check if you can get rid of me
-    public ArrayList<Question> getAllQuestions() { return this.questions; }
 
 
     /**
      * Sets a function to be called when an experiment is fetched
-     *
-     * @param questionID   the id of the question to fetch
+     * @param postID   the id of the question to fetch
      * @param listener     the function to be called when the experiment is fetched
      */
-    public void setOnQuestionFetchListener(QuestionForumManager.OnQuestionFetchListener listener) {
+    public void setOnQuestionFetchListener(String postID, QuestionForumManager.OnQuestionFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
         Log.d(TAG, "Fetching question");
-        DocumentReference docRef = questionForumCollection.document(questionID);
+        DocumentReference docRef = questionForumCollection.document(postID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -177,13 +171,12 @@ public class QuestionForumManager implements Serializable {
      *
      * @param listener the function to be called when the questions are fetched
      */
-    public void setOnAllQuestionsFetchCallback(QuestionForumManager.OnManyQuestionsFetchListener listener) {
+    public void setOnAllQuestionsFetchCallback(OnManyQuestionsFetchListener listener) {
         /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
          */
         Log.d(TAG, "Fetching all questions from collection");
-        questionForumCollection
-                .get()
+        questionForumCollection.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -192,13 +185,13 @@ public class QuestionForumManager implements Serializable {
                             Log.d(TAG, message);
 
                             QuerySnapshot qs = task.getResult();
-                            ArrayList<Experiment> experimentList = new ArrayList<>();
+                            ArrayList<Question> questionList = new ArrayList<>();
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                // retrieves all documents (questions) within questionForum collection
                                 Question question = extractQuestionDocument(doc);
-                                questions.add(question);
+                                questionList.add(question);
                             }
-                            listener.onManyQuestionsFetch(questions);
+                            listener.onManyQuestionsFetch(questionList);
                         } else {
                             String message = "Failed to fetch all questions";
                             Log.d(TAG, message);
@@ -218,6 +211,8 @@ public class QuestionForumManager implements Serializable {
     // TODO: this seems to good to be true -> test the limitations of this function heavily
     private Question extractQuestionDocument(DocumentSnapshot document) {
         Question question = document.toObject(Question.class);
+
+
         return question;
     }
 

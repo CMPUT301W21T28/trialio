@@ -88,7 +88,6 @@
                 android:padding="15dp"
                 android:text="Post body here"
                 android:textColor="@color/black">
-
             </TextView>
 
         </LinearLayout>

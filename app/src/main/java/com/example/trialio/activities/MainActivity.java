@@ -76,10 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
         setExperimentListToAll();
-
     }
 
     /**
@@ -169,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                ;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // enter key was pressed
                     String text = v.getText().toString();
@@ -198,6 +194,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method changes the state of the experiment list if the user toggles between the "owned","all" and "subscribed" experiment lists
+     * @param btn
+     */
+
     private void toggleListButton(int btn) {
         /* Shayne3000, https://stackoverflow.com/users/8801181/shayne3000,
          * "How to add button tint programmatically", 2018-02-13, CC BY-SA 3.0
@@ -220,6 +221,10 @@ public class MainActivity extends AppCompatActivity {
         activeListButton = selectedBtn;
 
     }
+
+    /**
+     * these methods change the list of displayed experiments to the appropriate list as the user toggles between the pages
+     */
 
     private void setExperimentListToAll() {
         // Fetch data for the list view

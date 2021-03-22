@@ -20,6 +20,9 @@ public abstract class Post {
         this.user = user;
     }
 
+    protected Post() {
+    }
+
     public void setPostID(String id) { this.postID = id ; }
 
     public String getPostID() { return this.postID; }
