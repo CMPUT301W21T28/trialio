@@ -248,40 +248,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         });
 
         // set Stats Summary
-        // TODO: this code is also used in StatActivity, make it so code only written once
         ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
-
-        // Took rounding code.
-        // DATE:	2021-03-19
-        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
-        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
-        // AUTHOR: 	Stack Overflow User: asterite
-        if(stats.get(0) == 1) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
-        } else if(stats.get(0) == 2) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
-                    stats.get(3).intValue() + "\nSuccess Rate: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d);
-        } else if(stats.get(0) == 3) {
-            String modes = Integer.toString(stats.get(6).intValue());
-            for(int i=7; i<stats.size(); i++) {
-                modes += ", " + stats.get(i).intValue();
-            }
-
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d + "\nMode(s): " + modes);
-        } else if(stats.get(0) == 4) {
-            textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                    "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
-                    Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                    Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                    Math.round(stats.get(5) * 10000d) / 10000d);
-        }
-
+        statisticsUtility.displaySummaryStats(stats, textStats);
     }
 
     /**
