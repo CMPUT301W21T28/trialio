@@ -9,9 +9,10 @@ import com.example.trialio.models.Trial;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Utility class for statistics, handles the manipulation and calculation of statistics
+ */
 public class StatisticsUtility {
-
-    // TODO: add in first and third quartiles
     public ArrayList<Double> getExperimentStatistics (String type, Experiment experiment) {
         ArrayList<Double> stats = new ArrayList<>();
         ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
@@ -19,9 +20,12 @@ public class StatisticsUtility {
 
         System.out.println(type);
         if(size == 0) {
+            // if no trials, no statistics are available
+            // data stored in format of: ID = 1.0, 0
             stats.add(1.0);
             stats.add(size);
         } else if(type.equals("COUNT")) {
+            // data stored in format of: ID = 1.0, total trials (count)
             stats.add(1.0);
             stats.add(size);
 
@@ -183,6 +187,13 @@ public class StatisticsUtility {
         return Math.sqrt(sum / size);
     }
 
+    /**
+     * Gets the mode(s) of trial values
+     *
+     * @param list the list of trial values
+     *
+     * @return the mode(s) of trial values
+     */
     public ArrayList<Double> mode(ArrayList<Double> list) {
         ArrayList<Double> modes = new ArrayList<>();
         int size = list.size();

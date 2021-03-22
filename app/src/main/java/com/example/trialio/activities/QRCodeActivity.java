@@ -24,6 +24,10 @@ public class QRCodeActivity extends AppCompatActivity {
     private ExperimentManager experimentManager;
 
 
+    /**
+     * onCreate takes in the experiment passed in as a bundle and send triallist into QRAdaptor
+     * @param savedInstanceState
+     */
     @Override
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {

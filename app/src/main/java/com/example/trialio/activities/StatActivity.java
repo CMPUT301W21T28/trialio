@@ -36,10 +36,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+/**
+ * This activity allows a user to view stats about an experiment
+ */
+
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
+
+    /**
+     * the On create the takes in the saved instance from the experiment activity
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

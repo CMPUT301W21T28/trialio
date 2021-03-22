@@ -44,6 +44,10 @@ import com.example.trialio.utils.StatisticsUtility;
 
 import java.util.ArrayList;
 
+/**
+ * This activity opens an experiment when clicked from the main activity, and displays information about it
+ */
+
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
     private Experiment experiment;
@@ -59,6 +63,10 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private Button showQR;
     private StatisticsUtility statisticsUtility;
 
+    /**
+     * the On create the takes in the saved instance from the main activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,16 +96,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
-
-        // set the visibility of certain views in this activity
-        setViewVisibility();
-
-        // initialize all of the fields in the activity
-        setFields();
-
-        // set the onclick listeners for this activity
-        setOnClickListeners();
-
     }
 
     @Override
@@ -137,10 +135,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     }
 
     /**
-     * This gets permission from the user to share their location
+     * This method gets permission from the user to share their location
      */
     public void getLocationPermissions() {
         //getting location permission from the user
+        /**
+         * this if-else loop checks if the user has already been asked for permission once before, and displays an appropriate explanation
+         * describing why location permissions are needed. If the user hasn't been asked for permission before, it simply asks for permission
+         */
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //permission is not granted so request permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -162,7 +164,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     }
 
     /**
-     * This is to take action if the user has denied location permission
+     * This method takes action after the user has responded to the dialog that asks for location permission
      */
 
     @Override
@@ -171,6 +173,10 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //user has granted permission
             } else {
+                /**
+                 * This section of the if-else loop is to take action if the user had been asked permission before
+                 * and chose the "deny" and "do not ask again" options
+                 */
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     //The user has chosen to permanently deny location permissions, so we request them to go to app settings and enable it from there
                     new AlertDialog.Builder(ExperimentActivity.this)
@@ -205,14 +211,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
         TextView textStats = findViewById(R.id.txtStatsSummary);
+        TextView textGeoWarning = findViewById(R.id.txtExperimentGeoWarning);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-
-
 
         // get the owner's username
         userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
@@ -221,6 +226,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 textOwner.setText("Owner: " + user.getUsername());
             }
         });
+
+        // if this is a geo experiment, give a warning
+        if (experiment.getSettings().getGeoLocationRequired()) {
+            textGeoWarning.setText("Warning! Geo-location information is collected with trials for this experiment.");
+        } else {
+            textGeoWarning.setText("");
+        }
 
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
