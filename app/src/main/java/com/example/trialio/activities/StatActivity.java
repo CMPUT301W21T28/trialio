@@ -39,7 +39,6 @@ import java.util.Date;
 /**
  * This activity allows a user to view stats about an experiment
  */
-
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
     private Experiment experiment;
@@ -49,7 +48,6 @@ public class StatActivity extends AppCompatActivity {
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +76,8 @@ public class StatActivity extends AppCompatActivity {
         TextView graphTitle = findViewById(R.id.plotTitle);
 
         // display summary statistics of results
-        displaySummaryStats(stats);
+        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
+        statisticsUtility.displaySummaryStats(stats, textStats);
 
         if(experiment.getTrialManager().getType().equals("COUNT")) {
             // display time plot by default if count experiment
@@ -113,55 +112,13 @@ public class StatActivity extends AppCompatActivity {
         });
     }
 
-    public void displaySummaryStats(ArrayList<Double> stats) {
-        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
-
-        // Took rounding code.
-        // DATE:	2021-03-19
-        // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
-        // SOURCE:  Working with Spinners in Android [https://stackoverflow.com/questions/153724/how-to-round-a-number-to-n-decimal-places-in-java]
-        // AUTHOR: 	Stack Overflow User: asterite
-        switch((stats.get(0).intValue())) {
-            case 1:
-                textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue());
-                break;
-            case 2:
-                textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                        "\nSuccesses: " + stats.get(2).intValue() + "\nFailures: " +
-                        stats.get(3).intValue() + "\nSuccess Rate: " +
-                        Math.round(stats.get(4) * 10000d) / 10000d);
-                break;
-            case 3:
-                String firstQuartile = "At least 4 trials required";
-                String thirdQuartile = "At least 4 trials required";
-                if(stats.get(6) != -1) {
-                    firstQuartile = "" + Math.round(stats.get(6) * 10000d) / 10000d;
-                    thirdQuartile = "" + Math.round(stats.get(7) * 10000d) / 10000d;
-                }
-
-                String modes = Integer.toString(stats.get(8).intValue());
-                for(int i=9; i<stats.size(); i++) {
-                    modes += ", " + stats.get(i).intValue();
-                }
-
-                textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                        "\nMean: " + stats.get(2) + "\nMedian: " +
-                        Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                        Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                        Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
-                        firstQuartile + "\nThird quartile: " + thirdQuartile + "\nMode(s): " + modes);
-                break;
-            case 4:
-                textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                        "\nMean: " + stats.get(2) + "\nMedian: " +
-                        Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
-                        Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
-                        Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
-                        Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
-                        Math.round(stats.get(7) * 10000d) / 10000d);
-        }
-    }
-
+    /**
+     * Displays the histogram
+     *
+     * @param stats the list of relevant summary statistics
+     * @param histogram the histogram object
+     * @param histogramTitle the TextView to set the title and axis labels for
+     */
     public void displayHistogram(ArrayList<Double> stats, BarChart histogram, TextView histogramTitle) {
         // Adapted from Youtube tutorial code.
         // DATE:	2021-03-19
@@ -242,10 +199,17 @@ public class StatActivity extends AppCompatActivity {
         histogram.setDescription(null);
     }
 
+    /**
+     * Helper method for displaying the histogram
+     *
+     * @param results the trial results for the histogram
+     * @param histogramEntries the object to place new histogram entries into
+     * @param xTitles the x-axis label for each vertical section of the histogram
+     */
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
         // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
-        int numSections = 6; // the desired number of vertical bars in the histogram
+        int numSections = 12; // the desired number of vertical bars in the histogram
         double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
 
         // sort the trial results from min to max
@@ -285,6 +249,13 @@ public class StatActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays the time plot
+     *
+     * @param stats the list of relevant summary statistics
+     * @param timePlot the time plot object
+     * @param timePlotTitle the TextView to set the title and axis labels for
+     */
     public void displayTimePlot(ArrayList<Double> stats, LineChart timePlot, TextView timePlotTitle) {
         // Also adapted from Youtube tutorial code.
         // DATE:	2021-03-19
@@ -314,7 +285,7 @@ public class StatActivity extends AppCompatActivity {
 
         // important values that app administrator may want to change
         // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
-        int numPoints = 6; // the desired number of points in the time plot
+        int numPoints = 12; // the desired number of points in the time plot
         //long max = new Date().getTime();
 
         // the following line can also be used for max, to see time plot up until the most recent data point
@@ -329,6 +300,8 @@ public class StatActivity extends AppCompatActivity {
 
         switch((stats.get(0).intValue())) {
             case 1:
+                timePlotDataSet = new LineDataSet(TimePlotEntries,"Count");
+
                 // call helper method for further setup
                 pointHeight = setupCountTimePlot(trials, cutoffs, numPoints);
 
@@ -338,6 +311,8 @@ public class StatActivity extends AppCompatActivity {
 
                 break;
             case 2:
+                timePlotDataSet = new LineDataSet(TimePlotEntries,"Success rate");
+
                 // call helper method for further setup
                 pointHeight = setupBinomialTimePlot(trials, cutoffs, numPoints);
 
@@ -385,6 +360,15 @@ public class StatActivity extends AppCompatActivity {
         timePlot.setDescription(null);
     }
 
+    /**
+     * Finds the x-axis cutoffs to sort the trial results into
+     *
+     * @param dates the sorted list of trial dates
+     * @param numPoints the number of points to be plotted on the time plot
+     * @param max the final date the experiment owner wants to be included in the time plot (must be after most recent trial)
+     *
+     * @return a list of the cutoffs based on number of points and date range given
+     */
     public long[] findCutoffs(ArrayList<Date> dates, int numPoints, long max) {
         // initialize min time plot x-value, max time plot x-value, and the distance between these two
         long min = (dates.get(0)).getTime();
@@ -399,6 +383,15 @@ public class StatActivity extends AppCompatActivity {
         return cutoffs;
     }
 
+    /**
+     * Helper method for displaying the time plot of a count experiment
+     *
+     * @param trials the trial results for the time plot
+     * @param cutoffs the date cutoffs that the time plot is divided into
+     * @param numPoints the number of points to be plotted on the time plot
+     *
+     * @return a list of the point heights / y-values
+     */
     public double[] setupCountTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
         // cast the trials to count type
         ArrayList<CountTrial> countTrials = new ArrayList<>();
@@ -426,6 +419,15 @@ public class StatActivity extends AppCompatActivity {
         return pointHeight;
     }
 
+    /**
+     * Helper method for displaying the time plot of a binomial experiment
+     *
+     * @param trials the trial results for the time plot
+     * @param cutoffs the date cutoffs that the time plot is divided into
+     * @param numPoints the number of points to be plotted on the time plot
+     *
+     * @return a list of the point heights / y-values
+     */
     public double[] setupBinomialTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
         // cast the trials to binomial type
         ArrayList<BinomialTrial> binomialTrials = new ArrayList<>();
@@ -458,6 +460,15 @@ public class StatActivity extends AppCompatActivity {
         return pointHeight;
     }
 
+    /**
+     * Helper method for displaying the time plot of a non-negative count experiment
+     *
+     * @param trials the trial results for the time plot
+     * @param cutoffs the date cutoffs that the time plot is divided into
+     * @param numPoints the number of points to be plotted on the time plot
+     *
+     * @return a list of the point heights / y-values
+     */
     public double[] setupNonNegativeTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
         // cast the trials to non-negative type
         ArrayList<NonNegativeTrial> nonNegativeTrials = new ArrayList<>();
@@ -486,6 +497,15 @@ public class StatActivity extends AppCompatActivity {
         return pointHeight;
     }
 
+    /**
+     * Helper method for displaying the time plot of a measurement experiment
+     *
+     * @param trials the trial results for the time plot
+     * @param cutoffs the date cutoffs that the time plot is divided into
+     * @param numPoints the number of points to be plotted on the time plot
+     *
+     * @return a list of the point heights / y-values
+     */
     public double[] setupMeasurementTimePlot(ArrayList<Trial> trials, long[] cutoffs, int numPoints) {
         // cast the trials to measurement type
         ArrayList<MeasurementTrial> measurementTrials = new ArrayList<>();
