@@ -4,17 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.trialio.models.BinomialTrial;
-import com.example.trialio.models.CountTrial;
-import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Location;
-import com.example.trialio.models.MeasurementTrial;
-import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
-import com.example.trialio.utils.ExperimentTypeUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,11 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class QuestionForumManager implements Serializable {
 
@@ -38,6 +27,8 @@ public class QuestionForumManager implements Serializable {
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
     private static final String EXPERIMENT_PATH = "experiments";
+
+
 
     /**
      * Generates a new unique question ID

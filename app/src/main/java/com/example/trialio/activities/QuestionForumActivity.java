@@ -108,7 +108,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(context, QuestionForumActivity.class);
+                Intent intent = new Intent(context, QuestionRepliesActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
