@@ -1,6 +1,6 @@
 package com.example.trialio.models;
 
-import com.example.trialio.controllers.QuestionForum;
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.TrialManager;
 
 import java.io.Serializable;
@@ -36,7 +36,7 @@ public class Experiment implements Serializable {
     /**
      * The question forum associated with this experiment
      */
-    private QuestionForum questionForum;
+    private QuestionForumManager questionForumManager;
 
     /**
      * Constructor for an Experiment
@@ -165,8 +165,8 @@ public class Experiment implements Serializable {
      *
      * @return the question forum manager
      */
-    public QuestionForum getQuestionForum() {
-        return questionForum;
+    public QuestionForumManager getQuestionForum() {
+        return questionForumManager;
     }
 
     /**
@@ -174,8 +174,8 @@ public class Experiment implements Serializable {
      *
      * @param questionForum the question forum to be set
      */
-    public void setQuestionForum(QuestionForum questionForum) {
-        this.questionForum = questionForum;
+    public void setQuestionForum(QuestionForumManager questionForum) {
+        this.questionForumManager = questionForum;
     }
 
     /**
@@ -190,7 +190,7 @@ public class Experiment implements Serializable {
                 ", settings=" + settings +
                 ", trialManager=" + trialManager +
                 ", keywords=" + keywords +
-                ", questionForum=" + questionForum +
+                ", questionForum=" + questionForumManager +
                 '}';
     }
 }
