@@ -24,6 +24,7 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddQuestionFragment extends DialogFragment {
     private EditText questionTitleInput;
@@ -56,7 +57,6 @@ public class AddQuestionFragment extends DialogFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String questionTitle = questionTitleInput.getText().toString();
                 String questionBody = questionBodyInput.getText().toString();
-                ArrayList<Reply> replies = new ArrayList<>();
 
                 QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID);
 
@@ -67,7 +67,7 @@ public class AddQuestionFragment extends DialogFragment {
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        listener.onOkPressed(new Question(newQuestionID, questionBody, user, questionTitle, replies) );
+                        listener.onOkPressed(new Question(newQuestionID, questionBody, user, questionTitle) );
                     }
                 });
             }}).create();

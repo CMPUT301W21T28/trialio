@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:backgroundTint="#fbd700"
-        android:hint="Question Title"
-        android:inputType="textPersonName" />
+        android:hint="Question Title" />
 
     <EditText
         android:id="@+id/editQuestionBody"
@@ -20,7 +19,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Question Body"
-        android:backgroundTint="#fbd700"
-        android:inputType="phone" />
+        android:backgroundTint="#fbd700" />
 
 </LinearLayout>

@@ -84,8 +84,16 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
                 questionList.clear();
-                questionList = (ArrayList<Question>) questions;
-                questionAdapter.notifyDataSetChanged();
+                if (questions.isEmpty()) {
+                    Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
+                    questionList = new ArrayList<>();
+                    questionAdapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
+                    questionList.addAll(questions);
+                    questionAdapter.notifyDataSetChanged();
+                }
+
             }
         });
     }

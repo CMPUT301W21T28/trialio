@@ -39,8 +39,6 @@ public class QuestionForumManager implements Serializable {
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
     private static final String EXPERIMENT_PATH = "experiments";
 
-    private ArrayList<Question> questions;
-
     /**
      * Generates a new unique question ID
      * @return unique ID for a new question which is about to be posted
@@ -83,10 +81,6 @@ public class QuestionForumManager implements Serializable {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
     }
 
-
-    public void setQuestions(ArrayList<Question> questions) {
-        this.questions = questions;
-    }
 
 
     public void createQuestion (Question newQuestion) {
@@ -139,8 +133,6 @@ public class QuestionForumManager implements Serializable {
         //...
     }
 
-    // TODO seems redundant, check if you can get rid of me
-    public ArrayList<Question> getAllQuestions() { return this.questions; }
 
 
     /**
@@ -197,9 +189,9 @@ public class QuestionForumManager implements Serializable {
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                // retrieves all documents (questions) within questionForum collection
                                 Question question = extractQuestionDocument(doc);
-                                questions.add(question);
+                                questionList.add(question);
                             }
-                            listener.onManyQuestionsFetch(questions);
+                            listener.onManyQuestionsFetch(questionList);
                         } else {
                             String message = "Failed to fetch all questions";
                             Log.d(TAG, message);
@@ -219,6 +211,8 @@ public class QuestionForumManager implements Serializable {
     // TODO: this seems to good to be true -> test the limitations of this function heavily
     private Question extractQuestionDocument(DocumentSnapshot document) {
         Question question = document.toObject(Question.class);
+
+
         return question;
     }
 
