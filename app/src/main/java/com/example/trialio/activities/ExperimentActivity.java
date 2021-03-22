@@ -252,6 +252,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     stats.get(3).intValue() + "\nSuccess Rate: " +
                     Math.round(stats.get(4) * 10000d) / 10000d);
         } else if(stats.get(0) == 3) {
+            String firstQuartile = "At least 4 trials required";
+            String thirdQuartile = "At least 4 trials required";
+            if(stats.get(6) != -1) {
+                firstQuartile = "" + Math.round(stats.get(6) * 10000d) / 10000d;
+                thirdQuartile = "" + Math.round(stats.get(7) * 10000d) / 10000d;
+            }
+
             String modes = Integer.toString(stats.get(8).intValue());
             for(int i=9; i<stats.size(); i++) {
                 modes += ", " + stats.get(i).intValue();
@@ -262,8 +269,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                     Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                     Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
-                    Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
-                    Math.round(stats.get(7) * 10000d) / 10000d + "\nMode(s): " + modes);
+                    firstQuartile + "\nThird quartile: " + thirdQuartile + "\nMode(s): " + modes);
         } else if(stats.get(0) == 4) {
             textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
                     "\nMean: " + stats.get(2) + "\nMedian: " +
