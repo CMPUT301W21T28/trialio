@@ -93,7 +93,6 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                     questionList.addAll(questions);
                     questionAdapter.notifyDataSetChanged();
                 }
-
             }
         });
     }
@@ -131,10 +130,8 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 Log.d(TAG, "Add question was clicked");
 
                 AddQuestionFragment newQuestion = new AddQuestionFragment();
-
                 Bundle args = new Bundle();
                 args.putString("experimentID", associatedExperimentID);
-
                 newQuestion.setArguments(args);
                 newQuestion.show(getSupportFragmentManager(), "addQuestion");
 
@@ -151,6 +148,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     public void onOkPressed (Question newQuestion) {
         Log.d(TAG, "QuestionAdded");
         questionForumManager.createQuestion(newQuestion);
+        setQuestionList();
     }
 
 
