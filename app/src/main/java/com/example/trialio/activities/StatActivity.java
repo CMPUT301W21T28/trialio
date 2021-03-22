@@ -215,6 +215,8 @@ public class StatActivity extends AppCompatActivity {
         histogram.setDragEnabled(true);
         histogram.setScaleEnabled(true);
         histogram.setDescription(null);
+        histogram.getAxisLeft().setAxisMinValue(0);
+        histogram.getAxisRight().setAxisMinValue(0);
     }
 
     /**
