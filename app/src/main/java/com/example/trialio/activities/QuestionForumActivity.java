@@ -1,10 +1,7 @@
 package com.example.trialio.activities;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,20 +9,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.QuestionArrayAdapter;
-import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.adapters.ReplyArrayAdapter;
 import com.example.trialio.controllers.QuestionForumManager;
-import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
-import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +28,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
     private QuestionForumManager questionForumManager;
     private ArrayList<Question> questionList;
-    private QuestionArrayAdapter questionAdapter;
+    private ReplyArrayAdapter questionAdapter;
 
     String associatedExperimentID;
 
@@ -61,7 +52,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         // Initialize attributes for the activity
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         questionList = new ArrayList<>();
-        questionAdapter = new QuestionArrayAdapter(this, questionList);
+        questionAdapter = new ReplyArrayAdapter(this, questionList);
 
         // Set up the adapter for the ListView
         ListView questionsListView = findViewById(R.id.questionForumListView);

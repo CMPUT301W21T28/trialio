@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,10 +30,10 @@ import com.example.trialio.fragments.MeasurementTrialFragment;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.Reply;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
-import com.example.trialio.utils.StatisticsUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +49,14 @@ package com.example.trialio.activities;
 
 public class QuestionRepliesActivity extends AppCompatActivity {
 
+    private final String TAG = "QuestionRepliesForumActivity";
 
-    Question selectedQuestion;
+
+    private Question selectedQuestion;
+    private ArrayList<Reply> replyList;
+    private RepliesArrayAdapter replyAdapter;
+
+
 
     // managers
     QuestionForumManager questionForumManager;
@@ -107,7 +112,6 @@ public class QuestionRepliesActivity extends AppCompatActivity {
 
         setReplyList();
     }
-
 
 
     private void setReplyList() {

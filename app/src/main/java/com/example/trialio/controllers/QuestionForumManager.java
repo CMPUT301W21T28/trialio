@@ -190,7 +190,7 @@ public class QuestionForumManager implements Serializable {
 
 
     /**
-     * Sets a function to be called when an experiment is fetched
+     * Sets a function to be called when a question is fetched
      * @param postID   the id of the question to fetch
      * @param listener     the function to be called when the experiment is fetched
      */
@@ -218,6 +218,39 @@ public class QuestionForumManager implements Serializable {
             }
         });
     }
+
+
+    /**
+     * Sets a function to be called when a reply is fetched
+     * @param questionID   the id of the question to fetch
+     * @param listener     the function to be called when the experiment is fetched
+     */
+    public void setOnReplyFetchListener(String questionID, String replyID, QuestionForumManager.OnReplyFetchListener listener) {
+        /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
+         */
+        Log.d(TAG, "Fetching reply");
+        DocumentReference docRef = questionForumCollection.document(questionID).collection("Replies").document(replyID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Reply reply = extractReplyDocument(doc);
+                        listener.onReplyFetch(reply);
+                        Log.d(TAG, "Reply fetched successfully.");
+                    } else {
+                        Log.d(TAG, "No reply  found");
+                    }
+                } else {
+                    Log.d(TAG, "Reply fetch failed with " + task.getException());
+                }
+            }
+        });
+    }
+
+
 
 
     /**
