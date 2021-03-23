@@ -33,6 +33,7 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
+import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
@@ -313,7 +314,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
                 }
                 else if (ExperimentTypeUtility.isBinomial(trialType)) {
-                    BinomialTrialFragment newTrial = new BinomialTrialFragment();
+                    QRFragment newTrial = new QRFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);

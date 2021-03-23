@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,15 +54,16 @@ public class ArrayAdapterQR extends ArrayAdapter{
         View view = convertView;
 
         if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.content_trials, parent,false);
+            view = LayoutInflater.from(context).inflate(R.layout.content_qr, parent,false);
         }
 
         Trial trial = trialList.get(position);
 
         // get the textviews
-        TextView textOwner = view.findViewById(R.id.text_trial_owner);
-        TextView textDate = view.findViewById(R.id.text_trial_date);
-        TextView textResult = view.findViewById(R.id.text_trial_result);
+        TextView textOwner = view.findViewById(R.id.text_trial_owner_qr);
+        TextView textDate = view.findViewById(R.id.text_trial_date_qr);
+        TextView textResult = view.findViewById(R.id.text_trial_result_qr);
+        ImageView imageView = view.findViewById(R.id.imageView);
 
         // set the textviews
         textOwner.setText("Owner:"+trial.getExperimenterID());
