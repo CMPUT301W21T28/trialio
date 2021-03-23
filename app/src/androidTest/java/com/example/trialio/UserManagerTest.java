@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,31 +46,35 @@ public class UserManagerTest {
         }
     }
 
+//    https://stackoverflow.com/a/1829949/15048024
+
     /**
      * Test the updating of User info in the database
      */
     @Test
-    public void testCreateNewUser() {
-        String userId = "100000";
-        User user = userManager.createNewUser(userId);
-        FirebaseFirestore.getInstance().collection(testCollection).document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public void testCreateNewUser() throws Exception {
+        String deviceId = "100000";
+        User user = userManager.createNewUser(deviceId);
+
+        FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("device_id", deviceId).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            DocumentSnapshot doc = task.getResult();
-                            if (doc.exists()) {
-                                assertEquals(userId, user.getId());
-                            } else {
-                                // User does not have the correct id
-                                fail();
-                            }
+                            // Check a single User was created
+                            QuerySnapshot query = task.getResult();
+                            assertEquals(1, query.size());
+
+                            // Check User document has expected data
+                            DocumentSnapshot doc = query.getDocuments().get(0);
+                            assertEquals(deviceId, doc.get("device_id"));
                         } else {
                             // Error occurred connecting to firebase
                             fail();
                         }
                     }
                 });
+
     }
 
     /***
