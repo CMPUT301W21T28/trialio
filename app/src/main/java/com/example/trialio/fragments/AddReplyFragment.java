@@ -31,7 +31,8 @@ public class AddReplyFragment extends DialogFragment {
     private EditText replyBodyInput;
     private OnFragmentInteractionListener listener;
 
-    String associatedQuestion;
+    Question associatedQuestion;
+    String associatedExperimentID;
 
 
     @NonNull
@@ -40,11 +41,11 @@ public class AddReplyFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_reply, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        // Get owner experiment ID from QuestionForumActivity
+        // Get owner experiment ID and associated question object from QuestionForumActivity
         Bundle bundle = getArguments();
-        associatedQuestion = bundle.getSerializable("associated_question");
 
-        replyBodyInput = view.findViewById(R.id.editReplyBody);
+        associatedExperimentID = bundle.getString("experimentID");
+        associatedQuestion = (Question) bundle.getSerializable("associated_question");
 
 
         return builder
@@ -57,23 +58,23 @@ public class AddReplyFragment extends DialogFragment {
 
                         String replyBody = replyBodyInput.getText().toString();
 
-                        QuestionForumManager questionForumManager = new QuestionForumManager();
+                        QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID, associatedQuestion.getPostID());
 
-                        String newQuestionID = questionForumManager.getNewPostID();
+                        String newReplyID = questionForumManager.getNewPostID();
 
                         //confirm update to user profile
                         UserManager userManager = new UserManager();
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new Question(newQuestionID, questionBody, user, questionTitle) );
+                                listener.onOkPressed(new Reply(newReplyID, replyBody, user) );
                             }
                         });
                     }}).create();
     }
 
     public interface OnFragmentInteractionListener {
-        void onOkPressed(Question newQuestion);
+        void onOkPressed(Reply newReply);
     }
 
     @Override

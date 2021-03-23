@@ -23,11 +23,11 @@ import java.util.List;
 
 public class QuestionForumManager implements Serializable {
 
-    private final CollectionReference questionForumCollection;
-    private final CollectionReference replyForumCollection;
+    private CollectionReference questionForumCollection;   // does this have to be final ???
+    private CollectionReference replyForumCollection;
 
     private static final String TAG = "QuestionForumManager";
-    private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
+    private static final String QUESTION_FORUM_PATH = "questionForum";
     private static final String EXPERIMENT_PATH = "experiments";
     private static final String REPLY_FORUM_PATH = "Replies";
 
@@ -39,12 +39,12 @@ public class QuestionForumManager implements Serializable {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
     }
 
-
     /**
      * Constructor for QuestionForumManager, when making a new reply
      */
     public QuestionForumManager(String associatedExperimentID, String questionID) {
-        replyForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH).document(questionID).collection(REPLY_FORUM_PATH) // TODO: how can I make this path into one string?? is that even possible?
+        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+        replyForumCollection = questionForumCollection.document(questionID).collection(REPLY_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
     }
 
 
@@ -320,7 +320,7 @@ public class QuestionForumManager implements Serializable {
                                 Reply reply = extractReplyDocument(doc);
                                 replyList.add(reply);
                             }
-                            listener.onManyQuestionsFetch(replyList);
+                            listener.onManyRepliesFetch(replyList);
                         } else {
                             String message = "Failed to fetch all replies";
                             Log.d(TAG, message);

@@ -1,6 +1,7 @@
 package com.example.trialio.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -13,6 +14,11 @@ public class Reply extends Post implements Serializable {
     public Reply(String body, User user, Collection<Reply> replies) {
         super(body, user);
         this.replies = replies;
+    }
+
+    public Reply(String postID, String body, User user) {
+        super(postID, body, user);
+        this.replies = new ArrayList<>();
     }
 
     public Reply(String postID, String body, User user, Collection<Reply> replies) {

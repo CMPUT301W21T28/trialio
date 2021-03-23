@@ -51,15 +51,18 @@ import java.util.List;
  * This activity opens an question (w/ details) with all of it's replies. The activity is opened when a question is clicked in the list view from QuestionForumActivity.
  */
 
-public class QuestionRepliesActivity extends AppCompatActivity {
+public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener{
 
     private final Context context = this;
     private final String TAG = "QuestionRepliesForumActivity";
+
 
     private Question selectedQuestion;
     private ArrayList<Reply> replyList;
     private ReplyArrayAdapter replyAdapter;
 
+
+    private String associatedExperimentID;
 
     // managers
     QuestionForumManager questionForumManager;
@@ -85,7 +88,10 @@ public class QuestionRepliesActivity extends AppCompatActivity {
 
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
+
+        associatedExperimentID = bundle.getString("experimentID");
         selectedQuestion = (Question) bundle.getSerializable("question_details");
+
 
         String questionID = selectedQuestion.getPostID();
 
@@ -169,6 +175,7 @@ public class QuestionRepliesActivity extends AppCompatActivity {
 
                 AddReplyFragment newReply = new AddReplyFragment();
                 Bundle args = new Bundle();
+                args.putString("experimentID", associatedExperimentID);
                 args.putSerializable("associated_question", selectedQuestion);
                 newReply.setArguments(args);
                 newReply.show(getSupportFragmentManager(), "addReply");

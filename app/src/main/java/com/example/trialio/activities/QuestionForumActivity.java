@@ -104,6 +104,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
+                args.putString("experimentID", associatedExperimentID);
                 args.putSerializable("question_details", questionList.get(position));
                 intent.putExtras(args);
 
