@@ -39,14 +39,12 @@ public class QuestionForumManager implements Serializable {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
     }
 
-    /**
-     * Constructor for QuestionForumManager, when making a new reply
-     */
-    public QuestionForumManager(String associatedExperimentID, String questionID) {
-        questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+    public CollectionReference getReplyForumCollection(String questionID) {
 
+        replyForumCollection = questionForumCollection.document(questionID).collection(REPLY_FORUM_PATH);
+
+        return replyForumCollection;  //TODO: is this a bad practice???
     }
-
 
     /**
      * Generates a new unique question ID
@@ -54,6 +52,10 @@ public class QuestionForumManager implements Serializable {
      */
 
     public String getNewPostID() { return this.questionForumCollection.document().getId(); }
+
+    public String getNewReplyID(String questionID) {
+        return this.questionForumCollection.document(questionID).collection("Replies").document().getId();
+    }
 
 
     /**
@@ -114,13 +116,12 @@ public class QuestionForumManager implements Serializable {
     public void createQuestion (Question newQuestion) {
         Log.d(TAG, "Posting question " + newQuestion.getTitle());
         questionForumCollection
-                .add(newQuestion)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Question written successfully with ID: " + documentReference.getId());
-                    }
-                })
+                .document(newQuestion.getPostID()).set(newQuestion)    //TODO ERROR HERE
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                    }
+//                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -239,7 +240,7 @@ public class QuestionForumManager implements Serializable {
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
         Log.d(TAG, "Fetching reply");
-        DocumentReference docRef = questionForumCollection.document(questionID).collection("Replies").document(replyID);  //TODO: double check
+        DocumentReference docRef = questionForumCollection.document(questionID).collection(REPLY_FORUM_PATH).document(replyID);  //TODO: double check
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -304,8 +305,9 @@ public class QuestionForumManager implements Serializable {
         /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
          */
-        Log.d(TAG, "Fetching all questions from collection");
-        questionForumCollection.document(questionID).collection("Replies").get()
+        Log.d(TAG, "Fetching all replies from collection");
+
+        questionForumCollection.document(questionID).collection(REPLY_FORUM_PATH).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -322,7 +324,8 @@ public class QuestionForumManager implements Serializable {
                             }
                             listener.onManyRepliesFetch(replyList);
                         } else {
-                            String message = "Failed to fetch all replies";
+                            // if fails -> create a "Replies sub colleciton here"
+                            String message = "Replies sub-collection does not exist. Making a new one now";
                             Log.d(TAG, message);
                         }
                     }

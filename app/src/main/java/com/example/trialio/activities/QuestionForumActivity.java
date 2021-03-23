@@ -66,6 +66,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     @Override
     protected void onStart() {
         super.onStart();
+
         setQuestionList();
     }
 
@@ -78,12 +79,11 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 if (questions.isEmpty()) {
                     Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
                     questionList = new ArrayList<>();
-                    questionAdapter.notifyDataSetChanged();
                 } else {
                     Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
                     questionList.addAll(questions);
-                    questionAdapter.notifyDataSetChanged();
                 }
+                questionAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -139,6 +139,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     public void onOkPressed (Question newQuestion) {
         Log.d(TAG, "QuestionAdded");
         questionForumManager.createQuestion(newQuestion);
+
         setQuestionList();
     }
 

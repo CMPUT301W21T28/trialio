@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Question extends Post implements Serializable {
     private String title;
-    private Collection<Reply> replies;
+    private List<Reply> replies;
 
 
     public Question () {
@@ -40,7 +40,7 @@ public class Question extends Post implements Serializable {
         return replies;
     }
 
-    public void setReplies(Collection<Reply> replies) {
+    public void setReplies(List<Reply> replies) {
         this.replies = replies;
     }
 

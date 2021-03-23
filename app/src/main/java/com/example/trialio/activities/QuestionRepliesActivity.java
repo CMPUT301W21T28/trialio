@@ -64,6 +64,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
 
     private String associatedExperimentID;
+    private String associatedQuestionID;
 
     // managers
     private QuestionForumManager questionForumManager;
@@ -84,12 +85,11 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         Bundle bundle = getIntent().getExtras();
 
         associatedExperimentID = bundle.getString("experimentID");
+
         selectedQuestion = (Question) bundle.getSerializable("question_details");
+        associatedQuestionID = selectedQuestion.getPostID();
 
-
-        String questionID = selectedQuestion.getPostID();
-
-        questionForumManager = new QuestionForumManager(questionID);
+        questionForumManager = new QuestionForumManager(associatedExperimentID);
 
         replyList = new ArrayList<>();
         replyAdapter = new ReplyArrayAdapter(this, replyList);
@@ -120,21 +120,19 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         setReplyList();
     }
 
-
     private void setReplyList() {
-        questionForumManager.setOnAllRepliesFetchCallback(selectedQuestion.getPostID(), new QuestionForumManager.OnManyRepliesFetchListener() {
+        questionForumManager.setOnAllRepliesFetchCallback(associatedQuestionID, new QuestionForumManager.OnManyRepliesFetchListener() {
             @Override
             public void onManyRepliesFetch(List<Reply> replies) {  // TODO: why not ArrayList ***
                 replyList.clear();
                 if (replies.isEmpty()) {
                     //Log.d(TAG, "onManyRepliesFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
                     replyList = new ArrayList<>();
-                    replyAdapter.notifyDataSetChanged();
                 } else {
                     //Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
                     replyList.addAll(replies);
-                    replyAdapter.notifyDataSetChanged();
                 }
+                replyAdapter.notifyDataSetChanged();
             }
         });
     }
