@@ -25,9 +25,9 @@ import static org.junit.Assert.fail;
 
 public class UserManagerTest {
 
-    String testCollection = "user-test";
-    ArrayList<String> testUserIds;
-    UserManager userManager;
+    private static final String testCollection = "user-test";
+    private ArrayList<String> testUserIds;
+    private UserManager userManager;
 
     @Before
     public void initUserManager() {
@@ -46,7 +46,7 @@ public class UserManagerTest {
         }
     }
 
-//    https://stackoverflow.com/a/1829949/15048024
+    // https://stackoverflow.com/a/1829949/15048024
 
     /**
      * Test the updating of User info in the database

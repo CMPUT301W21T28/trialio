@@ -157,9 +157,7 @@ public class UserManager {
                 public void onComplete(@NonNull Task<String> task) {
                     // Once FID has been received, fetch from database with userId=FID
                     String userId = task.getResult();
-                    // String userId = "3333"
                     fid = userId;
-                    assert userId != null;
                     setUserFetchListener(userId, listener);
                 }
             });
@@ -172,11 +170,41 @@ public class UserManager {
      * Gets a User from the database. If the current User does not exist in the
      * system already, a new User document is created.
      *
-     * @param userId   the id of the User to retrieve
-     * @param listener the callback to be called when the User is fetched
+     * @param username  the username of the User to retrieve
+     * @param listener  the callback to be called when the User is fetched
      */
-    public void getUser(String userId, OnUserFetchListener listener) {
-        setUserFetchListener(userId, listener);
+    public void getUser(String username, OnUserFetchListener listener) {
+        setUserFetchListener(username, listener);
+    }
+
+    /**
+     * Sets a function to be called when a User is fetched.
+     *
+     * @param userId   the id of the User to fetch
+     * @param listener the callback with the function to call
+     */
+    private void setUserFetchListener(String userId, OnUserFetchListener listener) {
+        userCollection.document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            assert doc != null;
+                            if (doc.exists()) {
+                                User user = extractUser(doc);
+                                listener.onUserFetch(user);
+                                Log.d(TAG, "User " + userId + " fetched successfully.");
+                            } else {
+                                Log.d(TAG, "No user found with id " + userId);
+                                User user = createNewUser(userId);
+                                listener.onUserFetch(user);
+                            }
+                        } else {
+                            Log.d(TAG, "User fetch failed with " + task.getException());
+                        }
+                    }
+                });
     }
 
     /**
@@ -306,35 +334,6 @@ public class UserManager {
                 });
     }
 
-    /**
-     * Sets a function to be called when a User is fetched.
-     *
-     * @param userId   the id of the User to fetch
-     * @param listener the callback with the function to call
-     */
-    private void setUserFetchListener(String userId, OnUserFetchListener listener) {
-        userCollection.document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot doc = task.getResult();
-                            assert doc != null;
-                            if (doc.exists()) {
-                                User user = extractUser(doc);
-                                listener.onUserFetch(user);
-                                Log.d(TAG, "User " + userId + " fetched successfully.");
-                            } else {
-                                Log.d(TAG, "No user found with id " + userId);
-                                User user = createNewUser(userId);
-                                listener.onUserFetch(user);
-                            }
-                        } else {
-                            Log.d(TAG, "User fetch failed with " + task.getException());
-                        }
-                    }
-                });
-    }
 
     /**
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
