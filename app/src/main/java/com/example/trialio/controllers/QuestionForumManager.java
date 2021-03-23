@@ -44,7 +44,7 @@ public class QuestionForumManager implements Serializable {
      */
     public QuestionForumManager(String associatedExperimentID, String questionID) {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
-        replyForumCollection = questionForumCollection.document(questionID).collection(REPLY_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+
     }
 
 

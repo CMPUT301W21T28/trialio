@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.QuestionArrayAdapter;
 import com.example.trialio.adapters.ReplyArrayAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
@@ -52,8 +53,8 @@ import java.util.List;
  */
 
 public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener{
-
     private final Context context = this;
+
     private final String TAG = "QuestionRepliesForumActivity";
 
 
@@ -65,9 +66,9 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     private String associatedExperimentID;
 
     // managers
-    QuestionForumManager questionForumManager;
-    UserManager userManager;
-    ExperimentManager experimentManager;
+    private QuestionForumManager questionForumManager;
+    private UserManager userManager;
+    private ExperimentManager experimentManager;
 
     /**
      * the On create the takes in the saved instance from the question forum activity
@@ -78,15 +79,8 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_forum_detailed);
 
-        // Took ActionBar code.
-        // DATE:	2020-12-14
-        // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-        // SOURCE: 	Add an up action [https://developer.android.com/training/appbar/up-action]
-        // AUTHOR: 	Android Developers [https://developer.android.com/]
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
 
-        // get the experiment that was passed in as an argument
+
         Bundle bundle = getIntent().getExtras();
 
         associatedExperimentID = bundle.getString("experimentID");
@@ -95,7 +89,11 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         String questionID = selectedQuestion.getPostID();
 
-        QuestionForumManager questionForumManager = new QuestionForumManager(questionID);
+        questionForumManager = new QuestionForumManager(questionID);
+
+        replyList = new ArrayList<>();
+        replyAdapter = new ReplyArrayAdapter(this, replyList);
+
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 

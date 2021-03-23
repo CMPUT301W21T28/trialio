@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
-import com.example.trialio.adapters.ReplyArrayAdapter;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
