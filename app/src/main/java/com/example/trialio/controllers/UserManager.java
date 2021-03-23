@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.example.trialio.models.User;
 import com.example.trialio.models.UserContactInfo;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +36,12 @@ public class UserManager {
     private final CollectionReference userCollection;
 
     private static String fid;
+
+    private static final String USERNAME_FIELD = "username";
+    private static final String DEVICE_ID_FIELD = "device_id";
+    private static final String EMAIL_FIELD = "email";
+    private static final String PHONE_FIELD = "phone";
+    private static final String SUBBED_EXPERIMENTS_FIELD = "subscribed_experiments";
 
     /*
      * This interface design was adapted from Android callbacks such as OnCLickListener
@@ -91,32 +98,48 @@ public class UserManager {
 
     /**
      * Creates a new User in the system.
-     * <p>
-     * The newly created User object will not track changes to the User document. To receive all
-     * real-time updates for the User, see UserManager#addUserUpdateListener()
      *
-     * @param id The id of the User to create
+     * @param deviceId The device id of new User to create in the database
      * @return The User that was created.
+     * <p>
+     * Note that this User object will not track changes to the
+     * User document. If you need to receive all database updates for the User, fetch the
+     * User using UserManager#addUserUpdateListener()
      */
-    public User createNewUser(String id) {
-        userCollection.getId();
-        Log.d(TAG, String.format("Generating new User with username %s.", id));
-        User user = new User(id);
-        Map<String, Object> comp = compressUser(user);
-        userCollection.document(id)
-                .set(comp)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, String.format("User %s created successfully.", id));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, String.format("Failed to create User %s.", id));
-                    }
-                });
+    public User createNewUser(String deviceId) {
+        Log.d(TAG, String.format("Generating new User with fid=%s.", deviceId));
+        User user = new User();
+        String username = userCollection.document().getId();
+        user.setUsername(username);
+        user.setId(deviceId);
+
+        // Check that device id does not already exist in the system
+        Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(DEVICE_ID_FIELD, user.getId()).get();
+        queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
+            @Override
+            public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
+                if (task.getResult().size() == 0) {
+                    // Proceed with creating new user document
+                    Map<String, Object> compressUser = compressUser(user);
+                    return userCollection.document(username).set(compressUser);
+                } else {
+                    // User for this device already exists
+                    Log.d(TAG, "Unable to create User: User with fid " + deviceId + " already exists");
+                    return null;
+                }
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, String.format("User created successfully for device %s.", deviceId));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, String.format("Failed to create User for device %s.", deviceId));
+            }
+        });
+
         return user;
     }
 
@@ -391,14 +414,14 @@ public class UserManager {
         Map<String, Object> data = document.getData();
         assert data != null;
 
-        String id = document.getString("id");
-        String username = document.getString("username");
-        String email = document.getString("contactInfo.email");
-        String phone = document.getString("contactInfo.phone");
+        String username = document.getString(USERNAME_FIELD);
+        String id = document.getString(DEVICE_ID_FIELD);
+        String email = document.getString(EMAIL_FIELD);
+        String phone = document.getString(PHONE_FIELD);
         /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
          * 2018-05-08, CC BY-SA 4.0, https://stackoverflow.com/questions/50233281/how-to-get-an-array-from-firestore
          */
-        ArrayList<String> subs = (ArrayList<String>) document.get("subscribedExperimentIds");
+        ArrayList<String> subs = (ArrayList<String>) document.get(SUBBED_EXPERIMENTS_FIELD);
         /* End of cited code */
 
         user.setId(id);
@@ -418,11 +441,11 @@ public class UserManager {
      */
     private Map<String, Object> compressUser(User user) {
         Map<String, Object> userData = new HashMap<>();
-        userData.put("id", user.getId());
-        userData.put("username", user.getUsername());
-        UserContactInfo info = user.getContactInfo();
-        userData.put("contactInfo", info);
-        userData.put("subscribedExperimentIds", user.getSubscribedExperiments());
+        userData.put(USERNAME_FIELD, user.getUsername());
+        userData.put(DEVICE_ID_FIELD, user.getId());
+        userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
+        userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
+        userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
         return userData;
     }
 }
