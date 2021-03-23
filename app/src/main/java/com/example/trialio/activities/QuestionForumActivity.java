@@ -96,16 +96,15 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
         // Called when the user clicks item in question list -> makes bundle to send to detailed question page
         ListView questionForumListView = findViewById(R.id.questionForumListView);
-
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(context, QuestionRepliesActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 args.putString("experimentID", associatedExperimentID);
-                args.putSerializable("question_details", questionList.get(position));
+                args.putSerializable("question_details", questionList.get(i));
                 intent.putExtras(args);
 
                 // start an ExperimentActivity
