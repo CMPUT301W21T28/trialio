@@ -29,7 +29,7 @@ public class QuestionForumManager implements Serializable {
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum"; // TODO: can you even make this into one path or do i have to split it up
     private static final String EXPERIMENT_PATH = "experiments";
-    private static final String REPLY_FORUM_PATH = "replyForum";
+    private static final String REPLY_FORUM_PATH = "Replies";
 
 
     /**
@@ -37,6 +37,14 @@ public class QuestionForumManager implements Serializable {
      */
     public QuestionForumManager(String associatedExperimentID) {
         questionForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH); // TODO: how can I make this path into one string?? is that even possible?
+    }
+
+
+    /**
+     * Constructor for QuestionForumManager, when making a new reply
+     */
+    public QuestionForumManager(String associatedExperimentID, String questionID) {
+        replyForumCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(QUESTION_FORUM_PATH).document(questionID).collection(REPLY_FORUM_PATH) // TODO: how can I make this path into one string?? is that even possible?
     }
 
 
@@ -144,7 +152,7 @@ public class QuestionForumManager implements Serializable {
     }
 
 
-    public void createReply (Reply newReply, String selectedQuestionID) {
+    public void createReply (String selectedQuestionID, Reply newReply) {
         Log.d( TAG, "Posting reply" );
         questionForumCollection
                 .document(selectedQuestionID)
@@ -219,18 +227,19 @@ public class QuestionForumManager implements Serializable {
         });
     }
 
-
     /**
-     * Sets a function to be called when a reply is fetched
-     * @param questionID   the id of the question to fetch
-     * @param listener     the function to be called when the experiment is fetched
+     * Sets a function to be called when a question is fetched
+     *
+     * @param questionID     the id of the question to which the replies belong to
+     * @param replyID        the id of the reply to fetch
+     * @param listener       the function to be called when the experiment is fetched
      */
     public void setOnReplyFetchListener(String questionID, String replyID, QuestionForumManager.OnReplyFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
         Log.d(TAG, "Fetching reply");
-        DocumentReference docRef = questionForumCollection.document(questionID).collection("Replies").document(replyID);
+        DocumentReference docRef = questionForumCollection.document(questionID).collection("Replies").document(replyID);  //TODO: double check
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -241,7 +250,7 @@ public class QuestionForumManager implements Serializable {
                         listener.onReplyFetch(reply);
                         Log.d(TAG, "Reply fetched successfully.");
                     } else {
-                        Log.d(TAG, "No reply  found");
+                        Log.d(TAG, "No reply(s) found");
                     }
                 } else {
                     Log.d(TAG, "Reply fetch failed with " + task.getException());
@@ -249,8 +258,6 @@ public class QuestionForumManager implements Serializable {
             }
         });
     }
-
-
 
 
     /**
@@ -287,6 +294,42 @@ public class QuestionForumManager implements Serializable {
                 });
     }
 
+
+    /**
+     * Sets a function to be called when all questions are fetched
+     *
+     * @param listener the function to be called when the replies are fetched
+     */
+    public void setOnAllRepliesFetchCallback(String questionID, OnManyRepliesFetchListener listener) {
+        /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
+         */
+        Log.d(TAG, "Fetching all questions from collection");
+        questionForumCollection.document(questionID).collection("Replies").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String message = "All replies fetched successfully";
+                            Log.d(TAG, message);
+
+                            QuerySnapshot qs = task.getResult();
+                            ArrayList<Reply> replyList = new ArrayList<>();
+                            for (DocumentSnapshot doc : qs.getDocuments()) {
+                                // retrieves all documents (questions) within questionForum collection
+                                Reply reply = extractReplyDocument(doc);
+                                replyList.add(reply);
+                            }
+                            listener.onManyQuestionsFetch(replyList);
+                        } else {
+                            String message = "Failed to fetch all replies";
+                            Log.d(TAG, message);
+                        }
+                    }
+                });
+    }
+
+
     /**
      * Extracts a Question object from a Firestore sub-collection (questionForum). This method assumes the document
      * hold a valid question.
@@ -299,8 +342,26 @@ public class QuestionForumManager implements Serializable {
     private Question extractQuestionDocument(DocumentSnapshot document) {
         Question question = document.toObject(Question.class);
 
-
         return question;
     }
+
+
+
+    /**
+     * Extracts a Reply object from a Firestore sub-collection (questionForum). This method assumes the document
+     * hold a valid question.
+     *
+     * @param document the document to be extracted
+     * @return the extracted reply
+     */
+
+    // TODO: this seems to good to be true -> test the limitations of this function heavily
+    private Reply extractReplyDocument(DocumentSnapshot document) {
+        Reply reply = document.toObject(Reply.class);
+
+        return reply;
+    }
+
+
 
 }

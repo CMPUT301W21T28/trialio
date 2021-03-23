@@ -2,6 +2,7 @@ package com.example.trialio.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
+import com.example.trialio.fragments.AddReplyFragment;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
@@ -51,11 +53,13 @@ import java.util.List;
 
 public class QuestionRepliesActivity extends AppCompatActivity {
 
+    private final Context context = this;
     private final String TAG = "QuestionRepliesForumActivity";
 
     private Question selectedQuestion;
     private ArrayList<Reply> replyList;
     private ReplyArrayAdapter replyAdapter;
+
 
     // managers
     QuestionForumManager questionForumManager;
@@ -114,16 +118,16 @@ public class QuestionRepliesActivity extends AppCompatActivity {
 
 
     private void setReplyList() {
-        questionForumManager.setOnAllRepliesFetchCallback(new QuestionForumManager.OnManyRepliesFetchListener() {
+        questionForumManager.setOnAllRepliesFetchCallback(selectedQuestion.getPostID(), new QuestionForumManager.OnManyRepliesFetchListener() {
             @Override
             public void onManyRepliesFetch(List<Reply> replies) {  // TODO: why not ArrayList ***
-               replyList.clear();
+                replyList.clear();
                 if (replies.isEmpty()) {
-                    Log.d(TAG, "onManyRepliesFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
+                    //Log.d(TAG, "onManyRepliesFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
                     replyList = new ArrayList<>();
                     replyAdapter.notifyDataSetChanged();
                 } else {
-                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
+                    //Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
                     replyList.addAll(replies);
                     replyAdapter.notifyDataSetChanged();
                 }
@@ -137,37 +141,37 @@ public class QuestionRepliesActivity extends AppCompatActivity {
     private void setUpOnClickListeners() {
 
         // Called when the user clicks item in question list -> makes bundle to send to detailed question page
-        ListView questionForumListView = findViewById(R.id.questionForumListView);
+        ListView replyListView = findViewById(R.id.replyListView);
 
-        questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        replyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(context, QuestionRepliesActivity.class);
-
-                // pass in experiment as an argument
-                Bundle args = new Bundle();
-                args.putSerializable("question_details", questionList.get(position));
-                intent.putExtras(args);
-
-                // start an ExperimentActivity
-                startActivity(intent);
+                // what do on click ???
+                /*
+                a) expand view to see sub replies
+                b) delete?
+                 */
             }
         });
 
+
         /**
-         * Adds new question
+         * Adds new reply
          */
-        Button newQuestion = findViewById(R.id.newQuestion);
-        newQuestion.setOnClickListener(new View.OnClickListener() {
+
+        Button postReplyButton = findViewById(R.id.replyButton);
+
+        postReplyButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("LongLogTag")   // TODO why does not having this cause an error
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Add question was clicked");
+                Log.d(TAG, "Reply was clicked");
 
-                AddQuestionFragment newQuestion = new AddQuestionFragment();
+                AddReplyFragment newReply = new AddReplyFragment();
                 Bundle args = new Bundle();
-                args.putString("experimentID", associatedExperimentID);
-                newQuestion.setArguments(args);
-                newQuestion.show(getSupportFragmentManager(), "addQuestion");
+                args.putSerializable("associated_question", selectedQuestion);
+                newReply.setArguments(args);
+                newReply.show(getSupportFragmentManager(), "addReply");
 
             }
         });
@@ -176,13 +180,14 @@ public class QuestionRepliesActivity extends AppCompatActivity {
     /**
      * This is called when the user presses confirm on one of the Question creation fragments
      *
-     * @param newQuestion The new question that was created in the fragment
+     * @param newReply The new reply that was created in the fragment
      */
+
     @Override
-    public void onOkPressed (Question newQuestion) {
-        Log.d(TAG, "QuestionAdded");
-        questionForumManager.createQuestion(newQuestion);
-        setQuestionList();
+    public void onOkPressed (Reply newReply) {
+        // Log.d(TAG, "Reply");
+        questionForumManager.createReply(selectedQuestion.getPostID(), newReply);
+        setReplyList();
     }
 
 

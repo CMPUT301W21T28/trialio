@@ -106,30 +106,30 @@
                 android:layout_weight="6"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="5">-->
 
 
-                    <EditText
+<!--                    <EditText-->
 
-                        android:id="@+id/replyTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="9"
-                        android:text="Reply here..."
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:background="#fbd700"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="2.5dp"
-                        android:layout_marginBottom="2.5dp">
+<!--                        android:id="@+id/replyEditText"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="9"-->
+<!--                        android:text="Reply here..."-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:background="#fbd700"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:layout_marginTop="2.5dp"-->
+<!--                        android:layout_marginBottom="2.5dp">-->
 
-                    </EditText>
+<!--                    </EditText>-->
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
 
                 <LinearLayout
@@ -170,6 +170,7 @@
         android:gravity="center">
 
         <ListView
+            android:id="@+id/replyListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
