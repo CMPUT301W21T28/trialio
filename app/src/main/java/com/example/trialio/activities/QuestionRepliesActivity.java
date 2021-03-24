@@ -85,9 +85,12 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         Bundle bundle = getIntent().getExtras();
 
         associatedExperimentID = bundle.getString("experimentID");
-
         selectedQuestion = (Question) bundle.getSerializable("question_details");
-        associatedQuestionID = selectedQuestion.getPostID();
+
+        associatedQuestionID = "EgNCwgGlcj6VCzjpzAio";
+        // associatedQuestionID = bundle.getString("questionID");
+
+        // Log.d("QUESTION ID", associatedQuestionID);
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
 
@@ -107,7 +110,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
 
         // set views with selectedQuestion details
-        authorID.setText(selectedQuestion.getPostID());
+        authorID.setText(selectedQuestion.getUser().getId());
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
         selectedQuestionBody.setText(selectedQuestion.getBody());
 
@@ -115,12 +118,15 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
     @Override
     protected void onStart() {
+
         super.onStart();
 
         setReplyList();
     }
 
     private void setReplyList() {
+        Log.d(associatedQuestionID, "question ID test ***");
+
         questionForumManager.setOnAllRepliesFetchCallback(associatedQuestionID, new QuestionForumManager.OnManyRepliesFetchListener() {
             @Override
             public void onManyRepliesFetch(List<Reply> replies) {  // TODO: why not ArrayList ***

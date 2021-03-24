@@ -66,7 +66,6 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     @Override
     protected void onStart() {
         super.onStart();
-
         setQuestionList();
     }
 
@@ -76,13 +75,22 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
                 questionList.clear();
-                if (questions.isEmpty()) {
-                    Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
-                    questionList = new ArrayList<>();
-                } else {
-                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
-                    questionList.addAll(questions);
+//                if (questions.isEmpty()) {
+//                    Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
+//                    questionList = new ArrayList<>();
+//                } else {
+//                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
+//                    questionList.addAll(questions);
+//                }
+
+                Log.w(TAG, "Succesfully fetched questions");
+                questionList.addAll(questions);
+
+                for (Question x : questionList) {
+                    String id = x.getPostID();
+                    Log.w(TAG, id);
                 }
+
                 questionAdapter.notifyDataSetChanged();
             }
         });
@@ -103,7 +111,15 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 args.putString("experimentID", associatedExperimentID);
-                args.putSerializable("question_details", questionList.get(i));
+
+                String selectedQuestionID = questionList.get(i).getPostID();
+//                Question selectedQuestion = questionList.get(i);
+//                args.putSerializable("question_details", selectedQuestion);
+
+
+                Log.d("Question from list = ",  selectedQuestionID);
+
+
                 intent.putExtras(args);
 
                 // start an ExperimentActivity
@@ -139,7 +155,6 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     public void onOkPressed (Question newQuestion) {
         Log.d(TAG, "QuestionAdded");
         questionForumManager.createQuestion(newQuestion);
-
         setQuestionList();
     }
 
