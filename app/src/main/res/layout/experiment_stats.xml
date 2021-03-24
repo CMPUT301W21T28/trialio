@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="#747474">
 
-
     <TextView
         android:id="@+id/txtStatsSummaryStatPage"
         android:layout_width="292dp"
@@ -24,25 +23,47 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/plotTitle"
-        android:layout_width="292dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:background="#747474"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtStatsSummaryStatPage"
-        tools:ignore="MissingConstraints" />
+    <LinearLayout
+        android:id="@+id/graphControl"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="#9c9c9c"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatsSummaryStatPage">
+
+        <TextView
+            android:id="@+id/plotTitle"
+            android:layout_width="220dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-10dp"
+            android:background="#747474" />
+
+        <Button
+            android:id="@+id/btnPreviousGraph"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/special_yellow"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnNextGraph"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/special_yellow"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/statPlot"
+        android:id="@+id/histogramView"
         android:layout_width="350dp"
-        android:layout_height="275dp"
+        android:layout_height="255dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="30dp"
@@ -50,8 +71,21 @@
         android:layout_marginRight="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plotTitle"
+        app:layout_constraintTop_toBottomOf="@+id/graphControl"
         tools:ignore="MissingConstraints"></com.github.mikephil.charting.charts.BarChart>
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/timePlotView"
+        android:layout_width="350dp"
+        android:layout_height="255dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graphControl"
+        tools:ignore="MissingConstraints"></com.github.mikephil.charting.charts.LineChart>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
