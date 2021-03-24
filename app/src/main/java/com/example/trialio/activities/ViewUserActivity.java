@@ -58,21 +58,13 @@ public class ViewUserActivity extends AppCompatActivity {
         TextView UserEMail = findViewById(R.id.emailText);
 
         UserManager manager = new UserManager();
-//        manager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
-//            @Override
-//            public void onUserFetch(User user) {
-//                userName.setText(user.getUsername());
-//                userPhone.setText(user.getContactInfo().getPhone());
-//                UserEMail.setText(user.getContactInfo().getEmail());
-//            }
-//        });
         manager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 manager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        userName.setText(user.getDeviceId());
+                        userName.setText(user.getUsername());
                         userPhone.setText(user.getContactInfo().getPhone());
                         UserEMail.setText(user.getContactInfo().getEmail());
                     }

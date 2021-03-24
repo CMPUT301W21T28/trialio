@@ -13,7 +13,6 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -36,7 +35,6 @@ public class TrialActivity extends AppCompatActivity {
      * @param savedInstanceState
      */
     @Override
-    @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trials);
@@ -77,21 +75,16 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     public void setFields() {
-        TextView textDescription = findViewById(R.id.txtExperimentDescriptionTrial);
-        textDescription.setText("Description: " + experiment.getSettings().getDescription());
+        TextView descView = findViewById(R.id.txtExperimentDescriptionTrial);
+        String descText = "Description: " + experiment.getSettings().getDescription();
+        descView.setText(descText);
 
-        TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
-        textOwner.setText("Owner: " + experiment.getSettings().getOwnerID());
+        TextView ownerView = findViewById(R.id.txtExperimentOwnerTrial);
+        String ownerText = "Owner: " + experiment.getSettings().getOwnerUsername();
+        ownerView.setText(ownerText);
 
-//        // get the owner's username
-//        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-//            @Override
-//            public void onUserFetch(User user) {
-//                textOwner.setText("Owner: " + user.getUsername());
-//            }
-//        });
-
-        TextView textType = findViewById(R.id.txtExperimentTypeTrial);
-        textType.setText("Type: " + experiment.getTrialManager().getType());
+        TextView typeView = findViewById(R.id.txtExperimentTypeTrial);
+        String typeText =  "Type: " + experiment.getTrialManager().getType();
+        typeView.setText(typeText);
     }
 }

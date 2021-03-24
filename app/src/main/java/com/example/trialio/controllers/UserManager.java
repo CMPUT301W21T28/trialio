@@ -28,6 +28,8 @@ import java.util.Map;
  * is used to perform create, read, update and delete functionality on Users which are to be
  * maintained by the system. This class communicates with the Firebase database where User data is
  * maintained.
+ *
+ * Version 2.0.1
  */
 public class UserManager {
     private static final String TAG = "UserManager";
@@ -106,11 +108,11 @@ public class UserManager {
      * User using UserManager#addUserUpdateListener()
      */
     public User createNewUser(String deviceId) {
-        Log.d(TAG, String.format("Generating new User with fid=%s.", deviceId));
-        User user = new User();
         String username = userCollection.document().getId();
+        User user = new User();
         user.setUsername(username);
         user.setDeviceId(deviceId);
+        Log.d(TAG, String.format("Generating new User %s for device %s.", username, deviceId));
 
         /* Chaining tasks
          * Google Play Services Developer Docs, "Chaining", data, Apache 2.0,
@@ -227,8 +229,8 @@ public class UserManager {
                             DocumentSnapshot doc = task.getResult();
                             if (doc.exists()) {
                                 User user = extractUser(doc);
-                                listener.onUserFetch(user);
                                 Log.d(TAG, "User " + username + " fetched successfully.");
+                                listener.onUserFetch(user);
                             } else {
                                 Log.d(TAG, "No user found with username " + username);
                                 listener.onUserFetch(null);
@@ -243,9 +245,9 @@ public class UserManager {
     /**
      * Sets a function to be called when a User is fetched.
      *
+     * @deprecated
      * @param userId   the id of the User to fetch
      * @param listener the callback with the function to call
-     * @deprecated
      */
     private void setUserFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).get()
