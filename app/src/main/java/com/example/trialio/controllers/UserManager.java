@@ -354,9 +354,9 @@ public class UserManager {
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
      * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
+     * @deprecated
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
-     * @deprecated
      */
     private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -373,27 +373,6 @@ public class UserManager {
                 listener.onUserFetch(currentUser);
             }
         });
-    }
-
-    /**
-     * Add a listener to a all User document that will listen for updates any User. This method is
-     * used to fetch User data for all users from the database when any User document in the
-     * database is updated.
-     *
-     * <pre>
-     * UserManager manager = new UserManager();
-     * manager.addAllUsersUpdateListener(new UserManager.OnAllUserUpdateListener() {
-     *     &#64;Override
-     *     public void onALlUsersUpdate(User user) {
-     *         // Do something with the User every time the database is updated
-     *     }
-     * });
-     * </pre>
-     *
-     * @param listener the listener to be called when the list of Users is fetched
-     */
-    public void addAllUserUpdateListener(UserManager.OnManyUsersFetchListener listener) {
-        setListenerToCollection(listener);
     }
 
 
