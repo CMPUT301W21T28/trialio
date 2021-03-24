@@ -42,8 +42,8 @@ public class QRFragment extends DialogFragment {
         experiment = (Experiment) bundle.getSerializable("experiment");
         position = (Integer) bundle.getSerializable("position");
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, position);
-        imgQR.setImageBitmap(qrCode);
+        //Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, position);
+        //imgQR.setImageBitmap(qrCode);
 
 
 

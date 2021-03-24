@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
+import android.service.autofill.AutofillService;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.example.trialio.R;
@@ -25,8 +27,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 import java.lang.ref.Reference;
-import java.sql.Date;
 import java.sql.Ref;
+import java.util.Date;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
@@ -48,7 +50,7 @@ Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
 public class QRCodeGenerator extends AppCompatActivity {
     private static final String TAG = "qrgenerator";
     private static ExperimentManager experimentManager;
-    private static User user;
+    private static User current_user;
     protected Experiment fetched_experiment;
     public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
         String infoResult = "";
@@ -87,13 +89,27 @@ public class QRCodeGenerator extends AppCompatActivity {
 
     public static void readQR(String[] input){
         if (input[0].equals("BINOMIAL")){
-            Date date = (Date) new java.util.Date();
+            Date date = new Date();
             Location location = new Location();
+            ExperimentManager experimentManager = new ExperimentManager();
+            UserManager userManager = new UserManager();
+
+            // if the current user is the owner, set the experiment settings button as visible.
+            userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                @Override
+                public void onUserFetch(User user) {
+                    current_user.setId(user.getId());
+                }
+            });
+
+
+
+
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
                     TrialManager trialManager = new_experiment.getTrialManager();
-                    BinomialTrial binomialTrial = new BinomialTrial(user.getId(), location, date, Boolean.parseBoolean(input[1]));
+                    BinomialTrial binomialTrial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
                     trialManager.addTrial(binomialTrial);
                 }
             });

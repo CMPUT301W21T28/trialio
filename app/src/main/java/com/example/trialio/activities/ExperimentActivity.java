@@ -315,7 +315,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
                 }
                 else if (ExperimentTypeUtility.isBinomial(trialType)) {
-                    QRFragment newTrial = new QRFragment();
+                    BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
