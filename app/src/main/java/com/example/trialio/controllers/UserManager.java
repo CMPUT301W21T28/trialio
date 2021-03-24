@@ -247,6 +247,7 @@ public class UserManager {
      *
      * @param userId   the id of the User to fetch
      * @param listener the callback with the function to call
+     * @deprecated
      */
     private void setUserFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).get()
@@ -273,6 +274,49 @@ public class UserManager {
     }
 
     /**
+     * Add a listener to a User document that will listen for updates to the User data. This method
+     * is used to fetch User data from the database and continue to fetch real-time data for a
+     * User.
+     *
+     * <pre>
+     * UserManager manager = new UserManager();
+     * manager.addUserUpdateListener(userId, new UserManager.OnUserUpdateListener() {
+     *     &#64;Override
+     *     public void onUserUpdate(User user) {
+     *         // Do something with the User every time the database is updated
+     *     }
+     * });
+     * </pre>
+     *
+     * @param username the username of the User to be fetched
+     * @param listener the listener to be called when the User document is fetched
+     */
+    public void addUserUpdateListener(String username, OnUserFetchListener listener) {
+        setUpdateListenerByUsername(username, listener);
+    }
+
+    /**
+     * Sets a listener to a the user identified by username. This function sets up a listener so that
+     * listener.onUserUpdate() is called whenever the User document is updated in the database. If
+     * no User matched the given username, no listener is set.
+     *
+     * @param username the username of the User to attach the listener to
+     * @param listener the listener with the callback function to be called when the User is updated
+     */
+    private void setUpdateListenerByUsername(String username, OnUserFetchListener listener) {
+        userCollection.document(username).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value != null && value.exists()) {
+                    User user = extractUser(value);
+                    listener.onUserFetch(user);
+                    Log.d(TAG, "User update detected, fetched from database: " + value.getData());
+                }
+            }
+        });
+    }
+
+    /**
      * Add a listener to the current User document that will listen for updates to the User data.
      * This method is used to fetch User data from the database and continue to fetch real-time
      * data for the current User.
@@ -288,6 +332,7 @@ public class UserManager {
      * </pre>
      *
      * @param listener the listener to be called when the User document is fetched
+     * @deprecated
      */
     public void addCurrentUserUpdateListener(OnUserFetchListener listener) {
         if (fid == null) {
@@ -296,11 +341,8 @@ public class UserManager {
                 @Override
                 public void onComplete(@NonNull Task<String> task) {
                     // Once FID has been received, fetch from database with userId=FID
-                    String userId = task.getResult();
-                    // String userId = "3333"
-                    fid = userId;
-                    assert userId != null;
-                    setOnUpdateFetchListener(userId, listener);
+                    fid = task.getResult();
+                    setOnUpdateFetchListener(fid, listener);
                 }
             });
         } else {
@@ -309,25 +351,28 @@ public class UserManager {
     }
 
     /**
-     * Add a listener to a User document that will listen for updates to the User data. This method
-     * is used to fetch User data from the database and continue to fetch real-time data for a
-     * User.
+     * Sets a listener to a the user identified by userId. This function sets up a listener so that
+     * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
-     * <pre>
-     * UserManager manager = new UserManager();
-     * manager.addUserUpdateListener(userId, new UserManager.OnUserUpdateListener() {
-     *     &#64;Override
-     *     public void onUserUpdate(User user) {
-     *         // Do something with the User every time the database is updated
-     *     }
-     * });
-     * </pre>
-     *
-     * @param userId   the id of the User to be fetched
-     * @param listener the listener to be called when the User document is fetched
+     * @param userId   the id of the User to attach the listener to
+     * @param listener the listener with the callback function to be called when the User is updated
+     * @deprecated
      */
-    public void addUserUpdateListener(String userId, OnUserFetchListener listener) {
-        setOnUpdateFetchListener(userId, listener);
+    private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
+        userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                assert value != null;
+                User currentUser;
+                if (value.exists()) {
+                    Log.d(TAG, "User fetched from database: " + value.getData());
+                    currentUser = extractUser(value);
+                } else {
+                    currentUser = createNewUser(userId);
+                }
+                listener.onUserFetch(currentUser);
+            }
+        });
     }
 
     /**
@@ -399,30 +444,6 @@ public class UserManager {
                 });
     }
 
-
-    /**
-     * Sets a listener to a the user identified by userId. This function sets up a listener so that
-     * listener.onUserUpdate() is called whenever the User document is updated in the database.
-     *
-     * @param userId   the id of the User to attach the listener to
-     * @param listener the listener with the callback function to be called when the User is updated
-     */
-    private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
-        userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                assert value != null;
-                User currentUser;
-                if (value.exists()) {
-                    Log.d(TAG, "User fetched from database: " + value.getData());
-                    currentUser = extractUser(value);
-                } else {
-                    currentUser = createNewUser(userId);
-                }
-                listener.onUserFetch(currentUser);
-            }
-        });
-    }
 
     /**
      * Sets a listener to a the User collection. This function sets up a listener so that

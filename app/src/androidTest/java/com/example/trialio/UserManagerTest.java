@@ -19,6 +19,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.MissingFormatArgumentException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -108,7 +110,7 @@ public class UserManagerTest {
         lock.await();
     }
 
-    /***
+    /**
      * Test the fetching of a User from the datbase
      */
     @Test
@@ -116,7 +118,6 @@ public class UserManagerTest {
         CountDownLatch lock = new CountDownLatch(1);
         String deviceId = "100003";
         String username = "M0t37Y1DJPSJZNHbizUM";
-        UserManager.setFid(deviceId);
         userManager.getUser(username, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
@@ -127,5 +128,70 @@ public class UserManagerTest {
         });
 
         lock.await();
+    }
+
+
+    User retrievedData;
+
+    /**
+     * Test the listening of User updates to the database
+     */
+    @Test
+    public void testAddUserUpdateListener() throws InterruptedException {
+        String deviceId = "100002";
+        String username = "CTUVUuG4P6kkheVUyFtz";
+
+        CountDownLatch lock = new CountDownLatch(1);
+        CountDownLatch lock1 = new CountDownLatch(1);
+        CountDownLatch lock2 = new CountDownLatch(1);
+
+        String firstPhone = "780-111-1111";
+        String firstEmail = "email1@email.com";
+        String secondPhone = "780-222-2222";
+        String secondEmail = "email2@email.com";
+
+        Map<String, Object> initialData = new HashMap<String, Object>();
+        initialData.put("email", firstEmail);
+        initialData.put("phone", firstPhone);
+        FirebaseFirestore.getInstance().collection(testCollection)
+                .document(username)
+                .update(initialData)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        lock.countDown();
+                    }
+                });
+
+        lock.await(2000, TimeUnit.MILLISECONDS);
+
+        userManager.addUserUpdateListener(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                String email = user.getContactInfo().getEmail();
+                if (email.equals(firstEmail)) {
+                    retrievedData = user;
+                    lock1.countDown();
+                } else if (email.equals(secondEmail)) {
+                    retrievedData = user;
+                    lock2.countDown();
+                } else {
+                    fail();
+                }
+            }
+        });
+
+        lock1.await(2000, TimeUnit.MILLISECONDS);
+        assertEquals(firstPhone, retrievedData.getContactInfo().getPhone());
+
+        Map<String, Object> updateData = new HashMap<String, Object>();
+        updateData.put("email", secondEmail);
+        updateData.put("phone", secondPhone);
+        FirebaseFirestore.getInstance().collection(testCollection)
+                .document(username)
+                .update(updateData);
+
+        lock2.await();
+        assertEquals(secondPhone, retrievedData.getContactInfo().getPhone());
     }
 }
