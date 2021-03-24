@@ -14,7 +14,6 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
@@ -27,17 +26,19 @@ import java.util.ArrayList;
  * This is an ArrayAdapter which contains a trial list. Used in TrialActivity.
  */
 public class ArrayAdapterTrials extends ArrayAdapter {
+    private final String TAG = "ArrayAdapterTrials";
+
     private Context context;
     private ArrayList<Trial> trialList;
-    private Experiment experiment;
     private UserManager userManager;
+    private String experimentType;
 
-    public ArrayAdapterTrials(Context context, Experiment experiment) {
-        super(context, 0, experiment.getTrialManager().getVisibleTrials());
-
-        this.trialList = experiment.getTrialManager().getTrials();
+    public ArrayAdapterTrials(Context context, ArrayList<Trial> new_trialList, String experimentType) {
+        super(context, 0, new_trialList);
         this.context = context;
-        this.experiment = experiment;
+
+        this.trialList = new_trialList;
+        this.experimentType = experimentType;
 
         this.userManager = new UserManager();
     }
@@ -69,14 +70,16 @@ public class ArrayAdapterTrials extends ArrayAdapter {
 
         textDate.setText("Date: "+trial.getDate().toString());
 
-        if (ExperimentTypeUtility.isBinomial(experiment.getTrialManager().getType())) {
+        if (ExperimentTypeUtility.isBinomial(experimentType)) {
             textResult.setText("Result: " + ((BinomialTrial) trial).getIsSuccess());
-        } else if (ExperimentTypeUtility.isMeasurement(experiment.getTrialManager().getType())) {
+        } else if (ExperimentTypeUtility.isMeasurement(experimentType)) {
             textResult.setText("Result: " + ((MeasurementTrial) trial).getMeasurement() + " " + ((MeasurementTrial) trial).getUnit());
-        } else if (ExperimentTypeUtility.isCount(experiment.getTrialManager().getType())) {
+        } else if (ExperimentTypeUtility.isCount(experimentType)) {
             textResult.setText("Result: " + ((CountTrial) trial).getCount());
-        } else if (ExperimentTypeUtility.isNonNegative(experiment.getTrialManager().getType())){
+        } else if (ExperimentTypeUtility.isNonNegative(experimentType)){
             textResult.setText("Result: " + ((NonNegativeTrial) trial).getNonNegCount());
+        } else {
+            assert(false);
         }
 
         return view;

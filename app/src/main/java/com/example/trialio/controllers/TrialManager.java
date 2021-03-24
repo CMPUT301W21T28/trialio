@@ -1,8 +1,7 @@
 package com.example.trialio.controllers;
 
-import android.widget.ArrayAdapter;
+import android.util.Log;
 
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 import java.io.Serializable;
@@ -13,9 +12,9 @@ import java.util.ArrayList;
  * This class manages trials and handles the persistence of trial data.
  */
 public class TrialManager implements Serializable {
+    private final String TAG = "TrialManager";
     private String type;
     private ArrayList<Trial> trials;
-    private ArrayAdapter<Experiment> trialAdapter;
     private ArrayList<String> ignoredUserIds;
     private int minNumOfTrials;
     private boolean isOpen;
@@ -119,14 +118,6 @@ public class TrialManager implements Serializable {
     }
 
     /**
-     * This sets the adapter of the trial manager.
-     * @param adapter The candidate adapter to set as the adapter of the trial manager.
-     */
-    public void setAdapter(ArrayAdapter adapter) {
-        trialAdapter = adapter;
-    }
-
-    /**
      * This finds all of the trials which are not ignored.
      * @return Returns the list of trials completed by users who are not in the ignored list
      */
@@ -137,6 +128,7 @@ public class TrialManager implements Serializable {
                 visible.add(trial);
             }
         }
+        Log.d(TAG, "Visible Trials: "+visible.toString());
         return visible;
     }
 }
