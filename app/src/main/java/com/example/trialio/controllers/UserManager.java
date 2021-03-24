@@ -22,6 +22,7 @@ import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,6 +114,11 @@ public class UserManager {
         user.setUsername(username);
         user.setId(deviceId);
 
+        /* Chaining tasks
+         * Google Play Services Developer Docs, "Chaining", data, Apache 2.0,
+         * https://developers.google.com/android/guides/tasks#chaining
+         */
+
         // Check that device id does not already exist in the system
         Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(DEVICE_ID_FIELD, user.getId()).get();
         queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
@@ -144,8 +150,8 @@ public class UserManager {
     }
 
     /**
-     * Gets the current User data from the database. If the current User does not exist in the
-     * system already, a new User document is created.
+     * Gets the User for the current device from the database. If the current User does not exist
+     * in the system already, a new User document is created.
      *
      * @param listener the callback to be called when the User object is retrieved
      */
@@ -156,13 +162,12 @@ public class UserManager {
                 @Override
                 public void onComplete(@NonNull Task<String> task) {
                     // Once FID has been received, fetch from database with userId=FID
-                    String userId = task.getResult();
-                    fid = userId;
-                    setUserFetchListener(userId, listener);
+                    fid = task.getResult();
+                    fetchUserByDevice(fid, listener);
                 }
             });
         } else {
-            setUserFetchListener(fid, listener);
+            fetchUserByDevice(fid, listener);
         }
     }
 
@@ -170,11 +175,71 @@ public class UserManager {
      * Gets a User from the database. If the current User does not exist in the
      * system already, a new User document is created.
      *
-     * @param username  the username of the User to retrieve
-     * @param listener  the callback to be called when the User is fetched
+     * @param username the username of the User to retrieve
+     * @param listener the callback to be called when the User is fetched
      */
     public void getUser(String username, OnUserFetchListener listener) {
-        setUserFetchListener(username, listener);
+        fetchUserByUsername(username, listener);
+    }
+
+    /**
+     * Gets a User from the database and calls the specified callback function with the User given
+     * as a parameter. If a user does not exist for the given device id, a new user is created.
+     *
+     * @param deviceId the fid of the User to fetch
+     * @param listener the callback listener to be called when the User is fetched
+     */
+    private void fetchUserByDevice(String deviceId, OnUserFetchListener listener) {
+        userCollection.whereEqualTo(DEVICE_ID_FIELD, deviceId).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        ArrayList<DocumentSnapshot> docs = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
+                        if (docs.size() == 0) {
+                            // User does not exist, create a new user
+                            User newUser = createNewUser(deviceId);
+                            listener.onUserFetch(newUser);
+                        } else if (docs.size() == 1) {
+                            // Successfully fetched the User
+                            User user = extractUser(docs.get(0));
+                            listener.onUserFetch(user);
+                        } else {
+                            // Exception, should not be more than 1 user with same id
+                            Log.e(TAG, "Found more than one user for device " + deviceId);
+                            User user = extractUser(docs.get(0));
+                            listener.onUserFetch(user);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Gets a User from the database and calls the specified callback function with the User given
+     * as a parameter. If the User is not found, null is passed into the callback function.
+     *
+     * @param username the username of the User to fetch
+     * @param listener the callback listener to be called when the User is fetched
+     */
+    private void fetchUserByUsername(String username, OnUserFetchListener listener) {
+        userCollection.document(username).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if (doc.exists()) {
+                                User user = extractUser(doc);
+                                listener.onUserFetch(user);
+                                Log.d(TAG, "User " + username + " fetched successfully.");
+                            } else {
+                                Log.d(TAG, "No user found with username " + username);
+                                listener.onUserFetch(null);
+                            }
+                        } else {
+                            Log.d(TAG, "User fetch failed with " + task.getException());
+                        }
+                    }
+                });
     }
 
     /**
@@ -446,5 +511,13 @@ public class UserManager {
         userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
         userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
         return userData;
+    }
+
+    public static String getFid() {
+        return fid;
+    }
+
+    public static void setFid(String fid) {
+        UserManager.fid = fid;
     }
 }

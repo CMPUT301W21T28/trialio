@@ -19,6 +19,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -53,56 +55,72 @@ public class UserManagerTest {
      */
     @Test
     public void testCreateNewUser() throws Exception {
-        String deviceId = "100000";
+        String deviceId = "100003";
         User user = userManager.createNewUser(deviceId);
+        CountDownLatch lock = new CountDownLatch(1);
 
-//        FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("device_id", deviceId).get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            // Check a single User was created
-//                            QuerySnapshot query = task.getResult();
-//                            assertEquals(1, query.size());
-//
-//                            // Check User document has expected data
-//                            DocumentSnapshot doc = query.getDocuments().get(0);
-//                            assertEquals(deviceId, doc.get("device_id"));
-//                        } else {
-//                            // Error occurred connecting to firebase
-//                            fail();
-//                        }
-//                    }
-//                });
+        FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("device_id", deviceId).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Check a single User was created
+                            QuerySnapshot query = task.getResult();
+                            assertEquals(1, query.size());
+                            fail();
+
+                            // Check User document has expected data
+                            DocumentSnapshot doc = query.getDocuments().get(0);
+                            assertEquals(deviceId, doc.get("device_id"));
+                        } else {
+                            // Error occurred connecting to firebase
+                            fail();
+                        }
+                    }
+                });
+
+        lock.await(2000, TimeUnit.MILLISECONDS);
     }
 
     /***
      * Test the fetching of a User from the datbase
      */
     @Test
-    public void testGetUser() {
-        String userId = "100001";
-        String username = "username";
-        String phone = "780-123-4567";
-        String email = "duderio@email";
+    public void testGetCurrentUser() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(1);
+        String deviceId = "100000";
+        String username = "NkwmOGk7T76Z6f5MiEiO";
+        UserManager.setFid(deviceId);
+        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                assertEquals(deviceId, user.getId());
+                assertEquals(username, user.getUsername());
+                lock.countDown();
+            }
+        });
 
-        HashMap<String, Object> data = new HashMap<String, Object>();
-        data.put("id", userId);
-        data.put("username", username);
+        lock.await();
+    }
 
-        FirebaseFirestore.getInstance().collection(testCollection).document(userId)
-                .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        userManager.getUser(userId, new UserManager.OnUserFetchListener() {
-                            @Override
-                            public void onUserFetch(User user) {
-                                assertEquals(userId, user.getId());
-                                assertEquals(username, user.getUsername());
-                            }
-                        });
-                    }
-                });
+    /***
+     * Test the fetching of a User from the datbase
+     */
+    @Test
+    public void testGetUser() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(1);
+        String deviceId = "100003";
+        String username = "M0t37Y1DJPSJZNHbizUM";
+        UserManager.setFid(deviceId);
+        userManager.getUser(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                assertEquals(deviceId, user.getId());
+                assertEquals(username, user.getUsername());
+                lock.countDown();
+            }
+        });
+
+        lock.await();
     }
 }
