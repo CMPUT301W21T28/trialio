@@ -21,7 +21,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/txtResultQR">
+            android:id="@+id/txtResultQR"
+            android:text="..."
+            android:textSize="24sp"
+            android:gravity="center"
+            android:textColor="@color/white">
 
         </TextView>
 

@@ -22,7 +22,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
     private ZXingScannerView scannerView;
     private TextView txtResult;
-    private String result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,24 +33,24 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
-                .withListener((new PermissionListener() {
+                .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
                         scannerView.setResultHandler(ScanningActivity.this);
                         scannerView.startCamera();
-
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(ScanningActivity.this, "Must accept permission to scan", Toast.LENGTH_SHORT);
+                        Toast.makeText(ScanningActivity.this, "Need to accept permission", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
 
                     }
-                }));
+                })
+                .check();
     }
 
     @Override
