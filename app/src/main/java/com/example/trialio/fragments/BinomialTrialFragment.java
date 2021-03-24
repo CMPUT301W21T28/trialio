@@ -22,7 +22,6 @@ import com.example.trialio.models.User;
 
 import java.util.Date;
 
-import static android.location.LocationManager.NETWORK_PROVIDER;
 /**
  * This fragment collects data from a user to upload a binomial type trial
  * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
@@ -57,7 +56,7 @@ public class BinomialTrialFragment extends DialogFragment {
                     @Override
                     public void onUserFetch(User user) {
                         //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                        listener.onOkPressed(new BinomialTrial(user.getId(), location, date, isSuccess));
+                        listener.onOkPressed(new BinomialTrial(user.getUsername(), location, date, isSuccess));
                     }
                 });
             }

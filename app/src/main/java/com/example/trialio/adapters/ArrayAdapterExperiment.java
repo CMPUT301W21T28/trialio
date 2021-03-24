@@ -56,14 +56,15 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
+        textOwner.setText(experiment.getSettings().getOwnerID());
 
-        // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                textOwner.setText(user.getUsername());
-            }
-        });
+//        // get the owner's username
+//        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+//            @Override
+//            public void onUserFetch(User user) {
+//                textOwner.setText(user.getUsername());
+//            }
+//        });
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
             locNeed.setVisibility(View.GONE);

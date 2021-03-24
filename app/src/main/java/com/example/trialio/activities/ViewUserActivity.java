@@ -1,22 +1,14 @@
 package com.example.trialio.activities;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.trialio.R;
-import com.example.trialio.fragments.BinomialTrialFragment;
-import com.example.trialio.fragments.CountTrialFragment;
-import com.example.trialio.models.BinomialTrial;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.EditProfileFragment;
@@ -33,6 +25,7 @@ import java.io.Serializable;
 
 public class ViewUserActivity extends AppCompatActivity {
     private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +58,25 @@ public class ViewUserActivity extends AppCompatActivity {
         TextView UserEMail = findViewById(R.id.emailText);
 
         UserManager manager = new UserManager();
-        manager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
+//        manager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
+//            @Override
+//            public void onUserFetch(User user) {
+//                userName.setText(user.getUsername());
+//                userPhone.setText(user.getContactInfo().getPhone());
+//                UserEMail.setText(user.getContactInfo().getEmail());
+//            }
+//        });
+        manager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                userName.setText(user.getUsername());
-                userPhone.setText(user.getContactInfo().getPhone());
-                UserEMail.setText(user.getContactInfo().getEmail());
+                manager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        userName.setText(user.getDeviceId());
+                        userPhone.setText(user.getContactInfo().getPhone());
+                        UserEMail.setText(user.getContactInfo().getEmail());
+                    }
+                });
             }
         });
 
@@ -84,6 +90,6 @@ public class ViewUserActivity extends AppCompatActivity {
                 editProfileFragment.setArguments(args);
                 editProfileFragment.show(getSupportFragmentManager(), "editProfile");
             }
-            });
+        });
     }
 }

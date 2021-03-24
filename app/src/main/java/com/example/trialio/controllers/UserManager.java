@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.models.User;
-import com.example.trialio.models.UserContactInfo;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,7 +21,6 @@ import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -112,7 +110,7 @@ public class UserManager {
         User user = new User();
         String username = userCollection.document().getId();
         user.setUsername(username);
-        user.setId(deviceId);
+        user.setDeviceId(deviceId);
 
         /* Chaining tasks
          * Google Play Services Developer Docs, "Chaining", data, Apache 2.0,
@@ -120,7 +118,7 @@ public class UserManager {
          */
 
         // Check that device id does not already exist in the system
-        Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(DEVICE_ID_FIELD, user.getId()).get();
+        Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(DEVICE_ID_FIELD, user.getDeviceId()).get();
         queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
             @Override
             public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
@@ -479,7 +477,7 @@ public class UserManager {
         assert data != null;
 
         String username = document.getString(USERNAME_FIELD);
-        String id = document.getString(DEVICE_ID_FIELD);
+        String deviceId = document.getString(DEVICE_ID_FIELD);
         String email = document.getString(EMAIL_FIELD);
         String phone = document.getString(PHONE_FIELD);
         /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
@@ -488,8 +486,8 @@ public class UserManager {
         ArrayList<String> subs = (ArrayList<String>) document.get(SUBBED_EXPERIMENTS_FIELD);
         /* End of cited code */
 
-        user.setId(id);
         user.setUsername(username);
+        user.setDeviceId(deviceId);
         user.getContactInfo().setEmail(email);
         user.getContactInfo().setPhone(phone);
         user.setSubscribedExperiments(subs);
@@ -506,7 +504,7 @@ public class UserManager {
     private Map<String, Object> compressUser(User user) {
         Map<String, Object> userData = new HashMap<>();
         userData.put(USERNAME_FIELD, user.getUsername());
-        userData.put(DEVICE_ID_FIELD, user.getId());
+        userData.put(DEVICE_ID_FIELD, user.getDeviceId());
         userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
         userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
         userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());

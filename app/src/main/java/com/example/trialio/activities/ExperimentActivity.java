@@ -218,14 +218,15 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+        textOwner.setText(experiment.getSettings().getOwnerID());
 
-        // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + user.getUsername());
-            }
-        });
+//        // get the owner's username
+//        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+//            @Override
+//            public void onUserFetch(User user) {
+//                textOwner.setText("Owner: " + user.getUsername());
+//            }
+//        });
 
         // if this is a geo experiment, give a warning
         if (experiment.getSettings().getGeoLocationRequired()) {
@@ -457,9 +458,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                Log.d(TAG, "currentUser: " + user.getId());
+                Log.d(TAG, "currentUser: " + user.getUsername());
                 Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
-                if (user.getId().equals(experiment.getSettings().getOwnerID())) {
+                if (user.getUsername().equals(experiment.getSettings().getOwnerID())) {
                     settingsButton.setVisibility(View.VISIBLE);
                 }
             }

@@ -2,25 +2,20 @@ package com.example.trialio;
 
 import androidx.annotation.NonNull;
 
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.MissingFormatArgumentException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -101,8 +96,8 @@ public class UserManagerTest {
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                assertEquals(deviceId, user.getId());
-                assertEquals(username, user.getUsername());
+                assertEquals(deviceId, user.getUsername());
+                assertEquals(username, user.getDeviceId());
                 lock.countDown();
             }
         });
@@ -121,8 +116,8 @@ public class UserManagerTest {
         userManager.getUser(username, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                assertEquals(deviceId, user.getId());
-                assertEquals(username, user.getUsername());
+                assertEquals(deviceId, user.getUsername());
+                assertEquals(username, user.getDeviceId());
                 lock.countDown();
             }
         });

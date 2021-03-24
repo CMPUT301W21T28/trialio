@@ -81,14 +81,15 @@ public class TrialActivity extends AppCompatActivity {
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
 
         TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
+        textOwner.setText("Owner: " + experiment.getSettings().getOwnerID());
 
-        // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + user.getUsername());
-            }
-        });
+//        // get the owner's username
+//        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+//            @Override
+//            public void onUserFetch(User user) {
+//                textOwner.setText("Owner: " + user.getUsername());
+//            }
+//        });
 
         TextView textType = findViewById(R.id.txtExperimentTypeTrial);
         textType.setText("Type: " + experiment.getTrialManager().getType());
