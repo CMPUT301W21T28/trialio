@@ -8,28 +8,8 @@
 
     <me.dm7.barcodescanner.zxing.ZXingScannerView
         android:id="@+id/scanner"
-        android:layout_above="@+id/layout_result"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
-    <LinearLayout
-       android:id="@+id/layout_result"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/txtResultQR"
-            android:text="..."
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textColor="@color/white">
-
-        </TextView>
-
-    </LinearLayout>
 
 
 </RelativeLayout>

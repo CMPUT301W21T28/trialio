@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.QRCodeGenerator;
+import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Trial;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -28,7 +30,6 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private Context context;
     private ZXingScannerView scannerView;
-    private TextView txtResult;
 
     /**
      * onCreate first ask for user permission, then proceeds to scan using camera
@@ -40,7 +41,6 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         setContentView(R.layout.activity_scanning);
 
         scannerView = (ZXingScannerView)findViewById(R.id.scanner);
-        txtResult = (TextView)findViewById(R.id.txtResultQR);
 
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
@@ -77,12 +77,14 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     public void handleResult(Result rawResult){
         processResult(rawResult.getText());
-        Intent intent = new Intent(context, ExperimentActivity.class);
-        onDestroy();
-        startActivity(intent);
+        //Intent intent = new Intent(context, ExperimentActivity.class);
+        //onDestroy();
+        //startActivity(intent);
     }
 
     private void processResult(String text){
-
+        String processed = text;
+        String [] items = processed.split("\n");
+        QRCodeGenerator.readQR(items);
     }
 }

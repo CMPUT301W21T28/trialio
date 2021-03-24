@@ -6,14 +6,18 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
@@ -21,6 +25,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 import java.lang.ref.Reference;
+import java.sql.Date;
 import java.sql.Ref;
 
 import static android.graphics.Color.BLACK;
@@ -41,6 +46,10 @@ Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
  * QRCodeGenerator generates QR code for trials when called
  */
 public class QRCodeGenerator extends AppCompatActivity {
+    private static final String TAG = "qrgenerator";
+    private static ExperimentManager experimentManager;
+    private static User user;
+    protected Experiment fetched_experiment;
     public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
         String infoResult = "";
 
@@ -76,9 +85,25 @@ public class QRCodeGenerator extends AppCompatActivity {
         return myBitmap;
     }
 
-    public static void readQR(String input){
-        String selectedTrial = input;
-        Trial newtrial = new Trial();
+    public static void readQR(String[] input){
+        if (input[0].equals("BINOMIAL")){
+            Date date = (Date) new java.util.Date();
+            Location location = new Location();
+            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment new_experiment) {
+                    TrialManager trialManager = new_experiment.getTrialManager();
+                    BinomialTrial binomialTrial = new BinomialTrial(user.getId(), location, date, Boolean.parseBoolean(input[1]));
+                    trialManager.addTrial(binomialTrial);
+                }
+            });
+        } else if (input[0].equals("COUNT")){
+            Trial trial = new Trial();
+        } else if (input[0].equals("NONNEGATIVE")){
+            Trial trial = new Trial();
+        } else if (input[0].equals("MEASUREMENT")){
+            Trial trial = new Trial();
+        }
 
     }
 
