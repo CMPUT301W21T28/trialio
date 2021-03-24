@@ -1,5 +1,7 @@
 package com.example.trialio.models;
 
+import android.media.Image;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +12,7 @@ public class Trial implements Serializable {
     protected String experimenterID;
     protected Location location;
     protected Date date;
+    protected Image qrCode;
 
     /**
      * Constructor for a Trial
@@ -81,5 +84,21 @@ public class Trial implements Serializable {
      */
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    /**
+     * Gets the QR code for the trial
+     * @return
+     */
+    public Image getQrCode() {
+        return qrCode;
+    }
+
+    /**
+     * sets the qr code for the trial
+     * @param qrCode the qr code of a trial to be set
+     */
+    public void setQrCode(Image qrCode) {
+        this.qrCode = qrCode;
     }
 }
