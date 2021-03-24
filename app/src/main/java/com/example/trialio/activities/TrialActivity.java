@@ -71,26 +71,8 @@ public class TrialActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // get the experiment, set all the fields and the trial list
-        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-            @Override
-            public void onExperimentFetch(Experiment new_experiment) {
-
-                // update local experiment
-                experiment = new_experiment;
-
-                // set the fields with the data from the experiment
-                setFields();
-
-                // set listeners
-                setOnClickListeners();
-
-                // update the trialList
-                trialList.clear();
-                trialList.addAll(experiment.getTrialManager().getVisibleTrials());
-                trialAdapter.notifyDataSetChanged();
-            }
-        });
+        // update the experiment from firebase
+        updateActivityData(); // TODO: think about changing this to be an update listener
     }
 
     /**
@@ -100,14 +82,24 @@ public class TrialActivity extends AppCompatActivity {
         trialListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // get the ID of the clicked user
+                String clickedUserID = trialList.get(i).getExperimenterID();
+
                 // check if the current user is the owner
-                userManager.getUser(trialList.get(i).getExperimenterID(), new UserManager.OnUserFetchListener() {
+                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
-                    public void onUserFetch(User user) {
+                    public void onUserFetch(User currentUser) {
+
+                        // by default use the experimenter menu
                         int popupViewID = R.layout.menu_trials_experimenter;
-                        if (user.getId().equals(experiment.getSettings().getOwnerID())) {
+
+                        // if the current user is the owner of the experiment, use the owner menu
+                        if (currentUser.getId().equals(experiment.getSettings().getOwnerID())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
+
+                        // create the popup menu
                         PopupMenu popup = new PopupMenu(context, view);
                         popup.inflate(popupViewID);
 
@@ -117,12 +109,12 @@ public class TrialActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 switch (menuItem.getItemId()) {
                                     case R.id.item_ignore_user:
-                                        Log.d(TAG, "Ignore user: " + user.getId());
-                                        menuIgnoreUser(user);
+                                        Log.d(TAG, "Ignore user: " + clickedUserID);
+                                        menuIgnoreUserID(clickedUserID);
                                         break;
                                     case R.id.item_view_profile:
-                                        Log.d(TAG, "View profile: " + user.getId());
-                                        menuViewProfile(user);
+                                        Log.d(TAG, "View profile: " + clickedUserID);
+                                        menuViewProfile(clickedUserID);
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -144,6 +136,7 @@ public class TrialActivity extends AppCompatActivity {
      * This sets the fields for the TrialActivity using the experiment data
      */
     public void setFields() {
+
         // get the fields
         TextView textDescription = findViewById(R.id.txtExperimentDescriptionTrial);
         TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
@@ -165,23 +158,71 @@ public class TrialActivity extends AppCompatActivity {
     /**
      * This switches to a ViewUserActivity with the given user as the argument.
      */
-    public void menuViewProfile(User user) {
-        Intent intent = new Intent(context, ViewUserActivity.class);
+    public void menuViewProfile(String userID) {
+        userManager.getUser(userID, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                Intent intent = new Intent(context, ViewUserActivity.class);
 
-        // pass in experiment as an argument
-        Bundle args = new Bundle();
-        args.putSerializable("user", user);
-        intent.putExtras(args);
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("user", user);
+                intent.putExtras(args);
 
-        // start an ExperimentActivity
-        startActivity(intent);
+                // start an ExperimentActivity
+                startActivity(intent);
+            }
+        });
     }
 
     /**
-     * This adds a user to the ignored list for the experiment.
-     * @param user User whose id will be added to the ignored list for the experiment.
+     * This adds a userID to the ignored list for the experiment.
+     * @param userID String of the user ID to add to the ignored list for the experiment.
      */
-    public void menuIgnoreUser(User user) {
+    public void menuIgnoreUserID(String userID) {
 
+        // get the experiment from firebase
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment newExperiment) {
+
+                // update the experiment
+                experiment = newExperiment;
+
+                // add the userID to the list of ignored userIDs
+                experiment.getTrialManager().addIgnoredUser(userID);
+
+                // update the experiment
+                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                updateActivityData();
+            }
+        });
+    }
+
+    /**
+     * This gets the update experiment from firebase, and updates the views of the activity.
+     */
+    public void updateActivityData() {
+
+        // get the experiment, set all the fields and the trial list
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+
+                // update local experiment
+                experiment = new_experiment;
+
+                // set the fields with the data from the experiment
+                setFields();
+
+                // set listeners
+                setOnClickListeners();
+
+                // update the trialList
+                trialList.clear();
+                trialList.addAll(experiment.getTrialManager().getVisibleTrials());
+                trialAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

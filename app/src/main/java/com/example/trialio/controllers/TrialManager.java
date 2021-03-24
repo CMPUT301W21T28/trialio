@@ -119,7 +119,7 @@ public class TrialManager implements Serializable {
 
     /**
      * This finds all of the trials which are not ignored.
-     * @return Returns the list of trials completed by users who are not in the ignored list
+     * @return Returns the list of trials completed by users who are not in the ignored list.
      */
     public ArrayList<Trial> getVisibleTrials() {
         ArrayList<Trial> visible = new ArrayList<Trial>();
@@ -130,5 +130,21 @@ public class TrialManager implements Serializable {
         }
         Log.d(TAG, "Visible Trials: "+visible.toString());
         return visible;
+    }
+
+    /**
+     * This adds a userID to the list of ignored userIDs.
+     * @param userID The candidate userID to add to the list of ignored userIds.
+     */
+    public void addIgnoredUser(String userID) {
+        ignoredUserIds.add(userID);
+    }
+
+    /**
+     * This removes a userID from the list of ignored userIDs
+     * @param userID The candidate userID to remove from the list of ignored userIDs.
+     */
+    public void removeIgnoredUsers(String userID) {
+        ignoredUserIds.remove(userID);
     }
 }

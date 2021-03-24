@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.example.trialio.fragments.EditProfileFragment;
  * This activity allows a user to view their own profile and edit it to make changes to their username and contract info
  */
 public class ViewUserActivity extends AppCompatActivity {
+    private final String TAG = "ViewUserActivity";
+
     private User user;
     private Button editUserProfile;
     private UserManager userManager;
@@ -63,7 +66,7 @@ public class ViewUserActivity extends AppCompatActivity {
         super.onStart();
 
         // use the userID to get the most recent user
-        userManager.getUser(user.getId(), new UserManager.OnUserFetchListener() {
+        userManager.addUserUpdateListener(user.getId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User newUser) {
 
