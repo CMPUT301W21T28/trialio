@@ -48,7 +48,12 @@ public class UserManagerTest {
         }
     }
 
-    // https://stackoverflow.com/a/1829949/15048024
+    /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
+     * Martin, https://stackoverflow.com/users/187492/martin, 2009-12-02,
+     * Evin1_, https://stackoverflow.com/users/2503185/evin1, 2017-04-05,
+     * "How to use JUnit to test asynchronous processes", date, CC BY-SA 3.0
+     * https://stackoverflow.com/a/1829949/15048024
+     */
 
     /**
      * Test the updating of User info in the database
