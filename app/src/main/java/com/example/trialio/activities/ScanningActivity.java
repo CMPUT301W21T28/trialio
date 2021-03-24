@@ -3,11 +3,14 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.QRCodeGenerator;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -18,11 +21,19 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
 
+/**
+ * this activity opens when user clicks the camera button in a experiment activity
+ */
+public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
+    private Context context;
     private ZXingScannerView scannerView;
     private TextView txtResult;
 
+    /**
+     * onCreate first ask for user permission, then proceeds to scan using camera
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,14 +65,24 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     }
 
     @Override
-    protected  void onStop() {
+    protected void onDestroy() {
+        super.onDestroy();
         scannerView.stopCamera();
-        super.onStop();
     }
 
+    /**
+     * fetch results from the qr code
+     * @param rawResult
+     */
     @Override
     public void handleResult(Result rawResult){
-        txtResult.setText(rawResult.getText());
+        processResult(rawResult.getText());
+        Intent intent = new Intent(context, ExperimentActivity.class);
+        onDestroy();
+        startActivity(intent);
+    }
+
+    private void processResult(String text){
 
     }
 }

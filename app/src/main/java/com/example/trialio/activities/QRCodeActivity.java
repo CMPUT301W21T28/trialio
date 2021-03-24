@@ -70,6 +70,7 @@ public class QRCodeActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("experiment",experiment);
                 bundle.putSerializable("trial",trialList.get(i));
+                bundle.putSerializable("position", i);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"QrCode");
 

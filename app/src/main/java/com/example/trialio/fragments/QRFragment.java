@@ -22,12 +22,14 @@ import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
+import java.lang.ref.Reference;
 import java.util.Date;
 
 public class QRFragment extends DialogFragment {
     private ImageView imgQR;
     private Experiment experiment;
     private Trial trial;
+    private Integer position;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -38,8 +40,9 @@ public class QRFragment extends DialogFragment {
         Bundle bundle = getArguments();
         trial = (Trial) bundle.getSerializable("trial");
         experiment = (Experiment) bundle.getSerializable("experiment");
+        position = (Integer) bundle.getSerializable("position");
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(String.valueOf(trial));
+        Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, position);
         imgQR.setImageBitmap(qrCode);
 
 

@@ -8,13 +8,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.trialio.R;
+import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
+import java.lang.ref.Reference;
+import java.sql.Ref;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
@@ -34,13 +41,21 @@ Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
  * QRCodeGenerator generates QR code for trials when called
  */
 public class QRCodeGenerator extends AppCompatActivity {
-    private final String TAG = "qr code generator";
+    public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
+        String infoResult = "";
 
-
-    public static Bitmap generateForTrial(String trial){
+        if (experiment.getTrialManager().getType().equals("BINOMIAL")){
+            infoResult = experiment.getTrialManager().getType() + "\n" +  ((BinomialTrial) trial).getIsSuccess() + "\n" +  experiment.getExperimentID();
+        } else if (experiment.getTrialManager().getType().equals("COUNT")){
+            infoResult = experiment.getTrialManager().getType() + "\n" +  ((CountTrial) trial).getCount() + "\n" +  experiment.getExperimentID();
+        } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
+            infoResult = experiment.getTrialManager().getType() + "\n" +  ((NonNegativeTrial) trial).getNonNegCount() + "\n" +  experiment.getExperimentID();
+        } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
+            infoResult = experiment.getTrialManager().getType() + "\n" +  ((MeasurementTrial) trial).getMeasurement() + "\n" +  experiment.getExperimentID();
+        }
         BitMatrix result = null;
         try{
-            result = new MultiFormatWriter().encode(trial, BarcodeFormat.QR_CODE, 300, 300, null);
+            result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
         } catch (WriterException writerException) {
             writerException.printStackTrace();
             return null;
@@ -59,8 +74,16 @@ public class QRCodeGenerator extends AppCompatActivity {
         Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         myBitmap.setPixels(pixels,0,width,0,0,width,height);
         return myBitmap;
+    }
+
+    public static void readQR(String input){
+        String selectedTrial = input;
+        Trial newtrial = new Trial();
 
     }
+
+
+
 
 
 }
