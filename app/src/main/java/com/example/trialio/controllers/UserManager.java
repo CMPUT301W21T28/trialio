@@ -220,7 +220,6 @@ public class UserManager {
         setListenerToCollection(listener);
     }
 
-
     /**
      * Updates a User in the system.
      *

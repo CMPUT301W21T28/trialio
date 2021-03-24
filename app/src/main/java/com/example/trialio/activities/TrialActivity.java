@@ -200,7 +200,7 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     /**
-     * This gets the update experiment from firebase, and updates the views of the activity.
+     * This gets the updated experiment from firebase, and updates the views of the activity.
      */
     public void updateActivityData() {
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +16,13 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
  */
-
 public class ExperimentSettingsActivity extends AppCompatActivity {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
@@ -29,12 +31,14 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     private UserManager userManager;
     private Button unpublishButton;
     private Switch isOpenSwitch;
+    private ListView ignoredListView;
+    private ArrayList<String> ignoredList;
+
 
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
      */
-
     @Override
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +58,30 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         // get views
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
+        ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
+
+        ignoredList = new ArrayList<String>();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        // upon starting, ensure that we have the most updated experiment
-        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-            @Override
-            public void onExperimentFetch(Experiment new_experiment) {
-                experiment = new_experiment;
-                setFields();
-                setOnClickListeners();
-            }
-        });
+        updateActivityData();
     }
 
+    /**
+     * This sets the fields of the ExperimentSettingsActivity.
+     */
     public void setFields() {
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
     }
 
+    /**
+     * This sets the on click listeners for the ExperimentSettingsActivity.
+     */
     public void setOnClickListeners() {
+
         // when the switch is switched onCheckedChanged is called
         isOpenSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -101,6 +107,21 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
 
                 // start an ExperimentActivity
                 startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * This gets the updated experiment from firebase, and updates the views of the activity.
+     */
+    public void updateActivityData() {
+        // upon starting, ensure that we have the most updated experiment
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;
+                setFields();
+                setOnClickListeners();
             }
         });
     }
