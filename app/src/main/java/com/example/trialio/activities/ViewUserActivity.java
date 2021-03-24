@@ -111,7 +111,7 @@ public class ViewUserActivity extends AppCompatActivity {
             @Override
             public void onUserFetch(User currentUser) {
                 // compare current user with arg user. If same id, make the edit button visible
-                if (user.getId() == currentUser.getId()) {
+                if (user.getId().equals(currentUser.getId())) {
                     editUserProfile.setVisibility(View.VISIBLE);
                 }
             }

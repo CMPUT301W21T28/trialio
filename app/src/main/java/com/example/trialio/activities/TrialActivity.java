@@ -117,20 +117,12 @@ public class TrialActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 switch (menuItem.getItemId()) {
                                     case R.id.item_ignore_user:
-
+                                        Log.d(TAG, "Ignore user: " + user.getId());
+                                        menuIgnoreUser(user);
                                         break;
                                     case R.id.item_view_profile:
-                                        Intent intent = new Intent(context, ViewUserActivity.class);
-
-                                        // pass in experiment as an argument
-                                        Bundle args = new Bundle();
-                                        args.putSerializable("user", user);
-                                        intent.putExtras(args);
-
                                         Log.d(TAG, "View profile: " + user.getId());
-
-                                        // start an ExperimentActivity
-                                        startActivity(intent);
+                                        menuViewProfile(user);
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -168,5 +160,28 @@ public class TrialActivity extends AppCompatActivity {
                 textOwner.setText("Owner: " + user.getUsername());
             }
         });
+    }
+
+    /**
+     * This switches to a ViewUserActivity with the given user as the argument.
+     */
+    public void menuViewProfile(User user) {
+        Intent intent = new Intent(context, ViewUserActivity.class);
+
+        // pass in experiment as an argument
+        Bundle args = new Bundle();
+        args.putSerializable("user", user);
+        intent.putExtras(args);
+
+        // start an ExperimentActivity
+        startActivity(intent);
+    }
+
+    /**
+     * This adds a user to the ignored list for the experiment.
+     * @param user User whose id will be added to the ignored list for the experiment.
+     */
+    public void menuIgnoreUser(User user) {
+
     }
 }
