@@ -74,7 +74,7 @@ public class ExperimentSettings implements Serializable {
      *
      * @return the owner of an experiment
      */
-    public String getOwnerID() {
+    public String getOwnerUsername() {
         return ownerID;
     }
 

@@ -218,14 +218,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-
-        // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + user.getUsername());
-            }
-        });
+        textOwner.setText(experiment.getSettings().getOwnerUsername());
 
         // if this is a geo experiment, give a warning
         if (experiment.getSettings().getGeoLocationRequired()) {
@@ -457,9 +450,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                Log.d(TAG, "currentUser: " + user.getId());
-                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
-                if (user.getId().equals(experiment.getSettings().getOwnerID())) {
+                Log.d(TAG, "currentUser: " + user.getUsername());
+                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerUsername());
+                if (user.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
                     settingsButton.setVisibility(View.VISIBLE);
                 }
             }

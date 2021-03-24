@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static final String COLLECTION_PATH = "experiments";
+    private static final String COLLECTION_PATH = "experiments-v2";
 
     private final CollectionReference experimentsCollection;
 
@@ -237,7 +237,7 @@ public class ExperimentManager {
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
         String field = "settings.ownerID";
-        String id = owner.getId();
+        String id = owner.getUsername();
         experimentsCollection.whereEqualTo(field, id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

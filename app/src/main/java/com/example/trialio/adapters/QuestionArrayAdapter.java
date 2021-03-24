@@ -11,10 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -45,7 +42,7 @@ public class QuestionArrayAdapter extends ArrayAdapter {
         TextView body = view.findViewById(R.id.questionBody);
 
         // set text views
-        authorID.setText(question.getUser().getId());
+        authorID.setText(question.getUser().getUsername());
         title.setText(question.getTitle());
         body.setText(question.getBody());
 
