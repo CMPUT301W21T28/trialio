@@ -90,12 +90,12 @@ public class ViewUserActivity extends AppCompatActivity {
         // get text views
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);
-        TextView UserEMail = findViewById(R.id.emailText);
+        TextView UserEmail = findViewById(R.id.emailText);
 
         // set text views
         userName.setText(user.getUsername());
         userPhone.setText(user.getContactInfo().getPhone());
-        UserEMail.setText(user.getContactInfo().getEmail());
+        UserEmail.setText(user.getContactInfo().getEmail());
     }
 
     /**
