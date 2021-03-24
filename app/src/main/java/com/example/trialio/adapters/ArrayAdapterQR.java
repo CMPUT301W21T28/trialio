@@ -1,6 +1,8 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.MainActivity;
+import com.example.trialio.activities.ViewUserActivity;
+import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -63,7 +68,6 @@ public class ArrayAdapterQR extends ArrayAdapter{
         TextView textOwner = view.findViewById(R.id.text_trial_owner_qr);
         TextView textDate = view.findViewById(R.id.text_trial_date_qr);
         TextView textResult = view.findViewById(R.id.text_trial_result_qr);
-        ImageView imageView = view.findViewById(R.id.imageView);
 
         // set the textviews
         textOwner.setText("Owner:"+trial.getExperimenterID());
@@ -78,7 +82,9 @@ public class ArrayAdapterQR extends ArrayAdapter{
         }else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
             textResult.setText("Result:" + ((NonNegativeTrial) trial).getNonNegCount());
         }
+
         return view;
     }
+
 
 }

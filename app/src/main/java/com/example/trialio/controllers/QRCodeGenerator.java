@@ -30,4 +30,6 @@ public class QRCodeGenerator extends AppCompatActivity {
     public Image generateForTrial(Trial trial, Experiment experiment){
        return null;
     };
+
+
 }

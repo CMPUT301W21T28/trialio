@@ -51,6 +51,7 @@ public class QRCodeActivity extends AppCompatActivity {
         // Set up the adapter for the list and experiment manager
         ListView trialListView = findViewById(R.id.list_trials_QR);
         trialListView.setAdapter(QRAdapter);
+        setUpOnClickListeners();
 
     }
 
@@ -63,12 +64,8 @@ public class QRCodeActivity extends AppCompatActivity {
         QRListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                QRFragment qrCode = new QRFragment();
-                Bundle args = new Bundle();
-                args.putSerializable("experiment", experiment);
-                qrCode.setArguments(args);
-                qrCode.show(getSupportFragmentManager(), "showQR");
+                QRFragment qrFragment = new QRFragment();
+                qrFragment.show(getSupportFragmentManager(),"QrCode");
 
             }
         });

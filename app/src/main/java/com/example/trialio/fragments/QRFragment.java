@@ -22,32 +22,16 @@ import com.example.trialio.models.User;
 import java.util.Date;
 
 public class QRFragment extends DialogFragment {
-    private OnFragmentInteractionListener listener;
+    private boolean geoLocationReq;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_show_qr_code, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
-
-        builder.setView(view).setTitle("Show QR").setNegativeButton("Cancel",null);
+        builder.setView(view).setTitle("Show QR:").setNegativeButton("Cancel",null);
         return builder.create();
     }
 
-    public interface OnFragmentInteractionListener {
-        void onOkPressed(Trial newTrial);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 }
 
