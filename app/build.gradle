@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.2'
     implementation 'com.google.zxing:javase:3.3.2'
     implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+    implementation 'com.karumi:dexter:5.0.0'
 
 
     implementation platform('com.google.firebase:firebase-bom:26.6.0')
@@ -55,4 +57,5 @@ dependencies {
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.3.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+
 }

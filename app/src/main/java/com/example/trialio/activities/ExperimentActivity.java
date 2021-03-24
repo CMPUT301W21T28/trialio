@@ -60,7 +60,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
-    private Button scanQR;
+    private ImageButton scanQR;
     private Button showQR;
     private StatisticsUtility statisticsUtility;
 
@@ -97,6 +97,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
+        scanQR = (ImageButton) findViewById(R.id.btnCamera);
     }
 
     @Override
@@ -358,6 +359,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        scanQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(context, ScanningActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {

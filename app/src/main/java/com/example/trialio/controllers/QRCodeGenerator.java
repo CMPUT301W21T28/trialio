@@ -36,19 +36,8 @@ Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
 public class QRCodeGenerator extends AppCompatActivity {
     private final String TAG = "qr code generator";
 
-    /**
-     * generateForTrial will take in trial and experiment to produce a QR code for trial with the type the experiment is
-     * @param trial
-     * @param experiment
-     * @return
-     *  Image: QRCode
-     */
-    public Image generateForTrial(Trial trial, Experiment experiment){
-        Bitmap qrCode = createBitmap(String.valueOf(trial));
-        return null;
-    };
 
-    public static Bitmap createBitmap(String trial){
+    public static Bitmap generateForTrial(String trial){
         BitMatrix result = null;
         try{
             result = new MultiFormatWriter().encode(trial, BarcodeFormat.QR_CODE, 300, 300, null);
