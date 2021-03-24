@@ -3,7 +3,9 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,7 +101,7 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // check if the current user is the owner
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                userManager.getUser(trialList.get(i).getExperimenterID(), new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
                         int popupViewID = R.layout.menu_trials_experimenter;
@@ -113,6 +115,28 @@ public class TrialActivity extends AppCompatActivity {
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
+                                switch (menuItem.getItemId()) {
+                                    case R.id.item_ignore_user:
+
+                                        break;
+                                    case R.id.item_view_profile:
+                                        Intent intent = new Intent(context, ViewUserActivity.class);
+
+                                        // pass in experiment as an argument
+                                        Bundle args = new Bundle();
+                                        args.putSerializable("user", user);
+                                        intent.putExtras(args);
+
+                                        Log.d(TAG, "View profile: " + user.getId());
+
+                                        // start an ExperimentActivity
+                                        startActivity(intent);
+                                        break;
+                                    default:
+                                        Log.d(TAG, "onMenuItemClick: Invalid item.");
+                                        assert(false);
+                                        break;
+                                }
                                 return false;
                             }
                         });
