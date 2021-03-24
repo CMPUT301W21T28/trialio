@@ -39,10 +39,10 @@ public class UserManager {
     private static String fid;
 
     private static final String USERNAME_FIELD = "username";
-    private static final String DEVICE_ID_FIELD = "device_id";
+    private static final String DEVICE_ID_FIELD = "deviceId";
     private static final String EMAIL_FIELD = "email";
     private static final String PHONE_FIELD = "phone";
-    private static final String SUBBED_EXPERIMENTS_FIELD = "subscribed_experiments";
+    private static final String SUBBED_EXPERIMENTS_FIELD = "subscribedExperiments";
 
     /*
      * This interface design was adapted from Android callbacks such as OnCLickListener
@@ -382,20 +382,20 @@ public class UserManager {
      * @param user the User to update
      */
     public void updateUser(User user) {
-        String id = user.getId();
-        Map<String, Object> cu = compressUser(user);
-        userCollection.document(id)
-                .set(cu)
+        String username = user.getUsername();
+        Map<String, Object> compressUser = compressUser(user);
+        userCollection.document(username)
+                .set(compressUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, String.format("User %s updated successfully", id));
+                        Log.d(TAG, String.format("User %s updated successfully", username));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, String.format("Failed to update User %s", id));
+                        Log.d(TAG, String.format("Failed to update User %s", username));
                     }
                 });
     }
@@ -406,19 +406,19 @@ public class UserManager {
      * @param user the user to be deleted
      */
     public void deleteUser(User user) {
-        String id = user.getId();
-        userCollection.document(id)
+        String username = user.getUsername();
+        userCollection.document(username)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, String.format("User %s deleted successfully", id));
+                        Log.d(TAG, String.format("User %s deleted successfully", username));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, String.format("Failed to delete User %s", id));
+                        Log.d(TAG, String.format("Failed to delete User %s", username));
                     }
                 });
     }
