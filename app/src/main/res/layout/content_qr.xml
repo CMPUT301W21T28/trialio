@@ -49,9 +49,9 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/screen_shot_2021_03_24_at_12_53_07_am" />
     </LinearLayout>
 
 
