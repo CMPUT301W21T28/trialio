@@ -1,6 +1,6 @@
 package com.example.trialio.models;
 
-import com.example.trialio.controllers.QuestionForum;
+import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.TrialManager;
 
 import java.io.Serializable;
@@ -36,18 +36,24 @@ public class Experiment implements Serializable {
     /**
      * The question forum associated with this experiment
      */
-    private QuestionForum questionForum;
+    private QuestionForumManager questionForumManager;
 
     /**
-     * Constructor for anExperiment
+     * Constructor for an Experiment
      */
     public Experiment() {
+        this.experimentID = null;
+        this.settings = new ExperimentSettings();
+        this.trialManager = new TrialManager();
+        this.keywords = new ArrayList<>();
+        parseKeywords();
+
     }
 
     /**
      * Constructor for an Experiment
      *
-     * @param experimentID   the unique identifer of an experiment
+     * @param experimentID   the unique identifier of an experiment
      * @param settings       the settings and description of an experiment
      * @param type           the type for an experiment
      * @param isOpen         the open/close status of an experiment
@@ -66,17 +72,17 @@ public class Experiment implements Serializable {
      * descriptions are used to form keywords.
      */
     void parseKeywords() {
-        if (this.keywords == null) {
-            this.keywords = new ArrayList<>();
-        } else {
-            this.keywords.clear();
-        }
+        this.keywords.clear();
 
-        if (this.settings != null) {
-            if (this.settings.getDescription() != null) {
-                String[] descKeywords = this.settings.getDescription().split(" ");
-                this.keywords.addAll(Arrays.asList(descKeywords));
-            }
+        if (this.settings.getDescription() != null) {
+            String[] descKeywords = this.settings.getDescription().split(" ");
+            this.keywords.addAll(Arrays.asList(descKeywords));
+            ArrayList<String> removes = new ArrayList<>();
+            removes.add("");
+            removes.add(".");
+            removes.add(";");
+            removes.add("'");
+            this.keywords.removeAll(removes);
         }
     }
 
@@ -114,6 +120,7 @@ public class Experiment implements Serializable {
      */
     public void setSettings(ExperimentSettings settings) {
         this.settings = settings;
+        parseKeywords();
     }
 
     /**
@@ -158,8 +165,8 @@ public class Experiment implements Serializable {
      *
      * @return the question forum manager
      */
-    public QuestionForum getQuestionForum() {
-        return questionForum;
+    public QuestionForumManager getQuestionForum() {
+        return questionForumManager;
     }
 
     /**
@@ -167,12 +174,13 @@ public class Experiment implements Serializable {
      *
      * @param questionForum the question forum to be set
      */
-    public void setQuestionForum(QuestionForum questionForum) {
-        this.questionForum = questionForum;
+    public void setQuestionForum(QuestionForumManager questionForum) {
+        this.questionForumManager = questionForum;
     }
 
     /**
      * Returns the string representation of the experiment
+     *
      * @return string representation of the experiment
      */
     @Override
@@ -182,7 +190,7 @@ public class Experiment implements Serializable {
                 ", settings=" + settings +
                 ", trialManager=" + trialManager +
                 ", keywords=" + keywords +
-                ", questionForum=" + questionForum +
+                ", questionForum=" + questionForumManager +
                 '}';
     }
 }

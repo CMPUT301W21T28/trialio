@@ -22,7 +22,10 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
-
+/**
+ * This fragment collects data from a user to upload a measurement type trial
+ * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
+ */
 public class MeasurementTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private boolean geoLocationReq;
@@ -56,10 +59,8 @@ public class MeasurementTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-
                                 //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
                                 listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
-
                             }
                         });
                     }}).create();

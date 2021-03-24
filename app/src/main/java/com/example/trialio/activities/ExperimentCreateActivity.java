@@ -22,6 +22,10 @@ import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
 
+/**
+ * This activity allows a user to create an experiment, with full settings for the user to make it
+ */
+
 public class ExperimentCreateActivity extends AppCompatActivity {
     private final String TAG = "ExperimentCreateActivity";
     private Experiment experiment;
@@ -30,6 +34,10 @@ public class ExperimentCreateActivity extends AppCompatActivity {
     private final Context context = this;
     private String selectedType = "";
 
+    /**
+     * the On create the takes in the saved instance from the main activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,8 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
+
+
 
         // Took ActionBar code.
         // DATE:	2020-12-14

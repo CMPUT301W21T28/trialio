@@ -19,6 +19,10 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+/**
+ * This activity shows a list of trials for an experiment when a user clicks the "trials" button from the
+ * experiment activity
+ */
 public class TrialActivity extends AppCompatActivity {
     private ArrayAdapterTrials trialAdapter;
     private ArrayList<Trial> trialList;
@@ -27,6 +31,10 @@ public class TrialActivity extends AppCompatActivity {
     private Experiment experiment;
     private UserManager userManager;
 
+    /**
+     * the On create the takes in the saved instance from the experiment activity
+     * @param savedInstanceState
+     */
     @Override
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {

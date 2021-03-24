@@ -2,15 +2,10 @@ package com.example.trialio.activities;
 
 /*
 Location permissions method from youtube video
-
 Video Title: Runtime Permissions Android | Required from API 23 and above
-
 Link to Video: https://www.youtube.com/watch?v=WZhEroL4P7s
-
 Video uploader: yoursTRULY
-
 Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
-
  */
 
 import androidx.annotation.NonNull;
@@ -45,6 +40,13 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.StatisticsUtility;
+
+import java.util.ArrayList;
+
+/**
+ * This activity opens an experiment when clicked from the main activity, and displays information about it
+ */
 
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentActivity";
@@ -57,7 +59,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
+    private Button scanQR;
+    private Button showQR;
+    private StatisticsUtility statisticsUtility;
 
+    /**
+     * the On create the takes in the saved instance from the main activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +88,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
+        // create statistics utility
+        statisticsUtility = new StatisticsUtility();
+
         // get the important views in this activity
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
+        showQR = (Button) findViewById(R.id.btnQRCode) ;
     }
 
     @Override
@@ -122,10 +135,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     }
 
     /**
-     * This gets permission from the user to share their location
+     * This method gets permission from the user to share their location
      */
     public void getLocationPermissions() {
         //getting location permission from the user
+        /**
+         * this if-else loop checks if the user has already been asked for permission once before, and displays an appropriate explanation
+         * describing why location permissions are needed. If the user hasn't been asked for permission before, it simply asks for permission
+         */
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //permission is not granted so request permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -147,7 +164,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     }
 
     /**
-     * This is to take action if the user has denied location permission
+     * This method takes action after the user has responded to the dialog that asks for location permission
      */
 
     @Override
@@ -156,6 +173,10 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //user has granted permission
             } else {
+                /**
+                 * This section of the if-else loop is to take action if the user had been asked permission before
+                 * and chose the "deny" and "do not ask again" options
+                 */
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(ExperimentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     //The user has chosen to permanently deny location permissions, so we request them to go to app settings and enable it from there
                     new AlertDialog.Builder(ExperimentActivity.this)
@@ -189,6 +210,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         TextView textOwner = findViewById(R.id.txtExperimentOwner);
         TextView textStatus = findViewById(R.id.txtExperimentStatus);
         TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+        TextView textStats = findViewById(R.id.txtStatsSummary);
+        TextView textGeoWarning = findViewById(R.id.txtExperimentGeoWarning);
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
@@ -204,6 +227,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        // if this is a geo experiment, give a warning
+        if (experiment.getSettings().getGeoLocationRequired()) {
+            textGeoWarning.setText("Warning! Geo-location information is collected with trials for this experiment.");
+        } else {
+            textGeoWarning.setText("");
+        }
+
         textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
         textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -217,6 +247,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        // set Stats Summary
+        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
+        statisticsUtility.displaySummaryStats(stats, textStats);
     }
 
     /**
@@ -271,30 +304,36 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
+
                     CountTrialFragment newTrial = new CountTrialFragment();
+
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
-                } else if (ExperimentTypeUtility.isBinomial(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
-                } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
-                } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
+                }
+                else if (ExperimentTypeUtility.isMeasurement(trialType)) {
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
-                } else {
+                }
+                else {
                     Log.d(TAG, "Error: invalid experiment type, see ExperimentTypeUtility.c");
                     assert (false);
                 }
@@ -302,8 +341,24 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         });
 
 
-        // Called when the user clicks item in experiment list
+        /**
+         * This sets the onClickListener for an QRCodeActivity
+         */
+        showQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, QRCodeActivity.class);
 
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_qr", experiment);
+                intent.putExtras(args);
+
+                startActivity(intent);
+            }
+        });
+
+
+        // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -318,6 +373,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
+
 
         // Called when the user clicks the subscribe button
         Button subBtn = findViewById(R.id.btnSubscribe);
@@ -350,10 +406,43 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 args.putSerializable("experiment", experiment);
                 intent.putExtras(args);
 
+                // start an ExperimentSettingsActivity
+                startActivity(intent);
+            }
+        });
+
+        Button statsButton = findViewById(R.id.btnStats);
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, StatActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment_stat", experiment);
+                intent.putExtras(args);
+
+                // start a StatActivity
+                startActivity(intent);
+            }
+        });
+
+        Button questionForumButton = findViewById(R.id.btnQA); // move me up
+        questionForumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, QuestionForumActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment", experiment);
+                intent.putExtras(args);
+
                 // start an ExperimentActivity
                 startActivity(intent);
             }
         });
+
     }
 
     /**
