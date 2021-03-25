@@ -15,13 +15,13 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
+
 /**
  * This fragment collects data from a user to upload a measurement type trial
  * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
@@ -60,7 +60,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                             @Override
                             public void onUserFetch(User user) {
                                 //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                                listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement , unit));
+                                listener.onOkPressed(new MeasurementTrial(user.getUsername(), location, date, measurement , unit));
                             }
                         });
                     }}).create();

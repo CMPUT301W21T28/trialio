@@ -2,7 +2,9 @@ package com.example.trialio.models;
 
 import com.example.trialio.models.User;
 
-public abstract class Post {
+import java.io.Serializable;
+
+public abstract class Post implements Serializable {
 
     private String postID;
     private String body;

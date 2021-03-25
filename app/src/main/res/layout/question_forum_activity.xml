@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginHorizontal="6dp">
 
         <ImageButton
             android:src="@drawable/ic_outline_search_24"
@@ -41,62 +43,56 @@
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:orientation="horizontal"
+
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.75"
-        android:background="#9c9c9c"
-        android:layout_margin="5dp">
+        android:layout_weight="11"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="Search"
-            android:padding="10dp"/>
-
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center">
+            android:background="@color/section_grey"
+            android:padding="7dp"
+            android:layout_marginHorizontal="5dp"/>
 
         <ListView
+            android:layout_marginTop="10dp"
             android:id="@+id/questionForumListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#9c9c9c">
+            android:background="@color/section_grey"
+            android:layout_marginHorizontal="5dp"
+            android:dividerHeight="10dp">
 
         </ListView>
+
     </LinearLayout>
 
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#9c9c9c"
-        android:layout_margin="5dp">
+
+        android:layout_marginHorizontal="5dp">
 
         <Button
             android:id="@+id/newQuestion"
             android:backgroundTint="#fbd700"
             android:text="New Question"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_margin="5dp">
-        </Button>
+            android:textColor="@color/button_dark_grey"
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp">
+        </Button>
 
     </LinearLayout>
 

@@ -70,7 +70,7 @@ public class ArrayAdapterQR extends ArrayAdapter{
         TextView textResult = view.findViewById(R.id.text_trial_result_qr);
 
         // set the textviews
-        textOwner.setText("Owner:"+trial.getExperimenterID());
+        textOwner.setText("Owner:"+trial.getExperimenterUsername());
         textDate.setText("Date:"+trial.getDate().toString());
 
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
