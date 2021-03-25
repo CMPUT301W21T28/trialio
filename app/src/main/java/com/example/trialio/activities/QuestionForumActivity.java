@@ -27,7 +27,9 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     private Experiment associatedExperiment;
 
     private QuestionForumManager questionForumManager;
+
     private ArrayList<Question> questionList;
+
     private QuestionArrayAdapter questionAdapter;
 
     String associatedExperimentID;
@@ -75,21 +77,16 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
                 questionList.clear();
-//                if (questions.isEmpty()) {
-//                    Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
-//                    questionList = new ArrayList<>();
-//                } else {
-//                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
-//                    questionList.addAll(questions);
-//                }
 
                 Log.w(TAG, "Succesfully fetched questions");
+
                 questionList.addAll(questions);
 
-                for (Question x : questionList) {
-                    String id = x.getPostID();
-                    Log.w(TAG, id);
-                }
+                // TODO: code confirms questions are present
+//                for (Question x : questionList) {
+//                    String id = x.getPostID();
+//                    Log.w(TAG, id);
+//                }
 
                 questionAdapter.notifyDataSetChanged();
             }
@@ -108,21 +105,25 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(context, QuestionRepliesActivity.class);
 
+                // PASSING THE OBJECT APPEARS TO BE THE PROBLEM
+
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
+
+                Question tempQuestion = questionList.get(i);
+
                 args.putString("experimentID", associatedExperimentID);
+                args.putSerializable("question", tempQuestion);
 
-                String selectedQuestionID = questionList.get(i).getPostID();
-//                Question selectedQuestion = questionList.get(i);
-//                args.putSerializable("question_details", selectedQuestion);
+                Log.w("QUESTION ID: ", tempQuestion.getPostID());
+                Log.w("QUESTION USERNAME: ", tempQuestion.getUser().getUsername());
 
-
-                Log.d("Question from list = ",  selectedQuestionID);
+//                Log.w("QUESTION ID: ", selectedQuestion.getPostID());
+//                Log.w("QUESTION USERNAME: ", selectedQuestion.getUser().getUsername());
 
 
                 intent.putExtras(args);
 
-                // start an ExperimentActivity
                 startActivity(intent);
             }
         });

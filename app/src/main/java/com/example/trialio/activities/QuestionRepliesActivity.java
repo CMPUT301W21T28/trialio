@@ -43,6 +43,7 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,6 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     private final String TAG = "QuestionRepliesForumActivity";
 
 
-    private Question selectedQuestion;
     private ArrayList<Reply> replyList;
     private ReplyArrayAdapter replyAdapter;
 
@@ -66,8 +66,11 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     private String associatedExperimentID;
     private String associatedQuestionID;
 
+    private Question selectedQuestion;
+
     // managers
     private QuestionForumManager questionForumManager;
+
     private UserManager userManager;
     private ExperimentManager experimentManager;
 
@@ -80,14 +83,18 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_forum_detailed);
 
-
-
         Bundle bundle = getIntent().getExtras();
 
+        selectedQuestion = (Question) bundle.getSerializable("question");
         associatedExperimentID = bundle.getString("experimentID");
-        selectedQuestion = (Question) bundle.getSerializable("question_details");
 
-        associatedQuestionID = "EgNCwgGlcj6VCzjpzAio";
+
+
+        associatedQuestionID = selectedQuestion.getPostID();
+
+
+
+        // associatedQuestionID = "EgNCwgGlcj6VCzjpzAio";
         // associatedQuestionID = bundle.getString("questionID");
 
         // Log.d("QUESTION ID", associatedQuestionID);
@@ -110,9 +117,14 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
 
         // set views with selectedQuestion details
-        authorID.setText(selectedQuestion.getUser().getId());
+//
+//        String id = selectedQuestion.getUser().getId();
+
+        //authorID.setText(selectedQuestion.getUser().getId());
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
         selectedQuestionBody.setText(selectedQuestion.getBody());
+
+        setUpOnClickListeners();
 
     }
 
@@ -125,7 +137,9 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     }
 
     private void setReplyList() {
-        Log.d(associatedQuestionID, "question ID test ***");
+
+//        Log.d("Selected Question ID", associatedQuestionID);
+//        String associatedQuestionID = selectedQuestion.getPostID();
 
         questionForumManager.setOnAllRepliesFetchCallback(associatedQuestionID, new QuestionForumManager.OnManyRepliesFetchListener() {
             @Override
