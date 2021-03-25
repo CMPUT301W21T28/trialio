@@ -87,29 +87,31 @@ public class QRCodeGenerator extends AppCompatActivity {
         return myBitmap;
     }
 
+
+    /**
+     * readQR takes in the input that is encoded in the code then create a new trial with its info
+     * @param input
+     */
     public static void readQR(String[] input){
         if (input[0].equals("BINOMIAL")){
             Date date = new Date();
             Location location = new Location();
+
             ExperimentManager experimentManager = new ExperimentManager();
             UserManager userManager = new UserManager();
-
-            // if the current user is the owner, set the experiment settings button as visible.
             userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                 @Override
                 public void onUserFetch(User user) {
-                    current_user.setId(user.getId());
+                    current_user = user;
                 }
             });
-
-
 
 
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
                     TrialManager trialManager = new_experiment.getTrialManager();
-                    BinomialTrial binomialTrial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
+                    BinomialTrial binomialTrial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
                     trialManager.addTrial(binomialTrial);
                 }
             });
