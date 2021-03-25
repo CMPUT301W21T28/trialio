@@ -45,7 +45,7 @@ public class ReplyArrayAdapter extends ArrayAdapter {
         TextView replyBody = view.findViewById(R.id.replyBody);
 
         // set text views
-        replyAuthorID.setText(reply.getUser().getId());
+        replyAuthorID.setText(reply.getUser().getUsername());
         replyBody.setText(reply.getBody());
 
         return view;

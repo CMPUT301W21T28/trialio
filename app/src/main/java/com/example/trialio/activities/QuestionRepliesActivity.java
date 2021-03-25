@@ -105,7 +105,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         TextView selectedQuestionBody = findViewById(R.id.selectedQuestionBody);
 
         // set views with selectedQuestion details
-        authorID.setText(selectedQuestion.getUser().getId());
+        authorID.setText(selectedQuestion.getUser().getUsername());
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
         selectedQuestionBody.setText(selectedQuestion.getBody());
 
