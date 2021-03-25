@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.fragments.EditProfileFragment;
+import com.example.trialio.fragments.EditContactInfoFragment;
 
 import java.io.Serializable;
 
@@ -76,11 +76,11 @@ public class ViewUserActivity extends AppCompatActivity {
         editUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditProfileFragment editProfileFragment = new EditProfileFragment();
+                EditContactInfoFragment editContactInfoFragment = new EditContactInfoFragment();
                 Bundle args = new Bundle();
                 args.putSerializable("UserProfile", (Serializable) user);
-                editProfileFragment.setArguments(args);
-                editProfileFragment.show(getSupportFragmentManager(), "editProfile");
+                editContactInfoFragment.setArguments(args);
+                editContactInfoFragment.show(getSupportFragmentManager(), "editProfile");
             }
         });
     }
