@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#747474"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="2.5dp"
-    android:layout_marginBottom="2.5dp">
+    android:background="@color/section_grey"
+
+
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
 
 
     <LinearLayout
@@ -23,18 +26,20 @@
 
 
             <TextView
-                android:id="@+id/questionTitle"
+                android:id="@+id/text_description"
+                android:text="Description"
+                android:textSize="12sp"
+                android:backgroundTint="@color/special_yellow"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="4dp"
                 android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
                 android:background="#9c9c9c"
-                android:padding="15dp"
-                android:text="Question title"
+                android:padding="5dp"
                 android:textColor="@color/black">
 
             </TextView>
@@ -60,19 +65,19 @@
 
 
             <TextView
-                android:id="@+id/questionTitle"
+                android:id="@+id/text_type"
+                android:text="Type"
+                android:textSize="12sp"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
-                android:background="#9c9c9c"
-                android:padding="15dp"
-                android:text="Question title"
-                android:textColor="@color/black">
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white">
 
             </TextView>
 
@@ -81,22 +86,26 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5">
+            android:layout_weight="6">
 
 
             <TextView
+
+                android:id="@+id/text_owner"
+                android:text="Owner"
+                android:textSize="12sp"
+
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
-                android:background="#9c9c9c"
-                android:padding="15dp"
-                android:text="Question title"
-                android:textColor="@color/black">
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+
+                android:textColor="@color/white">
             </TextView>
 
         </LinearLayout>
@@ -104,46 +113,37 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5">
+            android:layout_weight="6">
 
 
             <TextView
+                android:id="@+id/text_status"
+                android:text="Status"
+                android:textSize="12sp"
+
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="2.5dp"
                 android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
-                android:background="#9c9c9c"
-                android:padding="15dp"
-                android:text="Question title"
-                android:textColor="@color/black">
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white">
             </TextView>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5">
 
 
-            <TextView
+            <ImageView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="2.5dp"
-                android:layout_weight="5"
-                android:background="#9c9c9c"
-                android:padding="15dp"
-                android:text="Question title"
-                android:textColor="@color/black">
-            </TextView>
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_baseline_location_on_24" />
+
 
         </LinearLayout>
 
@@ -159,78 +159,8 @@
 
 
 
-<?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:paddingTop="5dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="5dp">
 
 
 
-        <TextView
-            android:id="@+id/text_description"
-            android:text="Description"
-            android:textSize="12sp"
 
 
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-
-            ></TextView>
-
-
-        <TextView
-            android:id="@+id/text_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:padding="3dp"
-            android:text="Type"
-            android:textSize="12sp"></TextView>
-
-
-        <TextView
-            android:id="@+id/text_owner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:padding="3dp"
-            android:text="Owner"
-            android:textSize="12sp"></TextView>
-
-
-
-        <TextView
-            android:id="@+id/text_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:padding="3dp"
-            android:text="Status"
-            android:textSize="12sp"></TextView>
-
-
-
-        <ImageView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_weight="0.5"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:padding="3dp"
-            app:srcCompat="@android:drawable/ic_menu_mylocation" />
-
-
-</LinearLayout>

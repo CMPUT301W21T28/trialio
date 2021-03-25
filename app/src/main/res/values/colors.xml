@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="special_yellow">#fbd700</color>
-    <color name="section_grey">#FF000000</color>
+    <color name="section_grey">#9c9c9c</color>
     <color name="background_grey">#747474</color>
     <color name="button_dark_grey">#606060</color>
     <color name="selector_green">#00FF00</color>
