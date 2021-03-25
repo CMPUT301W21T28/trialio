@@ -21,6 +21,7 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
+
 /**
  * This fragment collects data from a user to upload a measurement type trial
  * it sends data back to the Experiment activity, which then uploads the trial to the firestore database

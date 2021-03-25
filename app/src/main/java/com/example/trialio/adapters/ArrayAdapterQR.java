@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -64,7 +63,7 @@ public class ArrayAdapterQR extends ArrayAdapter{
         TextView textResult = view.findViewById(R.id.text_trial_result);
 
         // set the textviews
-        textOwner.setText("Owner:"+trial.getExperimenterID());
+        textOwner.setText("Owner:"+trial.getExperimenterUsername());
         textDate.setText("Date:"+trial.getDate().toString());
 
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){

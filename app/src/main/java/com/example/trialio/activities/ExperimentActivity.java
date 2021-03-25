@@ -297,9 +297,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
-
                     CountTrialFragment newTrial = new CountTrialFragment();
-
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
@@ -333,7 +331,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-
         /**
          * This sets the onClickListener for an QRCodeActivity
          */
@@ -350,7 +347,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-
         // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,7 +362,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
-
 
         // Called when the user clicks the subscribe button
         Button subBtn = findViewById(R.id.btnSubscribe);
