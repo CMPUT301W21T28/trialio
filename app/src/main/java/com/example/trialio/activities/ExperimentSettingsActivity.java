@@ -3,10 +3,14 @@ package com.example.trialio.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +40,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
     private ArrayAdapterUsers ignoredAdapter;
+    private Button addIgnoredButton;
+    private Button removeIgnoredButton;
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -65,6 +71,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
+        addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
+        removeIgnoredButton = (Button) findViewById(R.id.button_remove_ignored);
 
         // set adapter
         ignoredListView.setAdapter(ignoredAdapter);
@@ -116,6 +124,40 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // give option to remove ignored username when user long clicks in the listView
+        ignoredListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // get clicked userID
+                String clickedUserID = ignoredList.get(i);
+
+                // create the popup menu
+                PopupMenu popup = new PopupMenu(context, view);
+                popup.inflate(R.layout.menu_remove_ignored);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.item_unignore:
+                                Log.d(TAG, "UnIgnore user: " + clickedUserID);
+                                menuUnignoreUserID(clickedUserID);
+                                break;
+                            default:
+                                Log.d(TAG, "onMenuItemClick: Invalid item.");
+                                assert(false);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+                return false;
+            }
+        });
     }
 
     /**
@@ -141,6 +183,28 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
 
                 // set on click listeners
                 setOnClickListeners();
+            }
+        });
+    }
+
+    /**
+     * This removes a userID from the ignore list of the experiment.
+     * @param userID The string of the userID to remove from the ignore list of the experiment.
+     */
+    public void menuUnignoreUserID(String userID) {
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment newExperiment) {
+
+                // update experiment
+                experiment = newExperiment;
+
+                // edit experiment in firebase
+                experiment.getTrialManager().removeIgnoredUsers(userID);
+                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+
+                // update data in activity
+                updateActivityData();
             }
         });
     }
