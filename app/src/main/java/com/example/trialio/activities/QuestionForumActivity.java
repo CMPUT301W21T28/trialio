@@ -1,10 +1,7 @@
 package com.example.trialio.activities;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,20 +9,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
-import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
-import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +27,9 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     private Experiment associatedExperiment;
 
     private QuestionForumManager questionForumManager;
+
     private ArrayList<Question> questionList;
+
     private QuestionArrayAdapter questionAdapter;
 
     String associatedExperimentID;
@@ -84,15 +77,18 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
                 questionList.clear();
-                if (questions.isEmpty()) {
-                    Log.d(TAG, "onManyQuestionsFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
-                    questionList = new ArrayList<>();
-                    questionAdapter.notifyDataSetChanged();
-                } else {
-                    Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
-                    questionList.addAll(questions);
-                    questionAdapter.notifyDataSetChanged();
-                }
+
+                Log.w(TAG, "Succesfully fetched questions");
+
+                questionList.addAll(questions);
+
+                // TODO: code confirms questions are present
+//                for (Question x : questionList) {
+//                    String id = x.getPostID();
+//                    Log.w(TAG, id);
+//                }
+
+                questionAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -104,18 +100,30 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
         // Called when the user clicks item in question list -> makes bundle to send to detailed question page
         ListView questionForumListView = findViewById(R.id.questionForumListView);
-
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(context, QuestionForumActivity.class);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(context, QuestionRepliesActivity.class);
+
+                // PASSING THE OBJECT APPEARS TO BE THE PROBLEM
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
-                args.putSerializable("question_details", questionList.get(position));
+
+                Question tempQuestion = questionList.get(i);
+
+                args.putString("experimentID", associatedExperimentID);
+                args.putSerializable("question", tempQuestion);
+
+                Log.w("QUESTION ID: ", tempQuestion.getPostID());
+                Log.w("QUESTION USERNAME: ", tempQuestion.getUser().getUsername());
+
+//                Log.w("QUESTION ID: ", selectedQuestion.getPostID());
+//                Log.w("QUESTION USERNAME: ", selectedQuestion.getUser().getUsername());
+
+
                 intent.putExtras(args);
 
-                // start an ExperimentActivity
                 startActivity(intent);
             }
         });
