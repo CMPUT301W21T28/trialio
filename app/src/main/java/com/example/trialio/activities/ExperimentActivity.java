@@ -63,6 +63,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private ImageButton scanQR;
     private Button showQR;
     private StatisticsUtility statisticsUtility;
+    private User currentUser;
 
     /**
      * the On create the takes in the saved instance from the main activity
@@ -84,6 +85,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
+        currentUser = (User) bundle.getSerializable("user_exp");
 
         // create managers important to this activity
         experimentManager = new ExperimentManager();
@@ -363,6 +365,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View view){
                 Intent intent = new Intent(context, ScanningActivity.class);
+                Bundle args = new Bundle();
+                args.putSerializable("user_scan", currentUser);
+                intent.putExtras(args);
                 startActivity(intent);
             }
         });

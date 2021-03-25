@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 args.putSerializable("experiment", experimentList.get(i));
+                args.putSerializable("user_exp", currentUser);
                 intent.putExtras(args);
 
                 // start an ExperimentActivity

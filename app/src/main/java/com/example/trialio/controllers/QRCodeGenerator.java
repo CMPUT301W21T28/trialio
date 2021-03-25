@@ -52,6 +52,7 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static ExperimentManager experimentManager;
     private static User current_user;
     protected Experiment fetched_experiment;
+
     public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
         String infoResult = "";
 
@@ -90,29 +91,23 @@ public class QRCodeGenerator extends AppCompatActivity {
 
     /**
      * readQR takes in the input that is encoded in the code then create a new trial with its info
-     * @param input
+     * @param input, user
      */
-    public static void readQR(String[] input){
+    public static void readQR(String[] input, User user){
         if (input[0].equals("BINOMIAL")){
+            current_user = user;
             Date date = new Date();
             Location location = new Location();
 
             ExperimentManager experimentManager = new ExperimentManager();
-            UserManager userManager = new UserManager();
-            userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
-                @Override
-                public void onUserFetch(User user) {
-                    current_user = user;
-                }
-            });
-
-
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    new_experiment.getTrialManager().addTrial(new BinomialTrial("testing user id", location, date, Boolean.parseBoolean(input[1])));
+                    new_experiment.getTrialManager().addTrial((Trial) new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1])));
+                    experimentManager.editExperiment(input[2],new_experiment);
                 }
             });
+
         } else if (input[0].equals("COUNT")){
             Trial trial = new Trial();
         } else if (input[0].equals("NONNEGATIVE")){
