@@ -321,7 +321,6 @@ public class ExperimentManager {
      */
     private Experiment extractExperiment(DocumentSnapshot document) {
         Experiment experiment = document.toObject(Experiment.class);
-        Log.d(TAG, experiment.getSettings().getOwnerUsername());
 
         // clear the trials since they do not have subclass specific attributes
         experiment.getTrialManager().setTrials(new ArrayList<Trial>());
