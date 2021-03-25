@@ -44,9 +44,11 @@ public class AddReplyFragment extends DialogFragment {
         // Get owner experiment ID and associated question object from QuestionForumActivity
         Bundle bundle = getArguments();
 
-        associatedExperimentID = bundle.getString("experimentID");
         associatedQuestion = (Question) bundle.getSerializable("associated_question");
+        associatedExperimentID = bundle.getString("experimentID");
 
+
+        replyBodyInput = view.findViewById(R.id.editReplyBody);
 
         return builder
                 .setView(view)

@@ -11,6 +11,10 @@ public class Reply extends Post implements Serializable {
 
     private Collection<Reply> replies;
 
+    public Reply () {
+
+    }
+
     public Reply(String body, User user, Collection<Reply> replies) {
         super(body, user);
         this.replies = replies;

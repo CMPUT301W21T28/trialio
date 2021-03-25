@@ -86,6 +86,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         Bundle bundle = getIntent().getExtras();
 
         selectedQuestion = (Question) bundle.getSerializable("question");
+        //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
         associatedExperimentID = bundle.getString("experimentID");
 
 
@@ -112,7 +113,6 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         TextView selectedQuestionTitle = findViewById(R.id.selectedQuestionTitle);
         TextView selectedQuestionBody = findViewById(R.id.selectedQuestionBody);
 
-        EditText replyBox = findViewById(R.id.regionEditText);
         Button replyButton = findViewById(R.id.replyButton);
 
 
@@ -177,6 +177,8 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         });
 
 
+
+
         /**
          * Adds new reply
          */
@@ -184,10 +186,9 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         Button postReplyButton = findViewById(R.id.replyButton);
 
         postReplyButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("LongLogTag")   // TODO why does not having this cause an error
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Reply was clicked");
+                Log.d("REPLY", "Reply was clicked");
 
                 AddReplyFragment newReply = new AddReplyFragment();
                 Bundle args = new Bundle();
