@@ -28,7 +28,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * this activity opens when user clicks the camera button in a experiment activity
  */
 public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
-    private final Context context = this;
+    private Context context;
     private ZXingScannerView scannerView;
 
     /**
@@ -64,7 +64,11 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                 .check();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        scannerView.stopCamera();
+    }
 
     /**
      * fetch results from the qr code
@@ -73,10 +77,9 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     public void handleResult(Result rawResult){
         processResult(rawResult.getText());
-        scannerView.stopCamera();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-
+        //Intent intent = new Intent(context, ExperimentActivity.class);
+        //onDestroy();
+        //startActivity(intent);
     }
 
     private void processResult(String text){
