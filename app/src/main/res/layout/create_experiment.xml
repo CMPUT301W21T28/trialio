@@ -48,15 +48,14 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.75"
+        android:layout_height="wrap_content"
         android:background="#9c9c9c"
         android:layout_margin="5dp">
 
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             android:hint="Description" />
 
@@ -65,8 +64,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
 
         <LinearLayout
             android:background="#9c9c9c"
@@ -93,7 +92,7 @@
             <EditText
                 android:id="@+id/regionEditText"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Region:"/>
 
@@ -105,14 +104,15 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
 
         <LinearLayout
             android:background="#9c9c9c"
             android:layout_margin="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:padding="7dp"
             android:layout_weight="1">
 
 
@@ -130,6 +130,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#9c9c9c"
+            android:padding="7dp"
             android:layout_margin="5dp">
 
             <Switch
@@ -148,8 +149,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.75"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:background="#9c9c9c"
         android:layout_margin="5dp">
 

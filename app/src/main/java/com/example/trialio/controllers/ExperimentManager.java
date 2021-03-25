@@ -236,7 +236,7 @@ public class ExperimentManager {
      * @param listener the listener with the action to be taken once the experiments are fetched
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
-        String field = "settings.ownerID";
+        String field = "settings.ownerUsername";
         String ID = owner.getUsername();
         experimentsCollection.whereEqualTo(field, ID)
                 .get()
