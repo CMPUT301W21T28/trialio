@@ -41,12 +41,6 @@ Video Title: How To Make QR Code Generator Using Zxing (Zebra Crossing) Library 
 Link to Video: https://www.youtube.com/watch?v=zHStZwXtbj0&ab_channel=Programmity
 Video uploader: Programmity
 Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
-
-Scanning QR
-Video Title: Android Development Tutorial - Read QR Code with ZXing
-Link: https://www.youtube.com/watch?v=MegowI4T_L8&ab_channel=EDMTDev
-Video Uploader:EDMT Dev
-Uploader's channel: https://www.youtube.com/channel/UCllewj2bGdqB8U9Ld15INAg
  */
 
 
