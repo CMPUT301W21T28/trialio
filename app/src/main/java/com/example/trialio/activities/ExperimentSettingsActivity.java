@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 public class ExperimentSettingsActivity extends AppCompatActivity {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
-    
+
     private ExperimentManager experimentManager;
     private Experiment experiment;
     private UserManager userManager;
@@ -35,7 +35,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     private Switch isOpenSwitch;
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
-    private ArrayAdapterUsers userAdapter;
+    private ArrayAdapterUsers ignoredAdapter;
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -59,12 +59,15 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         // get managers
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
-        userAdapter = new ArrayAdapterUsers(context, ignoredList);
+        ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
 
         // get views
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
+
+        // set adapter
+        ignoredListView.setAdapter(ignoredAdapter);
     }
 
     @Override
@@ -120,12 +123,23 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
      */
     public void updateActivityData() {
 
-        // upon starting, ensure that we have the most updated experiment
+        // get experiment and update views of the activity
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
+
+                // update experiment
                 experiment = new_experiment;
+
+                // update ignored listView
+                ignoredList.clear();
+                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIds());
+                ignoredAdapter.notifyDataSetChanged();
+
+                // set fields
                 setFields();
+
+                // set on click listeners
                 setOnClickListeners();
             }
         });
