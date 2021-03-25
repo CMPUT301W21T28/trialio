@@ -31,6 +31,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private ZXingScannerView scannerView;
     private User currentUser;
+    private Boolean locationRequired;
 
     /**
      * onCreate first ask for user permission, then proceeds to scan using camera
@@ -43,6 +44,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         Bundle bundle = getIntent().getExtras();
         currentUser = (User) bundle.getSerializable("user_scan");
         scannerView = (ZXingScannerView)findViewById(R.id.scanner);
+        locationRequired = (Boolean) bundle.getBoolean("location_req");
 
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
@@ -75,14 +77,13 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     public void handleResult(Result rawResult){
         processResult(rawResult.getText());
         scannerView.stopCamera();
-        Intent intent = new Intent(this,ExperimentActivity.class);
-        startActivity(intent);
+        finish();
 
     }
 
     private void processResult(String text){
         String processed = text;
         String [] items = processed.split("\n");
-        QRCodeGenerator.readQR(items, currentUser);
+        QRCodeGenerator.readQR(items, currentUser, locationRequired);
     }
 }

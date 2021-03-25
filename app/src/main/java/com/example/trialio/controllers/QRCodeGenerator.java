@@ -2,6 +2,8 @@ package com.example.trialio.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.MainActivity;
+import com.example.trialio.activities.ScanningActivity;
 import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
@@ -51,7 +55,8 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static final String TAG = "qrgenerator";
     private static ExperimentManager experimentManager;
     private static User current_user;
-    protected Experiment fetched_experiment;
+    private static Boolean locationRequired;
+    private static Context context;
 
     public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
         String infoResult = "";
@@ -63,7 +68,7 @@ public class QRCodeGenerator extends AppCompatActivity {
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
             infoResult = experiment.getTrialManager().getType() + "\n" +  ((NonNegativeTrial) trial).getNonNegCount() + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((MeasurementTrial) trial).getMeasurement() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  ((MeasurementTrial) trial).getMeasurement() + "\n" +  experiment.getExperimentID() + "\n" +  ((MeasurementTrial) trial).getUnit();
         }
         BitMatrix result = null;
         try{
@@ -93,27 +98,75 @@ public class QRCodeGenerator extends AppCompatActivity {
      * readQR takes in the input that is encoded in the code then create a new trial with its info
      * @param input, user
      */
-    public static void readQR(String[] input, User user){
+    public static void readQR(String[] input, User user, Boolean locationReq){
         if (input[0].equals("BINOMIAL")){
             current_user = user;
             Date date = new Date();
             Location location = new Location();
+            locationRequired = locationReq;
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    new_experiment.getTrialManager().addTrial((Trial) new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1])));
+                    Trial new_trial = new Trial();
+
+                    new_trial = (Trial) new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
+                    new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
             });
 
         } else if (input[0].equals("COUNT")){
-            Trial trial = new Trial();
+            current_user = user;
+            Date date = new Date();
+            Location location = new Location();
+            locationRequired = locationReq;
+
+            ExperimentManager experimentManager = new ExperimentManager();
+            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment new_experiment) {
+                    Trial new_trial = new Trial();
+                    new_trial = (Trial) new CountTrial(current_user.getId(), location, date);
+                    new_experiment.getTrialManager().addTrial(new_trial);
+                    experimentManager.editExperiment(input[2],new_experiment);
+                }
+            });
         } else if (input[0].equals("NONNEGATIVE")){
-            Trial trial = new Trial();
+            current_user = user;
+            Date date = new Date();
+            Location location = new Location();
+            locationRequired = locationReq;
+
+            ExperimentManager experimentManager = new ExperimentManager();
+            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment new_experiment) {
+                    Trial new_trial = new Trial();
+
+                    new_trial = (Trial) new NonNegativeTrial(current_user.getId(), location, date, Integer.parseInt(input[1]));
+                    new_experiment.getTrialManager().addTrial(new_trial);
+                    experimentManager.editExperiment(input[2],new_experiment);
+                }
+            });
         } else if (input[0].equals("MEASUREMENT")){
-            Trial trial = new Trial();
+            current_user = user;
+            Date date = new Date();
+            Location location = new Location();
+            locationRequired = locationReq;
+
+            ExperimentManager experimentManager = new ExperimentManager();
+            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+                @Override
+                public void onExperimentFetch(Experiment new_experiment) {
+                    Trial new_trial = new Trial();
+
+                    new_trial = (Trial) new MeasurementTrial(current_user.getId(), location, date, Double.parseDouble(input[1]), input[3]);
+                    new_experiment.getTrialManager().addTrial(new_trial);
+                    experimentManager.editExperiment(input[2],new_experiment);
+                }
+            });
         }
 
     }
