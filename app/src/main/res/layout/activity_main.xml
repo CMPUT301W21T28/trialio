@@ -128,6 +128,7 @@
     <!-- Ruiqin Pi, "Lab 3", 2021-02-04, Public Domain,
      https://eclass.srv.ualberta.ca/pluginfile.php/6713986/mod_resource/content/0/Lab%203%20Instructions%20-%20Fragments.pdf
     -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnNewExperiment"
         android:layout_width="match_parent"
