@@ -59,7 +59,6 @@ public class AddReplyFragment extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         String replyBody = replyBodyInput.getText().toString();
-
                         QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID);
 
                         String newReplyID = questionForumManager.getNewReplyID(associatedQuestion.getPostID());   // TODO error check this a lot

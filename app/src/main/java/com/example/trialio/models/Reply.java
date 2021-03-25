@@ -3,19 +3,20 @@ package com.example.trialio.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Represents a reply to a question on an experiment's question forum
  */
 public class Reply extends Post implements Serializable {
 
-    private Collection<Reply> replies;
+    private List<Reply> replies;
 
     public Reply () {
 
     }
 
-    public Reply(String body, User user, Collection<Reply> replies) {
+    public Reply(String body, User user, List<Reply> replies) {
         super(body, user);
         this.replies = replies;
     }
@@ -25,7 +26,7 @@ public class Reply extends Post implements Serializable {
         this.replies = new ArrayList<>();
     }
 
-    public Reply(String postID, String body, User user, Collection<Reply> replies) {
+    public Reply(String postID, String body, User user, List<Reply> replies) {
         super(postID, body, user);
         this.replies = replies;
     }
@@ -35,7 +36,7 @@ public class Reply extends Post implements Serializable {
         return replies;
     }
 
-    public void setReplies(Collection<Reply> replies) {
+    public void setReplies(List<Reply> replies) {
         this.replies = replies;
     }
 
