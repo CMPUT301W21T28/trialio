@@ -88,23 +88,14 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         selectedQuestion = (Question) bundle.getSerializable("question");
         //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
         associatedExperimentID = bundle.getString("experimentID");
-
-
-
         associatedQuestionID = selectedQuestion.getPostID();
 
 
-
-        // associatedQuestionID = "EgNCwgGlcj6VCzjpzAio";
-        // associatedQuestionID = bundle.getString("questionID");
-
-        // Log.d("QUESTION ID", associatedQuestionID);
-
         questionForumManager = new QuestionForumManager(associatedExperimentID);
-
         replyList = new ArrayList<>();
         replyAdapter = new ReplyArrayAdapter(this, replyList);
 
+        // TODO: do we need this ???
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
@@ -113,16 +104,14 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         TextView selectedQuestionTitle = findViewById(R.id.selectedQuestionTitle);
         TextView selectedQuestionBody = findViewById(R.id.selectedQuestionBody);
 
-        Button replyButton = findViewById(R.id.replyButton);
-
-
         // set views with selectedQuestion details
-//
-//        String id = selectedQuestion.getUser().getId();
-
-        //authorID.setText(selectedQuestion.getUser().getId());
+        authorID.setText(selectedQuestion.getUser().getId());
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
         selectedQuestionBody.setText(selectedQuestion.getBody());
+
+        // Set up the adapter for the ListView
+        ListView questionsListView = findViewById(R.id.replyListView);
+        questionsListView.setAdapter(replyAdapter);
 
         setUpOnClickListeners();
 
@@ -145,13 +134,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
             @Override
             public void onManyRepliesFetch(List<Reply> replies) {  // TODO: why not ArrayList ***
                 replyList.clear();
-                if (replies.isEmpty()) {
-                    //Log.d(TAG, "onManyRepliesFetch: No question exist, initiate an empty array list to avoid crash "); //TODO: this seems hacky
-                    replyList = new ArrayList<>();
-                } else {
-                    //Log.d(TAG, "onManyQuestionsFetch: Succesfully fetched questions");
-                    replyList.addAll(replies);
-                }
+                replyList.addAll(replies);
                 replyAdapter.notifyDataSetChanged();
             }
         });
@@ -211,6 +194,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     public void onOkPressed (Reply newReply) {
         // Log.d(TAG, "Reply");
         questionForumManager.createReply(selectedQuestion.getPostID(), newReply);
+
         setReplyList();
     }
 
