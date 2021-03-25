@@ -43,22 +43,20 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="10dp"
+        android:layout_margin="5dp"
         android:layout_weight="0.75"
         android:background="#9c9c9c"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:hint="Description" />
+            android:hint="Description"
+            android:padding="10dp" />
 
     </LinearLayout>
 

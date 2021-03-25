@@ -1,5 +1,8 @@
 package com.example.trialio.models;
 
+import android.graphics.Bitmap;
+import android.media.Image;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -82,4 +85,5 @@ public class Trial implements Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
+
 }
