@@ -8,8 +8,6 @@ import com.example.trialio.utils.ExperimentTypeUtility;
 
 import org.junit.jupiter.api.Test;
 
-import java.net.ContentHandler;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -47,10 +45,10 @@ public class UserTest {
         UserContactInfo info = u1.getContactInfo();
         assertEquals(UserContactInfo.class, info.getClass());
 
-        assertNull(u1.getId());
+        assertNull(u1.getUsername());
         User u2 = new User("1234", "user1");
-        assertEquals("1234", u2.getId());
-        assertEquals("user1", u2.getUsername());
+        assertEquals("1234", u2.getUsername());
+        assertEquals("user1", u2.getDeviceId());
     }
 
     /**

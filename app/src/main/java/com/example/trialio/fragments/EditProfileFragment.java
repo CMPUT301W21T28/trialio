@@ -2,9 +2,7 @@ package com.example.trialio.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +13,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
-import com.example.trialio.activities.MainActivity;
-import com.example.trialio.activities.ViewUserActivity;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
-import com.example.trialio.utils.ExperimentTypeUtility;
-
-import java.io.Serializable;
 
 /**
  * This fragment allows a user to edit their profile information, including username, phone number and e-mail
  * it sends data back to the User manager, which then updates the user's information in the firebase database
  */
 public class EditProfileFragment extends DialogFragment {
-    private EditText username;
-    private EditText phoneNumber;
-    private EditText email;
+    private EditText usernameView;
+    private EditText phoneNumberView;
+    private EditText emailView;
     private OnFragmentInteractionListener listener;
     private User user;
 
@@ -45,17 +36,22 @@ public class EditProfileFragment extends DialogFragment {
         Bundle bundle = getArguments();
         user = (User) bundle.getSerializable("UserProfile");
 
-        username = view.findViewById(R.id.userNameText);
-        phoneNumber = view.findViewById(R.id.editUserPhone);
-        email = view.findViewById(R.id.editUserEmail);
+        usernameView = view.findViewById(R.id.userNameText);
+        phoneNumberView = view.findViewById(R.id.editUserPhone);
+        emailView = view.findViewById(R.id.editUserEmail);
 
         UserManager manager = new UserManager();
-        manager.addCurrentUserUpdateListener(new UserManager.OnUserFetchListener() {
+        manager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                username.setText(user.getUsername());
-                phoneNumber.setText(user.getContactInfo().getPhone());
-                email.setText(user.getContactInfo().getEmail());
+                manager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        usernameView.setText(user.getUsername());
+                        phoneNumberView.setText(user.getContactInfo().getPhone());
+                        emailView.setText(user.getContactInfo().getEmail());
+                    }
+                });
             }
         });
 
@@ -67,20 +63,20 @@ public class EditProfileFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String UserName = username.getText().toString();
-                        String UserPhone = phoneNumber.getText().toString();
-                        String UserEMail = email.getText().toString();
-                        String UserID = user.getId();
+                        String usernameText = usernameView.getText().toString();
+                        String phoneText = phoneNumberView.getText().toString();
+                        String emailText = emailView.getText().toString();
 
-                        user.setId(UserID);
-                        user.setUsername(UserName);
-                        user.getContactInfo().setPhone(UserPhone);
-                        user.getContactInfo().setEmail(UserEMail);
+//                        user.setUsername(usernameText);
+                        user.getContactInfo().setPhone(phoneText);
+                        user.getContactInfo().setEmail(emailText);
 
                         manager.updateUser(user);
-                    //confirm update to user profile
-                    }}).create();
+                        //confirm update to user profile
+                    }
+                }).create();
     }
+
     public interface OnFragmentInteractionListener {
         void onConfirm();
     }

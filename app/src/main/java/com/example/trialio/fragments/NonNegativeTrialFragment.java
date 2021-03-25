@@ -56,7 +56,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                             public void onUserFetch(User user) {
 
                                 //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
+                                listener.onOkPressed(new NonNegativeTrial(user.getUsername(), location, date, nonNegCount));
 
                             }
                         });

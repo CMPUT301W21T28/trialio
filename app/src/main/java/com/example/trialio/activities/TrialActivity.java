@@ -23,8 +23,6 @@ import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
 /**
  * This activity shows a list of trials for an experiment when a user clicks the "trials" button from the
  * experiment activity
@@ -45,7 +43,6 @@ public class TrialActivity extends AppCompatActivity {
      * @param savedInstanceState
      */
     @Override
-    @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trials);
@@ -95,7 +92,7 @@ public class TrialActivity extends AppCompatActivity {
                         int popupViewID = R.layout.menu_trials_experimenter;
 
                         // if the current user is the owner of the experiment, use the owner menu
-                        if (currentUser.getId().equals(experiment.getSettings().getOwnerID())) {
+                        if (currentUser.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
 
@@ -147,7 +144,7 @@ public class TrialActivity extends AppCompatActivity {
         textType.setText("Type: " + experiment.getTrialManager().getType());
 
         // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+        userManager.getUser(experiment.getSettings().getOwnerUsername(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 textOwner.setText("Owner: " + user.getUsername());

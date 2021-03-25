@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
-import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -56,14 +55,7 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
-
-        // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                textOwner.setText(user.getUsername());
-            }
-        });
+        textOwner.setText(experiment.getSettings().getOwnerUsername());
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
             locNeed.setVisibility(View.GONE);

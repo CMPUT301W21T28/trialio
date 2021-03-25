@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 public class User implements Serializable {
 
-    private String id;
     private String username;
+    private String deviceId;
     private UserContactInfo contactInfo;
     private ArrayList<String> subscribedExperimentIds;
     // private BarcodeManager barcodeManager;
@@ -18,7 +18,8 @@ public class User implements Serializable {
      * Constructor for a User
      */
     public User() {
-        this.username = "default_username";
+        this.username = null;
+        this.deviceId = null;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -26,11 +27,11 @@ public class User implements Serializable {
     /**
      * Constructor for a User
      *
-     * @param id A unique id to identify the user
+     * @param username A unique username to identify the user
      */
-    public User(String id) {
-        this.id = id;
-        this.username = "default_username";
+    public User(String username) {
+        this.username = username;
+        this.deviceId = null;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -42,8 +43,8 @@ public class User implements Serializable {
      * @param id       A unique id to identify the user
      */
     public User(String id, String username) {
-        this.id = id;
         this.username = username;
+        this.deviceId = id;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -53,17 +54,17 @@ public class User implements Serializable {
      *
      * @return the id
      */
-    public String getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * Sets the if of the User
      *
-     * @param id the id
+     * @param username the unique id of the User
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -71,17 +72,17 @@ public class User implements Serializable {
      *
      * @return the username
      */
-    public String getUsername() {
-        return username;
+    public String getDeviceId() {
+        return deviceId;
     }
 
     /**
      * Sets the username of the user
      *
-     * @param username the username to be set
+     * @param id the unique device identifier of the user
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setDeviceId(String id) {
+        this.deviceId = id;
     }
 
     /**

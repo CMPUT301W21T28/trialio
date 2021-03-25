@@ -64,7 +64,7 @@ public class ArrayAdapterTrials extends ArrayAdapter {
         userManager.getUser(trial.getExperimenterID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText("Experimenter: " + user.getUsername());
+                textOwner.setText("Experimenter: " + user.getDeviceId());
             }
         });
 

@@ -66,7 +66,7 @@ public class ViewUserActivity extends AppCompatActivity {
         super.onStart();
 
         // use the userID to get the most recent user
-        userManager.addUserUpdateListener(user.getId(), new UserManager.OnUserFetchListener() {
+        userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User newUser) {
 
@@ -114,7 +114,7 @@ public class ViewUserActivity extends AppCompatActivity {
             @Override
             public void onUserFetch(User currentUser) {
                 // compare current user with arg user. If same id, make the edit button visible
-                if (user.getId().equals(currentUser.getId())) {
+                if (user.getUsername().equals(currentUser.getUsername())) {
                     editUserProfile.setVisibility(View.VISIBLE);
                 }
             }

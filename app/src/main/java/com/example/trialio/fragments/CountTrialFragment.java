@@ -1,20 +1,15 @@
 package com.example.trialio.fragments;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
@@ -58,7 +53,7 @@ public class CountTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new CountTrial(user.getId(), location, date));
+                                listener.onOkPressed(new CountTrial(user.getUsername(), location, date));
                             }
                         });
                     }}).create();
