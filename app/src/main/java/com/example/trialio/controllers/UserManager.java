@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users-v2";
+    private static final String COLLECTION_PATH = "users-v3";
     private final CollectionReference userCollection;
 
     private static String fid;

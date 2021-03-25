@@ -69,7 +69,7 @@ public class TrialActivity extends AppCompatActivity {
         super.onStart();
 
         // update the experiment from firebase
-        updateActivityData(); // TODO: think about changing this to be an update listener
+        updateActivityData();
     }
 
     /**
@@ -80,8 +80,8 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // get the ID of the clicked user
-                String clickedUserID = trialList.get(i).getExperimenterID();
+                // get the username of the clicked user
+                String clickedUsername = trialList.get(i).getExperimenterUsername();
 
                 // check if the current user is the owner
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -106,12 +106,12 @@ public class TrialActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 switch (menuItem.getItemId()) {
                                     case R.id.item_ignore_user:
-                                        Log.d(TAG, "Ignore user: " + clickedUserID);
-                                        menuIgnoreUserID(clickedUserID);
+                                        Log.d(TAG, "Ignore user: " + clickedUsername);
+                                        menuIgnoreUsername(clickedUsername);
                                         break;
                                     case R.id.item_view_profile:
-                                        Log.d(TAG, "View profile: " + clickedUserID);
-                                        menuViewProfile(clickedUserID);
+                                        Log.d(TAG, "View profile: " + clickedUsername);
+                                        menuViewProfile(clickedUsername);
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -173,10 +173,10 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     /**
-     * This adds a userID to the ignored list for the experiment.
-     * @param userID String of the user ID to add to the ignored list for the experiment.
+     * This adds a username to the ignored list for the experiment.
+     * @param username String of the user ID to add to the ignored list for the experiment.
      */
-    public void menuIgnoreUserID(String userID) {
+    public void menuIgnoreUsername(String username) {
 
         // get the experiment from firebase
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -187,7 +187,7 @@ public class TrialActivity extends AppCompatActivity {
                 experiment = newExperiment;
 
                 // add the userID to the list of ignored userIDs
-                experiment.getTrialManager().addIgnoredUser(userID);
+                experiment.getTrialManager().addIgnoredUser(username);
 
                 // update the experiment
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
@@ -217,7 +217,7 @@ public class TrialActivity extends AppCompatActivity {
 
                 // update the trialList
                 trialList.clear();
-                trialList.addAll(experiment.getTrialManager().getVisibleTrials());
+                trialList.addAll(experiment.getTrialManager().fetchVisibleTrials());
                 trialAdapter.notifyDataSetChanged();
             }
         });

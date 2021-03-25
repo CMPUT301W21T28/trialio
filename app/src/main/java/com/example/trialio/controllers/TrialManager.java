@@ -121,10 +121,10 @@ public class TrialManager implements Serializable {
      * This finds all of the trials which are not ignored.
      * @return Returns the list of trials completed by users who are not in the ignored list.
      */
-    public ArrayList<Trial> getVisibleTrials() {
+    public ArrayList<Trial> fetchVisibleTrials() {
         ArrayList<Trial> visible = new ArrayList<Trial>();
         for (Trial trial : trials) {
-            if (!ignoredUserIds.contains(trial.getExperimenterID())) {
+            if (!ignoredUserIds.contains(trial.getExperimenterUsername())) {
                 visible.add(trial);
             }
         }

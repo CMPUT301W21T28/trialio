@@ -19,6 +19,7 @@ import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterUsers;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.fragments.AddIgnoredFragment;
 import com.example.trialio.models.Experiment;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
  */
-public class ExperimentSettingsActivity extends AppCompatActivity {
+public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener{
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
 
@@ -130,8 +131,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // get clicked userID
-                String clickedUserID = ignoredList.get(i);
+                // get clicked username
+                String clickedUsername = ignoredList.get(i);
 
                 // create the popup menu
                 PopupMenu popup = new PopupMenu(context, view);
@@ -143,8 +144,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.item_unignore:
-                                Log.d(TAG, "UnIgnore user: " + clickedUserID);
-                                menuUnignoreUserID(clickedUserID);
+                                Log.d(TAG, "UnIgnore user: " + clickedUsername);
+                                menuUnignoreUsername(clickedUsername);
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -156,6 +157,14 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
                 });
                 popup.show();
                 return false;
+            }
+        });
+
+        addIgnoredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddIgnoredFragment addIgnored = new AddIgnoredFragment();
+                addIgnored.show(getSupportFragmentManager(), "addIgnored");
             }
         });
     }
@@ -188,10 +197,12 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * This removes a userID from the ignore list of the experiment.
-     * @param userID The string of the userID to remove from the ignore list of the experiment.
+     * This removes a username from the ignore list of the experiment.
+     * @param username The string of the userID to remove from the ignore list of the experiment.
      */
-    public void menuUnignoreUserID(String userID) {
+    public void menuUnignoreUsername(String username) {
+
+        // update the experiment and remove a
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
@@ -200,7 +211,27 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
                 experiment = newExperiment;
 
                 // edit experiment in firebase
-                experiment.getTrialManager().removeIgnoredUsers(userID);
+                experiment.getTrialManager().removeIgnoredUsers(username);
+                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+
+                // update data in activity
+                updateActivityData();
+            }
+        });
+    }
+
+    @Override
+    public void onOkPressed(String username) {
+        // update the experiment and remove a
+        experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment newExperiment) {
+
+                // update experiment
+                experiment = newExperiment;
+
+                // edit experiment in firebase
+                experiment.getTrialManager().addIgnoredUser(username);
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
 
                 // update data in activity
