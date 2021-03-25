@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#747474"
+    android:background="@color/background_grey"
     android:orientation="vertical">
 
     <LinearLayout
@@ -51,7 +51,7 @@
             android:layout_height="0dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="#9c9c9c">
+            android:background="@color/section_grey">
 
             <Button
                 android:id="@+id/btnAll"
@@ -87,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="#9c9c9c"
+            android:background="@color/section_grey"
             android:orientation="horizontal">
 
             <EditText
@@ -116,9 +116,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="#9c9c9c">
+                android:background="@color/section_grey"
+                android:dividerHeight="10dp">
 
             </ListView>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -126,6 +128,7 @@
     <!-- Ruiqin Pi, "Lab 3", 2021-02-04, Public Domain,
      https://eclass.srv.ualberta.ca/pluginfile.php/6713986/mod_resource/content/0/Lab%203%20Instructions%20-%20Fragments.pdf
     -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnNewExperiment"
         android:layout_width="match_parent"
