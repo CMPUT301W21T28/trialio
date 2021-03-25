@@ -110,9 +110,7 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    TrialManager trialManager = new_experiment.getTrialManager();
-                    BinomialTrial binomialTrial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
-                    trialManager.addTrial(binomialTrial);
+                    new_experiment.getTrialManager().addTrial(new BinomialTrial("testing user id", location, date, Boolean.parseBoolean(input[1])));
                 }
             });
         } else if (input[0].equals("COUNT")){

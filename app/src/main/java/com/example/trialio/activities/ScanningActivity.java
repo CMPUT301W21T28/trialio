@@ -63,11 +63,6 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                 .check();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        scannerView.stopCamera();
-    }
 
     /**
      * fetch results from the qr code
@@ -76,9 +71,10 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     public void handleResult(Result rawResult){
         processResult(rawResult.getText());
-        Intent intent = new Intent(this, ExperimentActivity.class);
-        onDestroy();
+        scannerView.stopCamera();
+        Intent intent = new Intent(this,ExperimentActivity.class);
         startActivity(intent);
+
     }
 
     private void processResult(String text){

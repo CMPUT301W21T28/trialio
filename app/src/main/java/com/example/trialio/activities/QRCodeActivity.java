@@ -27,7 +27,6 @@ public class QRCodeActivity extends AppCompatActivity {
     private Experiment experiment;
     private ArrayList<Trial> trialList;
     private ArrayAdapterQR QRAdapter;
-    private final Context context = this;
     private ExperimentManager experimentManager;
 
 
