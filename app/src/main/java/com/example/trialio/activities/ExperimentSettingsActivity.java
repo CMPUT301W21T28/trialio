@@ -12,6 +12,7 @@ import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterUsers;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
 public class ExperimentSettingsActivity extends AppCompatActivity {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
+    
     private ExperimentManager experimentManager;
     private Experiment experiment;
     private UserManager userManager;
@@ -33,7 +35,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
     private Switch isOpenSwitch;
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
-
+    private ArrayAdapterUsers userAdapter;
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -51,16 +53,18 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
 
+        // initialize the ignored list
+        ignoredList = new ArrayList<String>();
+
         // get managers
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
+        userAdapter = new ArrayAdapterUsers(context, ignoredList);
 
         // get views
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
-
-        ignoredList = new ArrayList<String>();
     }
 
     @Override
@@ -115,6 +119,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity {
      * This gets the updated experiment from firebase, and updates the views of the activity.
      */
     public void updateActivityData() {
+
         // upon starting, ensure that we have the most updated experiment
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
