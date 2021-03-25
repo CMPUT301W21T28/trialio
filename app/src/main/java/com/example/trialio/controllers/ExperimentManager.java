@@ -332,22 +332,22 @@ public class ExperimentManager {
         if (ExperimentTypeUtility.isBinomial(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterID"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
+                experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterID"), new Location((long) location.get("latitude"), (long) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
             }
         } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterID"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
+                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterID"), new Location((long) location.get("latitude"), (long) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
             }
         } else if (ExperimentTypeUtility.isNonNegative(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterID"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
+                experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterID"), new Location((long) location.get("latitude"), (long) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
             }
         } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterID"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
+                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterID"), new Location((long) location.get("latitude"), (long) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
             }
         } else {
             Log.d(TAG, experiment.getExperimentID());
