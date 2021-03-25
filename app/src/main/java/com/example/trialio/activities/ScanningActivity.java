@@ -71,6 +71,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
     /**
      * fetch results from the qr code
+     * stop the camera and return to experiment activtiy
      * @param rawResult
      */
     @Override
@@ -81,6 +82,10 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
     }
 
+    /**
+     * sends the input from qr code to readQR in QRCodeGenerator to create new trials
+     * @param text
+     */
     private void processResult(String text){
         String processed = text;
         String [] items = processed.split("\n");

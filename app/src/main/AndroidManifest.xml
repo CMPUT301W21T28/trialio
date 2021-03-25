@@ -33,13 +33,8 @@
         <activity android:name=".activities.TrialActivity" />
         <activity android:name=".activities.ExperimentSettingsActivity" />
         <activity android:name=".activities.QuestionForumActivity" />
-          <activity android:name=".activities.QuestionRepliesActivity"></activity>
-        <activity android:name=".activities.ViewUserActivity" />
-        <activity android:name=".activities.TrialActivity"></activity>
-        <activity android:name=".activities.ExperimentSettingsActivity"></activity>
-        <activity android:name=".activities.QuestionForumActivity"></activity>
         <activity android:name=".activities.QuestionRepliesActivity"></activity>
-        <activity android:name=".activities.ViewUserActivity"></activity>
+        <activity android:name=".activities.ViewUserActivity" />
 
         <activity
             android:name=".activities.ExperimentActivity"
