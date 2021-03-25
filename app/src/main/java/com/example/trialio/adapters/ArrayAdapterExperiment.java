@@ -53,9 +53,10 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
         textOwner.setText(experiment.getSettings().getOwnerUsername());
+        locNeed.setImageResource(R.drawable.ic_baseline_location_on_24);
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
-            locNeed.setVisibility(View.GONE);
+            locNeed.setImageResource(R.drawable.ic_baseline_location_off_24);
         }
 
         return view;

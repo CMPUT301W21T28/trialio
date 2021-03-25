@@ -6,7 +6,7 @@
     android:id="@+id/btnAddTrials"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#535353"
+    android:background="@color/background_grey"
     tools:context=".activities.ExperimentActivity">
 
     <LinearLayout
@@ -59,7 +59,7 @@
         android:layout_width="379dp"
         android:layout_height="185dp"
         android:layout_marginTop="20dp"
-        android:background="#CCCECE"
+        android:background="@color/section_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -70,50 +70,92 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
+
                 android:id="@+id/txtExperimentDesciption"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
                 android:text="Description:"
                 android:textSize="14sp" />
 
             <TextView
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
+
                 android:id="@+id/txtExperimentOwner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:text="Owner:"
                 android:textSize="14sp" />
 
             <TextView
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
                 android:id="@+id/txtExperimentType"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Type: "
                 android:textSize="14sp" />
 
             <TextView
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
                 android:id="@+id/txtExperimentRegion"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Region:"
                 android:textSize="14sp" />
 
             <TextView
+
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
+
                 android:id="@+id/txtExperimentStatus"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Open:"
                 android:textSize="14sp" />
 
             <TextView
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
+
                 android:id="@+id/txtExperimentMinTrials"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Minimum number of trials:"
                 android:textSize="14sp" />
 
             <TextView
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/button_dark_grey"
+                android:textColor="@color/white"
+
+
                 android:id="@+id/txtExperimentGeoWarning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

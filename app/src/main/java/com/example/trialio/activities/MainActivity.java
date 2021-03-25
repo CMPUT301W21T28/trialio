@@ -148,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Called when the Add button is clicked
-        FloatingActionButton addExperiment = (FloatingActionButton) findViewById(R.id.btnNewExperiment);
+        Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
+
         addExperiment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
