@@ -47,15 +47,6 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         userManager = new UserManager();
 
 
-
-        // Took ActionBar code.
-        // DATE:	2020-12-14
-        // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-        // SOURCE: 	Add an up action [https://developer.android.com/training/appbar/up-action]
-        // AUTHOR: 	Android Developers [https://developer.android.com/]
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
 
         // Adapted from class/division code.

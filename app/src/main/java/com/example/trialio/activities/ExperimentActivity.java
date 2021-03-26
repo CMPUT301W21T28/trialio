@@ -74,13 +74,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experiment);
 
-        // Took ActionBar code.
-        // DATE:	2020-12-14
-        // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-        // SOURCE: 	Add an up action [https://developer.android.com/training/appbar/up-action]
-        // AUTHOR: 	Android Developers [https://developer.android.com/]
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
 
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
