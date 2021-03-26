@@ -19,7 +19,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuestionForumManager implements Serializable {
 
@@ -343,8 +345,9 @@ public class QuestionForumManager implements Serializable {
 
     // TODO: this seems to good to be true -> test the limitations of this function heavily
     private Question extractQuestionDocument(DocumentSnapshot document) {
-        Question question = document.toObject(Question.class);
 
+        // TODO custom mapping here
+        Question question = document.toObject(Question.class);
         return question;
     }
 
@@ -364,6 +367,23 @@ public class QuestionForumManager implements Serializable {
 
         return reply;
     }
+
+
+//    /**
+//     * Compresses a User into a Map for storage in a Firestore document.
+//     *
+//     * @param user The User to be compressed
+//     * @return A Map of fields to be stored
+//     */
+//    private Map<String, Object> compressUser(User user) {
+//        Map<String, Object> userData = new HashMap<>();
+//        userData.put(USERNAME_FIELD, user.getUsername());
+//        userData.put(DEVICE_ID_FIELD, user.getDeviceId());
+//        userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
+//        userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
+//        userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
+//        return userData;
+//    }
 
 
 

@@ -11,15 +11,15 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp">
 
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_outline_search_24" />
+                android:scaleType="fitCenter"/>
 
             <ImageButton
                 android:layout_width="0dp"
@@ -27,7 +27,7 @@
                 android:layout_weight="4"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/temp_logo" />
+                android:src="@drawable/temp_logo"/>
 
 
             <ImageButton

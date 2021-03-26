@@ -1,5 +1,6 @@
 package com.example.trialio.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,6 +47,13 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private Button addIgnoredButton;
     private Button removeIgnoredButton;
 
+
+    private TextView experimentDescriptionTextView;
+    private ImageView experimentLocationImageView;
+    private TextView experimentTypeTextView;
+    private TextView experimentOwnerTextView;
+    private TextView experimentStatusTextView;
+
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
@@ -69,11 +79,36 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
 
         // get views
+
+
+        experimentDescriptionTextView = findViewById(R.id.settings_description);
+        experimentLocationImageView = findViewById(R.id.settings_location);
+        experimentTypeTextView = findViewById(R.id.settings_text_type);
+        experimentOwnerTextView = findViewById(R.id.settings_text_owner);
+        experimentStatusTextView = findViewById(R.id.settings_text_status);
+
         unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
-        removeIgnoredButton = (Button) findViewById(R.id.button_remove_ignored);
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerUsername());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
 
         // set adapter
         ignoredListView.setAdapter(ignoredAdapter);
@@ -90,6 +125,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      * This sets the fields of the ExperimentSettingsActivity.
      */
     public void setFields() {
+
+
+
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
     }
 
@@ -128,6 +166,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
         // give option to remove ignored username when user long clicks in the listView
         ignoredListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
