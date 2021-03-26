@@ -21,21 +21,21 @@
                 android:id="@+id/text_trial_owner"
                 android:text="Owner"
                 android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="@color/button_dark_grey"
 
                 android:layout_gravity="center"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginBottom="3dp"
 
-                android:layout_weight="10"
-                android:background="@color/button_dark_grey"
-                android:padding="2dp"
-
-                android:textColor="@color/white">
+                android:layout_weight="6"
+                android:background="@color/special_yellow"
+                android:padding="2dp">
 
             </TextView>
 
@@ -45,7 +45,8 @@
                 android:id="@+id/text_trial_date"
                 android:text="Date"
                 android:textSize="12sp"
-
+                android:fontFamily="monospace"
+                android:textColor="@color/button_dark_grey"
 
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -58,10 +59,8 @@
 
 
                 android:layout_weight="5"
-                android:background="@color/button_dark_grey"
-                android:padding="2dp"
-
-                android:textColor="@color/white">
+                android:background="@color/special_yellow"
+                android:padding="2dp" >
 
             </TextView>
 
@@ -79,6 +78,7 @@
                 android:id="@+id/text_trial_result"
                 android:text="Result"
                 android:textSize="12sp"
+                android:fontFamily="monospace"
 
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
@@ -101,14 +101,3 @@
 
 
 
-</LinearLayout>
-
-
-
-
-
-
-
-
-
-</LinearLayout>

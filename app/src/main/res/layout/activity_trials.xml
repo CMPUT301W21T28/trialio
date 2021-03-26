@@ -1,159 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
-
-
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/btnAddTrials"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#535353"
-    tools:context=".activities.TrialActivity">
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/btnGeoLoc"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_dialog_map"
-            android:tint="#E8B41B">
-            android:src="@android:drawable/ic_dialog_map"></ImageButton>
+    android:background="@color/background_grey"
+    android:orientation="vertical">
 
 
-        <ImageButton
-            android:id="@+id/btnLogo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:padding="15dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/temp_logo"></ImageButton>
-
-        <ImageButton
-            android:id="@+id/btnSwitch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24"
-            android:tint="#E8B41B">
-            android:src="@android:drawable/ic_menu_manage"
-        </ImageButton>
-
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView3"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="5dp"
-        android:background="#CCCECE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtExperimentDescriptionTrial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
-                android:text="Description:"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtExperimentOwnerTrial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="Owner:"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtExperimentTypeTrial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Type: "
-                android:textSize="14sp" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:layout_marginHorizontal="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3">
-
-        <Button
-            android:id="@+id/btnFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:layout_marginHorizontal="5dp"
-
-            android:text="Filter" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:layout_marginHorizontal="5dp"
-
-            android:text="Add" />
-
-    </LinearLayout>
+    <!-- Page header -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
-        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp">
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo" />
+
+
+        <ImageButton
+            android:id="@+id/editUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24" />
+
+    </LinearLayout>
+
+
+    <!-- Description of what this page does -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Experiment Trials"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:layout_marginHorizontal="20dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <!--  Current experiment goes here   -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/section_grey"
+        android:layout_marginHorizontal="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/trial_description"
+
+                android:text="Description"
+                android:textSize="12sp"
+                android:backgroundTint="@color/special_yellow"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2.5dp"
+
+                android:layout_marginBottom="2.5dp"
+                android:layout_weight="5"
+                android:background="#9c9c9c"
+                android:padding="5dp"
+
+                android:textColor="@color/black"
+                android:fontFamily="monospace" >
+
+            </TextView>
+
+
+
+            <ImageView
+                android:id="@+id/trials_location"
+
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+
+
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_baseline_location_off_24" />
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/trials_text_type"
+                android:text="Type"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+
+                android:layout_weight="2.4"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+
+            </TextView>
+
+
+            <TextView
+
+                android:id="@+id/trials_text_owner"
+                android:text="Owner"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+
+            <TextView
+                android:id="@+id/trials_text_status"
+                android:text="Status"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="2"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- UNPUBLISH AND SWITCH -->
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trials"
+            android:textColor="@color/special_yellow"
+
+            android:fontFamily="monospace"
+            android:layout_marginHorizontal="20dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
+
+
+    <!--  List of blocked users  -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+        android:layout_marginBottom="10dp"
+        android:layout_weight="10"
+        android:gravity="center">
 
 
         <ListView
-            android:id="@+id/list_trials"
-            android:layout_width="359dp"
-            android:layout_height="520dp"
+            android:id="@+id/trials_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="#9c9c9c">
-
+            android:background="@color/section_grey">
         </ListView>
+
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
