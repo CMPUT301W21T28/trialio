@@ -6,7 +6,9 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +32,12 @@ public class QRCodeActivity extends AppCompatActivity {
     private ExperimentManager experimentManager;
 
 
+    private TextView experimentDescriptionTextView;
+    private ImageView experimentLocationImageView;
+    private TextView experimentTypeTextView;
+    private TextView experimentOwnerTextView;
+    private TextView experimentStatusTextView;
+
     /**
      * onCreate takes in the experiment passed in as a bundle and send triallist into QRAdaptor
      * @param savedInstanceState
@@ -48,6 +56,32 @@ public class QRCodeActivity extends AppCompatActivity {
         QRAdapter = new ArrayAdapterQR(this, experiment);
 
         experimentManager = new ExperimentManager();
+
+        // get views
+        experimentDescriptionTextView = findViewById(R.id.qr_description);
+        experimentLocationImageView = findViewById(R.id.qr_location);
+        experimentTypeTextView = findViewById(R.id.qr_text_type);
+        experimentOwnerTextView = findViewById(R.id.qr_text_owner);
+        experimentStatusTextView = findViewById(R.id.qr_text_status);
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerUsername());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
 
         // Set up the adapter for the list and experiment manager
         ListView trialListView = findViewById(R.id.list_trials_QR);

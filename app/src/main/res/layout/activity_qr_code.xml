@@ -37,7 +37,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="10dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24" />
 
     </LinearLayout>
 
@@ -45,20 +46,19 @@
     <!-- Description of what this page does -->
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#9c9c9c"
-        android:layout_margin="5dp"       >
+        android:layout_marginHorizontal="5dp"
+        android:background="@color/section_grey">
 
         <Button
+
             android:id="@+id/btnshowQR"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
             android:text="QR Codes" />
@@ -67,8 +67,8 @@
         <Button
             android:id="@+id/btnshowBarcode"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_dark_grey"
             android:text="Barcodes" />
