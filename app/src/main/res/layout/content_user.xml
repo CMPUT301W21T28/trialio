@@ -25,7 +25,7 @@
                 android:text="Question title"
                 android:fontFamily="monospace"
 
-                android:textColor="@color/special_yellow">
+                android:textColor="@color/white">
             </TextView>
 
 </LinearLayout>
