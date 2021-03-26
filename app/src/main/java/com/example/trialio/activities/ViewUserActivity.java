@@ -1,20 +1,16 @@
 package com.example.trialio.activities;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.fragments.EditContactInfoFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.fragments.EditProfileFragment;
 
 // Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
 // by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
@@ -39,11 +35,12 @@ public class ViewUserActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         user = (User) bundle.getSerializable("user");
 
-        editUserProfile = (Button) findViewById(R.id.editButton);
+        editUserProfile = (Button) findViewById(R.id.editContactInfoButton);
         userManager = new UserManager();
 
         /*
-        ActionBar customActionBar= getSupportActionBar();
+        //setup back button functionality
+        ActionBar customActionBar = getSupportActionBar();
         customActionBar.setDisplayShowHomeEnabled(false);
         customActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater customizedInflater = LayoutInflater.from(this);
@@ -60,6 +57,7 @@ public class ViewUserActivity extends AppCompatActivity {
         customActionBar.setCustomView(mCustomView);
         customActionBar.setDisplayShowCustomEnabled(true);
         */
+
     }
 
     @Override
@@ -131,13 +129,13 @@ public class ViewUserActivity extends AppCompatActivity {
         editUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditProfileFragment editProfileFragment = new EditProfileFragment();
+                EditContactInfoFragment editContactInfoFragment = new EditContactInfoFragment();
                 Bundle args = new Bundle();
 
                 args.putSerializable("UserProfile", user);
-                editProfileFragment.setArguments(args);
+                editContactInfoFragment.setArguments(args);
 
-                editProfileFragment.show(getSupportFragmentManager(), "editProfile");
+                editContactInfoFragment.show(getSupportFragmentManager(), "editProfile");
             }
         });
     }

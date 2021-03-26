@@ -32,7 +32,7 @@ public class QuestionArrayAdapter extends ArrayAdapter {
         View view = convertView;
 
         if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.question_forum_content, parent,false);
+            view = LayoutInflater.from(context).inflate(R.layout.content_question_forum, parent,false);
         }
 
         Question question = questionsList.get(position);

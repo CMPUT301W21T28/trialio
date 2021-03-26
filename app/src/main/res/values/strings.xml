@@ -3,4 +3,7 @@
     <string name="experiment_action_subscribe">Subscribe</string>
     <string name="experiment_action_unsubscribe">Unsubscribe</string>
     <string name="search_experiment_placeholder">Search</string>
+    <string name="view_user_username">Username</string>
+    <string name="view_user_phone">(000) 000-0000</string>
+    <string name="view_user_email">email@email.com</string>
 </resources>
