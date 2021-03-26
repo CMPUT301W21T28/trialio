@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.ChangeUsernameCommand;
 import com.example.trialio.fragments.ChangeUsernameFragment;
 import com.example.trialio.fragments.EditContactInfoFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
+import com.google.android.material.snackbar.Snackbar;
 
 // Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
 // by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
@@ -72,18 +74,10 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
         userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User newUser) {
-
-                // update the user
-                user = newUser;
-
-                // set fields
-                setFields();
-
-                // set visibility
-                setVisibility();
-
-                // set listeners
-                setOnClickListeners();
+                user = newUser;         // update the user
+                setFields();            // set fields
+                setVisibility();        // set visibility
+                setOnClickListeners();  // set listeners
             }
         });
     }
@@ -149,10 +143,6 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
             @Override
             public void onClick(View v) {
                 ChangeUsernameFragment changeUsernameFragment = new ChangeUsernameFragment();
-
-                Bundle args = new Bundle();
-                changeUsernameFragment.setArguments(args);
-
                 changeUsernameFragment.show(getSupportFragmentManager(), "changeUsername");
             }
         });
@@ -160,6 +150,13 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
 
     @Override
     public void onNewUsernameConfirm(String newUsername) {
-        Log.d(TAG, newUsername);
+        ChangeUsernameCommand command = new ChangeUsernameCommand(user, newUsername, isSuccess -> {
+            if (isSuccess) {
+                Log.d(TAG, "WooHoo, username changed!");
+            } else {
+                Log.d(TAG, "WooHoo, username not changed!");
+            }
+        });
+        command.execute();
     }
 }

@@ -416,7 +416,10 @@ public class UserManager {
         String oldUsername = user.getUsername();
         DocumentReference oldUserDocRef = userCollection.document(oldUsername);
         DocumentReference newUserDocRef = userCollection.document(newUsername);
-        Map<String, Object> compressUser = compressUser(user);
+
+        /* Firebase developer docs, "Transactions and batched writes",  2021-03-23, Apache 2.0
+         * https://firebase.google.com/docs/firestore/manage-data/transactions
+         */
 
         // Start transaction to claim new username only if it is available
         Task<Void> result = db.runTransaction(new Transaction.Function<Void>() {
@@ -426,6 +429,8 @@ public class UserManager {
                 DocumentSnapshot newUserSnapshot = transaction.get(newUserDocRef);
                 if (!newUserSnapshot.exists()) {
                     // Claim the new username
+                    user.setUsername(newUsername);
+                    Map<String, Object> compressUser = compressUser(user);
                     transaction.set(newUserDocRef, compressUser);
                     transaction.delete(oldUserDocRef);
                 } else {

@@ -9,11 +9,11 @@ import com.google.android.gms.tasks.Task;
 
 public class ChangeUsernameCommand {
 
-    User user;
-    String requestedUsername;
-    OnResultListener listener;
+    private final User user;
+    private final String requestedUsername;
+    private final OnResultListener listener;
 
-    interface OnResultListener {
+    public interface OnResultListener {
         public void onResult(Boolean isSuccess);
     }
 
