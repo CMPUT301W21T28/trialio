@@ -212,6 +212,7 @@
 
         <Button
             android:id="@+id/button_unpublish_experiment"
+            android:textColor="@color/button_dark_grey"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="wrap_content"
