@@ -12,11 +12,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
@@ -28,13 +30,14 @@ import java.util.Map;
  * is used to perform create, read, update and delete functionality on Users which are to be
  * maintained by the system. This class communicates with the Firebase database where User data is
  * maintained.
- *
+ * <p>
  * Version 2.0.1
  */
 public class UserManager {
     private static final String TAG = "UserManager";
     private static final String COLLECTION_PATH = "users-v3";
     private final CollectionReference userCollection;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static String fid;
 
@@ -245,9 +248,9 @@ public class UserManager {
     /**
      * Sets a function to be called when a User is fetched.
      *
-     * @deprecated
      * @param userId   the id of the User to fetch
      * @param listener the callback with the function to call
+     * @deprecated
      */
     private void setUserFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).get()
@@ -354,9 +357,9 @@ public class UserManager {
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
      * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
-     * @deprecated
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
+     * @deprecated
      */
     private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -397,6 +400,57 @@ public class UserManager {
                         Log.d(TAG, String.format("Failed to update User %s", username));
                     }
                 });
+    }
+
+    /**
+     * Transfers a User profile to a new username. If the username is not available, the process
+     * fails and the failure response can be captured with a onFailure listener to the returned Task.
+     * If the username is available and the switch is performed, the sucsess response can be
+     * captured with a onSuccess listener to the returned tasks
+     *
+     * @param user        the User to transfer to a new username
+     * @param newUsername the new username to transfer the user profile
+     * @return Task that indicates if the operation passed or failed
+     */
+    public Task<Void> transferUsername(User user, String newUsername) {
+        String oldUsername = user.getUsername();
+        DocumentReference oldUserDocRef = userCollection.document(oldUsername);
+        DocumentReference newUserDocRef = userCollection.document(newUsername);
+        Map<String, Object> compressUser = compressUser(user);
+
+        // Start transaction to claim new username only if it is available
+        Task<Void> result = db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot newUserSnapshot = transaction.get(newUserDocRef);
+                if (!newUserSnapshot.exists()) {
+                    // Claim the new username
+                    transaction.set(newUserDocRef, compressUser);
+                    transaction.delete(oldUserDocRef);
+                } else {
+                    // Requested username already exists in the system
+                    throw new FirebaseFirestoreException("Requested username is unavailable",
+                            FirebaseFirestoreException.Code.ABORTED);
+                }
+                return null;
+            }
+        });
+        result.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                String message = String.format("User transfer successful from %s to %s", oldUsername, newUsername);
+                Log.d(TAG, message);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                String message = String.format("User transfer failed from %s to %s", oldUsername, newUsername);
+                Log.d(TAG, message);
+
+            }
+        });
+        return result;
     }
 
     /**
