@@ -33,6 +33,7 @@
             android:orientation="horizontal">
 
             <ListView
+                android:id="@+id/list_ignored_experimenters"
                 android:layout_width="192dp"
                 android:layout_height="match_parent">
 

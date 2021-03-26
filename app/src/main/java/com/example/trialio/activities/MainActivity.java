@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
                 args.putSerializable("experiment", experimentList.get(i));
+                args.putSerializable("user_exp", currentUser);
                 intent.putExtras(args);
 
                 // start an ExperimentActivity
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ViewUserActivity.class);
-                intent.putExtra("User", currentUser);
+                intent.putExtra("user", currentUser);
                 startActivity(intent);
             }
         });
@@ -147,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Called when the Add button is clicked
-        FloatingActionButton addExperiment = (FloatingActionButton) findViewById(R.id.btnNewExperiment);
+        Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
+
         addExperiment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

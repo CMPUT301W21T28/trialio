@@ -2,8 +2,8 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,10 +13,8 @@ import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.EditContactInfoFragment;
 
-import java.io.Serializable;
-
-//Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
-//by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
+// Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
+// by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
 // in thread https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text/46244113#46244113
 
 /**
@@ -31,9 +29,13 @@ public class ViewUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user);
 
+        // get the user that was passed in as an argument
+        Bundle bundle = getIntent().getExtras();
+        user = (User) bundle.getSerializable("user");
 
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("User");
+        editUserProfile = (Button) findViewById(R.id.editButton);
+        userManager = new UserManager();
+
         /*
         //setup back button functionality
         ActionBar customActionBar = getSupportActionBar();
@@ -53,9 +55,42 @@ public class ViewUserActivity extends AppCompatActivity {
         customActionBar.setCustomView(mCustomView);
         customActionBar.setDisplayShowCustomEnabled(true);
         */
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // use the userID to get the most recent user
+        userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User newUser) {
+
+                // update the user
+                user = newUser;
+
+                // set fields
+                setFields();
+
+                // set visibility
+                setVisibility();
+
+                // set listeners
+                setOnClickListeners();
+            }
+        });
+    }
+
+    /**
+     * This sets the fields of the textViews in ViewUserActivity using the user data.
+     */
+    public void setFields() {
+
+        // get text views
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);
-        TextView UserEMail = findViewById(R.id.emailText);
+        TextView UserEmail = findViewById(R.id.emailText);
 
         UserManager manager = new UserManager();
         manager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -72,7 +107,7 @@ public class ViewUserActivity extends AppCompatActivity {
             }
         });
 
-        final Button editUserProfile = (Button) findViewById(R.id.editButton);
+        // show a fragment to edit user profile
         editUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

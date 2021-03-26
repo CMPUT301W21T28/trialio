@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
 
@@ -23,14 +22,12 @@ import java.util.ArrayList;
 public class ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;
     private ArrayList<Experiment> experimentList;
-    private UserManager userManager;
 
     public ArrayAdapterExperiment(Context context, ArrayList<Experiment> experimentList) {
         super(context, 0, experimentList);
+        this.context = context;
 
         this.experimentList = experimentList;
-        this.context = context;
-        userManager = new UserManager();
     }
 
     @NonNull
@@ -56,9 +53,10 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
         textOwner.setText(experiment.getSettings().getOwnerUsername());
+        locNeed.setImageResource(R.drawable.ic_baseline_location_on_24);
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
-            locNeed.setVisibility(View.GONE);
+            locNeed.setImageResource(R.drawable.ic_baseline_location_off_24);
         }
 
         return view;

@@ -33,6 +33,7 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
+import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
@@ -59,9 +60,10 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
-    private Button scanQR;
+    private ImageButton scanQR;
     private Button showQR;
     private StatisticsUtility statisticsUtility;
+    private User currentUser;
 
     /**
      * the On create the takes in the saved instance from the main activity
@@ -83,6 +85,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
+        currentUser = (User) bundle.getSerializable("user_exp");
 
         // create managers important to this activity
         experimentManager = new ExperimentManager();
@@ -96,6 +99,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
+        scanQR = (ImageButton) findViewById(R.id.btnCamera);
     }
 
     @Override
@@ -297,9 +301,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View v) {
                 if (ExperimentTypeUtility.isCount(trialType)) {
-
                     CountTrialFragment newTrial = new CountTrialFragment();
-
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
@@ -333,7 +335,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-
         /**
          * This sets the onClickListener for an QRCodeActivity
          */
@@ -350,6 +351,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        scanQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(context, ScanningActivity.class);
+                Bundle args = new Bundle();
+                args.putSerializable("user_scan", currentUser);
+                args.putBoolean("location_req", experiment.getSettings().getGeoLocationRequired());
+                intent.putExtras(args);
+                startActivity(intent);
+            }
+        });
 
         // Called when the user clicks item in experiment list
         showTrials.setOnClickListener(new View.OnClickListener() {
@@ -366,7 +378,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 startActivity(intent);
             }
         });
-
 
         // Called when the user clicks the subscribe button
         Button subBtn = findViewById(R.id.btnSubscribe);
