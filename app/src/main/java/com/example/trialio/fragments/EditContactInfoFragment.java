@@ -20,8 +20,7 @@ import com.example.trialio.models.User;
  * This fragment allows a user to edit their profile information, including username, phone number and e-mail
  * it sends data back to the User manager, which then updates the user's information in the firebase database
  */
-public class EditProfileFragment extends DialogFragment {
-    private EditText usernameView;
+public class EditContactInfoFragment extends DialogFragment {
     private EditText phoneNumberView;
     private EditText emailView;
     private OnFragmentInteractionListener listener;
@@ -30,13 +29,12 @@ public class EditProfileFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.edit_profile_fragment_layout, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_contact_info, null);
 
         // get the experiment that was passed in
         Bundle bundle = getArguments();
         user = (User) bundle.getSerializable("UserProfile");
 
-        usernameView = view.findViewById(R.id.userNameText);
         phoneNumberView = view.findViewById(R.id.editUserPhone);
         emailView = view.findViewById(R.id.editUserEmail);
 
@@ -47,7 +45,6 @@ public class EditProfileFragment extends DialogFragment {
                 manager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        usernameView.setText(user.getUsername());
                         phoneNumberView.setText(user.getContactInfo().getPhone());
                         emailView.setText(user.getContactInfo().getEmail());
                     }
@@ -58,16 +55,14 @@ public class EditProfileFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Edit User Information")
+                .setTitle("Edit Contact Information")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String usernameText = usernameView.getText().toString();
                         String phoneText = phoneNumberView.getText().toString();
                         String emailText = emailView.getText().toString();
 
-//                        user.setUsername(usernameText);
                         user.getContactInfo().setPhone(phoneText);
                         user.getContactInfo().setEmail(emailText);
 
