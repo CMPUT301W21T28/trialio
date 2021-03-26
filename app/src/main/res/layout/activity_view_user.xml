@@ -14,31 +14,31 @@
         android:layout_weight="5"
         android:background="#9c9c9c"
         android:orientation="vertical">
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linearLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="46dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:orientation="horizontal">-->
 
 
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="71dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/arrow" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/backButton"-->
+<!--                android:layout_width="71dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:srcCompat="@drawable/arrow" />-->
 
 
-            <ImageButton
-                android:id="@+id/btnLogo"
-                android:layout_width="32dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:padding="15dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/temp_logo"></ImageButton>
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnLogo"-->
+<!--                android:layout_width="32dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="4"-->
+<!--                android:padding="15dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/temp_logo"></ImageButton>-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <TextView
             android:id="@+id/usernameText"
@@ -49,7 +49,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/view_user_username" />
 
         <TextView
             android:id="@+id/phoneText"
@@ -60,7 +60,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/view_user_phone" />
 
         <TextView
             android:id="@+id/emailText"
@@ -71,7 +71,10 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="@string/view_user_email" />
+
+
+
 
     </LinearLayout>
 
@@ -85,8 +88,18 @@
         android:layout_weight="3"
         android:gravity="bottom" >
 
+                <Button
+            android:id="@+id/changeUsernameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="Change Username"
+            android:backgroundTint="#fbd700"
+            android:textColor="#000000"/>
+
         <Button
-            android:id="@+id/editButton"
+            android:id="@+id/editContactInfoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
