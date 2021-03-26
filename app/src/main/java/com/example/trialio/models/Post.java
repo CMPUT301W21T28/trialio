@@ -8,18 +8,18 @@ public abstract class Post implements Serializable {
 
     private String postID;
     private String body;
-    private User user;
+    private String userId;
 
 
-    public Post(String body, User user) {
+    public Post(String body, String userId) {
         this.body = body;
-        this.user = user;
+        this.userId = userId;
     }
 
-    public Post(String postID, String body, User user) {
+    public Post(String postID, String body, String userId) {
         this.postID = postID;
         this.body = body;
-        this.user = user;
+        this.userId = userId;
     }
 
     protected Post() {
@@ -37,12 +37,12 @@ public abstract class Post implements Serializable {
         return this.body;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
 }

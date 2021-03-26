@@ -61,7 +61,7 @@ public class ArrayAdapterTrials extends ArrayAdapter {
 
         // set the textviews
         // get the owner's username
-        userManager.getUser(trial.getExperimenterUsername(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(trial.getExperimenterId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 textOwner.setText("Username: " + user.getUsername());

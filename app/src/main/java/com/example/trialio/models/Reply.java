@@ -16,18 +16,18 @@ public class Reply extends Post implements Serializable {
 
     }
 
-    public Reply(String body, User user, List<Reply> replies) {
-        super(body, user);
+    public Reply(String body, String userId, List<Reply> replies) {
+        super(body, userId);
         this.replies = replies;
     }
 
-    public Reply(String postID, String body, User user) {
-        super(postID, body, user);
+    public Reply(String postID, String body, String userId) {
+        super(postID, body, userId);
         this.replies = new ArrayList<>();
     }
 
-    public Reply(String postID, String body, User user, List<Reply> replies) {
-        super(postID, body, user);
+    public Reply(String postID, String body, String userId, List<Reply> replies) {
+        super(postID, body, userId);
         this.replies = replies;
     }
 

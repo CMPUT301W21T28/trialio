@@ -81,7 +81,7 @@ public class TrialActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // get the username of the clicked user
-                String clickedUsername = trialList.get(i).getExperimenterUsername();
+                String clickedUsername = trialList.get(i).getExperimenterId();
 
                 // check if the current user is the owner
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -92,7 +92,7 @@ public class TrialActivity extends AppCompatActivity {
                         int popupViewID = R.layout.menu_trials_experimenter;
 
                         // if the current user is the owner of the experiment, use the owner menu
-                        if (currentUser.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
+                        if (currentUser.getUsername().equals(experiment.getSettings().getOwnerId())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
 
@@ -144,7 +144,7 @@ public class TrialActivity extends AppCompatActivity {
         textType.setText("Type: " + experiment.getTrialManager().getType());
 
         // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerUsername(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 textOwner.setText("Owner: " + user.getUsername());
@@ -156,7 +156,7 @@ public class TrialActivity extends AppCompatActivity {
      * This switches to a ViewUserActivity with the given user as the argument.
      */
     public void menuViewProfile(String userID) {
-        userManager.getUser(userID, new UserManager.OnUserFetchListener() {
+        userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 Intent intent = new Intent(context, ViewUserActivity.class);

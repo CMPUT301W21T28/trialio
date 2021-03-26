@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static final String COLLECTION_PATH = "experiments-v3";
+    private static final String COLLECTION_PATH = "experiments-v4";
 
     private final CollectionReference experimentsCollection;
 
@@ -236,15 +236,15 @@ public class ExperimentManager {
      * @param listener the listener with the action to be taken once the experiments are fetched
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
-        String field = "settings.ownerUsername";
-        String ID = owner.getUsername();
-        experimentsCollection.whereEqualTo(field, ID)
+        String field = "settings.ownerId";
+        String id = owner.getId();
+        experimentsCollection.whereEqualTo(field, id)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            String message = String.format("Owned experiments for user %s fetched successfully", ID);
+                            String message = String.format("Owned experiments for user %s fetched successfully", id);
                             Log.d(TAG, message);
 
                             QuerySnapshot qs = task.getResult();
@@ -332,22 +332,22 @@ public class ExperimentManager {
         if (ExperimentTypeUtility.isBinomial(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterUsername"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
+                experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
             }
         } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterUsername"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
+                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
             }
         } else if (ExperimentTypeUtility.isNonNegative(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterUsername"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
+                experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
             }
         } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
             for (Map trial : (ArrayList<Map>) tm.get("trials")) {
                 Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterUsername"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
+                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
             }
         } else {
             Log.d(TAG, experiment.getExperimentID());

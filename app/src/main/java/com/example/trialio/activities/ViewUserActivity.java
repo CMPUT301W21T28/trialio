@@ -70,6 +70,10 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
     protected void onStart() {
         super.onStart();
 
+        setUserDataListener();
+    }
+
+    private void setUserDataListener() {
         // use the userID to get the most recent user
         userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
             @Override
@@ -153,6 +157,7 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
         ChangeUsernameCommand command = new ChangeUsernameCommand(user, newUsername, isSuccess -> {
             if (isSuccess) {
                 Log.d(TAG, "WooHoo, username changed!");
+                setUserDataListener();
             } else {
                 Log.d(TAG, "WooHoo, username not changed!");
             }

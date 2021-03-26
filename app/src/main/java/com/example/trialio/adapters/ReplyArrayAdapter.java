@@ -11,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
-import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Question;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Reply;
-
-import org.w3c.dom.Text;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -35,18 +33,25 @@ public class ReplyArrayAdapter extends ArrayAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.reply_content, parent,false);
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.reply_content, parent, false);
         }
 
         Reply reply = replyList.get(position);
 
-        TextView replyAuthorID = view.findViewById(R.id.replyAuthorID);
-        TextView replyBody = view.findViewById(R.id.replyBody);
-
         // set text views
-        replyAuthorID.setText(reply.getUser().getUsername());
+        TextView replyBody = view.findViewById(R.id.replyBody);
         replyBody.setText(reply.getBody());
+        UserManager manager = new UserManager();
+
+        View finalView = view;
+        manager.getUserById(reply.getUserId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                TextView replyAuthorID = finalView.findViewById(R.id.replyAuthorID);
+                replyAuthorID.setText(user.getUsername());
+            }
+        });
 
         return view;
     }
