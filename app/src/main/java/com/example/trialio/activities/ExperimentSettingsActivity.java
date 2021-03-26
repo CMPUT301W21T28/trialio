@@ -52,7 +52,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_experiment_settings_OLD);
+        setContentView(R.layout.activity_experiment_settings);
 
         context = this;
 
@@ -73,7 +73,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
-        removeIgnoredButton = (Button) findViewById(R.id.button_remove_ignored);
 
         // set adapter
         ignoredListView.setAdapter(ignoredAdapter);
