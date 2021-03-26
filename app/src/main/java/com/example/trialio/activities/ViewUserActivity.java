@@ -1,11 +1,14 @@
 package com.example.trialio.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.trialio.R;
@@ -40,8 +43,7 @@ public class ViewUserActivity extends AppCompatActivity {
         userManager = new UserManager();
 
         /*
-        //setup back button functionality
-        ActionBar customActionBar = getSupportActionBar();
+        ActionBar customActionBar= getSupportActionBar();
         customActionBar.setDisplayShowHomeEnabled(false);
         customActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater customizedInflater = LayoutInflater.from(this);
@@ -58,7 +60,6 @@ public class ViewUserActivity extends AppCompatActivity {
         customActionBar.setCustomView(mCustomView);
         customActionBar.setDisplayShowCustomEnabled(true);
         */
-
     }
 
     @Override
