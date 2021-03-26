@@ -52,7 +52,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_experiment_settings);
+        setContentView(R.layout.activity_experiment_settings_OLD);
 
         context = this;
 
