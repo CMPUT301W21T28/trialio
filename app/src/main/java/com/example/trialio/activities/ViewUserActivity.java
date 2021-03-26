@@ -3,7 +3,6 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,7 +35,7 @@ public class ViewUserActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         user = (User) bundle.getSerializable("user");
 
-        editUserProfile = (Button) findViewById(R.id.editButton);
+        editUserProfile = (Button) findViewById(R.id.editContactInfoButton);
         userManager = new UserManager();
 
         /*
@@ -130,13 +129,13 @@ public class ViewUserActivity extends AppCompatActivity {
         editUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditContactInfoFragment editProfileFragment = new EditContactInfoFragment();
+                EditContactInfoFragment editContactInfoFragment = new EditContactInfoFragment();
                 Bundle args = new Bundle();
 
                 args.putSerializable("UserProfile", user);
-                editProfileFragment.setArguments(args);
+                editContactInfoFragment.setArguments(args);
 
-                editProfileFragment.show(getSupportFragmentManager(), "editProfile");
+                editContactInfoFragment.show(getSupportFragmentManager(), "editProfile");
             }
         });
     }
