@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Represents a location with a latitude and a longitude
@@ -140,6 +141,11 @@ public class Location implements Serializable{
     }
 
 
-    //    public ArrayList<double> getCoord() { }
+    public ArrayList<Double> getCoord() {
+        ArrayList<Double> LatLong = new ArrayList<>();
+        LatLong.add(getLatitude());
+        LatLong.add(getLongitude());
+        return LatLong;
+    }
 
 }
