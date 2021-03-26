@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -38,6 +39,12 @@ public class TrialActivity extends AppCompatActivity {
     private UserManager userManager;
     private ListView trialListView;
 
+    private TextView experimentDescriptionTextView;
+    private ImageView experimentLocationImageView;
+    private TextView experimentTypeTextView;
+    private TextView experimentOwnerTextView;
+    private TextView experimentStatusTextView;
+
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
@@ -59,8 +66,35 @@ public class TrialActivity extends AppCompatActivity {
         trialList = new ArrayList<>();
         trialAdapter = new ArrayAdapterTrials(this, trialList, experiment.getTrialManager().getType());
 
+        // views
+
+        experimentDescriptionTextView = findViewById(R.id.trial_description);
+        experimentLocationImageView = findViewById(R.id.trials_location);
+        experimentTypeTextView = findViewById(R.id.trials_text_type);
+        experimentOwnerTextView = findViewById(R.id.trials_text_owner);
+        experimentStatusTextView = findViewById(R.id.trials_text_status);
+
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerUsername());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
+
         // Set up the adapter for the list and experiment manager
-        trialListView = findViewById(R.id.list_trials);
+        trialListView = findViewById(R.id.trials_list);
         trialListView.setAdapter(trialAdapter);
     }
 
