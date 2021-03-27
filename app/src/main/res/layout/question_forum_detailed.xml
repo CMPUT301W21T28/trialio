@@ -5,14 +5,53 @@
     android:layout_height="match_parent"
     android:background="@color/background_grey" >
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp">
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="#fbd700"
+            android:backgroundTint="@color/section_grey"/>
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"
+            android:backgroundTint="@color/section_grey"/>
+
+
+        <ImageButton
+            android:id="@+id/editUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/special_yellow"
+            android:backgroundTint="@color/section_grey"/>
+
+    </LinearLayout>
+
+    <!-- Description of what this page does -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:background="@color/section_grey">
 
@@ -85,6 +124,28 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="5dp"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reply Forum"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="5dp"
+
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

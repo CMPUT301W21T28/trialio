@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.2"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:layout_marginHorizontal="5dp">
 
@@ -23,7 +23,6 @@
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:tint="#fbd700"
-            android:src="@android:drawable/ic_dialog_map"
             android:backgroundTint="@color/section_grey"/>
 
         <ImageButton
@@ -43,7 +42,6 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24"
             android:tint="@color/special_yellow"
             android:backgroundTint="@color/section_grey"/>
 
@@ -239,18 +237,27 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="2">
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:id="@+id/plotTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/section_grey" />
+            android:layout_height="wrap_content"
+
+            android:textAlignment="center"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:text="GRAPH INFO HERE"
+
+            android:padding="5dp"
+            android:background="@color/section_grey"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -260,7 +267,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/section_grey"
+        android:background="@color/white"
         android:layout_marginHorizontal="20dp" >
 
         <com.github.mikephil.charting.charts.BarChart
