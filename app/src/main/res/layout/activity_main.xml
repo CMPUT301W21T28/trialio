@@ -11,8 +11,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+
             android:orientation="horizontal"
-            android:layout_marginHorizontal="5dp">
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp">
 
             <ImageButton
                 android:layout_width="0dp"
@@ -27,6 +29,7 @@
                 android:layout_weight="4"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
+                android:backgroundTint="@color/section_grey"
                 android:src="@drawable/temp_logo"/>
 
 
@@ -88,6 +91,8 @@
         android:imeOptions="actionDone"
         android:inputType="text"
             android:textColor="@color/white"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
         android:paddingHorizontal="5dp"
             android:layout_marginHorizontal="5dp"
             android:backgroundTint="@color/special_yellow"/>
