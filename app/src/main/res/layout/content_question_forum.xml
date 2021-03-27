@@ -11,6 +11,7 @@
 
 
 
+
         <TextView
             android:id="@+id/questionAuthorID"
             android:layout_width="match_parent"
@@ -89,6 +90,5 @@
             android:gravity="center_horizontal">
 
         </TextView>
-
 
 </LinearLayout>

@@ -24,6 +24,7 @@
             android:scaleType="fitCenter"
             android:backgroundTint="@color/section_grey"/>
 
+
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -32,7 +33,6 @@
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo"
             android:backgroundTint="@color/section_grey"/>
-
 
         <ImageButton
             android:id="@+id/editUserBtn"
@@ -142,14 +142,11 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
                 android:layout_marginBottom="2.5dp"
-
-
                 android:layout_weight="2.4"
                 android:background="@color/button_dark_grey"
                 android:padding="3dp"
                 android:textColor="@color/white"
                 android:fontFamily="monospace">
-
             </TextView>
 
 
@@ -220,7 +217,6 @@
             android:layout_weight="3"
             android:layout_height="wrap_content"
             android:text="Unpublish"
-
             android:layout_marginHorizontal="5dp" />
 
         <Switch
@@ -280,7 +276,6 @@
             android:layout_gravity="center"
             android:background="@color/section_grey"
             android:dividerHeight="3dp">
-
         </ListView>
 
     </LinearLayout>
