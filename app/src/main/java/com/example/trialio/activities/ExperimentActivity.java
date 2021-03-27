@@ -9,7 +9,6 @@ Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
  */
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -34,7 +33,6 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
-import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
@@ -69,6 +67,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
     /**
      * the On create the takes in the saved instance from the main activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -93,7 +92,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         settingsButton = (ImageButton) findViewById(R.id.editUserBtn);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (ImageButton) findViewById(R.id.btnAddTrial);
-        showQR = (Button) findViewById(R.id.btnQRCode) ;
+        showQR = (Button) findViewById(R.id.btnQRCode);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
     }
 
@@ -169,7 +168,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_FINE_PERMISSION) {
-            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //user has granted permission
             } else {
                 /**
@@ -221,7 +220,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
-        textOwner.setText(experiment.getSettings().getOwnerUsername());
+
+        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText(user.getUsername());
+
+            }
+        });
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             textStatus.setText("Open");
@@ -284,7 +290,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             new AlertDialog.Builder(ExperimentActivity.this)
                     .setMessage("Your trial was not submitted, please enable location permissions")
                     .setCancelable(false)
-                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
@@ -307,32 +313,28 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 if (ExperimentTypeUtility.isCount(trialType)) {
                     CountTrialFragment newTrial = new CountTrialFragment();
                     Bundle args = new Bundle();
-                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addCountTrial");
-                }
-                else if (ExperimentTypeUtility.isBinomial(trialType)) {
+                } else if (ExperimentTypeUtility.isBinomial(trialType)) {
                     BinomialTrialFragment newTrial = new BinomialTrialFragment();
                     Bundle args = new Bundle();
-                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addBinomial");
-                }
-                else if (ExperimentTypeUtility.isNonNegative(trialType)) {
+                } else if (ExperimentTypeUtility.isNonNegative(trialType)) {
                     NonNegativeTrialFragment newTrial = new NonNegativeTrialFragment();
                     Bundle args = new Bundle();
-                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addConNegativeTrial");
-                }
-                else if (ExperimentTypeUtility.isMeasurement(trialType)) {
+                } else if (ExperimentTypeUtility.isMeasurement(trialType)) {
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
                     Bundle args = new Bundle();
-                    args.putBoolean("GeoLocationRequired",experiment.getSettings().getGeoLocationRequired());
+                    args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
-                }
-                else {
+                } else {
                     Log.d(TAG, "Error: invalid experiment type, see ExperimentTypeUtility.c");
                     assert (false);
                 }
@@ -357,7 +359,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
         scanQR.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Intent intent = new Intent(context, ScanningActivity.class);
                 Bundle args = new Bundle();
                 args.putSerializable("user_scan", currentUser);
@@ -466,8 +468,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getUsername());
-                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerUsername());
-                if (user.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
+                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerId());
+                if (user.getId().equals(experiment.getSettings().getOwnerId())) {
                     settingsButton.setVisibility(View.VISIBLE);
                 }
             }

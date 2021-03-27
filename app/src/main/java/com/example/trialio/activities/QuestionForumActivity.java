@@ -116,7 +116,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 args.putSerializable("question", tempQuestion);
 
                 Log.w("QUESTION ID: ", tempQuestion.getPostID());
-                Log.w("QUESTION USERNAME: ", tempQuestion.getUser().getUsername());
+                Log.w("QUESTION USERNAME: ", tempQuestion.getUserId());
 
 //                Log.w("QUESTION ID: ", selectedQuestion.getPostID());
 //                Log.w("QUESTION USERNAME: ", selectedQuestion.getUser().getUsername());

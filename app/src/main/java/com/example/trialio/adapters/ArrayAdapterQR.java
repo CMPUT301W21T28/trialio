@@ -1,23 +1,16 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
-import com.example.trialio.activities.MainActivity;
-import com.example.trialio.activities.ViewUserActivity;
-import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -70,7 +63,7 @@ public class ArrayAdapterQR extends ArrayAdapter{
         TextView textResult = view.findViewById(R.id.text_trial_result_qr);
 
         // set the textviews
-        textOwner.setText("Owner:"+trial.getExperimenterUsername());
+        textOwner.setText("Owner:"+trial.getExperimenterId());
         textDate.setText("Date:"+trial.getDate().toString());
 
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){

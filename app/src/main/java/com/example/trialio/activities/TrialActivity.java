@@ -91,7 +91,7 @@ public class TrialActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // get the username of the clicked user
-                String clickedUsername = trialList.get(i).getExperimenterUsername();
+                String clickedUserId = trialList.get(i).getExperimenterId();
 
                 // check if the current user is the owner
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -102,7 +102,7 @@ public class TrialActivity extends AppCompatActivity {
                         int popupViewID = R.layout.menu_trials_experimenter;
 
                         // if the current user is the owner of the experiment, use the owner menu
-                        if (currentUser.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
+                        if (currentUser.getId().equals(experiment.getSettings().getOwnerId())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
 
@@ -116,12 +116,12 @@ public class TrialActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 switch (menuItem.getItemId()) {
                                     case R.id.item_ignore_user:
-                                        Log.d(TAG, "Ignore user: " + clickedUsername);
-                                        menuIgnoreUsername(clickedUsername);
+                                        Log.d(TAG, "Ignore user: " + clickedUserId);
+                                        menuIgnoreUsername(clickedUserId);
                                         break;
                                     case R.id.item_view_profile:
-                                        Log.d(TAG, "View profile: " + clickedUsername);
-                                        menuViewProfile(clickedUsername);
+                                        Log.d(TAG, "View profile: " + clickedUserId);
+                                        menuViewProfile(clickedUserId);
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -179,13 +179,20 @@ public class TrialActivity extends AppCompatActivity {
 //            }
 //        });
 
+        // get the owner's username
+        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText("Owner: " + user.getUsername());
+            }
+        });
     }
 
     /**
      * This switches to a ViewUserActivity with the given user as the argument.
      */
     public void menuViewProfile(String userID) {
-        userManager.getUser(userID, new UserManager.OnUserFetchListener() {
+        userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 Intent intent = new Intent(context, ViewUserActivity.class);
@@ -203,9 +210,12 @@ public class TrialActivity extends AppCompatActivity {
 
     /**
      * This adds a username to the ignored list for the experiment.
-     * @param username String of the user ID to add to the ignored list for the experiment.
+     *
+     * TODO: This can be refactored into a command object that takes the input of Experiment and
+     * User
+     * @param userId String of the user ID to add to the ignored list for the experiment.
      */
-    public void menuIgnoreUsername(String username) {
+    public void menuIgnoreUsername(String userId) {
 
         // get the experiment from firebase
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -216,7 +226,7 @@ public class TrialActivity extends AppCompatActivity {
                 experiment = newExperiment;
 
                 // add the userID to the list of ignored userIDs
-                experiment.getTrialManager().addIgnoredUser(username);
+                experiment.getTrialManager().addIgnoredUser(userId);
 
                 // update the experiment
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
