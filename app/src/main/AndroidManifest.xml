@@ -22,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
-        <activity android:name=".activities.QRCountActivity"></activity>
+        <activity android:name=".QRMeasurementActivity"></activity>
+        <activity android:name=".QRNonnegActivity" />
+        <activity android:name=".activities.QRCountActivity" />
         <activity
             android:name=".activities.ScanningActivity"
             android:parentActivityName=".activities.ExperimentActivity">

@@ -332,13 +332,31 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, QRBinomialActivity.class);
-
-                Bundle args = new Bundle();
-                args.putSerializable("experiment_qr", experiment);
-                intent.putExtras(args);
-
-                startActivity(intent);
+                if (experiment.getTrialManager().getType().equals("BINOMIAL")){
+                    Intent intent = new Intent(context, QRBinomialActivity.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("experiment_qr", experiment);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }else if (experiment.getTrialManager().getType().equals("COUNT")){
+                    Intent intent = new Intent(context, QRCountActivity.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("experiment_qr", experiment);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
+                    Intent intent = new Intent(context, QRCountActivity.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("experiment_qr", experiment);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
+                    Intent intent = new Intent(context, QRCountActivity.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("experiment_qr", experiment);
+                    intent.putExtras(args);
+                    startActivity(intent);
+                }
             }
         });
 
