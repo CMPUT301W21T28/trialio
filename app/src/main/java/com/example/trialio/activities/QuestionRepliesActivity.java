@@ -1,59 +1,35 @@
 package com.example.trialio.activities;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.QuestionArrayAdapter;
 import com.example.trialio.adapters.ReplyArrayAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.fragments.AddReplyFragment;
-import com.example.trialio.fragments.BinomialTrialFragment;
-import com.example.trialio.fragments.CountTrialFragment;
-import com.example.trialio.fragments.MeasurementTrialFragment;
-import com.example.trialio.fragments.NonNegativeTrialFragment;
-import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
-import com.example.trialio.utils.ExperimentTypeUtility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**
  * This activity opens an question (w/ details) with all of it's replies. The activity is opened when a question is clicked in the list view from QuestionForumActivity.
  */
 
-public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener{
+public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener {
     private final Context context = this;
 
     private final String TAG = "QuestionRepliesForumActivity";
@@ -76,6 +52,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
     /**
      * the On create the takes in the saved instance from the question forum activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -105,7 +82,12 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         TextView selectedQuestionBody = findViewById(R.id.selectedQuestionBody);
 
         // set views with selectedQuestion details
-        authorID.setText(selectedQuestion.getUser().getUsername());
+        userManager.getUserById(selectedQuestion.getUserId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                authorID.setText(user.getUsername());
+            }
+        });
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
         selectedQuestionBody.setText(selectedQuestion.getBody());
 
@@ -160,8 +142,6 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         });
 
 
-
-
         /**
          * Adds new reply
          */
@@ -191,13 +171,12 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
      */
 
     @Override
-    public void onOkPressed (Reply newReply) {
+    public void onOkPressed(Reply newReply) {
         // Log.d(TAG, "Reply");
         questionForumManager.createReply(selectedQuestion.getPostID(), newReply);
 
         setReplyList();
     }
-
 
 
 }

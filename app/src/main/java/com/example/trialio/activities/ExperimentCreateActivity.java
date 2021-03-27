@@ -121,7 +121,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                             @Override
                             public void onUserFetch(User user) {
                                 // prepare experiment settings
-                                ExperimentSettings settings = new ExperimentSettings(description, region, user.getUsername(), geo);
+                                ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
                                 // create Experiment object
                                 experiment = new Experiment(newID, settings, type, open, numTrials);

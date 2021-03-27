@@ -124,7 +124,7 @@ public class TrialManager implements Serializable {
     public ArrayList<Trial> fetchVisibleTrials() {
         ArrayList<Trial> visible = new ArrayList<Trial>();
         for (Trial trial : trials) {
-            if (!ignoredUserIds.contains(trial.getExperimenterUsername())) {
+            if (!ignoredUserIds.contains(trial.getExperimenterId())) {
                 visible.add(trial);
             }
         }

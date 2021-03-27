@@ -12,6 +12,7 @@
         android:hint="Enter Phone Number"
         android:backgroundTint="#fbd700"
         android:inputType="phone"
+        android:digits="0123456789+"
         android:autofillHints="phone" />
 
     <EditText
