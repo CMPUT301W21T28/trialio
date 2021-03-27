@@ -9,7 +9,6 @@ Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
  */
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,7 +32,6 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
-import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
@@ -334,7 +332,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, QRCodeActivity.class);
+                Intent intent = new Intent(context, QRBinomialActivity.class);
 
                 Bundle args = new Bundle();
                 args.putSerializable("experiment_qr", experiment);

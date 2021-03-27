@@ -2,20 +2,9 @@ package com.example.trialio.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.os.Bundle;
-import android.service.autofill.AutofillService;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 
-import com.example.trialio.R;
-import com.example.trialio.activities.MainActivity;
-import com.example.trialio.activities.ScanningActivity;
-import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -25,13 +14,10 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import java.lang.ref.Reference;
-import java.sql.Ref;
 import java.util.Date;
 
 import static android.graphics.Color.BLACK;
