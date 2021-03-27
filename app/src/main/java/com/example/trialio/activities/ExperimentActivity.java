@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.trialio.controllers.UserManager;
@@ -58,8 +59,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     final int REQUEST_CODE_FINE_PERMISSION = 99;
     private ImageButton settingsButton;
     private UserManager userManager;
+
     private Button showTrials;
-    private Button addTrial;
+    private ImageButton addTrial;
     private ImageButton scanQR;
     private Button showQR;
     private StatisticsUtility statisticsUtility;
@@ -88,9 +90,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         statisticsUtility = new StatisticsUtility();
 
         // get the important views in this activity
-        settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
+        settingsButton = (ImageButton) findViewById(R.id.editUserBtn);
         showTrials = (Button) findViewById(R.id.btnTrials);
-        addTrial = (Button) findViewById(R.id.btnAddTrial);
+        addTrial = (ImageButton) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
     }
@@ -201,14 +203,18 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
      */
     public void setFields() {
         // get TextViews
-        TextView textDescription = findViewById(R.id.txtExperimentDesciption);
-        TextView textType = findViewById(R.id.txtExperimentType);
-        TextView textRegion = findViewById(R.id.txtExperimentRegion);
-        TextView textOwner = findViewById(R.id.txtExperimentOwner);
-        TextView textStatus = findViewById(R.id.txtExperimentStatus);
-        TextView textMinTrials = findViewById(R.id.txtExperimentMinTrials);
+
+        // TODO: maybe make some adjustments here
+        TextView textDescription = findViewById(R.id.experiment_description);
+        TextView textType = findViewById(R.id.experiment_text_type);
+        TextView textRegion = findViewById(R.id.experiment_region);
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        TextView textStatus = findViewById(R.id.experiment_text_status);
+        TextView textMinTrials = findViewById(R.id.experiment_min_num);
         TextView textStats = findViewById(R.id.txtStatsSummary);
-        TextView textGeoWarning = findViewById(R.id.txtExperimentGeoWarning);
+        ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
+
+
         Button subBtn = findViewById(R.id.btnSubscribe);
 
         // set TextViews
@@ -217,15 +223,20 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
         textOwner.setText(experiment.getSettings().getOwnerUsername());
 
-        // if this is a geo experiment, give a warning
-        if (experiment.getSettings().getGeoLocationRequired()) {
-            textGeoWarning.setText("Warning! Geo-location information is collected with trials for this experiment.");
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            textStatus.setText("Open");
         } else {
-            textGeoWarning.setText("");
+            textStatus.setText("Closed");
         }
 
-        textStatus.setText("Open: " + (experiment.getTrialManager().getIsOpen() ? "yes" : "no"));
-        textMinTrials.setText("Minimum number of trials: " + experiment.getTrialManager().getMinNumOfTrials());
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
+        textMinTrials.setText("Min # Trials: " + experiment.getTrialManager().getMinNumOfTrials());
+
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
