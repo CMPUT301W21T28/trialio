@@ -1,91 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:background="#747474">
+    android:background="@color/background_grey"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtStatsSummaryStatPage"
-        android:layout_width="292dp"
-        android:layout_height="153dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:background="#A19B9B"
-        android:textColor="#B6B0B0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+
+    <!-- Page header -->
+
 
     <LinearLayout
-        android:id="@+id/graphControl"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:background="#9c9c9c"
-        app:layout_constraintTop_toBottomOf="@+id/txtStatsSummaryStatPage">
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp">
 
-        <TextView
-            android:id="@+id/plotTitle"
-            android:layout_width="220dp"
-            android:layout_height="75dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="-10dp"
-            android:background="#747474" />
-
-        <Button
-            android:id="@+id/btnPreviousGraph"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="@color/special_yellow"
-            android:textSize="16sp" />
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="#fbd700"
+            android:src="@android:drawable/ic_dialog_map"
+            android:backgroundTint="@color/section_grey"/>
 
-        <Button
-            android:id="@+id/btnNextGraph"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"
+            android:backgroundTint="@color/section_grey"/>
+
+
+        <ImageButton
+            android:id="@+id/editUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="@color/special_yellow"
-            android:textSize="16sp" />
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24"
+            android:tint="@color/special_yellow"
+            android:backgroundTint="@color/section_grey"/>
 
     </LinearLayout>
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/histogramView"
-        android:layout_width="350dp"
-        android:layout_height="255dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphControl"
-        tools:ignore="MissingConstraints"></com.github.mikephil.charting.charts.BarChart>
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/timePlotView"
-        android:layout_width="350dp"
-        android:layout_height="255dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphControl"
-        tools:ignore="MissingConstraints"></com.github.mikephil.charting.charts.LineChart>
+    <!-- Description of what this page does -->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Experiment Statistics"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:layout_marginHorizontal="20dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <!--  Current experiment goes here   -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/section_grey"
+        android:layout_marginHorizontal="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/experiment_description"
+
+                android:text="Description"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2.5dp"
+
+                android:layout_marginBottom="2.5dp"
+                android:layout_weight="5"
+                android:background="@color/special_yellow"
+                android:padding="5dp"
+
+                android:textColor="@color/black"
+                android:fontFamily="monospace" >
+
+            </TextView>
+
+
+
+            <ImageView
+                android:id="@+id/experiment_location"
+
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+
+
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_baseline_location_off_24" />
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/experiment_text_type"
+                android:text="Type"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+
+                android:layout_weight="2.4"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+
+            </TextView>
+
+
+            <TextView
+
+                android:id="@+id/experiment_text_owner"
+                android:text="Owner"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+
+            <TextView
+                android:id="@+id/experiment_text_status"
+                android:text="Status"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="2"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!--  List of blocked users  -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="4"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txtStatsSummaryStatPage"
+
+            android:text="Stats Summary"
+            android:textSize="12sp"
+
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="5"
+            android:background="@color/button_dark_grey"
+            android:padding="3dp"
+
+            android:textColor="@color/white"
+            android:fontFamily="monospace">
+        </TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="3">
+
+        <TextView
+            android:id="@+id/plotTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/section_grey" />
+
+    </LinearLayout>
+
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/section_grey"
+        android:layout_marginHorizontal="20dp" >
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/histogramView"
+            android:layout_width="350dp"
+            android:layout_height="255dp">
+        </com.github.mikephil.charting.charts.BarChart>
+
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/timePlotView"
+            android:layout_width="350dp"
+            android:layout_height="255dp">
+        </com.github.mikephil.charting.charts.LineChart>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_weight="0.8">
+
+        <ImageButton
+            android:id="@+id/btnPreviousGraph"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_chevron_left_24"
+
+
+            android:backgroundTint="@color/special_yellow"/>
+
+        <ImageButton
+            android:id="@+id/btnNextGraph"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+
+            android:backgroundTint="@color/special_yellow"
+
+            android:src="@drawable/ic_baseline_chevron_right_24"
+
+            >
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
