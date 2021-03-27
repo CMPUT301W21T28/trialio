@@ -68,7 +68,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerUsername());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");

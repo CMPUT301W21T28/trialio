@@ -101,7 +101,7 @@ public class StatActivity extends AppCompatActivity {
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
-        textOwner.setText(experiment.getSettings().getOwnerUsername());
+        textOwner.setText(experiment.getSettings().getOwnerId());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             textStatus.setText("Open");

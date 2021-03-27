@@ -157,7 +157,7 @@ public class TrialActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerUsername());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");
@@ -183,7 +183,7 @@ public class TrialActivity extends AppCompatActivity {
         userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + user.getUsername());
+                experimentOwnerTextView.setText("Owner: " + user.getUsername());
             }
         });
     }

@@ -34,7 +34,7 @@ public class ReplyArrayAdapter extends ArrayAdapter {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.reply_content, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.content_reply, parent, false);
         }
 
         Reply reply = replyList.get(position);

@@ -34,7 +34,7 @@
                 android:layout_weight="4"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:backgroundTint="@color/section_grey"
+                android:backgroundTint="@color/section_grey"/>
 
 
             <ImageButton
