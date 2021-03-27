@@ -79,7 +79,8 @@
                 android:background="@color/special_yellow"
                 android:padding="5dp"
 
-                android:textColor="@color/black"
+                android:textColor="@color/button_dark_grey"
+                android:textStyle="bold"
                 android:fontFamily="monospace" >
 
             </TextView>
