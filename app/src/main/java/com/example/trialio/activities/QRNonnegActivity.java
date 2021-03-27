@@ -1,14 +1,16 @@
-package com.example.trialio;
+package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class QRMeasurementActivity extends AppCompatActivity {
+import com.example.trialio.R;
+
+public class QRNonnegActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_measurement);
+        setContentView(R.layout.activity_qr_nonneg);
     }
 }

@@ -1,6 +1,10 @@
 package com.example.trialio.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +21,9 @@ public class QRBinomialActivity extends AppCompatActivity {
     private Experiment experiment;
     private ArrayList<Trial> trialList;
     private ExperimentManager experimentManager;
+    private TextView txtExpInfo;
+    private Switch aSwitch;
+    private Button createQR;
 
 
     /**
@@ -28,10 +35,16 @@ public class QRBinomialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_binomial);
+        txtExpInfo = (TextView) findViewById(R.id.txtQRExpInfo);
+        aSwitch = (Switch) findViewById(R.id.swtQR);
+        createQR = (Button) findViewById(R.id.btnQRBinomial);
+        boolean isSuccess = aSwitch.isChecked();
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
+
+        txtExpInfo.setText("Experiment: " + experiment.getSettings().getDescription() + "\nType: " + experiment.getTrialManager().getType());
 
         trialList = experiment.getTrialManager().getTrials();
 
@@ -39,6 +52,12 @@ public class QRBinomialActivity extends AppCompatActivity {
     }
 
 
+    public void setOnClickListeners() {
+        createQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
+            }
+        });
+    }
 }
