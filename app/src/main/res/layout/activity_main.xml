@@ -21,7 +21,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:backgroundTint="@color/section_grey"/>
 
             <ImageButton
                 android:layout_width="0dp"
@@ -40,7 +41,8 @@
                 android:layout_weight="1"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_baseline_settings_24" />
+                android:src="@drawable/ic_baseline_settings_24"
+                android:backgroundTint="@color/section_grey"/>
 
         </LinearLayout>
 
