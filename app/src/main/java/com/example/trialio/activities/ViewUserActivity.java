@@ -155,11 +155,17 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
     @Override
     public void onNewUsernameConfirm(String newUsername) {
         ChangeUsernameCommand command = new ChangeUsernameCommand(user, newUsername, isSuccess -> {
+            /* devDeejay, https://stackoverflow.com/users/6145568/devdeejay,
+             * "How to show Snackbar when Activity starts", 2017-08-17, CC BY-SA 4.0,
+             * https://stackoverflow.com/a/45532564/15048024
+             */
             if (isSuccess) {
-                Log.d(TAG, "WooHoo, username changed!");
                 setUserDataListener();
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your username has been changed", Snackbar.LENGTH_LONG);
+                snackbar.show();
             } else {
-                Log.d(TAG, "WooHoo, username not changed!");
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Sorry, that username is unavailable", Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
         });
         command.execute();
