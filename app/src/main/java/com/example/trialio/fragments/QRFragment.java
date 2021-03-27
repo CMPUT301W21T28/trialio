@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trialio.R;
 import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
 import java.lang.ref.Reference;
@@ -28,6 +29,8 @@ import java.util.Date;
 public class QRFragment extends DialogFragment {
     private ImageView imgQR;
     private Experiment experiment;
+    private String result;
+    private String unit;
     private Trial trial;
     private Integer position;
 
@@ -36,15 +39,14 @@ public class QRFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_show_qr_code, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
         Bundle bundle = getArguments();
-        trial = (Trial) bundle.getSerializable("trial");
         experiment = (Experiment) bundle.getSerializable("experiment");
-        position = (Integer) bundle.getSerializable("position");
-        imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, position);
-        imgQR.setImageBitmap(qrCode);
+        result = (String) bundle.getString("result");
+        unit = (String) bundle.getString("unit");
 
+        imgQR = view.findViewById(R.id.imgQRCode);
+        Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, result);
+        imgQR.setImageBitmap(qrCode);
 
 
         builder.setView(view).setTitle("Show QR:").setNegativeButton("Cancel",null);

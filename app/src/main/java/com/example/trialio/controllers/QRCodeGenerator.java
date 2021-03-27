@@ -44,17 +44,17 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static Boolean locationRequired;
     private static Context context;
 
-    public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
+    public static Bitmap generateForTrial(Trial trial, Experiment experiment, String strResult){
         String infoResult = "";
 
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((BinomialTrial) trial).getIsSuccess() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("COUNT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((CountTrial) trial).getCount() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((NonNegativeTrial) trial).getNonNegCount() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((MeasurementTrial) trial).getMeasurement() + "\n" +  experiment.getExperimentID() + "\n" +  ((MeasurementTrial) trial).getUnit();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" +  ((MeasurementTrial) trial).getUnit();
         }
         BitMatrix result = null;
         try{
