@@ -57,6 +57,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private final Context context = this;
     final int REQUEST_CODE_FINE_PERMISSION = 99;
     private ImageButton settingsButton;
+    private ImageButton mapViewButton;
     private UserManager userManager;
     private Button showTrials;
     private Button addTrial;
@@ -89,6 +90,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
         // get the important views in this activity
         settingsButton = (ImageButton) findViewById(R.id.button_experiment_settings);
+        mapViewButton = (ImageButton) findViewById(R.id.btnGeoLoc);
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (Button) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode) ;
@@ -397,6 +399,21 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ExperimentSettingsActivity.class);
+
+                // pass in experiment as an argument
+                Bundle args = new Bundle();
+                args.putSerializable("experiment", experiment);
+                intent.putExtras(args);
+
+                // start an ExperimentSettingsActivity
+                startActivity(intent);
+            }
+        });
+
+        mapViewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MapViewActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();

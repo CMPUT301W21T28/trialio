@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.type.LatLng;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -141,11 +142,5 @@ public class Location implements Serializable{
     }
 
 
-    public ArrayList<Double> getCoord() {
-        ArrayList<Double> LatLong = new ArrayList<>();
-        LatLong.add(getLatitude());
-        LatLong.add(getLongitude());
-        return LatLong;
-    }
-
+    // public type getCoord() {
 }

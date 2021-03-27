@@ -59,7 +59,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="22dp"
         android:background="#CCCECE"
-        app:layout_constraintBottom_toTopOf="@+id/mapView2"
+        app:layout_constraintBottom_toTopOf="@+id/trialsMap"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -197,8 +197,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView2"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/trialsMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="381dp"
         android:layout_height="478dp"
         android:layout_marginStart="16dp"
@@ -210,6 +213,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3"
+        tools:context=".activities.MapViewActivity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
