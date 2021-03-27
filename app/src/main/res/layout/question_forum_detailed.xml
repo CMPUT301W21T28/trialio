@@ -141,7 +141,7 @@
             android:textColor="@color/special_yellow"
 
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="2dp"
 
             android:gravity="center_horizontal" />
 
@@ -153,8 +153,7 @@
         android:layout_weight="30"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center">
+        android:layout_marginRight="10dp">
 
         <ListView
             android:id="@+id/replyListView"
@@ -163,7 +162,7 @@
             android:layout_gravity="center"
             android:background="@color/section_grey"
 
-            android:dividerHeight="10dp" >
+            android:dividerHeight="5dp" >
         </ListView>
 
 
