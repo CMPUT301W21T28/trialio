@@ -458,7 +458,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getUsername());
                 Log.d(TAG, "owner: " + experiment.getSettings().getOwnerId());
-                if (user.getUsername().equals(experiment.getSettings().getOwnerId())) {
+                if (user.getId().equals(experiment.getSettings().getOwnerId())) {
                     settingsButton.setVisibility(View.VISIBLE);
                 }
             }
