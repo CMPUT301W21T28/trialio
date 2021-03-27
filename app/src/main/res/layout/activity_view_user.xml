@@ -3,100 +3,230 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#747474"
+    android:background="@color/background_grey"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:layout_weight="5"
-        android:background="#9c9c9c"
-        android:orientation="vertical">
-<!--        <LinearLayout-->
-<!--            android:id="@+id/linearLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="46dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:orientation="horizontal">-->
+        android:layout_height="55dp"
 
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/backButton"-->
-<!--                android:layout_width="71dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:srcCompat="@drawable/arrow" />-->
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp">
 
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/btnLogo"-->
-<!--                android:layout_width="32dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="4"-->
-<!--                android:padding="15dp"-->
-<!--                android:scaleType="fitCenter"-->
-<!--                android:src="@drawable/temp_logo"></ImageButton>-->
-
-<!--        </LinearLayout>-->
-
-        <TextView
-            android:id="@+id/usernameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="30dp"
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/view_user_username" />
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/section_grey"/>
 
-        <TextView
-            android:id="@+id/phoneText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="30dp"
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/section_grey"
+            android:src="@drawable/temp_logo"/>
+
+
+        <ImageButton
+            android:id="@+id/editUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/view_user_phone" />
-
-        <TextView
-            android:id="@+id/emailText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="30dp"
-            android:layout_weight="1"
-            android:text="@string/view_user_email" />
-
-
-
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/section_grey"/>
 
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/section_grey"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2.5dp">
+
+
+            <TextView
+
+                android:text="Username:"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="@color/button_dark_grey"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+                android:background="@color/special_yellow"
+                android:padding="2dp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/usernameText"
+                android:text="Username:"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="2dp"
+                android:textColor="@color/white">
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/section_grey"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2.5dp">
+
+
+            <TextView
+
+                android:text="Phone Number:"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="@color/button_dark_grey"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+                android:background="@color/special_yellow"
+                android:padding="2dp">
+
+            </TextView>
+
+            <TextView
+
+                android:id="@+id/phoneText"
+                android:text="@string/view_user_phone"
+
+
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="2dp"
+                android:textColor="@color/white">
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/section_grey"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2.5dp">
+
+
+            <TextView
+                android:id="@+id/text_trial_owner"
+                android:text="Email"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                android:textColor="@color/button_dark_grey"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+                android:background="@color/special_yellow"
+                android:padding="2dp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/emailText"
+                android:text="@string/view_user_email"
+
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="5dp"
+
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="2dp"
+                android:textColor="@color/white">
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="3"
         android:gravity="bottom" >
 
-                <Button
+        <Button
             android:id="@+id/changeUsernameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="Change Username"
-            android:backgroundTint="#fbd700"
-            android:textColor="#000000"/>
+            android:backgroundTint="@color/special_yellow"
+            android:textColor="@color/button_dark_grey"/>
 
         <Button
             android:id="@+id/editContactInfoButton"
@@ -105,8 +235,9 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="Edit Profile"
-            android:backgroundTint="#fbd700"
-            android:textColor="#000000"/>
+            android:backgroundTint="@color/special_yellow"
+            android:textColor="@color/button_dark_grey"/>
     </LinearLayout>
+
 
 </LinearLayout>

@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.1"
         android:orientation="horizontal"
         android:layout_marginHorizontal="5dp">
 
@@ -21,7 +21,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="10dp"
-            android:scaleType="fitCenter"/>                  />
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/section_grey"/>
+
 
         <ImageButton
             android:layout_width="0dp"
@@ -29,8 +31,8 @@
             android:layout_weight="4"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/temp_logo" />
-
+            android:src="@drawable/temp_logo"
+            android:backgroundTint="@color/section_grey"/>
 
         <ImageButton
             android:id="@+id/editUserBtn"
@@ -39,7 +41,8 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24" />
+            android:src="@drawable/ic_baseline_settings_24"
+            android:backgroundTint="@color/section_grey"/>
 
     </LinearLayout>
 
@@ -139,14 +142,11 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
                 android:layout_marginBottom="2.5dp"
-
-
                 android:layout_weight="2.4"
                 android:background="@color/button_dark_grey"
                 android:padding="3dp"
                 android:textColor="@color/white"
                 android:fontFamily="monospace">
-
             </TextView>
 
 
@@ -207,12 +207,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginHorizontal="5dp"
-        android:background="@color/section_grey"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_unpublish_experiment"
             android:textColor="@color/button_dark_grey"
+            android:backgroundTint="@color/special_yellow"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="wrap_content"
@@ -274,8 +274,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@color/section_grey">
-
+            android:background="@color/section_grey"
+            android:dividerHeight="3dp">
         </ListView>
 
     </LinearLayout>
