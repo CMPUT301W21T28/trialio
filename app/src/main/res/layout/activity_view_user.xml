@@ -64,7 +64,7 @@
 
 
             <TextView
-                android:id="@+id/usernameText"
+
                 android:text="Username:"
                 android:textSize="12sp"
                 android:fontFamily="monospace"
@@ -82,9 +82,8 @@
             </TextView>
 
             <TextView
-
-                android:id="@+id/text_trial_result"
-                android:text="@string/view_user_username"
+                android:id="@+id/usernameText"
+                android:text="Username:"
                 android:textSize="12sp"
                 android:fontFamily="monospace"
 
