@@ -6,4 +6,6 @@
     <string name="view_user_username">Username</string>
     <string name="view_user_phone">(000) 000-0000</string>
     <string name="view_user_email">email@email.com</string>
+    <string name="experiment_status_open">OPEN</string>
+    <string name="experiment_status_closed">CLOSED</string>
 </resources>

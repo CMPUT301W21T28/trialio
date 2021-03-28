@@ -24,6 +24,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddIgnoredFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
  */
-public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener{
+public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
 
@@ -56,6 +57,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * the On create the takes in the saved instance from the experiment activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -96,12 +98,17 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                experimentOwnerTextView.setText(user.getUsername());
+            }
+        });
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
-            experimentStatusTextView.setText("Open");
+        if (experiment.getTrialManager().getIsOpen()) {
+            experimentStatusTextView.setText(R.string.experiment_status_open);
         } else {
-            experimentStatusTextView.setText("Closed");
+            experimentStatusTextView.setText(R.string.experiment_status_closed);
         }
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
@@ -125,7 +132,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      * This sets the fields of the ExperimentSettingsActivity.
      */
     public void setFields() {
-
 
 
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
@@ -188,7 +194,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
-                                assert(false);
+                                assert (false);
                                 break;
                         }
                         return false;
@@ -237,6 +243,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * This removes a username from the ignore list of the experiment.
+     *
      * @param username The string of the userID to remove from the ignore list of the experiment.
      */
     public void menuUnignoreUsername(String username) {
