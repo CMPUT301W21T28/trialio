@@ -68,15 +68,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-
                 android:background="@color/special_yellow"
                 android:fontFamily="monospace"
                 android:padding="2dp"
-
-                android:text="Username:"
-
+                android:text="@string/username_label"
                 android:textColor="@color/button_dark_grey"
-                android:textSize="12sp">
+                android:textSize="14sp">
 
             </TextView>
 
@@ -85,18 +82,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
                 android:layout_margin="5dp"
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
-
                 android:fontFamily="monospace"
-
-
                 android:padding="2dp"
-                android:text="Username:"
                 android:textColor="@color/white"
-                android:textSize="12sp"></TextView>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -117,15 +109,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-
                 android:background="@color/special_yellow"
                 android:fontFamily="monospace"
                 android:padding="2dp"
-
-                android:text="Phone Number:"
-
+                android:text="@string/phone_label"
                 android:textColor="@color/button_dark_grey"
-                android:textSize="12sp">
+                android:textSize="14sp">
 
             </TextView>
 
@@ -133,22 +122,15 @@
 
                 android:id="@+id/phoneText"
                 android:layout_width="match_parent"
-
-
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
                 android:layout_margin="5dp"
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
-
                 android:fontFamily="monospace"
-
-
                 android:padding="2dp"
-                android:text="@string/view_user_phone"
                 android:textColor="@color/white"
-                android:textSize="12sp"></TextView>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -169,36 +151,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-
                 android:background="@color/special_yellow"
                 android:fontFamily="monospace"
                 android:padding="2dp"
-
-                android:text="Email"
-
+                android:text="@string/email_label"
                 android:textColor="@color/button_dark_grey"
-                android:textSize="12sp">
+                android:textSize="14sp">
 
             </TextView>
 
             <TextView
                 android:id="@+id/emailText"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
                 android:layout_margin="5dp"
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
-
                 android:fontFamily="monospace"
-
-
                 android:padding="2dp"
-                android:text="@string/view_user_email"
                 android:textColor="@color/white"
-                android:textSize="12sp"></TextView>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -221,7 +194,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
             android:gravity="center_horizontal"
-            android:text="Change Username"
+            android:text="@string/change_username"
             android:textColor="@color/button_dark_grey"
             android:visibility="invisible" />
 
@@ -232,7 +205,7 @@
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
             android:gravity="center_horizontal"
-            android:text="Edit Contact Info"
+            android:text="@string/edit_contact_info"
             android:textColor="@color/button_dark_grey"
             android:visibility="invisible" />
     </LinearLayout>
