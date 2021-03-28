@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.trialio.R;
@@ -15,13 +16,17 @@ public class QRMeasurementActivity extends AppCompatActivity {
     private TextView txtExpInfo;
     private Button createQR;
     private Experiment experiment;
+    private TextView Warning;
+    private EditText input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_measurement);
         txtExpInfo = findViewById(R.id.txtQRExpInfo);
-        createQR = findViewById(R.id.btnQRBinomial);
+        createQR = findViewById(R.id.btnQRMeasurement);
+        input = findViewById(R.id.txtMeasurementQRValue);
+        Warning = findViewById(R.id.txtWarning);
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
@@ -38,8 +43,13 @@ public class QRMeasurementActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("experiment",experiment);
-                qrFragment.setArguments(bundle);
-                qrFragment.show(getSupportFragmentManager(),"QrCode");
+                if (input.getText().toString().matches("")){
+                    Warning.setText("testing");
+                }else{
+                    bundle.putString("result", input.getText().toString());
+                    qrFragment.setArguments(bundle);
+                    qrFragment.show(getSupportFragmentManager(),"QrCode");
+                }
             }
         });
     }

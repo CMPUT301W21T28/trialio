@@ -44,7 +44,7 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static Boolean locationRequired;
     private static Context context;
 
-    public static Bitmap generateForTrial(Trial trial, Experiment experiment, String strResult){
+    public static Bitmap generateForTrial(Experiment experiment, String strResult){
         String infoResult = "";
 
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
@@ -54,7 +54,7 @@ public class QRCodeGenerator extends AppCompatActivity {
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
             infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" +  ((MeasurementTrial) trial).getUnit();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         }
         BitMatrix result = null;
         try{

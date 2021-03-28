@@ -41,11 +41,10 @@ public class QRFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         experiment = (Experiment) bundle.getSerializable("experiment");
-        result = (String) bundle.getString("result");
-        unit = (String) bundle.getString("unit");
+        result = bundle.getString("result");
 
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(trial, experiment, result);
+        Bitmap qrCode = QRCodeGenerator.generateForTrial(experiment, result);
         imgQR.setImageBitmap(qrCode);
 
 
