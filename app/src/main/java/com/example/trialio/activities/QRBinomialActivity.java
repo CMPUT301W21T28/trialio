@@ -18,6 +18,7 @@ import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -104,4 +105,9 @@ public class QRBinomialActivity extends AppCompatActivity {
             }
         });
     }
+    private void setActivitytoBarcode() {
+
+    }
+
+
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -25,6 +26,9 @@ import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.ref.Reference;
 import java.util.Date;
 
@@ -53,10 +57,9 @@ public class QRFragment extends DialogFragment {
             loc.getCurrentLocation(getContext(),getActivity());
         }
 
-
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(experiment, result, loc);
-        imgQR.setImageBitmap(qrCode);
+        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result, loc);
+        imgQR.setImageBitmap(qrcode);
 
 
         builder.setView(view).setTitle("Show QR:").setNegativeButton("Cancel",null);
