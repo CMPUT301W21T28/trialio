@@ -15,10 +15,12 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 
+/**
+ * Collects a new username string input from the user.
+ */
 public class ChangeUsernameFragment extends DialogFragment {
 
     private OnFragmentInteractionListener listener;
-
     private EditText usernameTextView;
 
     @NonNull
@@ -26,12 +28,7 @@ public class ChangeUsernameFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_change_username, null);
 
-        // get the experiment that was passed in
-        Bundle bundle = getArguments();
-
         usernameTextView = view.findViewById(R.id.editUsername);
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
@@ -41,7 +38,7 @@ public class ChangeUsernameFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String newUsername = usernameTextView.getText().toString();
-                        listener.onNewUsernameConfirm(newUsername);
+                        listener.onChangeUsernameConfirm(newUsername);
                     }
                 }).create();
     }
@@ -58,7 +55,10 @@ public class ChangeUsernameFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Interface for action to be performed by called when OK is clicked
+     */
     public interface OnFragmentInteractionListener {
-        void onNewUsernameConfirm(String newUsername);
+        void onChangeUsernameConfirm(String newUsername);
     }
 }

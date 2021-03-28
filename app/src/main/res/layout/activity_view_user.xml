@@ -11,26 +11,26 @@
         android:layout_height="55dp"
 
 
-        android:orientation="horizontal"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp">
+        android:layout_marginVertical="5dp"
+        android:orientation="horizontal">
 
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/section_grey"/>
+            android:scaleType="fitCenter" />
 
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:backgroundTint="@color/section_grey"
-            android:src="@drawable/temp_logo"/>
+            android:src="@drawable/temp_logo" />
 
 
         <ImageButton
@@ -38,9 +38,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/section_grey"/>
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 
@@ -52,161 +52,157 @@
 
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/section_grey"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="2.5dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="2.5dp"
+            android:background="@color/section_grey"
+            android:orientation="vertical">
 
 
             <TextView
 
-                android:text="Username:"
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-                android:textColor="@color/button_dark_grey"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_gravity="center"
                 android:layout_margin="5dp"
 
                 android:background="@color/special_yellow"
-                android:padding="2dp">
+                android:fontFamily="monospace"
+                android:padding="2dp"
+
+                android:text="Username:"
+
+                android:textColor="@color/button_dark_grey"
+                android:textSize="12sp">
 
             </TextView>
 
             <TextView
                 android:id="@+id/usernameText"
-                android:text="Username:"
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
                 android:layout_margin="5dp"
-
-
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
+
+                android:fontFamily="monospace"
+
+
                 android:padding="2dp"
-                android:textColor="@color/white">
-            </TextView>
+                android:text="Username:"
+                android:textColor="@color/white"
+                android:textSize="12sp"></TextView>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/section_grey"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="2.5dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="2.5dp"
+            android:background="@color/section_grey"
+            android:orientation="vertical">
 
 
             <TextView
 
-                android:text="Phone Number:"
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-                android:textColor="@color/button_dark_grey"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_gravity="center"
                 android:layout_margin="5dp"
 
                 android:background="@color/special_yellow"
-                android:padding="2dp">
+                android:fontFamily="monospace"
+                android:padding="2dp"
+
+                android:text="Phone Number:"
+
+                android:textColor="@color/button_dark_grey"
+                android:textSize="12sp">
 
             </TextView>
 
             <TextView
 
                 android:id="@+id/phoneText"
-                android:text="@string/view_user_phone"
-
-
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
+
+
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
                 android:layout_margin="5dp"
-
-
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
+
+                android:fontFamily="monospace"
+
+
                 android:padding="2dp"
-                android:textColor="@color/white">
-            </TextView>
+                android:text="@string/view_user_phone"
+                android:textColor="@color/white"
+                android:textSize="12sp"></TextView>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/section_grey"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="2.5dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="2.5dp"
+            android:background="@color/section_grey"
+            android:orientation="vertical">
 
 
             <TextView
                 android:id="@+id/text_trial_owner"
-                android:text="Email"
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-                android:textColor="@color/button_dark_grey"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_gravity="center"
                 android:layout_margin="5dp"
 
                 android:background="@color/special_yellow"
-                android:padding="2dp">
+                android:fontFamily="monospace"
+                android:padding="2dp"
+
+                android:text="Email"
+
+                android:textColor="@color/button_dark_grey"
+                android:textSize="12sp">
 
             </TextView>
 
             <TextView
                 android:id="@+id/emailText"
-                android:text="@string/view_user_email"
-
-                android:textSize="12sp"
-                android:fontFamily="monospace"
-
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
                 android:layout_margin="5dp"
-
-
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
+
+                android:fontFamily="monospace"
+
+
                 android:padding="2dp"
-                android:textColor="@color/white">
-            </TextView>
+                android:text="@string/view_user_email"
+                android:textColor="@color/white"
+                android:textSize="12sp"></TextView>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -216,27 +212,29 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="3"
-        android:gravity="bottom" >
+        android:gravity="bottom">
 
         <Button
             android:id="@+id/changeUsernameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/special_yellow"
             android:gravity="center_horizontal"
             android:text="Change Username"
-            android:backgroundTint="@color/special_yellow"
-            android:textColor="@color/button_dark_grey"/>
+            android:textColor="@color/button_dark_grey"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/editContactInfoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="Edit Profile"
             android:backgroundTint="@color/special_yellow"
-            android:textColor="@color/button_dark_grey"/>
+            android:gravity="center_horizontal"
+            android:text="Edit Contact Info"
+            android:textColor="@color/button_dark_grey"
+            android:visibility="invisible" />
     </LinearLayout>
 
 
