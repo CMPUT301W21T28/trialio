@@ -14,19 +14,16 @@ import com.example.trialio.models.Experiment;
 
 public class QRCountActivity extends AppCompatActivity {
     private Button createQR;
-    private TextView txtExpInfo;
     private Experiment experiment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_count);
-        txtExpInfo = findViewById(R.id.txtQRExpInfo);
         createQR = findViewById(R.id.btnQRCount);
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
-        txtExpInfo.setText("Experiment: " + experiment.getSettings().getDescription() + "\nType: " + experiment.getTrialManager().getType());
         setOnClickListeners();
     }
 

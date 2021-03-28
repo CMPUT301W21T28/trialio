@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -24,10 +25,14 @@ public class QRBinomialActivity extends AppCompatActivity {
     private ArrayList<Trial> trialList;
     private Trial trial;
     private ExperimentManager experimentManager;
-    private TextView txtExpInfo;
     private Switch aSwitch;
     private Button createQR;
     private Boolean isSuccess;
+    private TextView experimentDescriptionTextView;
+    private ImageView experimentLocationImageView ;
+    private TextView experimentTypeTextView;
+    private TextView experimentOwnerTextView;
+    private TextView experimentStatusTextView;
 
 
     /**
@@ -39,7 +44,6 @@ public class QRBinomialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_binomial);
-        txtExpInfo = findViewById(R.id.txtQRExpInfo);
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
         isSuccess = aSwitch.isChecked();
@@ -47,10 +51,41 @@ public class QRBinomialActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
-        txtExpInfo.setText("Experiment: " + experiment.getSettings().getDescription() + "\nType: " + experiment.getTrialManager().getType());
+        setOnClickListeners();
+
+
+        trialList = experiment.getTrialManager().getTrials();
+        experimentManager = new ExperimentManager();
+
+        // get views
+        experimentDescriptionTextView = findViewById(R.id.qr_description);
+        experimentLocationImageView = findViewById(R.id.qr_location);
+        experimentTypeTextView = findViewById(R.id.qr_text_type);
+        experimentOwnerTextView = findViewById(R.id.qr_text_owner);
+        experimentStatusTextView = findViewById(R.id.qr_text_status);
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
         setOnClickListeners();
 
     }
+
 
 
     public void setOnClickListeners() {

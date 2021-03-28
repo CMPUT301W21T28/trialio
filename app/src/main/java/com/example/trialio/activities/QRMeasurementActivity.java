@@ -23,14 +23,12 @@ public class QRMeasurementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_measurement);
-        txtExpInfo = findViewById(R.id.txtQRExpInfo);
         createQR = findViewById(R.id.btnQRMeasurement);
         input = findViewById(R.id.txtMeasurementQRValue);
         Warning = findViewById(R.id.txtWarning);
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
-        txtExpInfo.setText("Experiment: " + experiment.getSettings().getDescription() + "\nType: " + experiment.getTrialManager().getType());
         setOnClickListeners();
 
     }

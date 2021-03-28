@@ -73,6 +73,175 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="0.6"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+
+            android:fontFamily="monospace"
+            android:gravity="center_horizontal"
+
+            android:text="Parent Experiment:"
+            android:textColor="@color/special_yellow" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/section_grey"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/qr_description"
+                android:text="Description"
+                android:textSize="12sp"
+                android:backgroundTint="@color/special_yellow"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2.5dp"
+
+                android:layout_marginBottom="2.5dp"
+                android:layout_weight="5"
+                android:background="#9c9c9c"
+                android:padding="5dp"
+
+                android:textColor="@color/black"
+                android:fontFamily="monospace"
+                >
+
+            </TextView>
+
+
+
+            <ImageView
+                android:id="@+id/qr_location"
+
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+
+
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_baseline_location_off_24" />
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/qr_text_type"
+                android:text="Type"
+                android:textSize="12sp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+
+                android:layout_weight="2.4"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+
+            </TextView>
+
+
+            <TextView
+
+                android:id="@+id/qr_text_owner"
+                android:text="Owner"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="5"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+
+            <TextView
+                android:id="@+id/qr_text_status"
+                android:text="Status"
+                android:textSize="12sp"
+
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2.5dp"
+                android:layout_marginRight="2.5dp"
+                android:layout_marginBottom="2.5dp"
+
+                android:layout_weight="2"
+                android:background="@color/button_dark_grey"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:fontFamily="monospace">
+            </TextView>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:layout_marginHorizontal="20dp"
+        android:layout_weight="0"
+
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:text="Create QR Code:"
+        android:textColor="@color/special_yellow" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="10"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
@@ -80,14 +249,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtQRExpInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="163dp"
-            android:layout_weight="1"
-            android:text="TextView"
 
-            android:background="#A19B9B"/>
 
         <LinearLayout
             android:layout_width="match_parent"
