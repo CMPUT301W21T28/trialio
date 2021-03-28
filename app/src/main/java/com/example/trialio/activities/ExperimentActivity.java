@@ -381,7 +381,6 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 Intent intent = new Intent(context, ScanningActivity.class);
                 Bundle args = new Bundle();
                 args.putSerializable("user_scan", currentUser);
-                args.putBoolean("location_req", experiment.getSettings().getGeoLocationRequired());
                 intent.putExtras(args);
                 startActivity(intent);
             }

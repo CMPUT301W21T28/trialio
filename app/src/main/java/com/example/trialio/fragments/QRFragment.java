@@ -18,8 +18,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.QRBinomialActivity;
 import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
@@ -33,6 +35,7 @@ public class QRFragment extends DialogFragment {
     private String unit;
     private Trial trial;
     private Integer position;
+    private Boolean location;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -43,8 +46,16 @@ public class QRFragment extends DialogFragment {
         experiment = (Experiment) bundle.getSerializable("experiment");
         result = bundle.getString("result");
 
+        location = experiment.getSettings().getGeoLocationRequired();
+        Location loc = new Location();
+
+        if (location){
+            loc.getCurrentLocation(getContext(),getActivity());
+        }
+
+
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrCode = QRCodeGenerator.generateForTrial(experiment, result);
+        Bitmap qrCode = QRCodeGenerator.generateForTrial(experiment, result, loc);
         imgQR.setImageBitmap(qrCode);
 
 
