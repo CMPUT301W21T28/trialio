@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class User implements Serializable {
 
     private String username;
-    private String deviceId;
+    private String id;
     private UserContactInfo contactInfo;
     private ArrayList<String> subscribedExperimentIds;
     // private BarcodeManager barcodeManager;
@@ -19,7 +19,7 @@ public class User implements Serializable {
      */
     public User() {
         this.username = null;
-        this.deviceId = null;
+        this.id = null;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -31,7 +31,7 @@ public class User implements Serializable {
      */
     public User(String username) {
         this.username = username;
-        this.deviceId = null;
+        this.id = null;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -44,7 +44,7 @@ public class User implements Serializable {
      */
     public User(String id, String username) {
         this.username = username;
-        this.deviceId = id;
+        this.id = id;
         this.contactInfo = new UserContactInfo();
         this.subscribedExperimentIds = new ArrayList<>();
     }
@@ -72,8 +72,8 @@ public class User implements Serializable {
      *
      * @return the username
      */
-    public String getDeviceId() {
-        return deviceId;
+    public String getId() {
+        return id;
     }
 
     /**
@@ -81,8 +81,8 @@ public class User implements Serializable {
      *
      * @param id the unique device identifier of the user
      */
-    public void setDeviceId(String id) {
-        this.deviceId = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**

@@ -9,18 +9,22 @@ package com.example.trialio.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -44,6 +48,7 @@ public class StatActivity extends AppCompatActivity {
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
 
+    UserManager userManager;
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
@@ -52,14 +57,6 @@ public class StatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.experiment_stats);
-
-        // Took ActionBar code.
-        // DATE:	2020-12-14
-        // LICENSE:	Apache 2.0 [http://www.apache.org/licenses/LICENSE-2.0]
-        // SOURCE: 	Add an up action [https://developer.android.com/training/appbar/up-action]
-        // AUTHOR: 	Android Developers [https://developer.android.com/]
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
 
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
@@ -89,8 +86,38 @@ public class StatActivity extends AppCompatActivity {
             timePlot.setVisibility(View.GONE);
         }
 
-        Button previous = findViewById(R.id.btnPreviousGraph);
-        previous.setText("<");
+        // SET VIEWS
+        // TODO: Split me into nice functions when testing
+
+        // TODO: maybe make some adjustments here
+
+        TextView textDescription = findViewById(R.id.experiment_description);
+        TextView textType = findViewById(R.id.experiment_text_type);
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        TextView textStatus = findViewById(R.id.experiment_text_status);
+        ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
+
+
+        // set TextViews
+        textDescription.setText("Description: " + experiment.getSettings().getDescription());
+        textType.setText("Type: " + experiment.getTrialManager().getType());
+        textOwner.setText(experiment.getSettings().getOwnerId());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            textStatus.setText("Open");
+        } else {
+            textStatus.setText("Closed");
+        }
+
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
+        // TODO: make me into a function
+
+        ImageButton previous = findViewById(R.id.btnPreviousGraph);
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,8 +136,7 @@ public class StatActivity extends AppCompatActivity {
             }
         });
 
-        Button next = findViewById(R.id.btnNextGraph);
-        next.setText(">");
+        ImageButton next = findViewById(R.id.btnNextGraph);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +155,8 @@ public class StatActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     /**
      * Displays the histogram

@@ -95,9 +95,7 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-
-                    new_trial = (Trial) new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
+                    BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -113,8 +111,7 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-                    new_trial = (Trial) new CountTrial(current_user.getUsername(), location, date);
+                    CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -129,9 +126,7 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-
-                    new_trial = (Trial) new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[1]));
+                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[1]));
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -146,9 +141,8 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
 
-                    new_trial = (Trial) new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[1]), input[3]);
+                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[1]), input[3]);
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }

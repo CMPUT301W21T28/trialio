@@ -27,6 +27,7 @@
         <activity android:name=".activities.QRCountActivity" />
         <activity
             android:name=".activities.ScanningActivity"
+
             android:parentActivityName=".activities.ExperimentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -38,6 +39,7 @@
         <activity android:name=".activities.QuestionForumActivity" />
         <activity android:name=".activities.QuestionRepliesActivity" />
         <activity android:name=".activities.ViewUserActivity" />
+
         <activity
             android:name=".activities.ExperimentActivity"
             android:parentActivityName=".activities.MainActivity">

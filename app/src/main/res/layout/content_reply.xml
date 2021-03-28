@@ -12,19 +12,20 @@
             android:layout_height="wrap_content"
             android:gravity="center"
 
-
-
-
-            android:paddingVertical="4dp"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
             android:text="Poster ID"
-            android:textSize="11sp"
+            android:textSize="12sp"
+            android:textColor="@color/button_dark_grey"
 
-            android:textColor="@color/black"
+            android:paddingVertical="3dp"
+
+
+
             android:background="@color/special_yellow"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="2.5dp">
+            android:layout_marginVertical="3dp"
+            android:layout_marginHorizontal="4dp">
+
         </TextView>
 
 
@@ -37,16 +38,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="2.5dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginVertical="3dp"
+            android:layout_marginHorizontal="4dp"
 
+            android:fontFamily="monospace"
+            android:textSize="11sp"
 
             android:background="@color/button_dark_grey"
             android:padding="3dp"
             android:text="Post reply here"
-            android:textSize="12sp"
             android:textColor="@color/white"            >
 
         </TextView>

@@ -12,11 +12,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
@@ -28,18 +30,19 @@ import java.util.Map;
  * is used to perform create, read, update and delete functionality on Users which are to be
  * maintained by the system. This class communicates with the Firebase database where User data is
  * maintained.
- *
+ * <p>
  * Version 2.0.1
  */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users-v3";
+    private static final String COLLECTION_PATH = "users-v4";
     private final CollectionReference userCollection;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static String fid;
 
     private static final String USERNAME_FIELD = "username";
-    private static final String DEVICE_ID_FIELD = "deviceId";
+    private static final String ID_FIELD = "id";
     private static final String EMAIL_FIELD = "email";
     private static final String PHONE_FIELD = "phone";
     private static final String SUBBED_EXPERIMENTS_FIELD = "subscribedExperiments";
@@ -99,20 +102,20 @@ public class UserManager {
 
     /**
      * Creates a new User in the system.
-     *
-     * @param deviceId The device id of new User to create in the database
-     * @return The User that was created.
      * <p>
      * Note that this User object will not track changes to the
      * User document. If you need to receive all database updates for the User, fetch the
      * User using UserManager#addUserUpdateListener()
+     *
+     * @param id The device id of new User to create in the database
+     * @return The User that was created.
      */
-    public User createNewUser(String deviceId) {
+    public User createNewUser(String id) {
         String username = userCollection.document().getId();
         User user = new User();
         user.setUsername(username);
-        user.setDeviceId(deviceId);
-        Log.d(TAG, String.format("Generating new User %s for device %s.", username, deviceId));
+        user.setId(id);
+        Log.d(TAG, String.format("Generating new User %s for device %s.", username, id));
 
         /* Chaining tasks
          * Google Play Services Developer Docs, "Chaining", data, Apache 2.0,
@@ -120,7 +123,7 @@ public class UserManager {
          */
 
         // Check that device id does not already exist in the system
-        Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(DEVICE_ID_FIELD, user.getDeviceId()).get();
+        Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(ID_FIELD, user.getId()).get();
         queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
             @Override
             public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
@@ -130,19 +133,19 @@ public class UserManager {
                     return userCollection.document(username).set(compressUser);
                 } else {
                     // User for this device already exists
-                    Log.d(TAG, "Unable to create User: User with fid " + deviceId + " already exists");
+                    Log.d(TAG, "Unable to create User: User with fid " + id + " already exists");
                     return null;
                 }
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, String.format("User created successfully for device %s.", deviceId));
+                Log.d(TAG, String.format("User created successfully for device %s.", id));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, String.format("Failed to create User for device %s.", deviceId));
+                Log.d(TAG, String.format("Failed to create User for device %s.", id));
             }
         });
 
@@ -172,14 +175,24 @@ public class UserManager {
     }
 
     /**
-     * Gets a User from the database. If the current User does not exist in the
-     * system already, a new User document is created.
+     * Gets a User from the database.
      *
      * @param username the username of the User to retrieve
      * @param listener the callback to be called when the User is fetched
      */
-    public void getUser(String username, OnUserFetchListener listener) {
+    public void getUserByUsername(String username, OnUserFetchListener listener) {
         fetchUserByUsername(username, listener);
+    }
+
+    /**
+     * Gets a User from the database. If the current User does not exist in the
+     * system already, a new User document is created.
+     *
+     * @param id       the id of the User to retrieve
+     * @param listener the callback to be called when the User is fetched
+     */
+    public void getUserById(String id, OnUserFetchListener listener) {
+        fetchUserByDevice(id, listener);
     }
 
     /**
@@ -190,7 +203,7 @@ public class UserManager {
      * @param listener the callback listener to be called when the User is fetched
      */
     private void fetchUserByDevice(String deviceId, OnUserFetchListener listener) {
-        userCollection.whereEqualTo(DEVICE_ID_FIELD, deviceId).get()
+        userCollection.whereEqualTo(ID_FIELD, deviceId).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -234,37 +247,6 @@ public class UserManager {
                             } else {
                                 Log.d(TAG, "No user found with username " + username);
                                 listener.onUserFetch(null);
-                            }
-                        } else {
-                            Log.d(TAG, "User fetch failed with " + task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Sets a function to be called when a User is fetched.
-     *
-     * @deprecated
-     * @param userId   the id of the User to fetch
-     * @param listener the callback with the function to call
-     */
-    private void setUserFetchListener(String userId, OnUserFetchListener listener) {
-        userCollection.document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot doc = task.getResult();
-                            assert doc != null;
-                            if (doc.exists()) {
-                                User user = extractUser(doc);
-                                listener.onUserFetch(user);
-                                Log.d(TAG, "User " + userId + " fetched successfully.");
-                            } else {
-                                Log.d(TAG, "No user found with id " + userId);
-                                User user = createNewUser(userId);
-                                listener.onUserFetch(user);
                             }
                         } else {
                             Log.d(TAG, "User fetch failed with " + task.getException());
@@ -354,9 +336,9 @@ public class UserManager {
      * Sets a listener to a the user identified by userId. This function sets up a listener so that
      * listener.onUserUpdate() is called whenever the User document is updated in the database.
      *
-     * @deprecated
      * @param userId   the id of the User to attach the listener to
      * @param listener the listener with the callback function to be called when the User is updated
+     * @deprecated
      */
     private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
         userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -397,6 +379,62 @@ public class UserManager {
                         Log.d(TAG, String.format("Failed to update User %s", username));
                     }
                 });
+    }
+
+    /**
+     * Transfers a User profile to a new username. If the username is not available, the process
+     * fails and the failure response can be captured with a onFailure listener to the returned Task.
+     * If the username is available and the switch is performed, the sucsess response can be
+     * captured with a onSuccess listener to the returned tasks
+     *
+     * @param user        the User to transfer to a new username
+     * @param newUsername the new username to transfer the user profile
+     * @return Task that indicates if the operation passed or failed
+     */
+    public Task<Void> transferUsername(User user, String newUsername) {
+        String oldUsername = user.getUsername();
+        DocumentReference oldUserDocRef = userCollection.document(oldUsername);
+        DocumentReference newUserDocRef = userCollection.document(newUsername);
+
+        /* Firebase developer docs, "Transactions and batched writes",  2021-03-23, Apache 2.0
+         * https://firebase.google.com/docs/firestore/manage-data/transactions
+         */
+
+        // Start transaction to claim new username only if it is available
+        Task<Void> result = db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot newUserSnapshot = transaction.get(newUserDocRef);
+                if (!newUserSnapshot.exists()) {
+                    // Claim the new username
+                    user.setUsername(newUsername);
+                    Map<String, Object> compressUser = compressUser(user);
+                    transaction.set(newUserDocRef, compressUser);
+                    transaction.delete(oldUserDocRef);
+                } else {
+                    // Requested username already exists in the system
+                    throw new FirebaseFirestoreException("Requested username is unavailable",
+                            FirebaseFirestoreException.Code.ABORTED);
+                }
+                return null;
+            }
+        });
+        result.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                String message = String.format("User transfer successful from %s to %s", oldUsername, newUsername);
+                Log.d(TAG, message);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                String message = String.format("User transfer failed from %s to %s", oldUsername, newUsername);
+                Log.d(TAG, message);
+
+            }
+        });
+        return result;
     }
 
     /**
@@ -478,7 +516,7 @@ public class UserManager {
         assert data != null;
 
         String username = document.getString(USERNAME_FIELD);
-        String deviceId = document.getString(DEVICE_ID_FIELD);
+        String id = document.getString(ID_FIELD);
         String email = document.getString(EMAIL_FIELD);
         String phone = document.getString(PHONE_FIELD);
         /* Doug Stevenson, https://stackoverflow.com/users/807126/doug-stevenson, "How to get an array from Firestore?",
@@ -488,7 +526,7 @@ public class UserManager {
         /* End of cited code */
 
         user.setUsername(username);
-        user.setDeviceId(deviceId);
+        user.setId(id);
         user.getContactInfo().setEmail(email);
         user.getContactInfo().setPhone(phone);
         user.setSubscribedExperiments(subs);
@@ -505,7 +543,7 @@ public class UserManager {
     private Map<String, Object> compressUser(User user) {
         Map<String, Object> userData = new HashMap<>();
         userData.put(USERNAME_FIELD, user.getUsername());
-        userData.put(DEVICE_ID_FIELD, user.getDeviceId());
+        userData.put(ID_FIELD, user.getId());
         userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
         userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
         userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());

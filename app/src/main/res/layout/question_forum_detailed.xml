@@ -5,14 +5,52 @@
     android:layout_height="match_parent"
     android:background="@color/background_grey" >
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="5dp">
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="#fbd700"
+            android:backgroundTint="@color/section_grey"/>
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"
+            android:backgroundTint="@color/section_grey"/>
+
+
+        <ImageButton
+            android:id="@+id/editUserBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/special_yellow"
+            android:backgroundTint="@color/section_grey"/>
+
+    </LinearLayout>
+
+    <!-- Description of what this page does -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:background="@color/section_grey">
 
@@ -22,8 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+
+
             android:text="Poster ID"
-            android:textColor="@color/black"
+
+            android:textColor="@color/button_dark_grey"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+
             android:background="@color/special_yellow"
 
             android:layout_marginLeft="10dp"
@@ -40,7 +84,13 @@
             android:layout_weight="5"
             android:gravity="center"
             android:text="Question Title"
-            android:textColor="@color/black"
+
+
+            android:textColor="@color/button_dark_grey"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+
+
             android:background="@color/special_yellow"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -59,6 +109,11 @@
             android:layout_marginBottom="2.5dp"
             android:layout_weight="5"
 
+
+
+
+            android:fontFamily="monospace"
+
             android:background="@color/button_dark_grey"
             android:padding="15dp"
 
@@ -73,7 +128,9 @@
             android:layout_height="wrap_content"
 
             android:text="Reply"
-            android:textColor="@color/black"
+            android:textColor="@color/button_dark_grey"
+
+            android:fontFamily="monospace"
 
             android:backgroundTint="@color/special_yellow"
             android:layout_marginLeft="10dp"
@@ -85,6 +142,28 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="5dp"
+
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reply Forum"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="2dp"
+
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,8 +171,7 @@
         android:layout_weight="30"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center">
+        android:layout_marginRight="10dp">
 
         <ListView
             android:id="@+id/replyListView"
@@ -102,7 +180,7 @@
             android:layout_gravity="center"
             android:background="@color/section_grey"
 
-            android:dividerHeight="10dp" >
+            android:dividerHeight="5dp" >
         </ListView>
 
 

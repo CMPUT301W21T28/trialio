@@ -67,7 +67,7 @@ public class AddQuestionFragment extends DialogFragment {
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        listener.onOkPressed(new Question(newQuestionID, questionBody, user, questionTitle) );
+                        listener.onOkPressed(new Question(newQuestionID, questionBody, user.getId(), questionTitle) );
                     }
                 });
             }}).create();
