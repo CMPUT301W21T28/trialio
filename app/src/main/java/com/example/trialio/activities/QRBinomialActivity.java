@@ -13,6 +13,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
@@ -47,6 +48,7 @@ public class QRBinomialActivity extends AppCompatActivity {
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
         isSuccess = aSwitch.isChecked();
+
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -94,6 +96,7 @@ public class QRBinomialActivity extends AppCompatActivity {
             public void onClick(View v) {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
+
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isSuccess));
                 qrFragment.setArguments(bundle);
