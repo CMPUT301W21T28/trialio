@@ -39,9 +39,9 @@ public class QRBinomialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_binomial);
-        txtExpInfo = (TextView) findViewById(R.id.txtQRExpInfo);
-        aSwitch = (Switch) findViewById(R.id.swtQR);
-        createQR = (Button) findViewById(R.id.btnQRBinomial);
+        txtExpInfo = findViewById(R.id.txtQRExpInfo);
+        aSwitch = findViewById(R.id.swtQR);
+        createQR = findViewById(R.id.btnQRBinomial);
         isSuccess = aSwitch.isChecked();
 
         // get the experiment that was passed in

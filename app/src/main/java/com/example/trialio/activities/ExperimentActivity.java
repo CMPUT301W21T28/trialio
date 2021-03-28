@@ -345,13 +345,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     intent.putExtras(args);
                     startActivity(intent);
                 }else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
-                    Intent intent = new Intent(context, QRCountActivity.class);
+                    Intent intent = new Intent(context, QRNonnegActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
                     intent.putExtras(args);
                     startActivity(intent);
                 }else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-                    Intent intent = new Intent(context, QRCountActivity.class);
+                    Intent intent = new Intent(context, QRMeasurementActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
                     intent.putExtras(args);
