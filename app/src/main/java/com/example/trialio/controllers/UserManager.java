@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users-v4";
+    private static final String COLLECTION_PATH = "users-v5";
     private final CollectionReference userCollection;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 

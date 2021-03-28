@@ -2,10 +2,26 @@ package com.example.trialio.controllers;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
+import com.example.trialio.models.Location;
+import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.ExperimentTypeUtility;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -13,18 +29,35 @@ import java.util.ArrayList;
  */
 public class TrialManager implements Serializable {
     private final String TAG = "TrialManager";
+    private static final String EXPERIMENT_COLLECTION_PATH = "experiments-v5";
+    private static final String TRIALS_COLLECTION_PATH = "trials";
+    private CollectionReference trialCollection;
+
+    private static final String EXPERIMENTERID_FIELD = "experimenterID";
+    private static final String L_LATITUDE_FIELD = "latitude";
+    private static final String L_LONGITUDE_FIELD = "longitude";
+    private static final String DATE_FIELD = "date";
+    private static final String B_ISSUCCESS_FIELD = "isSuccess";
+    private static final String C_COUNT_FIELD = "count";
+    private static final String M_MEASUREMENT_FIELD = "measurement";
+    private static final String M_UNIT_FIELD = "unit";
+    private static final String N_NONNEGCOUNT_FIELD = "nonNegCount";
+
     private String type;
     private ArrayList<Trial> trials;
-    private ArrayList<String> ignoredUserIds;
+    private ArrayList<String> ignoredUserIDs;
     private int minNumOfTrials;
     private boolean isOpen;
 
-    public TrialManager() { }
+    public TrialManager() {
+        this.trials = new ArrayList<Trial>();
+        this.ignoredUserIDs = new ArrayList<String>();
+    }
 
     public TrialManager(String type, boolean isOpen, int minNumOfTrials) {
         this.type = type;
         this.trials = new ArrayList<Trial>();
-        this.ignoredUserIds = new ArrayList<String>();
+        this.ignoredUserIDs = new ArrayList<String>();
         this.minNumOfTrials = minNumOfTrials;
         this.isOpen = isOpen;
     }
@@ -73,16 +106,16 @@ public class TrialManager implements Serializable {
      * This gets the list of user ids which are ignored by the trial manager.
      * @return Returns the list of ignored user ids.
      */
-    public ArrayList<String> getIgnoredUserIds() {
-        return ignoredUserIds;
+    public ArrayList<String> getIgnoredUserIDs() {
+        return ignoredUserIDs;
     }
 
     /**
      * This sets the list of user ids ignored by the trial manager.
-     * @param ignoredUserIds The candidate list of user ids to be ignored by the trial manager.
+     * @param ignoredUserIDs The candidate list of user ids to be ignored by the trial manager.
      */
-    public void setIgnoredUserIds(ArrayList<String> ignoredUserIds) {
-        this.ignoredUserIds = ignoredUserIds;
+    public void setIgnoredUserIDs(ArrayList<String> ignoredUserIDs) {
+        this.ignoredUserIDs = ignoredUserIDs;
     }
 
     /**
@@ -124,7 +157,7 @@ public class TrialManager implements Serializable {
     public ArrayList<Trial> fetchVisibleTrials() {
         ArrayList<Trial> visible = new ArrayList<Trial>();
         for (Trial trial : trials) {
-            if (!ignoredUserIds.contains(trial.getExperimenterId())) {
+            if (!ignoredUserIDs.contains(trial.getExperimenterId())) {
                 visible.add(trial);
             }
         }
@@ -137,7 +170,7 @@ public class TrialManager implements Serializable {
      * @param userID The candidate userID to add to the list of ignored userIds.
      */
     public void addIgnoredUser(String userID) {
-        ignoredUserIds.add(userID);
+        ignoredUserIDs.add(userID);
     }
 
     /**
@@ -145,6 +178,137 @@ public class TrialManager implements Serializable {
      * @param userID The candidate userID to remove from the list of ignored userIDs.
      */
     public void removeIgnoredUsers(String userID) {
-        ignoredUserIds.remove(userID);
+        ignoredUserIDs.remove(userID);
+    }
+
+    public void setTrialCollection(String experimentID) {
+        FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
+
+        setUpdateListener(new OnAllTrialsUpdateListener() {
+            @Override
+            public void onAllTrialsUpdate(ArrayList<Trial> trialList) {
+                trials = trialList;
+            }
+        });
+    }
+
+
+    /**
+     * Sets a listener to the trial collection. This function sets up a listener so that
+     * listener.onAllTrialsUpdate() is called whenever the Trial collection is updated.
+     *
+     * @param listener the listener with the callback function to be called when the Trial
+     *                 collection is updated
+     */
+    private void setUpdateListener(TrialManager.OnAllTrialsUpdateListener listener) {
+        trialCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                // initialize a list of trials
+                ArrayList<Trial> trialList = new ArrayList<Trial>();
+
+                // extract all trial documents in  the collection
+                for (DocumentSnapshot doc : value.getDocuments()) {
+                    try {
+                        trialList.add(extractTrial(doc));
+                        Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
+                    } catch (Exception e) {
+                        Log.d(TAG, "Error fetching " + doc.getId() + ".");
+                    }
+                }
+
+                // pass the trialList to the listener
+                listener.onAllTrialsUpdate(trialList);
+            }
+        });
+    }
+
+    /**
+     * This interface represents an action to be taken when all trials of a collection have been
+     * fetched.
+     */
+    public interface OnAllTrialsUpdateListener {
+
+        /**
+         * This method is called when all trials in the collection have been fetched and extracted.
+         * @param trialList The list of trials extracted from the collection.
+         */
+        public void onAllTrialsUpdate(ArrayList<Trial> trialList);
+    }
+
+    /**
+     * Extracts a trial object from a Firebase document. This method assumes the document holds a
+     * valid trial.
+     * @param document The document to extract a trial object from.
+     * @return The trial object extracted from the document.
+     */
+    public Trial extractTrial(DocumentSnapshot document) {
+
+        // get the data
+        Map<String, Object> data = document.getData();
+
+        // initialize trial
+        Trial trial = new Trial(); // this trial is overwritten immediately
+        if (ExperimentTypeUtility.isBinomial(type)){
+            trial = new BinomialTrial();
+
+            // set isSuccess
+            boolean isSuccess = (boolean) data.get(B_ISSUCCESS_FIELD);
+            ((BinomialTrial) trial).setIsSuccess(isSuccess);
+
+        } else if (ExperimentTypeUtility.isNonNegative(type)) {
+            trial = new NonNegativeTrial();
+
+            // set nonNegCount
+            int nonNegCount = (int) data.get(N_NONNEGCOUNT_FIELD);
+            ((NonNegativeTrial) trial).setNonNegCount(nonNegCount);
+
+        } else if (ExperimentTypeUtility.isCount(type)) {
+            trial = new CountTrial();
+
+            // set count
+            int count = (int) data.get(C_COUNT_FIELD);
+            ((CountTrial) trial).setCount(count);
+
+        } else if (ExperimentTypeUtility.isMeasurement(type)) {
+            trial = new MeasurementTrial();
+
+            // set measurement
+            double measurement = (double) data.get(M_MEASUREMENT_FIELD);
+            ((MeasurementTrial) trial).setMeasurement(measurement);
+
+            // set unit
+            String unit = (String) data.get(M_UNIT_FIELD);
+            assert unit != null;
+            ((MeasurementTrial) trial).setUnit(unit);
+
+        } else {
+            Log.d(TAG, "EXPERIMENT_TYPE_ERROR: invalid type in extractTrial");
+            assert false;
+        }
+
+        // set experimenterID
+        String experimenterID = (String) data.get(EXPERIMENTERID_FIELD);
+        assert experimenterID != null;
+        trial.setExperimenterId(experimenterID);
+
+        // set location
+        trial.setLocation(new Location());
+
+        // set latitude in location
+        double latitude = (double) data.get(L_LATITUDE_FIELD);
+        trial.getLocation().setLatitude(latitude);
+
+        // set longitude in location
+        double longitude = (double) data.get(L_LONGITUDE_FIELD);
+        trial.getLocation().setLongitude(longitude);
+
+        // set date
+        Date date = (Date) data.get(DATE_FIELD);
+        assert date != null;
+        trial.setDate(date);
+
+        return trial;
     }
 }

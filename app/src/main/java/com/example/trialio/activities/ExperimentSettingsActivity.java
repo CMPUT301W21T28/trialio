@@ -96,7 +96,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");
@@ -223,7 +223,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
                 // update ignored listView
                 ignoredList.clear();
-                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIds());
+                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
                 ignoredAdapter.notifyDataSetChanged();
 
                 // set fields

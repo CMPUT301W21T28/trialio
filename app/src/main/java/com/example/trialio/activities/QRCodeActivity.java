@@ -1,8 +1,5 @@
 package com.example.trialio.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.controllers.ExperimentManager;
-import com.example.trialio.controllers.QRCodeGenerator;
-import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -68,7 +63,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");

@@ -9,6 +9,8 @@ import java.util.Date;
 public class BinomialTrial extends Trial implements Serializable {
     private boolean isSuccess;
 
+    public BinomialTrial() { }
+
     /**
      * Constructor for a BinomialTrial
      *

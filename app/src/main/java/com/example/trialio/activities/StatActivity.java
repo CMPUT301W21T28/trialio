@@ -8,12 +8,10 @@ package com.example.trialio.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
@@ -24,7 +22,6 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -101,7 +98,7 @@ public class StatActivity extends AppCompatActivity {
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
-        textOwner.setText(experiment.getSettings().getOwnerId());
+        textOwner.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             textStatus.setText("Open");

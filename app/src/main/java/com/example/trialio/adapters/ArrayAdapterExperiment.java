@@ -57,7 +57,7 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         locNeed.setImageResource(R.drawable.ic_baseline_location_on_24);
 
         UserManager userManager = new UserManager();
-        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 textOwner.setText(user.getUsername());
