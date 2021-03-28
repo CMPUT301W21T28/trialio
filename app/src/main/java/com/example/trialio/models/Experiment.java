@@ -54,7 +54,7 @@ public class Experiment implements Serializable {
     public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials) {
         this.experimentID = experimentID;
         this.settings = settings;
-        this.trialManager = new TrialManager(type, isOpen, minNumOfTrials);
+        this.trialManager = new TrialManager(experimentID, type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();
         parseKeywords();
     }

@@ -325,7 +325,7 @@ public class ExperimentManager {
 
     /**
      * Compresses an experiment into a Map which can be stored as a Firebase document. This method
-     * does not compress the trials ArrayList of the experiment (see TrialManager).
+     * does not compress the trials ArrayList of the experiment (see TrialManager addTrial method).
      * @param experiment The experiment to compress.
      * @return Returns the map representing the compressed experiment.
      */
@@ -426,8 +426,13 @@ public class ExperimentManager {
         assert keywords != null;
         experiment.setKeywords(keywords);
 
-        // set trialManager Collection
-        experiment.getTrialManager().setTrialCollection(experimentID);
+        // set experimentID in trialManager
+        experiment.getTrialManager().setExperimentID(experimentID);
+
+        experiment.getTrialManager()
+
+        // set the listener to update the trials list in trialManager on update
+        experiment.getTrialManager().setTrialsListener();
 
         return experiment;
     }
