@@ -44,7 +44,7 @@ public class QRMeasurementActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("experiment",experiment);
                 if (input.getText().toString().matches("")){
-                    Warning.setText("testing");
+                    Warning.setText("Measurement cannot be blank.");
                 }else{
                     bundle.putString("result", input.getText().toString());
                     qrFragment.setArguments(bundle);

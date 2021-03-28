@@ -80,21 +80,29 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtQRExpInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="163dp"
-            android:layout_weight="1"
-            android:text="TextView"
-
-            android:background="#A19B9B"/>
-
-        <TextView
-            android:id="@+id/txtWarning"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtQRExpInfo"
+                android:layout_width="match_parent"
+                android:layout_height="163dp"
+                android:layout_weight="1"
+                android:background="#A19B9B"
+
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/txtWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
