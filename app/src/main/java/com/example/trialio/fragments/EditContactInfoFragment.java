@@ -2,6 +2,7 @@ package com.example.trialio.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -22,36 +23,25 @@ import com.example.trialio.models.User;
  * it sends data back to the User manager, which then updates the user's information in the firebase database
  */
 public class EditContactInfoFragment extends DialogFragment {
+
+    private OnFragmentInteractionListener listener;
     private EditText phoneNumberView;
     private EditText emailView;
-    private OnFragmentInteractionListener listener;
-    private User user;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_contact_info, null);
 
-        // get the experiment that was passed in
+        // get the user that was passed in
         Bundle bundle = getArguments();
-        user = (User) bundle.getSerializable("UserProfile");
+        User user = (User) bundle.getSerializable("UserProfile");
 
+        // set the text views with current user values
         phoneNumberView = view.findViewById(R.id.editUserPhone);
         emailView = view.findViewById(R.id.editUserEmail);
-
-        UserManager manager = new UserManager();
-        manager.getCurrentUser(new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                manager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
-                    @Override
-                    public void onUserFetch(User user) {
-                        phoneNumberView.setText(user.getContactInfo().getPhone());
-                        emailView.setText(user.getContactInfo().getEmail());
-                    }
-                });
-            }
-        });
+        phoneNumberView.setText(user.getContactInfo().getPhone());
+        emailView.setText(user.getContactInfo().getEmail());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
@@ -61,20 +51,30 @@ public class EditContactInfoFragment extends DialogFragment {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String phoneText = phoneNumberView.getText().toString();
-                        String emailText = emailView.getText().toString();
-
-                        user.getContactInfo().setPhone(phoneText);
-                        user.getContactInfo().setEmail(emailText);
-
-                        manager.updateUser(user);
-                        //confirm update to user profile
+                        String phone = phoneNumberView.getText().toString();
+                        String email = emailView.getText().toString();
+                        listener.onEditContactInfoConfirm(phone, email);
                     }
                 }).create();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    /**
+     * Interface for action to be performed by called when OK is clicked
+     */
     public interface OnFragmentInteractionListener {
-        void onConfirm();
+        void onEditContactInfoConfirm(String phone, String email);
     }
 
 }
