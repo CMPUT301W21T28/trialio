@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
@@ -254,9 +255,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-        // set Stats Summary
-        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
-        statisticsUtility.displaySummaryStats(stats, textStats);
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
+                // set Stats Summary
+                ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), trialList);
+                statisticsUtility.displaySummaryStats(stats, textStats);
+            }
+        });
     }
 
     /**

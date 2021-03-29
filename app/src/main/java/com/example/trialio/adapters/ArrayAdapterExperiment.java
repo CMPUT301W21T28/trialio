@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * This is an ArrayAdapter which contains an experiment list. Used in MainActivity.
  */
-public class ArrayAdapterExperiment extends ArrayAdapter {
+public class    ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;
     private ArrayList<Experiment> experimentList;
 

@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * This class manages trials and handles the persistence of trial data.
  */
@@ -48,20 +47,17 @@ public class TrialManager implements Serializable {
     private static final String N_NONNEGCOUNT_FIELD = "nonNegCount";
 
     private String type;
-    private ArrayList<Trial> trials;
     private ArrayList<String> ignoredUserIDs;
     private int minNumOfTrials;
     private boolean isOpen;
     private String experimentID;
 
     public TrialManager() {
-        this.trials = new ArrayList<Trial>();
         this.ignoredUserIDs = new ArrayList<String>();
     }
 
     public TrialManager(String experimentID, String type, boolean isOpen, int minNumOfTrials) {
         this.type = type;
-        this.trials = new ArrayList<Trial>();
         this.ignoredUserIDs = new ArrayList<String>();
         this.minNumOfTrials = minNumOfTrials;
         this.isOpen = isOpen;
@@ -114,22 +110,6 @@ public class TrialManager implements Serializable {
     }
 
     /**
-     * This gets the trials of the trial manager.
-     * @return Returns the trials of the trial manager.
-     */
-    public ArrayList<Trial> getTrials() {
-        return trials;
-    }
-
-    /**
-     * This sets the trials of the trial manager.
-     * @param trials The candidate list of trials to set as the trials of the trial manager.
-     */
-    public void setTrials(ArrayList<Trial> trials) {
-        this.trials = trials;
-    }
-
-    /**
      * This gets the list of user ids which are ignored by the trial manager.
      * @return Returns the list of ignored user ids.
      */
@@ -178,21 +158,6 @@ public class TrialManager implements Serializable {
     }
 
     /**
-     * This finds all of the trials which are not ignored.
-     * @return Returns the list of trials completed by users who are not in the ignored list.
-     */
-    public ArrayList<Trial> fetchVisibleTrials() {
-        ArrayList<Trial> visible = new ArrayList<Trial>();
-        for (Trial trial : trials) {
-            if (!ignoredUserIDs.contains(trial.getExperimenterId())) {
-                visible.add(trial);
-            }
-        }
-        Log.d(TAG, "Visible Trials: "+visible.toString());
-        return visible;
-    }
-
-    /**
      * This adds a userID to the list of ignored userIDs.
      * @param userID The candidate userID to add to the list of ignored userIds.
      */
@@ -206,16 +171,6 @@ public class TrialManager implements Serializable {
      */
     public void removeIgnoredUsers(String userID) {
         ignoredUserIDs.remove(userID);
-    }
-
-    public void setTrialsListener() {
-        setUpdateListener(new OnAllTrialsUpdateListener() {
-            @Override
-            public void onAllTrialsUpdate(ArrayList<Trial> trialList) {
-                trials.clear();
-                trials.addAll(trialList);
-            }
-        });
     }
 
     /**
@@ -252,6 +207,43 @@ public class TrialManager implements Serializable {
     }
 
     /**
+     * Sets a listener to the trial collection. This function sets up a listener so that
+     * listener.onAllTrialsUpdate() is called when all visible trials in the collection have been
+     * fetched.
+     *
+     * @param listener the listener with the callback function to be called when the Trial
+     *                 collection is updated
+     */
+    public void setAllVisibleTrialsFetchListener(TrialManager.OnAllVisibleTrialsFetchListener listener) {
+        CollectionReference trialCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
+
+        trialCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                // initialize a list of trials
+                ArrayList<Trial> trialList = new ArrayList<Trial>();
+
+                // extract all trial documents in  the collection
+                for (DocumentSnapshot doc : value.getDocuments()) {
+                    try {
+                        Trial trial = extractTrial(doc);
+                        if (!ignoredUserIDs.contains(trial.getExperimenterId())) {
+                            trialList.add(trial);
+                        }
+                        Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
+                    } catch (Exception e) {
+                        Log.d(TAG, "Error fetching " + doc.getId() + ".");
+                    }
+                }
+
+                // pass the trialList to the listener
+                listener.onAllVisibleTrialsFetch(trialList);
+            }
+        });
+    }
+
+    /**
      * This gets the ID of the experiment associated with the trialManager.
      * @return Returns the String that is the ID of the experiment.
      */
@@ -278,6 +270,19 @@ public class TrialManager implements Serializable {
          * @param trialList The list of trials extracted from the collection.
          */
         public void onAllTrialsUpdate(ArrayList<Trial> trialList);
+    }
+
+    /**
+     * This interface represents an action to be taken when all visible trials of a collection have
+     * been fetched.
+     */
+    public interface OnAllVisibleTrialsFetchListener {
+
+        /**
+         * This method is called when all visible trials in the collection have been fetched and
+         * extracted. @param trialList The list of trials extracted from the collection.
+         */
+        public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList);
     }
 
     /**

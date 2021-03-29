@@ -47,7 +47,7 @@ public class QRCodeActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
 
-        trialList = experiment.getTrialManager().getTrials();
+        trialList = new ArrayList<Trial>();
         QRAdapter = new ArrayAdapterQR(this, experiment);
 
         experimentManager = new ExperimentManager();

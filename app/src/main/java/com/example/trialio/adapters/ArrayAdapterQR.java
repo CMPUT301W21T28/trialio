@@ -31,9 +31,9 @@ public class ArrayAdapterQR extends ArrayAdapter{
      * @param experiment
      */
     public ArrayAdapterQR(Context context, Experiment experiment) {
-        super(context, 0, experiment.getTrialManager().getTrials());
+        super(context, 0, new ArrayList<Trial>());
 
-        this.trialList = experiment.getTrialManager().getTrials();
+        this.trialList = new ArrayList<Trial>();
         this.context = context;
         this.experiment = experiment;
     }

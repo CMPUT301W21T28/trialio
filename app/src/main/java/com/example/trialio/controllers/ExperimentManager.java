@@ -248,7 +248,7 @@ public class ExperimentManager {
      * @param listener the listener with the action to be taken once the experiments are fetched
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
-        String field = "settings.ownerId";
+        String field = "ownerID";
         String id = owner.getId();
         experimentsCollection.whereEqualTo(field, id)
                 .get()
@@ -355,7 +355,7 @@ public class ExperimentManager {
     }
 
     /**
-     * Extracts an experiment object from a Firestore document. This method assumes the document
+     * Extracts an experiment object from a Firebase document. This method assumes the document
      * hold a valid Experiment.
      *
      * @param document The document to be extracted.
@@ -380,7 +380,7 @@ public class ExperimentManager {
         // set description in settings
         String description = (String) data.get(ES_DESCRIPTION_FIELD);
         assert description != null;
-        experiment.getSettings().setDescription(ES_DESCRIPTION_FIELD);
+        experiment.getSettings().setDescription(description);
 
         // set region in settings
         experiment.getSettings().setRegion(new Region());
@@ -428,11 +428,6 @@ public class ExperimentManager {
 
         // set experimentID in trialManager
         experiment.getTrialManager().setExperimentID(experimentID);
-
-        experiment.getTrialManager()
-
-        // set the listener to update the trials list in trialManager on update
-        experiment.getTrialManager().setTrialsListener();
 
         return experiment;
     }

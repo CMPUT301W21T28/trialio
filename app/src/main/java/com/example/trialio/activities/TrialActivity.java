@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -255,9 +256,14 @@ public class TrialActivity extends AppCompatActivity {
                 setOnClickListeners();
 
                 // update the trialList
-                trialList.clear();
-                trialList.addAll(experiment.getTrialManager().fetchVisibleTrials());
-                trialAdapter.notifyDataSetChanged();
+                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+                    @Override
+                    public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
+                        trialList.clear();
+                        trialList.addAll(newTrialList);
+                        trialAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }

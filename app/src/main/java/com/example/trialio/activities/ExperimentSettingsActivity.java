@@ -24,6 +24,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddIgnoredFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private ArrayList<String> ignoredList;
     private ArrayAdapterUsers ignoredAdapter;
     private Button addIgnoredButton;
-    private Button removeIgnoredButton;
 
 
     private TextView experimentDescriptionTextView;
@@ -79,8 +79,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
 
         // get views
-
-
         experimentDescriptionTextView = findViewById(R.id.settings_description);
         experimentLocationImageView = findViewById(R.id.settings_location);
         experimentTypeTextView = findViewById(R.id.settings_text_type);
@@ -93,10 +91,16 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
 
         // set experiment info
-
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+
+        // get the username of the owner
+        userManager.addUserUpdateListener(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                experimentOwnerTextView.setText(user.getUsername());
+            }
+        });
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");
@@ -125,9 +129,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      * This sets the fields of the ExperimentSettingsActivity.
      */
     public void setFields() {
-
-
-
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
     }
 
