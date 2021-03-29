@@ -1,67 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_grey"
-    android:orientation="vertical">
+    android:background="#747474"
+    tools:context=".activities.QRNonnegActivity">>
 
-
-    <!-- Page header -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.1"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="5dp">
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_weight="0"
+        android:orientation="horizontal">
 
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/section_grey"/>
+            android:scaleType="fitCenter" />
 
         <ImageButton
-            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo" />
 
 
         <ImageButton
-            android:backgroundTint="@color/section_grey"
             android:id="@+id/editUserBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter" />
 
     </LinearLayout>
 
-
-    <!-- Description of what this page does -->
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginHorizontal="5dp"
-        android:background="@color/section_grey">
+        android:background="#9c9c9c"
+        android:layout_margin="5dp"       >
 
         <Button
-
             android:id="@+id/btnshowQR"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/special_yellow"
             android:text="QR Codes" />
@@ -70,14 +64,13 @@
         <Button
             android:id="@+id/btnshowBarcode"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_dark_grey"
             android:text="Barcodes" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -232,87 +225,59 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:layout_marginHorizontal="20dp"
+        android:layout_weight="0"
+
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:text="Create QR Code:"
+        android:textColor="@color/special_yellow" />
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
-
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="20dp"
-
-            android:fontFamily="monospace"
-            android:gravity="center_horizontal"
-
-            android:text="QR Codes"
-            android:textColor="@color/special_yellow" />
-
-    </LinearLayout>
-
-
-    <!--  List of blocked users  -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="10"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
 
-        <ListView
-            android:id="@+id/list_trials_QR"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/section_grey">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        </ListView>
+            <EditText
+                android:id="@+id/txtNonNegQRValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Enter value here"
+                android:inputType="number" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnQRNonneg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Create QR Code" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="3dp"
-        android:layout_weight="1">
-
-
-        <Button
-            android:id="@+id/button_add_qr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-
-
-            android:text="Generate QR Code"
-            android:textColor="@color/button_dark_grey"
-            android:focusable="true"
-            app:backgroundTint="@color/special_yellow"
-            app:srcCompat="@android:drawable/ic_input_add" />
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
-
-
-
-
-
-
-
-
-
-
+</LinearLayout
+    >

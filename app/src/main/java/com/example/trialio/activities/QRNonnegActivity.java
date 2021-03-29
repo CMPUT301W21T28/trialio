@@ -1,60 +1,48 @@
 package com.example.trialio.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
+
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.controllers.ExperimentManager;
-import com.example.trialio.controllers.QRCodeGenerator;
-import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
-public class QRCodeActivity extends AppCompatActivity {
-    private Experiment experiment;
+public class QRNonnegActivity extends AppCompatActivity {
     private ArrayList<Trial> trialList;
-    private ArrayAdapterQR QRAdapter;
     private ExperimentManager experimentManager;
-
-
+    private Button createQR;
+    private EditText input;
+    private Experiment experiment;
     private TextView experimentDescriptionTextView;
-    private ImageView experimentLocationImageView;
+    private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
 
-    /**
-     * onCreate takes in the experiment passed in as a bundle and send triallist into QRAdaptor
-     * @param savedInstanceState
-     */
     @Override
-    @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_code);
+        setContentView(R.layout.activity_qr_nonneg);
+        createQR = findViewById(R.id.btnQRNonneg);
+        input = findViewById(R.id.txtNonNegQRValue);
+
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
 
         trialList = experiment.getTrialManager().getTrials();
-        QRAdapter = new ArrayAdapterQR(this, experiment);
-
         experimentManager = new ExperimentManager();
 
         // get views
@@ -82,35 +70,23 @@ public class QRCodeActivity extends AppCompatActivity {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
 
-
-        // Set up the adapter for the list and experiment manager
-        ListView trialListView = findViewById(R.id.list_trials_QR);
-        trialListView.setAdapter(QRAdapter);
-        setUpOnClickListeners();
-
+        setOnClickListeners();
     }
 
-    /**
-     * Sets up on click listeners for the activity.
-     */
-    private void setUpOnClickListeners() {
-        // Called when the user clicks item in experiment list
-        ListView QRListView = findViewById(R.id.list_trials_QR);
-        QRListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void setOnClickListeners() {
+        createQR.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onClick(View v) {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("experiment",experiment);
-                bundle.putSerializable("trial",trialList.get(i));
-                bundle.putSerializable("position", i);
+                bundle.putString("result", input.getText().toString());
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"QrCode");
-
-
             }
         });
     }
+
 
 
 }
