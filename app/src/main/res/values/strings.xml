@@ -8,4 +8,9 @@
     <string name="view_user_email">email@email.com</string>
     <string name="experiment_status_open">OPEN</string>
     <string name="experiment_status_closed">CLOSED</string>
+    <string name="phone_label">Phone Number:</string>
+    <string name="username_label">Username:</string>
+    <string name="email_label">Email</string>
+    <string name="edit_contact_info">Edit Contact Info</string>
+    <string name="change_username">Change Username</string>
 </resources>
