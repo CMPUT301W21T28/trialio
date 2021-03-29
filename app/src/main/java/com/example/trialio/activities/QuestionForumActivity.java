@@ -1,6 +1,5 @@
 package com.example.trialio.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,35 +7,31 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionArrayAdapter;
 import com.example.trialio.controllers.QuestionForumManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionForumActivity extends AppCompatActivity implements AddQuestionFragment.OnFragmentInteractionListener {
-    private final Context context = this;
-
-    private Experiment associatedExperiment;
-
-    private QuestionForumManager questionForumManager;
-
-    private ArrayList<Question> questionList;
-
-    private QuestionArrayAdapter questionAdapter;
-
-    String associatedExperimentID;
 
     private final String TAG = "QuestionForumActivity";
 
-
+    private String associatedExperimentID;
+    private Experiment experiment;
+    private QuestionForumManager questionForumManager;
+    private ArrayList<Question> questionList;
+    private QuestionArrayAdapter questionAdapter;
 
 
     @Override
@@ -46,10 +41,9 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
         // receive experiment info from main -> the question forum belongs to this experiment
         Bundle bundle = getIntent().getExtras();
-        associatedExperiment = (Experiment) bundle.getSerializable("experiment");
+        experiment = (Experiment) bundle.getSerializable("experiment");
         // get id here and pass it into the constructor of the quesitonForumManager
-        associatedExperimentID = associatedExperiment.getExperimentID();
-
+        associatedExperimentID = experiment.getExperimentID();
 
         // Initialize attributes for the activity
         questionForumManager = new QuestionForumManager(associatedExperimentID);
@@ -66,31 +60,47 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         setQuestionList();
+        setFields();
     }
 
 
+    /**
+     * Sets the questionList and updates the ArrayAdapter of the activity
+     */
     private void setQuestionList() {
         questionForumManager.setOnAllQuestionsFetchCallback(new QuestionForumManager.OnManyQuestionsFetchListener() {
             @Override
             public void onManyQuestionsFetch(List<Question> questions) {  // TODO: why not ArrayList ***
+                Log.w(TAG, "Successfully fetched questions");
                 questionList.clear();
-
-                Log.w(TAG, "Succesfully fetched questions");
-
                 questionList.addAll(questions);
-
-                // TODO: code confirms questions are present
-//                for (Question x : questionList) {
-//                    String id = x.getPostID();
-//                    Log.w(TAG, id);
-//                }
-
                 questionAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    /**
+     * Sets the fields of the TextViews of the activity
+     */
+    private void setFields() {
+        TextView experimentTypeView = findViewById(R.id.experiment_text_type);
+        experimentTypeView.setText(experiment.getTrialManager().getType());
+
+        TextView statusView = findViewById(R.id.experiment_text_status);
+        statusView.setText(experiment.getTrialManager().getIsOpen() ? R.string.experiment_status_open : R.string.experiment_status_closed);
+
+        TextView ownerView = findViewById(R.id.experiment_text_owner);
+        UserManager userManager = new UserManager();
+        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                ownerView.setText(user.getUsername());
+            }
+        });
+
     }
 
     /**
@@ -103,7 +113,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         questionForumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(context, QuestionRepliesActivity.class);
+                Intent intent = new Intent(getApplicationContext(), QuestionRepliesActivity.class);
 
                 // PASSING THE OBJECT APPEARS TO BE THE PROBLEM
 
@@ -118,19 +128,13 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 Log.w("QUESTION ID: ", tempQuestion.getPostID());
                 Log.w("QUESTION USERNAME: ", tempQuestion.getUserId());
 
-//                Log.w("QUESTION ID: ", selectedQuestion.getPostID());
-//                Log.w("QUESTION USERNAME: ", selectedQuestion.getUser().getUsername());
-
-
                 intent.putExtras(args);
 
                 startActivity(intent);
             }
         });
 
-        /**
-         * Adds new question
-         */
+        // adds new question
         Button newQuestion = findViewById(R.id.newQuestion);
         newQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,18 +151,18 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         });
     }
 
+
     /**
      * This is called when the user presses confirm on one of the Question creation fragments
      *
      * @param newQuestion The new question that was created in the fragment
      */
     @Override
-    public void onOkPressed (Question newQuestion) {
+    public void onOkPressed(Question newQuestion) {
         Log.d(TAG, "QuestionAdded");
         questionForumManager.createQuestion(newQuestion);
         setQuestionList();
     }
-
 
 
 }
