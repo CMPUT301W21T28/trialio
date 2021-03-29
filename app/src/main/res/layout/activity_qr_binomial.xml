@@ -11,35 +11,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.1"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="5dp">
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_weight="0"
+        android:orientation="horizontal">
 
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/section_grey"/>
+            android:scaleType="fitCenter" />
 
         <ImageButton
-            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo" />
 
 
         <ImageButton
-            android:backgroundTint="@color/section_grey"
             android:id="@+id/editUserBtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter" />
 
@@ -51,8 +51,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:layout_marginHorizontal="5dp"
         android:background="@color/section_grey">
 
@@ -81,8 +81,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
 
         android:orientation="horizontal"
         android:layout_gravity="center_vertical">
@@ -235,8 +235,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
 
         android:orientation="horizontal"
         android:layout_gravity="center_vertical">
@@ -258,26 +258,7 @@
 
     <!--  List of blocked users  -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="10"
-        android:gravity="center">
 
-
-        <ListView
-            android:id="@+id/list_trials_QR"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/section_grey">
-
-        </ListView>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

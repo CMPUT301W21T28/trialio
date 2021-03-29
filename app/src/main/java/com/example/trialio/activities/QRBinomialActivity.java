@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -13,18 +14,14 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Location;
-import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.Trial;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
 public class QRBinomialActivity extends AppCompatActivity {
     private Experiment experiment;
-    private ArrayList<Trial> trialList;
     private Trial trial;
     private ExperimentManager experimentManager;
     private Switch aSwitch;
@@ -35,6 +32,7 @@ public class QRBinomialActivity extends AppCompatActivity {
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+    private ListView qrListView;
 
 
     /**
@@ -48,7 +46,6 @@ public class QRBinomialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr_binomial);
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
-        isSuccess = aSwitch.isChecked();
 
 
         // get the experiment that was passed in
@@ -57,7 +54,6 @@ public class QRBinomialActivity extends AppCompatActivity {
         setOnClickListeners();
 
 
-        trialList = experiment.getTrialManager().getTrials();
         experimentManager = new ExperimentManager();
 
         // get views
@@ -97,6 +93,8 @@ public class QRBinomialActivity extends AppCompatActivity {
             public void onClick(View v) {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
+                isSuccess = aSwitch.isChecked();
+
 
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isSuccess));
@@ -105,9 +103,7 @@ public class QRBinomialActivity extends AppCompatActivity {
             }
         });
     }
-    private void setActivitytoBarcode() {
 
-    }
 
 
 }

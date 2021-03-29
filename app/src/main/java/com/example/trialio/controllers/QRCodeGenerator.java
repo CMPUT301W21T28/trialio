@@ -46,7 +46,7 @@ public class QRCodeGenerator extends AppCompatActivity {
 
     public static Bitmap generateForTrial(Experiment experiment, String strResult, Location location){
         String infoResult = "";
-
+        Date date = new Date();
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
             infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
         } else if (experiment.getTrialManager().getType().equals("COUNT")){

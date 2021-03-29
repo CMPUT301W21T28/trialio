@@ -21,9 +21,12 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trialio.R;
 import com.example.trialio.activities.QRBinomialActivity;
 import com.example.trialio.controllers.QRCodeGenerator;
+import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 
 import java.io.File;
@@ -52,6 +55,7 @@ public class QRFragment extends DialogFragment {
 
         location = experiment.getSettings().getGeoLocationRequired();
         Location loc = new Location();
+        Date date = new Date();
 
         if (location){
             loc.getCurrentLocation(getContext(),getActivity());
