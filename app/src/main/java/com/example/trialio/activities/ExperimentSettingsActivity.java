@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
  */
-public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener {
+public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener{
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
 
@@ -46,7 +46,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private ArrayList<String> ignoredList;
     private ArrayAdapterUsers ignoredAdapter;
     private Button addIgnoredButton;
-    private Button removeIgnoredButton;
 
 
     private TextView experimentDescriptionTextView;
@@ -57,7 +56,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * the On create the takes in the saved instance from the experiment activity
-     *
      * @param savedInstanceState
      */
     @Override
@@ -81,8 +79,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
 
         // get views
-
-
         experimentDescriptionTextView = findViewById(R.id.settings_description);
         experimentLocationImageView = findViewById(R.id.settings_location);
         experimentTypeTextView = findViewById(R.id.settings_text_type);
@@ -95,20 +91,21 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
 
         // set experiment info
-
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+
+        // get the username of the owner
+        userManager.addUserUpdateListener(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 experimentOwnerTextView.setText(user.getUsername());
             }
         });
 
-        if (experiment.getTrialManager().getIsOpen()) {
-            experimentStatusTextView.setText(R.string.experiment_status_open);
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
         } else {
-            experimentStatusTextView.setText(R.string.experiment_status_closed);
+            experimentStatusTextView.setText("Closed");
         }
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
@@ -132,8 +129,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      * This sets the fields of the ExperimentSettingsActivity.
      */
     public void setFields() {
-
-
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
     }
 
@@ -194,7 +189,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
-                                assert (false);
+                                assert(false);
                                 break;
                         }
                         return false;
@@ -229,7 +224,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
                 // update ignored listView
                 ignoredList.clear();
-                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIds());
+                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
                 ignoredAdapter.notifyDataSetChanged();
 
                 // set fields
@@ -243,7 +238,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * This removes a username from the ignore list of the experiment.
-     *
      * @param username The string of the userID to remove from the ignore list of the experiment.
      */
     public void menuUnignoreUsername(String username) {

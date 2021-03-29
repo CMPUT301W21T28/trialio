@@ -7,26 +7,26 @@ import java.io.Serializable;
  */
 public class Region implements Serializable {
 
-    private String description;
+    private String regionText;
     // private Location geoLocation;
-    private Double kmRadius;
+    private double kmRadius;
 
     /**
      * Gets the description of a region
      *
      * @return the description of a region
      */
-    public String getDescription() {
-        return description;
+    public String getRegionText() {
+        return regionText;
     }
 
     /**
      * Sets the description of a region
      *
-     * @param description the description of a region to be set
+     * @param regionText the description of a region to be set
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRegionText(String regionText) {
+        this.regionText = regionText;
     }
 
     /**
@@ -34,7 +34,7 @@ public class Region implements Serializable {
      *
      * @return the region radius in kilometres
      */
-    public Double getKmRadius() {
+    public double getKmRadius() {
         return kmRadius;
     }
 
@@ -43,7 +43,7 @@ public class Region implements Serializable {
      *
      * @param kmRadius the region radius in kilometres to be set
      */
-    public void setKmRadius(Double kmRadius) {
+    public void setKmRadius(double kmRadius) {
         this.kmRadius = kmRadius;
     }
 }

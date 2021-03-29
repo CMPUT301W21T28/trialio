@@ -4,26 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Trial;
-
-import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
 public class QRBinomialActivity extends AppCompatActivity {
     private Experiment experiment;
-    private Trial trial;
-    private ExperimentManager experimentManager;
     private Switch aSwitch;
     private Button createQR;
     private Boolean isSuccess;
@@ -32,7 +25,6 @@ public class QRBinomialActivity extends AppCompatActivity {
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
-    private ListView qrListView;
 
 
     /**
@@ -47,14 +39,10 @@ public class QRBinomialActivity extends AppCompatActivity {
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
 
-
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
         setOnClickListeners();
-
-
-        experimentManager = new ExperimentManager();
 
         // get views
         experimentDescriptionTextView = findViewById(R.id.qr_description);
@@ -67,7 +55,7 @@ public class QRBinomialActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");

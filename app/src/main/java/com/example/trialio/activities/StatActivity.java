@@ -8,15 +8,14 @@ package com.example.trialio.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
@@ -24,7 +23,6 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -62,96 +60,101 @@ public class StatActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_stat");
 
-        // create statistics utility
-        statisticsUtility = new StatisticsUtility();
-
-        // calculate the relevant stats based on experiment type
-        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
-
-        BarChart histogram = findViewById(R.id.histogramView);
-        LineChart timePlot = findViewById(R.id.timePlotView);
-        TextView graphTitle = findViewById(R.id.plotTitle);
-
-        // display summary statistics of results
-        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
-        statisticsUtility.displaySummaryStats(stats, textStats);
-
-        if(experiment.getTrialManager().getType().equals("COUNT")) {
-            // display time plot by default if count experiment
-            displayTimePlot(stats, timePlot, graphTitle);
-            histogram.setVisibility(View.GONE);
-        } else {
-            // otherwise display histogram by default
-            displayHistogram(stats, histogram, graphTitle);
-            timePlot.setVisibility(View.GONE);
-        }
-
-        // SET VIEWS
-        // TODO: Split me into nice functions when testing
-
-        // TODO: maybe make some adjustments here
-
-        TextView textDescription = findViewById(R.id.experiment_description);
-        TextView textType = findViewById(R.id.experiment_text_type);
-        TextView textOwner = findViewById(R.id.experiment_text_owner);
-        TextView textStatus = findViewById(R.id.experiment_text_status);
-        ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
-
-
-        // set TextViews
-        textDescription.setText("Description: " + experiment.getSettings().getDescription());
-        textType.setText("Type: " + experiment.getTrialManager().getType());
-        textOwner.setText(experiment.getSettings().getOwnerId());
-
-        if ( experiment.getTrialManager().getIsOpen() ) {
-            textStatus.setText("Open");
-        } else {
-            textStatus.setText("Closed");
-        }
-
-        if (!experiment.getSettings().getGeoLocationRequired()) {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
-        } else {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
-        }
-
-        // TODO: make me into a function
-
-        ImageButton previous = findViewById(R.id.btnPreviousGraph);
-        previous.setOnClickListener(new View.OnClickListener() {
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
             @Override
-            public void onClick(View v) {
-                // will come in handy if we add more time plots
-                if(histogram.getVisibility() == View.VISIBLE) {
-                    // if histogram is visible, create and display time plot of trials
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
+                // create statistics utility
+                statisticsUtility = new StatisticsUtility();
+
+                // calculate the relevant stats based on experiment type
+                ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), trialList);
+
+                BarChart histogram = findViewById(R.id.histogramView);
+                LineChart timePlot = findViewById(R.id.timePlotView);
+                TextView graphTitle = findViewById(R.id.plotTitle);
+
+                // display summary statistics of results
+                TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
+                statisticsUtility.displaySummaryStats(stats, textStats);
+
+                if(experiment.getTrialManager().getType().equals("COUNT")) {
+                    // display time plot by default if count experiment
                     displayTimePlot(stats, timePlot, graphTitle);
                     histogram.setVisibility(View.GONE);
-                    timePlot.setVisibility(View.VISIBLE);
                 } else {
-                    // else create and display histogram of trials
+                    // otherwise display histogram by default
                     displayHistogram(stats, histogram, graphTitle);
                     timePlot.setVisibility(View.GONE);
-                    histogram.setVisibility(View.VISIBLE);
                 }
-            }
-        });
 
-        ImageButton next = findViewById(R.id.btnNextGraph);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // will come in handy if we add more time plots
-                if(histogram.getVisibility() == View.VISIBLE) {
-                    // if histogram is visible, create and display time plot of trials
-                    displayTimePlot(stats, timePlot, graphTitle);
-                    histogram.setVisibility(View.GONE);
-                    timePlot.setVisibility(View.VISIBLE);
+                // SET VIEWS
+                // TODO: Split me into nice functions when testing
+
+                // TODO: maybe make some adjustments here
+
+                TextView textDescription = findViewById(R.id.experiment_description);
+                TextView textType = findViewById(R.id.experiment_text_type);
+                TextView textOwner = findViewById(R.id.experiment_text_owner);
+                TextView textStatus = findViewById(R.id.experiment_text_status);
+                ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
+
+
+                // set TextViews
+                textDescription.setText("Description: " + experiment.getSettings().getDescription());
+                textType.setText("Type: " + experiment.getTrialManager().getType());
+                textOwner.setText(experiment.getSettings().getOwnerID());
+
+                if ( experiment.getTrialManager().getIsOpen() ) {
+                    textStatus.setText("Open");
                 } else {
-                    // else create and display histogram of trials
-                    displayHistogram(stats, histogram, graphTitle);
-                    timePlot.setVisibility(View.GONE);
-                    histogram.setVisibility(View.VISIBLE);
+                    textStatus.setText("Closed");
                 }
+
+                if (!experiment.getSettings().getGeoLocationRequired()) {
+                    experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+                } else {
+                    experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+                }
+
+                // TODO: make me into a function
+
+                ImageButton previous = findViewById(R.id.btnPreviousGraph);
+                previous.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // will come in handy if we add more time plots
+                        if(histogram.getVisibility() == View.VISIBLE) {
+                            // if histogram is visible, create and display time plot of trials
+                            displayTimePlot(stats, timePlot, graphTitle);
+                            histogram.setVisibility(View.GONE);
+                            timePlot.setVisibility(View.VISIBLE);
+                        } else {
+                            // else create and display histogram of trials
+                            displayHistogram(stats, histogram, graphTitle);
+                            timePlot.setVisibility(View.GONE);
+                            histogram.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+                ImageButton next = findViewById(R.id.btnNextGraph);
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // will come in handy if we add more time plots
+                        if(histogram.getVisibility() == View.VISIBLE) {
+                            // if histogram is visible, create and display time plot of trials
+                            displayTimePlot(stats, timePlot, graphTitle);
+                            histogram.setVisibility(View.GONE);
+                            timePlot.setVisibility(View.VISIBLE);
+                        } else {
+                            // else create and display histogram of trials
+                            displayHistogram(stats, histogram, graphTitle);
+                            timePlot.setVisibility(View.GONE);
+                            histogram.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
             }
         });
     }
@@ -174,77 +177,82 @@ public class StatActivity extends AppCompatActivity {
 
         ArrayList<BarEntry> histogramEntries = new ArrayList<>();
         ArrayList<String> xTitles = new ArrayList<>();
-        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
-        BarDataSet histogramDataSet = new BarDataSet(histogramEntries,"Trials");
 
-        // cannot display histogram if there are no trials
-        if(trials.isEmpty()) {
-            histogramTitle.setText("No trial results to display");
-            return;
-        }
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> trials) {
+                BarDataSet histogramDataSet = new BarDataSet(histogramEntries,"Trials");
 
-        switch((stats.get(0).intValue())) {
-            case 1:
-                // no graph for COUNT experiments, nothing noteworthy to view
-                histogramTitle.setText("No histogram is available for count experiments");
-
-                return;
-            case 2:
-                // add these calculated heights into the histogram
-                histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
-                histogramEntries.add(new BarEntry(stats.get(3).intValue(),1));
-
-                // add the titles of both sections
-                xTitles.add("Successes");
-                xTitles.add("Failures");
-
-                // display histogram titles
-                histogramTitle.setText("Successes vs Failures");
-
-                break;
-            case 3:
-                // find the non-negative count value of each trial
-                ArrayList<Double> counts = new ArrayList<>();
-                NonNegativeTrial nonnegative;
-                for(int i=0; i<trials.size(); i++) {
-                    nonnegative = (NonNegativeTrial) trials.get(i);
-                    counts.add((double)nonnegative.getNonNegCount());
+                // cannot display histogram if there are no trials
+                if(trials.isEmpty()) {
+                    histogramTitle.setText("No trial results to display");
+                    return;
                 }
 
-                // call helper method for further setup
-                setupHistogram(counts, histogramEntries, xTitles);
+                switch((stats.get(0).intValue())) {
+                    case 1:
+                        // no graph for COUNT experiments, nothing noteworthy to view
+                        histogramTitle.setText("No histogram is available for count experiments");
 
-                // display histogram titles
-                histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Non-negative count\nY-axis: Frequency");
+                        return;
+                    case 2:
+                        // add these calculated heights into the histogram
+                        histogramEntries.add(new BarEntry(stats.get(2).intValue(),0));
+                        histogramEntries.add(new BarEntry(stats.get(3).intValue(),1));
 
-                break;
-            case 4:
-                // find the measurement value of each trial
-                ArrayList<Double> measurements = new ArrayList<>();
-                MeasurementTrial measurement;
-                for(int i=0; i<trials.size(); i++) {
-                    measurement = (MeasurementTrial) trials.get(i);
-                    measurements.add(measurement.getMeasurement());
+                        // add the titles of both sections
+                        xTitles.add("Successes");
+                        xTitles.add("Failures");
+
+                        // display histogram titles
+                        histogramTitle.setText("Successes vs Failures");
+
+                        break;
+                    case 3:
+                        // find the non-negative count value of each trial
+                        ArrayList<Double> counts = new ArrayList<>();
+                        NonNegativeTrial nonnegative;
+                        for(int i=0; i<trials.size(); i++) {
+                            nonnegative = (NonNegativeTrial) trials.get(i);
+                            counts.add((double)nonnegative.getNonNegCount());
+                        }
+
+                        // call helper method for further setup
+                        setupHistogram(counts, histogramEntries, xTitles);
+
+                        // display histogram titles
+                        histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                                "X-axis: Non-negative count\nY-axis: Frequency");
+
+                        break;
+                    case 4:
+                        // find the measurement value of each trial
+                        ArrayList<Double> measurements = new ArrayList<>();
+                        MeasurementTrial measurement;
+                        for(int i=0; i<trials.size(); i++) {
+                            measurement = (MeasurementTrial) trials.get(i);
+                            measurements.add(measurement.getMeasurement());
+                        }
+
+                        // call helper method for further setup
+                        setupHistogram(measurements, histogramEntries, xTitles);
+
+                        // display histogram titles
+                        histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
+                                "X-axis: Measurement\nY-axis: Frequency");
                 }
 
-                // call helper method for further setup
-                setupHistogram(measurements, histogramEntries, xTitles);
-
-                // display histogram titles
-                histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                        "X-axis: Measurement\nY-axis: Frequency");
-        }
-
-        // display the histogram and set certain settings
-        BarData data = new BarData(xTitles, histogramDataSet);
-        histogram.setData(data);
-        histogram.setTouchEnabled(true);
-        histogram.setDragEnabled(true);
-        histogram.setScaleEnabled(true);
-        histogram.setDescription(null);
-        histogram.getAxisLeft().setAxisMinValue(0);
-        histogram.getAxisRight().setAxisMinValue(0);
+                // display the histogram and set certain settings
+                BarData data = new BarData(xTitles, histogramDataSet);
+                histogram.setData(data);
+                histogram.setTouchEnabled(true);
+                histogram.setDragEnabled(true);
+                histogram.setScaleEnabled(true);
+                histogram.setDescription(null);
+                histogram.getAxisLeft().setAxisMinValue(0);
+                histogram.getAxisRight().setAxisMinValue(0);
+            }
+        });
     }
 
     /**
@@ -313,99 +321,104 @@ public class StatActivity extends AppCompatActivity {
 
         ArrayList<Entry> TimePlotEntries = new ArrayList<>();
         ArrayList<String> xTitles = new ArrayList<>();
-        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
-        LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Mean");
 
-        // cannot display time plot if there are no trials
-        if(trials.isEmpty()) {
-            timePlotTitle.setText("No trial results to display");
-            return;
-        }
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> trials) {
+                LineDataSet timePlotDataSet = new LineDataSet(TimePlotEntries,"Mean");
 
-        // find the dates of each trial
-        ArrayList<Date> dates = new ArrayList<>();
-        for(int i=0; i<trials.size(); i++) {
-            dates.add(trials.get(i).getDate());
-        }
+                // cannot display time plot if there are no trials
+                if(trials.isEmpty()) {
+                    timePlotTitle.setText("No trial results to display");
+                    return;
+                }
 
-        // sort the dates from furthest in the past to most recent
-        Collections.sort(dates);
+                // find the dates of each trial
+                ArrayList<Date> dates = new ArrayList<>();
+                for(int i=0; i<trials.size(); i++) {
+                    dates.add(trials.get(i).getDate());
+                }
 
-        // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
-        int numPoints = 12; // the desired number of points in the time plot
-        //long max = new Date().getTime();
+                // sort the dates from furthest in the past to most recent
+                Collections.sort(dates);
 
-        // the following line can also be used for max, to see time plot up until the most recent data point
-        // instead of the current date/time
-        long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
+                // important values that app administrator may want to change
+                // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
+                int numPoints = 12; // the desired number of points in the time plot
+                //long max = new Date().getTime();
 
-        // find the cutoffs based on number of points
-        long[] cutoffs = findCutoffs(dates, numPoints, max);
+                // the following line can also be used for max, to see time plot up until the most recent data point
+                // instead of the current date/time
+                long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
 
-        // set up point heights array
-        double[] pointHeight = new double[numPoints];
+                // find the cutoffs based on number of points
+                long[] cutoffs = findCutoffs(dates, numPoints, max);
 
-        switch((stats.get(0).intValue())) {
-            case 1:
-                timePlotDataSet = new LineDataSet(TimePlotEntries,"Count");
+                // set up point heights array
+                double[] pointHeight = new double[numPoints];
 
-                // call helper method for further setup
-                pointHeight = setupCountTimePlot(trials, cutoffs, numPoints);
+                switch((stats.get(0).intValue())) {
+                    case 1:
+                        timePlotDataSet = new LineDataSet(TimePlotEntries,"Count");
 
-                // display time plot titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() +
-                        " total count over time\nX-axis: Time\nY-axis: Count");
+                        // call helper method for further setup
+                        pointHeight = setupCountTimePlot(trials, cutoffs, numPoints);
 
-                break;
-            case 2:
-                timePlotDataSet = new LineDataSet(TimePlotEntries,"Success rate");
+                        // display time plot titles
+                        timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                " total count over time\nX-axis: Time\nY-axis: Count");
 
-                // call helper method for further setup
-                pointHeight = setupBinomialTimePlot(trials, cutoffs, numPoints);
+                        break;
+                    case 2:
+                        timePlotDataSet = new LineDataSet(TimePlotEntries,"Success rate");
 
-                // display time plot titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() +
-                        " success rate over time\nX-axis: Time\nY-axis: Success rate");
+                        // call helper method for further setup
+                        pointHeight = setupBinomialTimePlot(trials, cutoffs, numPoints);
 
-                break;
-            case 3:
-                // call helper method for further setup
-                pointHeight = setupNonNegativeTimePlot(trials, cutoffs, numPoints);
+                        // display time plot titles
+                        timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                " success rate over time\nX-axis: Time\nY-axis: Success rate");
 
-                // display time plot titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() +
-                        " average non-negative count over time\nX-axis: Time\n" +
-                        "Y-axis: Mean non-negative count");
+                        break;
+                    case 3:
+                        // call helper method for further setup
+                        pointHeight = setupNonNegativeTimePlot(trials, cutoffs, numPoints);
 
-                break;
-            case 4:
-                // call helper method for further setup
-                pointHeight = setupMeasurementTimePlot(trials, cutoffs, numPoints);
+                        // display time plot titles
+                        timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                " average non-negative count over time\nX-axis: Time\n" +
+                                "Y-axis: Mean non-negative count");
 
-                // display time plot titles
-                timePlotTitle.setText(experiment.getSettings().getDescription() +
-                        " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
-        }
+                        break;
+                    case 4:
+                        // call helper method for further setup
+                        pointHeight = setupMeasurementTimePlot(trials, cutoffs, numPoints);
 
-        // add the calculated heights into the time plot
-        for(int i=0; i<numPoints; i++) {
-            TimePlotEntries.add(new Entry((float)pointHeight[i],i));
-        }
+                        // display time plot titles
+                        timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
+                }
 
-        // display the date cutoff for each point in the time plot
-        SimpleDateFormat dateDisplay = new SimpleDateFormat("MM/dd/yy");
-        for(int i=0; i<numPoints; i++) {
-            xTitles.add(dateDisplay.format(new Date(cutoffs[i])));
-        }
+                // add the calculated heights into the time plot
+                for(int i=0; i<numPoints; i++) {
+                    TimePlotEntries.add(new Entry((float)pointHeight[i],i));
+                }
 
-        // display the time plot and set certain settings
-        LineData data = new LineData(xTitles, timePlotDataSet);
-        timePlot.setData(data);
-        timePlot.setTouchEnabled(true);
-        timePlot.setDragEnabled(true);
-        timePlot.setScaleEnabled(true);
-        timePlot.setDescription(null);
+                // display the date cutoff for each point in the time plot
+                SimpleDateFormat dateDisplay = new SimpleDateFormat("MM/dd/yy");
+                for(int i=0; i<numPoints; i++) {
+                    xTitles.add(dateDisplay.format(new Date(cutoffs[i])));
+                }
+
+                // display the time plot and set certain settings
+                LineData data = new LineData(xTitles, timePlotDataSet);
+                timePlot.setData(data);
+                timePlot.setTouchEnabled(true);
+                timePlot.setDragEnabled(true);
+                timePlot.setScaleEnabled(true);
+                timePlot.setDescription(null);
+            }
+        });
     }
 
     /**

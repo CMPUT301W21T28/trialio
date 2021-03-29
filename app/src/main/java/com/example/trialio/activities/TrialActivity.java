@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -102,7 +103,7 @@ public class TrialActivity extends AppCompatActivity {
                         int popupViewID = R.layout.menu_trials_experimenter;
 
                         // if the current user is the owner of the experiment, use the owner menu
-                        if (currentUser.getId().equals(experiment.getSettings().getOwnerId())) {
+                        if (currentUser.getId().equals(experiment.getSettings().getOwnerID())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
 
@@ -157,7 +158,7 @@ public class TrialActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");
@@ -180,7 +181,7 @@ public class TrialActivity extends AppCompatActivity {
 //        });
 
         // get the owner's username
-        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 experimentOwnerTextView.setText("Owner: " + user.getUsername());
@@ -255,9 +256,14 @@ public class TrialActivity extends AppCompatActivity {
                 setOnClickListeners();
 
                 // update the trialList
-                trialList.clear();
-                trialList.addAll(experiment.getTrialManager().fetchVisibleTrials());
-                trialAdapter.notifyDataSetChanged();
+                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+                    @Override
+                    public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
+                        trialList.clear();
+                        trialList.addAll(newTrialList);
+                        trialAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }

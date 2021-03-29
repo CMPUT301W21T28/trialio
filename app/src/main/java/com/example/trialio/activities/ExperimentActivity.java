@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
@@ -219,9 +220,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // set TextViews
         textDescription.setText("Description: " + experiment.getSettings().getDescription());
         textType.setText("Type: " + experiment.getTrialManager().getType());
-        textRegion.setText("Region: " + experiment.getSettings().getRegion().getDescription());
+        textRegion.setText("Region: " + experiment.getSettings().getRegion().getRegionText());
 
-        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 textOwner.setText(user.getUsername());
@@ -254,9 +255,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-        // set Stats Summary
-        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), experiment);
-        statisticsUtility.displaySummaryStats(stats, textStats);
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
+                // set Stats Summary
+                ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), trialList);
+                statisticsUtility.displaySummaryStats(stats, textStats);
+            }
+        });
     }
 
     /**
@@ -485,8 +491,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             @Override
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getUsername());
-                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerId());
-                if (user.getId().equals(experiment.getSettings().getOwnerId())) {
+                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
+                if (user.getId().equals(experiment.getSettings().getOwnerID())) {
                     settingsButton.setVisibility(View.VISIBLE);
                 }
             }

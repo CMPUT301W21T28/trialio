@@ -4,14 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.trialio.models.BinomialTrial;
-import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
-import com.example.trialio.models.MeasurementTrial;
-import com.example.trialio.utils.ExperimentTypeUtility;
-import com.example.trialio.models.NonNegativeTrial;
-import com.example.trialio.models.Location;
-import com.example.trialio.models.Trial;
+import com.example.trialio.models.ExperimentSettings;
+import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +28,19 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static final String COLLECTION_PATH = "experiments-v4";
+    private static final String COLLECTION_PATH = "experiments-v5";
+
+    private static final String E_EXPERIMENTID_FIELD = "experimentID";
+    private static final String E_KEYWORDS_FIELD = "keywords";
+    private static final String ES_DESCRIPTION_FIELD = "description";
+    private static final String ES_R_REGIONTEXT_FIELD = "regionText";
+    private static final String ES_R_KMRADIUS_FIELD = "kmRadius";
+    private static final String ES_OWNERID_FIELD = "ownerID";
+    private static final String ES_GEOLOCATIONREQUIRED_FIELD = "geoLocationRequired";
+    private static final String TM_TYPE_FIELD = "type";
+    private static final String TM_IGNOREDUSERIDS = "ignoredUserIDs";
+    private static final String TM_MINNUMOFTRIALS = "minNumOfTrials";
+    private static final String TM_ISOPEN = "isOpen";
 
     private final CollectionReference experimentsCollection;
 
@@ -93,7 +101,7 @@ public class ExperimentManager {
         String ID = experiment.getExperimentID();
         experimentsCollection
                 .document(ID)
-                .set(experiment)
+                .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -128,9 +136,13 @@ public class ExperimentManager {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        Experiment experiment = extractExperiment(doc);
-                        listener.onExperimentFetch(experiment);
-                        Log.d(TAG, "Experiment " + experimentId + " fetched successfully.");
+                        try {
+                            Experiment experiment = extractExperiment(doc);
+                            listener.onExperimentFetch(experiment);
+                            Log.d(TAG, "Experiment " + experimentId + " fetched successfully.");
+                        } catch (Exception e) {
+                            Log.d(TAG, "Error fetching " + experimentId + ".");
+                        }
                     } else {
                         Log.d(TAG, "No experiment found with id " + experimentId);
                     }
@@ -186,7 +198,7 @@ public class ExperimentManager {
         Log.d(TAG, "Editing " + experimentId + "with" + experiment.toString());
         experimentsCollection
                 .document(experimentId)
-                .set(experiment)
+                .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -236,7 +248,7 @@ public class ExperimentManager {
      * @param listener the listener with the action to be taken once the experiments are fetched
      */
     public void getOwnedExperiments(User owner, ExperimentManager.OnManyExperimentsFetchListener listener) {
-        String field = "settings.ownerId";
+        String field = "ownerID";
         String id = owner.getId();
         experimentsCollection.whereEqualTo(field, id)
                 .get()
@@ -302,7 +314,6 @@ public class ExperimentManager {
         }
     }
 
-
     /**
      * This generates a new unique experiment ID
      *
@@ -313,46 +324,111 @@ public class ExperimentManager {
     }
 
     /**
-     * Extracts an experiment object from a Firestore document. This method assumes the document
+     * Compresses an experiment into a Map which can be stored as a Firebase document. This method
+     * does not compress the trials ArrayList of the experiment (see TrialManager addTrial method).
+     * @param experiment The experiment to compress.
+     * @return Returns the map representing the compressed experiment.
+     */
+    public Map<String, Object> compressExperiment(Experiment experiment) {
+
+        // create map
+        Map<String, Object> data = new HashMap<String, Object>();
+
+        // set Experiment fields
+        data.put(E_EXPERIMENTID_FIELD, experiment.getExperimentID());
+        data.put(E_KEYWORDS_FIELD, experiment.getKeywords());
+
+        // set ExperimentSettings fields
+        data.put(ES_DESCRIPTION_FIELD, experiment.getSettings().getDescription());
+        data.put(ES_R_REGIONTEXT_FIELD, experiment.getSettings().getRegion().getRegionText());
+        data.put(ES_R_KMRADIUS_FIELD, experiment.getSettings().getRegion().getKmRadius());
+        data.put(ES_OWNERID_FIELD, experiment.getSettings().getOwnerID());
+        data.put(ES_GEOLOCATIONREQUIRED_FIELD, experiment.getSettings().getGeoLocationRequired());
+
+        // set TrialManager fields
+        data.put(TM_TYPE_FIELD, experiment.getTrialManager().getType());
+        data.put(TM_IGNOREDUSERIDS, experiment.getTrialManager().getIgnoredUserIDs());
+        data.put(TM_MINNUMOFTRIALS, experiment.getTrialManager().getMinNumOfTrials());
+        data.put(TM_ISOPEN, experiment.getTrialManager().getIsOpen());
+
+        return data;
+    }
+
+    /**
+     * Extracts an experiment object from a Firebase document. This method assumes the document
      * hold a valid Experiment.
      *
-     * @param document the document to be extracted
-     * @return the extracted experiment
+     * @param document The document to be extracted.
+     * @return The extracted experiment.
      */
     private Experiment extractExperiment(DocumentSnapshot document) {
-        Experiment experiment = document.toObject(Experiment.class);
 
-        // clear the trials since they do not have subclass specific attributes
-        experiment.getTrialManager().setTrials(new ArrayList<Trial>());
+        // get the data
+        Map<String, Object> data = document.getData();
 
-        Map data = document.getData();
-        Map tm = (Map) data.get("trialManager");
+        // initialize experiment
+        Experiment experiment = new Experiment();
 
-        // cast trials to the appropriate type and add them to the trial manager
-        if (ExperimentTypeUtility.isBinomial(tm.get("type").toString())) {
-            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new BinomialTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), (boolean) trial.get("isSuccess")));
-            }
-        } else if (ExperimentTypeUtility.isCount(tm.get("type").toString())) {
-            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new CountTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate()));
-            }
-        } else if (ExperimentTypeUtility.isNonNegative(tm.get("type").toString())) {
-            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new NonNegativeTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Long) trial.get("nonNegCount")).intValue()));
-            }
-        } else if (ExperimentTypeUtility.isMeasurement(tm.get("type").toString())) {
-            for (Map trial : (ArrayList<Map>) tm.get("trials")) {
-                Map location = (Map) trial.get("location");
-                experiment.getTrialManager().addTrial(new MeasurementTrial((String) trial.get("experimenterId"), new Location((double) location.get("latitude"), (double) location.get("longitude")), ((com.google.firebase.Timestamp) trial.get("date")).toDate(), ((java.lang.Double) trial.get("measurement")).doubleValue(), trial.get("unit").toString()));
-            }
-        } else {
-            Log.d(TAG, experiment.getExperimentID());
-            assert (false);
-        }
+        // set experimentID
+        String experimentID = (String) data.get(E_EXPERIMENTID_FIELD);
+        assert experimentID != null;
+        experiment.setExperimentID(experimentID);
+
+        // set settings
+        experiment.setSettings(new ExperimentSettings());
+
+        // set description in settings
+        String description = (String) data.get(ES_DESCRIPTION_FIELD);
+        assert description != null;
+        experiment.getSettings().setDescription(description);
+
+        // set region in settings
+        experiment.getSettings().setRegion(new Region());
+
+        // set regionText in region in settings
+        String regionText = (String) data.get(ES_R_REGIONTEXT_FIELD);
+        assert regionText != null;
+        experiment.getSettings().getRegion().setRegionText(regionText);
+
+        // set kmRadius in region in settings
+        double kmRadius = (double) data.get(ES_R_KMRADIUS_FIELD);
+        experiment.getSettings().getRegion().setKmRadius(kmRadius);
+
+        // set ownerID in settings
+        String ownerID = (String) data.get(ES_OWNERID_FIELD);
+        assert ownerID != null;
+        experiment.getSettings().setOwnerID(ownerID);
+
+        // set geoLocationRequired in settings
+        boolean geoLocationRequired = (boolean) data.get(ES_GEOLOCATIONREQUIRED_FIELD);
+        experiment.getSettings().setGeoLocationRequired(geoLocationRequired);
+
+        // set type in trialManager
+        String type = (String) data.get(TM_TYPE_FIELD);
+        assert type != null;
+        experiment.getTrialManager().setType(type);
+
+        // set ignoredUserIDs in trialManager
+        ArrayList<String> ignoredUserIDs = (ArrayList<String>) data.get(TM_IGNOREDUSERIDS);
+        assert ignoredUserIDs != null;
+        experiment.getTrialManager().setIgnoredUserIDs(ignoredUserIDs);
+
+        // set minNumOfTrials in trialManager
+        int minNumOfTrials = ((Long) data.get(TM_MINNUMOFTRIALS)).intValue();
+        experiment.getTrialManager().setMinNumOfTrials(minNumOfTrials);
+
+        // set isOpen
+        boolean isOpen = (boolean) data.get(TM_ISOPEN);
+        experiment.getTrialManager().setIsOpen(isOpen);
+
+        // set keywords
+        ArrayList<String> keywords = (ArrayList<String>) data.get(E_KEYWORDS_FIELD);
+        assert keywords != null;
+        experiment.setKeywords(keywords);
+
+        // set experimentID in trialManager
+        experiment.getTrialManager().setExperimentID(experimentID);
+
         return experiment;
     }
 }
