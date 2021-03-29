@@ -94,7 +94,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
         TextView ownerView = findViewById(R.id.experiment_text_owner);
         UserManager userManager = new UserManager();
-        userManager.getUserById(experiment.getSettings().getOwnerId(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 ownerView.setText(user.getUsername());

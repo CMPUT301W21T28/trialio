@@ -7,20 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.trialio.R;
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
-import com.example.trialio.models.Trial;
-
-import java.util.ArrayList;
 
 public class QRNonnegActivity extends AppCompatActivity {
-    private ArrayList<Trial> trialList;
-    private ExperimentManager experimentManager;
     private Button createQR;
     private EditText input;
     private Experiment experiment;
@@ -42,9 +35,6 @@ public class QRNonnegActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
 
-        trialList = experiment.getTrialManager().getTrials();
-        experimentManager = new ExperimentManager();
-
         // get views
         experimentDescriptionTextView = findViewById(R.id.qr_description);
         experimentLocationImageView = findViewById(R.id.qr_location);
@@ -56,7 +46,7 @@ public class QRNonnegActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerId());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");

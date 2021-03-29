@@ -13,7 +13,6 @@ import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 
 public class QRMeasurementActivity extends AppCompatActivity {
-    private TextView txtExpInfo;
     private Button createQR;
     private Experiment experiment;
     private TextView Warning;
