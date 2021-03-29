@@ -175,39 +175,6 @@ public class TrialManager implements Serializable {
 
     /**
      * Sets a listener to the trial collection. This function sets up a listener so that
-     * listener.onAllTrialsUpdate() is called whenever the Trial collection is updated.
-     *
-     * @param listener the listener with the callback function to be called when the Trial
-     *                 collection is updated
-     */
-    private void setUpdateListener(TrialManager.OnAllTrialsUpdateListener listener) {
-        CollectionReference trialCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
-
-        trialCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                // initialize a list of trials
-                ArrayList<Trial> trialList = new ArrayList<Trial>();
-
-                // extract all trial documents in  the collection
-                for (DocumentSnapshot doc : value.getDocuments()) {
-                    try {
-                        trialList.add(extractTrial(doc));
-                        Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
-                    } catch (Exception e) {
-                        Log.d(TAG, "Error fetching " + doc.getId() + ".");
-                    }
-                }
-
-                // pass the trialList to the listener
-                listener.onAllTrialsUpdate(trialList);
-            }
-        });
-    }
-
-    /**
-     * Sets a listener to the trial collection. This function sets up a listener so that
      * listener.onAllTrialsUpdate() is called when all visible trials in the collection have been
      * fetched.
      *
@@ -260,19 +227,6 @@ public class TrialManager implements Serializable {
     }
 
     /**
-     * This interface represents an action to be taken when all trials of a collection have been
-     * fetched.
-     */
-    public interface OnAllTrialsUpdateListener {
-
-        /**
-         * This method is called when all trials in the collection have been fetched and extracted.
-         * @param trialList The list of trials extracted from the collection.
-         */
-        public void onAllTrialsUpdate(ArrayList<Trial> trialList);
-    }
-
-    /**
      * This interface represents an action to be taken when all visible trials of a collection have
      * been fetched.
      */
@@ -286,9 +240,9 @@ public class TrialManager implements Serializable {
     }
 
     /**
-     * Compresses a trial into a Map which can be stored in a Firebase document. T
-     * @param trial
-     * @return
+     * Compresses a trial into a Map which can be stored in a Firebase document.
+     * @param trial Trial to compress into a Map.
+     * @return Returns the map which will be stored in a Firebase document.
      */
     public Map<String, Object> compressTrial(Trial trial) {
 
