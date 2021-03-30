@@ -2,7 +2,6 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterTrials;
+import com.example.trialio.adapters.TrialAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
@@ -40,7 +39,7 @@ public class TrialActivity extends AppCompatActivity {
     /**
      * Adapter for trialListView
      */
-    private ArrayAdapterTrials trialAdapter;
+    private TrialAdapter trialAdapter;
 
     /**
      * The data source of submitted trials
@@ -75,7 +74,7 @@ public class TrialActivity extends AppCompatActivity {
 
         // set the trialList and adapter
         trialList = new ArrayList<>();
-        trialAdapter = new ArrayAdapterTrials(this, trialList, experiment.getTrialManager().getType());
+        trialAdapter = new TrialAdapter(this, trialList, experiment.getTrialManager().getType());
 
         // set up the adapter for the list and experiment manager
         trialListView = findViewById(R.id.trials_list);
@@ -172,7 +171,6 @@ public class TrialActivity extends AppCompatActivity {
         // set text views
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
         // set experiment status
         if (experiment.getTrialManager().getIsOpen()) {
