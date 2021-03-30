@@ -53,7 +53,7 @@ public class CountTrialFragment extends DialogFragment {
                         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
                             @Override
                             public void onUserFetch(User user) {
-                                listener.onOkPressed(new CountTrial(user.getUsername(), location, date));
+                                listener.onOkPressed(new CountTrial(user.getId(), location, date));
                             }
                         });
                     }}).create();

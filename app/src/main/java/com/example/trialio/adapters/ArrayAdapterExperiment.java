@@ -11,15 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
 /**
  * This is an ArrayAdapter which contains an experiment list. Used in MainActivity.
  */
-public class ArrayAdapterExperiment extends ArrayAdapter {
+public class    ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;
     private ArrayList<Experiment> experimentList;
 
@@ -35,8 +37,8 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.content_experiment, parent,false);
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.content_experiment, parent, false);
         }
 
         Experiment experiment = experimentList.get(position);
@@ -52,8 +54,15 @@ public class ArrayAdapterExperiment extends ArrayAdapter {
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
         textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
-        textOwner.setText(experiment.getSettings().getOwnerUsername());
         locNeed.setImageResource(R.drawable.ic_baseline_location_on_24);
+
+        UserManager userManager = new UserManager();
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                textOwner.setText(user.getUsername());
+            }
+        });
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
             locNeed.setImageResource(R.drawable.ic_baseline_location_off_24);

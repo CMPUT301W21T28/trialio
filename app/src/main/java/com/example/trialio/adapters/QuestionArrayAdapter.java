@@ -11,7 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.ChangeUsernameCommand;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
@@ -31,8 +34,8 @@ public class QuestionArrayAdapter extends ArrayAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.content_question_forum, parent,false);
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.content_question_forum, parent, false);
         }
 
         Question question = questionsList.get(position);
@@ -42,7 +45,13 @@ public class QuestionArrayAdapter extends ArrayAdapter {
         TextView body = view.findViewById(R.id.questionBody);
 
         // set text views
-        authorID.setText(question.getUser().getUsername());
+        UserManager manager = new UserManager();
+        manager.getUserById(question.getUserId(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                authorID.setText(user.getUsername());
+            }
+        });
         title.setText(question.getTitle());
         body.setText(question.getBody());
 

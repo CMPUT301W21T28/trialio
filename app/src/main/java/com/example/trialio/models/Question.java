@@ -19,8 +19,8 @@ public class Question extends Post implements Serializable {
 //        this.title = title;
 //    }
 
-    public Question(String postID, String body, User user, String title) {
-        super(postID, body, user);
+    public Question(String postID, String body, String userId, String title) {
+        super(postID, body, userId);
         this.title = title;
     }
 

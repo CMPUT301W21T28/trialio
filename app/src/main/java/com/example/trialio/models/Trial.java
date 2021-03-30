@@ -1,8 +1,5 @@
 package com.example.trialio.models;
 
-import android.graphics.Bitmap;
-import android.media.Image;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,7 +7,7 @@ import java.util.Date;
  * Represents a general trial, experiment type not specified
  */
 public class Trial implements Serializable {
-    protected String experimenterUsername;
+    protected String experimenterId;
     protected Location location;
     protected Date date;
 
@@ -22,12 +19,12 @@ public class Trial implements Serializable {
     /**
      * Constructor for a Trial
      *
-     * @param experimenterUsername the unique identifier of an experimenter
+     * @param experimenterId the unique identifier of an experimenter
      * @param location       the location of a trial
      * @param date           the date of a trial
      */
-    public Trial(String experimenterUsername, Location location, Date date) {
-        this.experimenterUsername = experimenterUsername;
+    public Trial(String experimenterId, Location location, Date date) {
+        this.experimenterId = experimenterId;
         this.location = location;
         this.date = date;
     }
@@ -37,17 +34,17 @@ public class Trial implements Serializable {
      *
      * @return the experimenter id
      */
-    public String getExperimenterUsername() {
-        return experimenterUsername;
+    public String getExperimenterId() {
+        return experimenterId;
     }
 
     /**
      * Sets the experimenter Id
      *
-     * @param experimenterUsername the experimenter id to be set
+     * @param experimenterId the experimenter id to be set
      */
-    public void setExperimenterUsername(String experimenterUsername) {
-        this.experimenterUsername = experimenterUsername;
+    public void setExperimenterId(String experimenterId) {
+        this.experimenterId = experimenterId;
     }
 
     /**

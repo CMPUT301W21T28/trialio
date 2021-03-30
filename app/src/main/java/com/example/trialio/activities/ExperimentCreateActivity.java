@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.controllers.ExperimentManager;
@@ -90,7 +89,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 // prepare region
                 Region region = new Region();
-                region.setDescription(editRegion.getText().toString());
+                region.setRegionText(editRegion.getText().toString());
 
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
@@ -121,7 +120,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                             @Override
                             public void onUserFetch(User user) {
                                 // prepare experiment settings
-                                ExperimentSettings settings = new ExperimentSettings(description, region, user.getUsername(), geo);
+                                ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
                                 // create Experiment object
                                 experiment = new Experiment(newID, settings, type, open, numTrials);
@@ -132,6 +131,9 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                                 intent.putExtras(args);
 
                                 startActivity(intent);
+
+                                // finish the activity so back button does not return here
+                                finish();
                             }
                         });
                     }
@@ -149,8 +151,5 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
-
 }

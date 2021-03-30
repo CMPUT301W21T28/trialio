@@ -1,10 +1,8 @@
 package com.example.trialio.models;
 
-import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.TrialManager;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,11 +32,6 @@ public class Experiment implements Serializable {
     private ArrayList<String> keywords;
 
     /**
-     * The question forum associated with this experiment
-     */
-    private QuestionForumManager questionForumManager;
-
-    /**
      * Constructor for an Experiment
      */
     public Experiment() {
@@ -47,7 +40,6 @@ public class Experiment implements Serializable {
         this.trialManager = new TrialManager();
         this.keywords = new ArrayList<>();
         parseKeywords();
-
     }
 
     /**
@@ -62,7 +54,7 @@ public class Experiment implements Serializable {
     public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials) {
         this.experimentID = experimentID;
         this.settings = settings;
-        this.trialManager = new TrialManager(type, isOpen, minNumOfTrials);
+        this.trialManager = new TrialManager(experimentID, type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();
         parseKeywords();
     }
@@ -161,24 +153,6 @@ public class Experiment implements Serializable {
     }
 
     /**
-     * Gets the question forum manager for the experiment
-     *
-     * @return the question forum manager
-     */
-    public QuestionForumManager getQuestionForum() {
-        return questionForumManager;
-    }
-
-    /**
-     * Sets the question forum manager for the experiment
-     *
-     * @param questionForum the question forum to be set
-     */
-    public void setQuestionForum(QuestionForumManager questionForum) {
-        this.questionForumManager = questionForum;
-    }
-
-    /**
      * Returns the string representation of the experiment
      *
      * @return string representation of the experiment
@@ -190,7 +164,6 @@ public class Experiment implements Serializable {
                 ", settings=" + settings +
                 ", trialManager=" + trialManager +
                 ", keywords=" + keywords +
-                ", questionForum=" + questionForumManager +
                 '}';
     }
 }

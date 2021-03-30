@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -38,6 +40,12 @@ public class TrialActivity extends AppCompatActivity {
     private UserManager userManager;
     private ListView trialListView;
 
+    private TextView experimentDescriptionTextView;
+    private ImageView experimentLocationImageView;
+    private TextView experimentTypeTextView;
+    private TextView experimentOwnerTextView;
+    private TextView experimentStatusTextView;
+
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
@@ -59,8 +67,11 @@ public class TrialActivity extends AppCompatActivity {
         trialList = new ArrayList<>();
         trialAdapter = new ArrayAdapterTrials(this, trialList, experiment.getTrialManager().getType());
 
+
+
+
         // Set up the adapter for the list and experiment manager
-        trialListView = findViewById(R.id.list_trials);
+        trialListView = findViewById(R.id.trials_list);
         trialListView.setAdapter(trialAdapter);
     }
 
@@ -81,7 +92,7 @@ public class TrialActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // get the username of the clicked user
-                String clickedUsername = trialList.get(i).getExperimenterUsername();
+                String clickedUserId = trialList.get(i).getExperimenterId();
 
                 // check if the current user is the owner
                 userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
@@ -92,7 +103,7 @@ public class TrialActivity extends AppCompatActivity {
                         int popupViewID = R.layout.menu_trials_experimenter;
 
                         // if the current user is the owner of the experiment, use the owner menu
-                        if (currentUser.getUsername().equals(experiment.getSettings().getOwnerUsername())) {
+                        if (currentUser.getId().equals(experiment.getSettings().getOwnerID())) {
                             popupViewID = R.layout.menu_trials_owner;
                         }
 
@@ -106,12 +117,12 @@ public class TrialActivity extends AppCompatActivity {
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 switch (menuItem.getItemId()) {
                                     case R.id.item_ignore_user:
-                                        Log.d(TAG, "Ignore user: " + clickedUsername);
-                                        menuIgnoreUsername(clickedUsername);
+                                        Log.d(TAG, "Ignore user: " + clickedUserId);
+                                        menuIgnoreUsername(clickedUserId);
                                         break;
                                     case R.id.item_view_profile:
-                                        Log.d(TAG, "View profile: " + clickedUsername);
-                                        menuViewProfile(clickedUsername);
+                                        Log.d(TAG, "View profile: " + clickedUserId);
+                                        menuViewProfile(clickedUserId);
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -134,20 +145,46 @@ public class TrialActivity extends AppCompatActivity {
      */
     public void setFields() {
 
-        // get the fields
-        TextView textDescription = findViewById(R.id.txtExperimentDescriptionTrial);
-        TextView textOwner = findViewById(R.id.txtExperimentOwnerTrial);
-        TextView textType = findViewById(R.id.txtExperimentTypeTrial);
+        // views
 
-        // set the fields
-        textDescription.setText("Description: " + experiment.getSettings().getDescription());
-        textType.setText("Type: " + experiment.getTrialManager().getType());
+        experimentDescriptionTextView = findViewById(R.id.trial_description);
+        experimentLocationImageView = findViewById(R.id.trials_location);
+        experimentTypeTextView = findViewById(R.id.trials_text_type);
+        experimentOwnerTextView = findViewById(R.id.trials_text_owner);
+        experimentStatusTextView = findViewById(R.id.trials_text_status);
+
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+
+        //TODO: need this or can I use the getTrialManager???
+//        // get the owner's username
+//        userManager.getUser(experiment.getSettings().getOwnerUsername(), new UserManager.OnUserFetchListener() {
+//            @Override
+//            public void onUserFetch(User user) {
+//                textOwner.setText("Owner: " + user.getUsername());
+//            }
+//        });
 
         // get the owner's username
-        userManager.getUser(experiment.getSettings().getOwnerUsername(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + user.getUsername());
+                experimentOwnerTextView.setText("Owner: " + user.getUsername());
             }
         });
     }
@@ -156,7 +193,7 @@ public class TrialActivity extends AppCompatActivity {
      * This switches to a ViewUserActivity with the given user as the argument.
      */
     public void menuViewProfile(String userID) {
-        userManager.getUser(userID, new UserManager.OnUserFetchListener() {
+        userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 Intent intent = new Intent(context, ViewUserActivity.class);
@@ -174,9 +211,12 @@ public class TrialActivity extends AppCompatActivity {
 
     /**
      * This adds a username to the ignored list for the experiment.
-     * @param username String of the user ID to add to the ignored list for the experiment.
+     *
+     * TODO: This can be refactored into a command object that takes the input of Experiment and
+     * User
+     * @param userId String of the user ID to add to the ignored list for the experiment.
      */
-    public void menuIgnoreUsername(String username) {
+    public void menuIgnoreUsername(String userId) {
 
         // get the experiment from firebase
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -187,7 +227,7 @@ public class TrialActivity extends AppCompatActivity {
                 experiment = newExperiment;
 
                 // add the userID to the list of ignored userIDs
-                experiment.getTrialManager().addIgnoredUser(username);
+                experiment.getTrialManager().addIgnoredUser(userId);
 
                 // update the experiment
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
@@ -216,9 +256,14 @@ public class TrialActivity extends AppCompatActivity {
                 setOnClickListeners();
 
                 // update the trialList
-                trialList.clear();
-                trialList.addAll(experiment.getTrialManager().fetchVisibleTrials());
-                trialAdapter.notifyDataSetChanged();
+                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+                    @Override
+                    public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
+                        trialList.clear();
+                        trialList.addAll(newTrialList);
+                        trialAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }

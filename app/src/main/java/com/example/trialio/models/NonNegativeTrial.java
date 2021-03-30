@@ -12,6 +12,8 @@ import java.util.Date;
 public class NonNegativeTrial extends Trial implements Serializable {
     private int nonNegCount;
 
+    public NonNegativeTrial() { }
+
     /**
      * Constructor for a NonNegativeTrial
      *

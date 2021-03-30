@@ -2,20 +2,9 @@ package com.example.trialio.controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.os.Bundle;
-import android.service.autofill.AutofillService;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 
-import com.example.trialio.R;
-import com.example.trialio.activities.MainActivity;
-import com.example.trialio.activities.ScanningActivity;
-import com.example.trialio.adapters.ArrayAdapterQR;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -25,13 +14,10 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import java.lang.ref.Reference;
-import java.sql.Ref;
 import java.util.Date;
 
 import static android.graphics.Color.BLACK;
@@ -58,17 +44,17 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static Boolean locationRequired;
     private static Context context;
 
-    public static Bitmap generateForTrial(Trial trial, Experiment experiment, Integer position){
+    public static Bitmap generateForTrial(Experiment experiment, String strResult, Location location){
         String infoResult = "";
-
+        Date date = new Date();
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((BinomialTrial) trial).getIsSuccess() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
         } else if (experiment.getTrialManager().getType().equals("COUNT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((CountTrial) trial).getCount() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((NonNegativeTrial) trial).getNonNegCount() + "\n" +  experiment.getExperimentID();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  ((MeasurementTrial) trial).getMeasurement() + "\n" +  experiment.getExperimentID() + "\n" +  ((MeasurementTrial) trial).getUnit();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
         }
         BitMatrix result = null;
         try{
@@ -98,20 +84,20 @@ public class QRCodeGenerator extends AppCompatActivity {
      * readQR takes in the input that is encoded in the code then create a new trial with its info
      * @param input, user
      */
-    public static void readQR(String[] input, User user, Boolean locationReq){
+    public static void readQR(String[] input, User user){
         if (input[0].equals("BINOMIAL")){
             current_user = user;
-            Date date = new Date();
             Location location = new Location();
-            locationRequired = locationReq;
+            Date date = new Date();
+
+            location.setLatitude(Double.valueOf(input[3]));
+            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-
-                    new_trial = (Trial) new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
+                    BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -121,14 +107,15 @@ public class QRCodeGenerator extends AppCompatActivity {
             current_user = user;
             Date date = new Date();
             Location location = new Location();
-            locationRequired = locationReq;
+
+            location.setLatitude(Double.valueOf(input[3]));
+            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-                    new_trial = (Trial) new CountTrial(current_user.getUsername(), location, date);
+                    CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -137,15 +124,15 @@ public class QRCodeGenerator extends AppCompatActivity {
             current_user = user;
             Date date = new Date();
             Location location = new Location();
-            locationRequired = locationReq;
+
+            location.setLatitude(Double.valueOf(input[3]));
+            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
-
-                    new_trial = (Trial) new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[1]));
+                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[1]));
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }
@@ -154,15 +141,16 @@ public class QRCodeGenerator extends AppCompatActivity {
             current_user = user;
             Date date = new Date();
             Location location = new Location();
-            locationRequired = locationReq;
+
+            location.setLatitude(Double.valueOf(input[3]));
+            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    Trial new_trial = new Trial();
 
-                    new_trial = (Trial) new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[1]), input[3]);
+                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[1]), input[3]);
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
                 }

@@ -9,6 +9,8 @@ import java.util.Date;
 public class CountTrial extends Trial implements Serializable {
     private int count;
 
+    public CountTrial() { }
+
     /**
      * Constructor for a CountTrial
      *

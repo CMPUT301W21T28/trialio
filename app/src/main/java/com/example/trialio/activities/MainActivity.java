@@ -28,7 +28,6 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,14 +54,6 @@ public class MainActivity extends AppCompatActivity {
         experimentManager = new ExperimentManager();
         experimentList = new ArrayList<>();
         experimentAdapter = new ArrayAdapterExperiment(this, experimentList);
-        UserManager userManager = new UserManager();
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                currentUser = user;
-            }
-        });
-
 
         // Set up the adapter for the ListView
         ListView experimentListView = findViewById(R.id.list_experiment);
@@ -76,7 +67,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         setExperimentListToAll();
+        setCurrentUser();
+
+    }
+
+    /**
+     * Sets the current user attribute for the activity
+     */
+    private void setCurrentUser() {
+        UserManager userManager = new UserManager();
+        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                currentUser = user;
+            }
+        });
     }
 
     /**
@@ -198,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This method changes the state of the experiment list if the user toggles between the "owned","all" and "subscribed" experiment lists
+     *
      * @param btn
      */
 

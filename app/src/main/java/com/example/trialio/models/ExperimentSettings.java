@@ -10,26 +10,26 @@ public class ExperimentSettings implements Serializable {
 
     private String description;
     private Region region;
-    private String ownerUsername;
+    private String ownerID;
     private boolean geoLocationRequired;
 
     /**
      * Constructor for an Experiment
      */
-    public ExperimentSettings () { }
+    public ExperimentSettings() { }
 
     /**
      * Constructor for an ExperimentSettings
      *
      * @param description         the description of an experiment
      * @param region              the region of an experiment
-     * @param ownerUsername       the owner of an experiment
+     * @param ownerId             the owner of an experiment
      * @param geoLocationRequired whether or not geo-location is required for an experiment
      */
-    public ExperimentSettings(String description, Region region, String ownerUsername, boolean geoLocationRequired) {
+    public ExperimentSettings(String description, Region region, String ownerId, boolean geoLocationRequired) {
         this.description = description;
         this.region = region;
-        this.ownerUsername = ownerUsername;
+        this.ownerID = ownerId;
         this.geoLocationRequired = geoLocationRequired;
     }
 
@@ -74,8 +74,8 @@ public class ExperimentSettings implements Serializable {
      *
      * @return the owner of an experiment
      */
-    public String getOwnerUsername() {
-        return ownerUsername;
+    public String getOwnerID() {
+        return ownerID;
     }
 
     /**
@@ -84,7 +84,7 @@ public class ExperimentSettings implements Serializable {
      * @param ownerID the owner ID to be set
      */
     public void setOwnerID(String ownerID) {
-        this.ownerUsername = ownerID;
+        this.ownerID = ownerID;
     }
 
     /**

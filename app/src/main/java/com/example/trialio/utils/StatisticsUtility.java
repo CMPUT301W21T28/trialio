@@ -15,9 +15,8 @@ import java.util.Collections;
  * Utility class for statistics, handles the manipulation and calculation of statistics
  */
 public class StatisticsUtility {
-    public ArrayList<Double> getExperimentStatistics (String type, Experiment experiment) {
+    public ArrayList<Double> getExperimentStatistics (String type, ArrayList<Trial> trials) {
         ArrayList<Double> stats = new ArrayList<>();
-        ArrayList<Trial> trials = experiment.getTrialManager().getTrials();
         double size = trials.size();
 
         System.out.println(type);

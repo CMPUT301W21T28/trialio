@@ -3,28 +3,39 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.ChangeUsernameCommand;
+import com.example.trialio.fragments.ChangeUsernameFragment;
 import com.example.trialio.fragments.EditContactInfoFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
-
-// Code referenced from Stack Overflow thread Android custom back button with text https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text
-// by user Nuovo 001, profile https://stackoverflow.com/users/8615244/nuovo-001
-// in thread https://stackoverflow.com/questions/46242280/android-custom-back-button-with-text/46244113#46244113
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * This activity allows a user to view their own profile and edit it to make changes to their username and contract info
  */
-public class ViewUserActivity extends AppCompatActivity {
+public class ViewUserActivity extends AppCompatActivity implements ChangeUsernameFragment.OnFragmentInteractionListener, EditContactInfoFragment.OnFragmentInteractionListener {
     private final String TAG = "ViewUserActivity";
 
+    /**
+     * The user data to be displayed
+     */
     private User user;
-    private Button editUserProfile;
-    private UserManager userManager;
+
+    /**
+     * The button used to open dialog to edit contact info
+     */
+    private Button editContactInfo;
+
+    /**
+     * The button used to open dialog to change username
+     */
+    private Button changeUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,60 +46,36 @@ public class ViewUserActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         user = (User) bundle.getSerializable("user");
 
-        editUserProfile = (Button) findViewById(R.id.editContactInfoButton);
-        userManager = new UserManager();
+        // find the important views
+        editContactInfo = (Button) findViewById(R.id.editContactInfoButton);
+        changeUsername = (Button) findViewById(R.id.changeUsernameButton);
 
-        /*
-        //setup back button functionality
-        ActionBar customActionBar = getSupportActionBar();
-        customActionBar.setDisplayShowHomeEnabled(false);
-        customActionBar.setDisplayShowTitleEnabled(false);
-        LayoutInflater customizedInflater = LayoutInflater.from(this);
-
-        View mCustomView = customizedInflater.inflate(R.layout.custom_action_bar_layout, null);
-        ImageButton backButton = (ImageButton) mCustomView.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        customActionBar.setCustomView(mCustomView);
-        customActionBar.setDisplayShowCustomEnabled(true);
-        */
-
+        setUserDataListener();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
 
-        // use the userID to get the most recent user
+    private void setUserDataListener() {
+        // use the username to get the most recent user
+        UserManager userManager = new UserManager();
         userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User newUser) {
-
-                // update the user
-                user = newUser;
-
-                // set fields
-                setFields();
-
-                // set visibility
-                setVisibility();
-
-                // set listeners
-                setOnClickListeners();
+                user = newUser;         // update the user
+                setFields();            // set fields
+                setVisibility();        // set visibility
+                setOnClickListeners();  // set listeners
             }
         });
     }
 
     /**
-     * This sets the fields of the textViews in ViewUserActivity using the user data.
+     * Sets the fields of the textViews in ViewUserActivity using the user data.
      */
     public void setFields() {
-
         // get text views
         TextView userName = findViewById(R.id.usernameText);
         TextView userPhone = findViewById(R.id.phoneText);
@@ -101,42 +88,89 @@ public class ViewUserActivity extends AppCompatActivity {
     }
 
     /**
-     * This sets the visibility of the edit button in the ViewUserActivity.
+     * Sets the visibility of the buttons in the ViewUserActivity.
      */
     public void setVisibility() {
-
         // by default the editUserProfile button is invisible
-        editUserProfile.setVisibility(View.INVISIBLE);
-
-        // get current user
+        // get current user and check if same as displayed user
+        UserManager userManager = new UserManager();
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User currentUser) {
                 // compare current user with arg user. If same id, make the edit button visible
                 if (user.getUsername().equals(currentUser.getUsername())) {
-                    editUserProfile.setVisibility(View.VISIBLE);
+                    editContactInfo.setVisibility(View.VISIBLE);
+                    changeUsername.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     /**
-     * This sets the onclick listeners of the buttons in ViewUserActivity.
+     * Sets up the OnClick listeners for the Activity
      */
     public void setOnClickListeners() {
-
-        // show a fragment to edit user profile
-        editUserProfile.setOnClickListener(new View.OnClickListener() {
+        // action to be performed when editContactInfo button is clicked
+        editContactInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // show a fragment to edit user contact information
                 EditContactInfoFragment editContactInfoFragment = new EditContactInfoFragment();
-                Bundle args = new Bundle();
 
+                Bundle args = new Bundle();
                 args.putSerializable("UserProfile", user);
                 editContactInfoFragment.setArguments(args);
 
-                editContactInfoFragment.show(getSupportFragmentManager(), "editProfile");
+                editContactInfoFragment.show(getSupportFragmentManager(), "editContactInfo");
             }
         });
+
+        // action to be performed when changeUsername button is clicked
+        changeUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // show a fragment to enter a new username
+                ChangeUsernameFragment changeUsernameFragment = new ChangeUsernameFragment();
+                changeUsernameFragment.show(getSupportFragmentManager(), "changeUsername");
+            }
+        });
+    }
+
+    /**
+     * Action to be performed when OK clicked on change username dialog
+     *
+     * @param requestedUsername the requested username input from the dialog
+     */
+    @Override
+    public void onChangeUsernameConfirm(String requestedUsername) {
+        ChangeUsernameCommand command = new ChangeUsernameCommand(user, requestedUsername, isSuccess -> {
+            /* devDeejay, https://stackoverflow.com/users/6145568/devdeejay,
+             * "How to show Snackbar when Activity starts", 2017-08-17, CC BY-SA 4.0,
+             * https://stackoverflow.com/a/45532564/15048024
+             */
+            if (isSuccess) {
+                setUserDataListener();
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your username has been changed", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            } else {
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Sorry, that username is unavailable", Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
+        command.execute();
+    }
+
+    /**
+     * Action to be performed when OK clicked on edit contact info dialog
+     *
+     * @param phone the phone number input from the dialog
+     * @param email the email input from the dialog
+     */
+    @Override
+    public void onEditContactInfoConfirm(String phone, String email) {
+        user.getContactInfo().setPhone(phone);
+        user.getContactInfo().setEmail(email);
+        UserManager userManager = new UserManager();
+        userManager.updateUser(user);
     }
 }

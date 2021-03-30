@@ -30,7 +30,7 @@ public class QuestionForumManager implements Serializable {
 
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum";
-    private static final String EXPERIMENT_PATH = "experiments";
+    private static final String EXPERIMENT_PATH = "experiments-v5";
     private static final String REPLY_FORUM_PATH = "Replies";
 
 
