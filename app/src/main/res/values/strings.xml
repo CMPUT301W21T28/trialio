@@ -13,4 +13,5 @@
     <string name="email_label">Email</string>
     <string name="edit_contact_info">Edit Contact Info</string>
     <string name="change_username">Change Username</string>
+    <string name="exp_owner_label_inline">Owner: %1$s</string>
 </resources>
