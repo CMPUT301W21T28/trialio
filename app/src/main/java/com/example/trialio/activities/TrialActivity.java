@@ -31,16 +31,35 @@ import java.util.ArrayList;
  */
 public class TrialActivity extends AppCompatActivity {
     private final String TAG = "TrialActivity";
-    private final Context context = this;
 
-    private ExperimentManager experimentManager;
-    private UserManager userManager;
-
+    /**
+     * The ListView of submitted trials
+     */
     private ListView trialListView;
+
+    /**
+     * Adapter for trialListView
+     */
     private ArrayAdapterTrials trialAdapter;
+
+    /**
+     * The data source of submitted trials
+     */
     private ArrayList<Trial> trialList;
 
+    /**
+     * The experiment being viewed in the activity
+     */
     private Experiment experiment;
+
+    /**
+     * The trial manager for the activity experiment
+     */
+    private TrialManager trialManager;
+
+    /**
+     * Flag indicating if current user owns the experiment
+     */
     private Boolean isUserOwner = false;
 
 
@@ -52,10 +71,7 @@ public class TrialActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
-
-        // get the managers
-        experimentManager = new ExperimentManager();
-        userManager = new UserManager();
+        trialManager = experiment.getTrialManager();
 
         // set the trialList and adapter
         trialList = new ArrayList<>();
@@ -73,10 +89,15 @@ public class TrialActivity extends AppCompatActivity {
         super.onStart();
 
         // update the experiment from firebase
-        updateActivityData();
+        updateExperimentData();
+        updateTrialData();
     }
 
+    /**
+     * Initialize the state for the Activity
+     */
     private void initState() {
+        UserManager userManager = new UserManager();
         userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
@@ -168,6 +189,7 @@ public class TrialActivity extends AppCompatActivity {
         }
 
         // set owner username
+        UserManager userManager = new UserManager();
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
@@ -180,10 +202,11 @@ public class TrialActivity extends AppCompatActivity {
      * This switches to a ViewUserActivity with the given user as the argument.
      */
     private void menuViewProfile(String userID) {
+        UserManager userManager = new UserManager();
         userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                Intent intent = new Intent(context, ViewUserActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ViewUserActivity.class);
 
                 // pass in experiment as an argument
                 Bundle args = new Bundle();
@@ -205,50 +228,43 @@ public class TrialActivity extends AppCompatActivity {
      * @param userId String of the user ID to add to the ignored list for the experiment.
      */
     private void menuIgnoreUsername(String userId) {
-
         // get the experiment from firebase
+        ExperimentManager experimentManager = new ExperimentManager();
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
-
-                // update the experiment
-                experiment = newExperiment;
-
-                // add the userID to the list of ignored userIDs
-                experiment.getTrialManager().addIgnoredUser(userId);
-
-                // update the experiment
-                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
-                updateActivityData();
+                experiment = newExperiment;                                                     // update the local experiment
+                trialManager.addIgnoredUser(userId);                            // add the userID to the list of ignored userIDs
+                experimentManager.editExperiment(experiment.getExperimentID(), experiment);     // update the experiment
+                updateExperimentData();
             }
         });
     }
 
     /**
-     * This gets the updated experiment from firebase, and updates the views of the activity.
+     * Updates the experiment data displayed in the activity with database data
      */
-    private void updateActivityData() {
-
-        // get the experiment, set all the fields and the trial list
+    private void updateExperimentData() {
+        ExperimentManager experimentManager = new ExperimentManager();
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
+                experiment = new_experiment;        // update local experiment
+                setFields();                        // set views with experiment values
+            }
+        });
+    }
 
-                // update local experiment
-                experiment = new_experiment;
-
-                // set the fields with the data from the experiment
-                setFields();
-
-                // update the trialList
-                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
-                    @Override
-                    public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
-                        trialList.clear();
-                        trialList.addAll(newTrialList);
-                        trialAdapter.notifyDataSetChanged();
-                    }
-                });
+    /**
+     * Updates the trial data displayed in the activity with database data
+     */
+    private void updateTrialData() {
+        trialManager.setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
+                trialList.clear();
+                trialList.addAll(newTrialList);
+                trialAdapter.notifyDataSetChanged();
             }
         });
     }
