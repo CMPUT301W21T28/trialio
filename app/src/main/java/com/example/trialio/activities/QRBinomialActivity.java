@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,6 +26,10 @@ public class QRBinomialActivity extends AppCompatActivity {
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+    private FrameLayout barcodeFrame;
+    private FrameLayout qrFrame;
+    private Button showQR;
+    private Button showBarcode;
 
 
     /**
@@ -38,12 +43,52 @@ public class QRBinomialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr_binomial);
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
+        showQR = findViewById(R.id.btnshowQR);
+        showBarcode = findViewById(R.id.btnshowBarcode);
+        barcodeFrame = findViewById(R.id.barcodeFrame);
+        qrFrame = findViewById(R.id.QRFrame);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
+        setExperimentInfo();
+        setQRView();
         setOnClickListeners();
+    }
 
+
+
+    public void setOnClickListeners() {
+        createQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QRFragment qrFragment = new QRFragment();
+                Bundle bundle = new Bundle();
+                isSuccess = aSwitch.isChecked();
+
+                bundle.putSerializable("experiment",experiment);
+                bundle.putString("result", String.valueOf(isSuccess));
+                qrFragment.setArguments(bundle);
+                qrFragment.show(getSupportFragmentManager(),"QrCode");
+            }
+        });
+
+        showQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setQRView();
+            }
+        });
+
+        showBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBarcodeView();
+            }
+        });
+    }
+
+    private void setExperimentInfo(){
         // get views
         experimentDescriptionTextView = findViewById(R.id.qr_description);
         experimentLocationImageView = findViewById(R.id.qr_location);
@@ -68,28 +113,17 @@ public class QRBinomialActivity extends AppCompatActivity {
         } else {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
+    }
 
-        setOnClickListeners();
+    private void setBarcodeView (){
+        barcodeFrame.setVisibility(View.VISIBLE);
+        qrFrame.setVisibility(View.INVISIBLE);
 
     }
 
-
-
-    public void setOnClickListeners() {
-        createQR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                QRFragment qrFragment = new QRFragment();
-                Bundle bundle = new Bundle();
-                isSuccess = aSwitch.isChecked();
-
-
-                bundle.putSerializable("experiment",experiment);
-                bundle.putString("result", String.valueOf(isSuccess));
-                qrFragment.setArguments(bundle);
-                qrFragment.show(getSupportFragmentManager(),"QrCode");
-            }
-        });
+    private void setQRView(){
+        barcodeFrame.setVisibility(View.INVISIBLE);
+        qrFrame.setVisibility(View.VISIBLE);
     }
 
 
