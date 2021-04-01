@@ -40,8 +40,6 @@ public class UserManager {
     private final CollectionReference userCollection;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private static String fid;
-
     private static final String USERNAME_FIELD = "username";
     private static final String ID_FIELD = "id";
     private static final String EMAIL_FIELD = "email";
@@ -152,32 +150,6 @@ public class UserManager {
 
         return user;
     }
-
-//    /**
-//     * Gets the current User from the database. If a user with the given id is found, the User
-//     * object is passed into the given callback listener. If a User with the given id does not exist
-//     * in the system, NULL is passed into the callback.
-//     *
-//     * @deprecated
-//     * @param listener the callback to be called when the User object is retrieved
-//     */
-//    public void getCurrentUser(OnUserFetchListener listener) {
-//        if (fid == null) {
-//            Task<String> userIdTask = getFID();
-//            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
-//                @Override
-//                public void onComplete(@NonNull Task<String> task) {
-//                    // Once FID has been received, fetch from database with userId=FID
-//                    fid = task.getResult();
-//                    Log.d(TAG, "Getting the current user: id = " + fid);
-//                    fetchUserById(fid, listener);
-//                }
-//            });
-//        } else {
-//            Log.d(TAG, "Getting the current user: id = " + fid);
-//            fetchUserById(fid, listener);
-//        }
-//    }
 
     /**
      * Gets a User from the database.
@@ -431,28 +403,6 @@ public class UserManager {
     }
 
     /**
-     * Gets the Firebase Installation ID of the device installation
-     *
-     * @return The Task containing the FID
-     */
-    private Task<String> getFID() {
-        Task<String> task = FirebaseInstallations.getInstance().getId();
-        task.addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful()) {
-                    // FID was retrieved successfully
-                    Log.d(TAG, "Installation ID: " + task.getResult());
-                } else {
-                    // Failed to retrieve FID
-                    Log.e(TAG, "Unable to get Installation ID");
-                }
-            }
-        });
-        return task;
-    }
-
-    /**
      * Extracts a User from a Firestore document.
      *
      * @param document the user document to extract from
@@ -497,13 +447,5 @@ public class UserManager {
         userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
         userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
         return userData;
-    }
-
-    public static String getFid() {
-        return fid;
-    }
-
-    public static void setFid(String fid) {
-        UserManager.fid = fid;
     }
 }
