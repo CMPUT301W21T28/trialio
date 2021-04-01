@@ -29,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.BinomialTrialFragment;
@@ -230,7 +231,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
+        if (experiment.getTrialManager().getIsOpen()) {
             textStatus.setText("Open");
         } else {
             textStatus.setText("Closed");
@@ -244,7 +245,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
         textMinTrials.setText("Min # Trials: " + experiment.getTrialManager().getMinNumOfTrials());
 
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
                 if (user.isSubscribed(experiment)) {
@@ -353,25 +354,25 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (experiment.getTrialManager().getType().equals("BINOMIAL")){
+                if (experiment.getTrialManager().getType().equals("BINOMIAL")) {
                     Intent intent = new Intent(context, QRBinomialActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
                     intent.putExtras(args);
                     startActivity(intent);
-                }else if (experiment.getTrialManager().getType().equals("COUNT")){
+                } else if (experiment.getTrialManager().getType().equals("COUNT")) {
                     Intent intent = new Intent(context, QRCountActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
                     intent.putExtras(args);
                     startActivity(intent);
-                }else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
+                } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
                     Intent intent = new Intent(context, QRNonnegActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
                     intent.putExtras(args);
                     startActivity(intent);
-                }else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
+                } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
                     Intent intent = new Intent(context, QRMeasurementActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
@@ -413,7 +414,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         subBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
                         if (user.isSubscribed(experiment)) {
@@ -487,7 +488,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
 
         // if the current user is the owner, set the experiment settings button as visible.
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
                 Log.d(TAG, "currentUser: " + user.getUsername());

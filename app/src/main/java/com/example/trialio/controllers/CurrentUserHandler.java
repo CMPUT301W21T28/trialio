@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.trialio.models.User;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.installations.FirebaseInstallations;
@@ -22,7 +21,7 @@ public class CurrentUserHandler {
 
     public interface OnUserFetchCallback {
 
-        void OnUserFetch(User user);
+        void onUserFetch(User user);
     }
 
     /**
@@ -98,7 +97,7 @@ public class CurrentUserHandler {
      */
     public void getCurrentUser(OnUserFetchCallback listener) {
         if (ready) {
-            listener.OnUserFetch(currentUser);
+            listener.onUserFetch(currentUser);
         } else {
             waiting.add(listener);
         }
@@ -140,7 +139,7 @@ public class CurrentUserHandler {
 
         // take care of all waiting processes
         for (OnUserFetchCallback listener : waiting) {
-            listener.OnUserFetch(currentUser);
+            listener.onUserFetch(currentUser);
         }
         waiting.clear();
         Log.d(TAG, "All waiting processes handled");

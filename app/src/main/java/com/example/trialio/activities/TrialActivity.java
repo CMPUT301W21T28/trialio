@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterTrials;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
@@ -48,6 +49,7 @@ public class TrialActivity extends AppCompatActivity {
 
     /**
      * the On create the takes in the saved instance from the experiment activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -66,8 +68,6 @@ public class TrialActivity extends AppCompatActivity {
         // set the trialList and adapter
         trialList = new ArrayList<>();
         trialAdapter = new ArrayAdapterTrials(this, trialList, experiment.getTrialManager().getType());
-
-
 
 
         // Set up the adapter for the list and experiment manager
@@ -95,7 +95,7 @@ public class TrialActivity extends AppCompatActivity {
                 String clickedUserId = trialList.get(i).getExperimenterId();
 
                 // check if the current user is the owner
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User currentUser) {
 
@@ -126,7 +126,7 @@ public class TrialActivity extends AppCompatActivity {
                                         break;
                                     default:
                                         Log.d(TAG, "onMenuItemClick: Invalid item.");
-                                        assert(false);
+                                        assert (false);
                                         break;
                                 }
                                 return false;
@@ -160,7 +160,7 @@ public class TrialActivity extends AppCompatActivity {
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
         experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
+        if (experiment.getTrialManager().getIsOpen()) {
             experimentStatusTextView.setText("Open");
         } else {
             experimentStatusTextView.setText("Closed");
@@ -211,9 +211,10 @@ public class TrialActivity extends AppCompatActivity {
 
     /**
      * This adds a username to the ignored list for the experiment.
-     *
+     * <p>
      * TODO: This can be refactored into a command object that takes the input of Experiment and
      * User
+     *
      * @param userId String of the user ID to add to the ignored list for the experiment.
      */
     public void menuIgnoreUsername(String userId) {

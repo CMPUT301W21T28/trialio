@@ -153,31 +153,31 @@ public class UserManager {
         return user;
     }
 
-    /**
-     * Gets the current User from the database. If a user with the given id is found, the User
-     * object is passed into the given callback listener. If a User with the given id does not exist
-     * in the system, NULL is passed into the callback.
-     *
-     * @deprecated
-     * @param listener the callback to be called when the User object is retrieved
-     */
-    public void getCurrentUser(OnUserFetchListener listener) {
-        if (fid == null) {
-            Task<String> userIdTask = getFID();
-            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                    // Once FID has been received, fetch from database with userId=FID
-                    fid = task.getResult();
-                    Log.d(TAG, "Getting the current user: id = " + fid);
-                    fetchUserById(fid, listener);
-                }
-            });
-        } else {
-            Log.d(TAG, "Getting the current user: id = " + fid);
-            fetchUserById(fid, listener);
-        }
-    }
+//    /**
+//     * Gets the current User from the database. If a user with the given id is found, the User
+//     * object is passed into the given callback listener. If a User with the given id does not exist
+//     * in the system, NULL is passed into the callback.
+//     *
+//     * @deprecated
+//     * @param listener the callback to be called when the User object is retrieved
+//     */
+//    public void getCurrentUser(OnUserFetchListener listener) {
+//        if (fid == null) {
+//            Task<String> userIdTask = getFID();
+//            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
+//                @Override
+//                public void onComplete(@NonNull Task<String> task) {
+//                    // Once FID has been received, fetch from database with userId=FID
+//                    fid = task.getResult();
+//                    Log.d(TAG, "Getting the current user: id = " + fid);
+//                    fetchUserById(fid, listener);
+//                }
+//            });
+//        } else {
+//            Log.d(TAG, "Getting the current user: id = " + fid);
+//            fetchUserById(fid, listener);
+//        }
+//    }
 
     /**
      * Gets a User from the database.

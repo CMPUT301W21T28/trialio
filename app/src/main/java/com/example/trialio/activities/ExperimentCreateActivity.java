@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
@@ -35,6 +36,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
     /**
      * the On create the takes in the saved instance from the main activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -53,16 +55,15 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
         // SOURCE:  Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
         // AUTHOR: 	Studytonight tutorial developers
-        selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedType = parent.getItemAtPosition(position).toString();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         Button addNewExperiment = (Button) findViewById(R.id.btnAddNewExperiment);
@@ -116,7 +117,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                         Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
                     } else {
                         // get owner id
-                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                             @Override
                             public void onUserFetch(User user) {
                                 // prepare experiment settings

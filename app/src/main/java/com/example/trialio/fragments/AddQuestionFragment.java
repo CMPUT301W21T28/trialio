@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.NonNegativeTrial;
@@ -63,8 +64,7 @@ public class AddQuestionFragment extends DialogFragment {
                 String newQuestionID = questionForumManager.getNewPostID();
 
                 //confirm update to user profile
-                UserManager userManager = new UserManager();
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
                         listener.onOkPressed(new Question(newQuestionID, questionBody, user.getId(), questionTitle) );
