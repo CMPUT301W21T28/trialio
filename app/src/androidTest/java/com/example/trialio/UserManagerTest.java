@@ -328,11 +328,61 @@ public class UserManagerTest {
     }
 
     /**
-     * Test the deleting of a user in the system
+     * Test the transferring of a user to a new username
      */
     @Test
-    public void testTransferUsername() {
+    public void testTransferUsername() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(1);
+        String newUsername = "new";
 
+        // Get the user
+        CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+
+        // Change the username of the user
+        CountDownLatch transferLock = new CountDownLatch(1);
+        userManager.transferUsername(user, newUsername).addOnCompleteListener(task -> transferLock.countDown());
+        transferLock.await(5, TimeUnit.SECONDS);
+
+        // Fetch from the new username should return the user
+        fetchedUserHolder[0] = null;
+        CountDownLatch newLock = new CountDownLatch(1);
+        userManager.getUserByUsername(newUsername, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                newLock.countDown();
+            }
+        });
+        newLock.await(5, TimeUnit.SECONDS);
+        User newUser = fetchedUserHolder[0];
+        assertNotNull(newUser);
+        assertEquals(newUser.getUsername(), newUsername);
+
+        // Fetch from the old username should return NULL
+        CountDownLatch oldLock = new CountDownLatch(1);
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                oldLock.countDown();
+            }
+        });
+        oldLock.await(5, TimeUnit.SECONDS);
+        User oldUser = fetchedUserHolder[0];
+        assertNull(oldUser);
     }
 
     /**
