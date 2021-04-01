@@ -1,5 +1,18 @@
 package com.example.trialio.activities;
 
+/*
+Map View markers method from Youtube Video
+
+Video Title: How to Create Multiple Markers on Google Maps in Android
+
+Link to Video: https://youtu.be/kcFjBtEVikE
+
+Video uploader: Gadgets and Technical field Android Tech
+
+Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
+
+ */
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -30,7 +43,6 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     private UiSettings uiSettings;
     private GoogleMap trialsMap;
     private ArrayList<Trial> trialList;
-    private static final String TAG = "Trial List Size";
 
 
     @Override

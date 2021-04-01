@@ -16,17 +16,6 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnGeoLoc"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_dialog_map"
-            android:tint="#E8B41B">
-            android:src="@android:drawable/ic_dialog_map"></ImageButton>
-
 
         <ImageButton
             android:id="@+id/btnLogo"
@@ -36,18 +25,6 @@
             android:padding="15dp"
             android:scaleType="fitCenter"
             android:src="@drawable/temp_logo"></ImageButton>
-
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24"
-            android:tint="#E8B41B">
-            android:src="@android:drawable/ic_menu_manage"
-        </ImageButton>
 
     </LinearLayout>
 
