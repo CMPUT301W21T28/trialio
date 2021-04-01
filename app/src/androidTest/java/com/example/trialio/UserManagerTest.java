@@ -58,11 +58,12 @@ public class UserManagerTest {
     private UserManager mockUserManager() throws InterruptedException {
         CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
         UserManager userManager = new UserManager(testCollection);
+        initTestUsernames.clear();
         for (String id : initTestUserIds) {
             User user = new User();
             userManager.createNewUser(user, id).addOnCompleteListener(task -> {
-                lock.countDown();
                 initTestUsernames.add(user.getUsername());
+                lock.countDown();
             });
         }
         lock.await(5, TimeUnit.SECONDS);
@@ -213,15 +214,66 @@ public class UserManagerTest {
         assertNotNull(user);
         assertEquals(username, user.getUsername());
         assertEquals(userId, user.getId());
-
     }
 
     /**
      * Test the updating of a user in the system
      */
     @Test
-    public void testUpdateUser() {
+    public void testUpdateUser() throws Exception {
+        UserManager userManager = mockUserManager();
+        String newEmail = "email@email.com";
+        String newPhone = "123456789";
 
+        // First get that will be updated
+        String username = initTestUsernames.get(1);
+        String userId = initTestUserIds.get(1);
+        CountDownLatch prepLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        fetchedUserHolder[0] = null;
+
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                prepLock.countDown();
+            }
+        });
+
+        // Wait for user fetch to complete, then check if values of user are as expected
+        prepLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+        assertEquals(userId, user.getId());
+
+        // Change values of the user, then update in the system
+        user.getContactInfo().setEmail(newEmail);
+        user.getContactInfo().setPhone(newPhone);
+
+        CountDownLatch updateLock = new CountDownLatch(1);
+        userManager.updateUser(user).addOnCompleteListener(task -> updateLock.countDown());
+        updateLock.await(5, TimeUnit.SECONDS);
+
+        // Get the user again and make sure updates persist
+        CountDownLatch getLock = new CountDownLatch(1);
+        fetchedUserHolder[0] = null;
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+
+        // Wait for user fetch to complete, then check if values of user are as expected
+        getLock.await(5, TimeUnit.SECONDS);
+        User updatedUser = fetchedUserHolder[0];
+        assertNotNull(updatedUser);
+        assertEquals(user.getUsername(), updatedUser.getUsername());
+        assertEquals(user.getId(), updatedUser.getId());
+        assertEquals(user.getContactInfo().getEmail(), updatedUser.getContactInfo().getEmail());
+        assertEquals(user.getContactInfo().getPhone(), updatedUser.getContactInfo().getPhone());
     }
 
     /**
