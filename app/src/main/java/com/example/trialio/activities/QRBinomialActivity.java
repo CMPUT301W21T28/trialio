@@ -16,6 +16,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.trialio.R;
 import com.example.trialio.fragments.QRFragment;
+import com.example.trialio.fragments.RegisterBarcodeFragment;
 import com.example.trialio.models.Experiment;
 
 import javax.annotation.Nullable;
@@ -34,6 +35,7 @@ public class QRBinomialActivity extends AppCompatActivity {
     private FrameLayout qrFrame;
     private Button showQR;
     private Button showBarcode;
+    private Button registerBarcode;
 
 
     /**
@@ -47,10 +49,11 @@ public class QRBinomialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr_binomial);
         aSwitch = findViewById(R.id.swtQR);
         createQR = findViewById(R.id.btnQRBinomial);
-        showQR = findViewById(R.id.btnshowQRBinomial);
-        showBarcode = findViewById(R.id.btnshowBarcodeBinomial);
+        showQR = findViewById(R.id.btnshowQR);
+        showBarcode = findViewById(R.id.btnshowBarcode);
         barcodeFrame = findViewById(R.id.barcodeFrame);
         qrFrame = findViewById(R.id.QRFrame);
+        registerBarcode = findViewById(R.id.btnRegisterBarcode);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -69,7 +72,6 @@ public class QRBinomialActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 isSuccess = aSwitch.isChecked();
-
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isSuccess));
                 qrFragment.setArguments(bundle);
@@ -88,6 +90,20 @@ public class QRBinomialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setBarcodeView();
+            }
+        });
+
+        registerBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterBarcodeFragment registerBarcodeFragment = new RegisterBarcodeFragment();
+                Bundle bundle = new Bundle();
+                isSuccess = aSwitch.isChecked();
+                bundle.putSerializable("experiment",experiment);
+                bundle.putString("result", String.valueOf(isSuccess));
+                registerBarcodeFragment.setArguments(bundle);
+                registerBarcodeFragment.show(getSupportFragmentManager(), "Barcode");
+
             }
         });
     }
@@ -122,13 +138,13 @@ public class QRBinomialActivity extends AppCompatActivity {
     private void setBarcodeView (){
         barcodeFrame.setVisibility(View.VISIBLE);
         qrFrame.setVisibility(View.INVISIBLE);
-        toggleListButton(R.id.btnshowBarcodeBinomial);
+        toggleListButton(R.id.btnshowBarcode);
     }
 
     private void setQRView(){
         barcodeFrame.setVisibility(View.INVISIBLE);
         qrFrame.setVisibility(View.VISIBLE);
-        toggleListButton(R.id.btnshowQRBinomial);
+        toggleListButton(R.id.btnshowQR);
     }
 
     private void toggleListButton(int btn) {

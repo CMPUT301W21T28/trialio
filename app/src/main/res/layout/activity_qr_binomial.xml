@@ -58,7 +58,7 @@
 
         <Button
 
-            android:id="@+id/btnshowQRBinomial"
+            android:id="@+id/btnshowQR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
@@ -68,7 +68,7 @@
 
 
         <Button
-            android:id="@+id/btnshowBarcodeBinomial"
+            android:id="@+id/btnshowBarcode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
@@ -227,7 +227,6 @@
     </LinearLayout>
 
     //barcode
-
     <FrameLayout
         android:id="@+id/barcodeFrame"
         android:layout_width="match_parent"
@@ -257,13 +256,15 @@
                 android:id="@+id/listBarcode"
                 android:layout_width="wrap_content"
                 android:layout_height="400dp" />
+
             <Button
+                android:id="@+id/btnRegisterBarcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/special_yellow"
-                android:text="Register Barcode" >
+                android:text="Register Barcode">
 
             </Button>
 
