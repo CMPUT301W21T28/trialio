@@ -3,7 +3,6 @@ package com.example.trialio;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Switch;
 
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -13,7 +12,6 @@ import androidx.test.rule.ActivityTestRule;
 import com.example.trialio.activities.ExperimentActivity;
 import com.example.trialio.activities.ExperimentCreateActivity;
 import com.example.trialio.activities.MainActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -21,8 +19,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -59,7 +55,7 @@ public class ExperimentCreateActivityTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click add experiment button
-        FloatingActionButton addExperimentButton = (FloatingActionButton) solo.getView("btnNewExperiment");
+        Button addExperimentButton = (Button) solo.getView("btnNewExperiment");
         solo.clickOnView(addExperimentButton);
 
         // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show “Wrong Activity”
@@ -94,7 +90,7 @@ public class ExperimentCreateActivityTest {
         assertTrue(solo.waitForText("CreateExperimentTest Region", 1, 2000));
         assertTrue(solo.waitForText("1", 1, 2000));
         assertTrue(solo.waitForText("BINOMIAL", 1, 2000));
-        assertTrue(solo.waitForText("yes", 1, 2000));
+        assertTrue(solo.waitForText("OPEN", 1, 2000));
     }
 
     /**
