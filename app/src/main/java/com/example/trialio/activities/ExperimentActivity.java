@@ -63,6 +63,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private ImageButton addTrial;
     private ImageButton scanQR;
     private Button showQR;
+    private ImageButton mapView;
     private StatisticsUtility statisticsUtility;
     private User currentUser;
 
@@ -94,6 +95,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showTrials = (Button) findViewById(R.id.btnTrials);
         addTrial = (ImageButton) findViewById(R.id.btnAddTrial);
         showQR = (Button) findViewById(R.id.btnQRCode);
+        mapView = (ImageButton) findViewById(R.id.btnMap);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
     }
 
@@ -405,6 +407,34 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
 
                 // start an ExperimentActivity
                 startActivity(intent);
+            }
+        });
+
+        mapView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (experiment.getSettings().getGeoLocationRequired()) {
+                    Intent intent = new Intent(context, MapViewActivity.class);
+
+                    // pass in experiment as an argument
+                    Bundle args = new Bundle();
+                    args.putSerializable("experiment", experiment);
+                    intent.putExtras(args);
+
+                    // start an ExperimentActivity
+                    startActivity(intent);
+                } else {
+                    //noh
+                    new AlertDialog.Builder(ExperimentActivity.this)
+                            .setMessage("Map view is not available for this experiment")
+                            .setCancelable(false)
+                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                }
             }
         });
 

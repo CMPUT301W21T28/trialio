@@ -20,18 +20,21 @@ import com.example.trialio.R;
 import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
  */
 
-public class ExperimentCreateActivity extends AppCompatActivity {
+public class ExperimentCreateActivity extends AppCompatActivity{
     private final String TAG = "ExperimentCreateActivity";
     private Experiment experiment;
     private ExperimentManager experimentManager;
     private UserManager userManager;
     private final Context context = this;
     private String selectedType = "";
+    private GoogleMap regionMap;
 
     /**
      * the On create the takes in the saved instance from the main activity

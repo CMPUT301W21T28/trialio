@@ -140,7 +140,4 @@ public class Location implements Serializable{
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
-
-    // public type getCoord() {
 }
