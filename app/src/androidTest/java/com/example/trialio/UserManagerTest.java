@@ -51,13 +51,16 @@ public class UserManagerTest {
 
     /**
      * Creates a mock UserManager
+     *
      * @return a UserManager
      */
     private UserManager mockUserManager() throws InterruptedException {
         CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
         UserManager userManager = new UserManager(testCollection);
         for (String id : initTestUserIds) {
-            userManager.createNewUser(new User(), id).addOnCompleteListener(task->{lock.countDown();});
+            userManager.createNewUser(new User(), id).addOnCompleteListener(task -> {
+                lock.countDown();
+            });
         }
         lock.await(5, TimeUnit.SECONDS);
         return userManager;
@@ -65,6 +68,7 @@ public class UserManagerTest {
 
     /**
      * Creates a mock UserManager with no Users in it
+     *
      * @return a UserManager
      */
     private UserManager mockEmptyUserManager() {
@@ -103,7 +107,7 @@ public class UserManagerTest {
     }
 
     /**
-     * Test the updating of User info in the database
+     * Test the creating of a User in the system
      */
     @Test
     public void testCreateNewUser() throws Exception {
@@ -148,4 +152,46 @@ public class UserManagerTest {
         // Wait until user fetch is complete
         readLock.await(10, TimeUnit.SECONDS);
     }
+
+    /**
+     * Test the getting of a user from the system
+     */
+    @Test
+    public void testGetUser() {
+
+    }
+
+    /**
+     * Test the updating of a user in the system
+     */
+    @Test
+    public void testUpdateUser() {
+
+    }
+
+    /**
+     * Test the deleting of a user in the system
+     */
+    @Test
+    public void testDeleteUser() {
+
+    }
+
+    /**
+     * Test the deleting of a user in the system
+     */
+    @Test
+    public void testTransferUsername() {
+
+    }
+
+    /**
+     * Test the user update listener
+     */
+    @Test
+    public void testAddUserUpdateListener() {
+
+    }
+
+
 }
