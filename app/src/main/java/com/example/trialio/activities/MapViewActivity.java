@@ -24,9 +24,14 @@ import com.example.trialio.adapters.ArrayAdapterTrials;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.BinomialTrial;
+import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.ExperimentTypeUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +48,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     private UiSettings uiSettings;
     private GoogleMap trialsMap;
     private ArrayList<Trial> trialList;
+    private String experimentType;
 
 
     @Override
@@ -53,6 +59,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
+        experimentType = experiment.getTrialManager().getType();
 
         // get the managers
         userManager = new UserManager();
@@ -105,6 +112,19 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
+    private String getTrialResult(Trial trial) {
+        if (ExperimentTypeUtility.isBinomial(experimentType)) {
+            return ("Result: " + ((BinomialTrial) trial).getIsSuccess());
+        } else if (ExperimentTypeUtility.isMeasurement(experimentType)) {
+            return ("Result: " + ((MeasurementTrial) trial).getMeasurement() + " " + ((MeasurementTrial) trial).getUnit());
+        } else if (ExperimentTypeUtility.isCount(experimentType)) {
+            return ("Result: " + ((CountTrial) trial).getCount());
+        } else if (ExperimentTypeUtility.isNonNegative(experimentType)){
+            return ("Result: " + ((NonNegativeTrial) trial).getNonNegCount());
+        }
+        return "null";
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         trialsMap = googleMap;
@@ -116,7 +136,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
         if (!trialList.isEmpty()) {
             for (int i=0; i < trialList.size(); i++) {
-                trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude())));
+                trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude())).title(getTrialResult(trialList.get(i))));
             }
 
             trialsMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(trialList.get(0).getLocation().getLatitude(), trialList.get(0).getLocation().getLongitude())));
