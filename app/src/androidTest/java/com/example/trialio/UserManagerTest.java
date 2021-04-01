@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class UserManagerTest {
@@ -280,8 +282,49 @@ public class UserManagerTest {
      * Test the deleting of a user in the system
      */
     @Test
-    public void testDeleteUser() {
+    public void testDeleteUser() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(0);
 
+        // Get the user
+        CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+
+        // Delete the user from the system
+        CountDownLatch deleteLock = new CountDownLatch(1);
+        userManager.deleteUser(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                deleteLock.countDown();
+            }
+        });
+        deleteLock.await(5, TimeUnit.SECONDS);
+
+        // Assert the user was actually deleted
+        CountDownLatch afterLock = new CountDownLatch(1);
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                // Fetched user should be null
+                fetchedUserHolder[0] = user;
+                afterLock.countDown();
+            }
+        });
+        afterLock.await(5, TimeUnit.SECONDS);
+
+        User after = fetchedUserHolder[0];
+        assertNull(after);
     }
 
     /**
