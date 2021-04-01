@@ -19,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,12 +105,12 @@ public class UserManager {
      * User document. If you need to receive all database updates for the User, fetch the
      * User using UserManager#addUserUpdateListener()
      *
-     * @param id The device id of new User to create in the database
-     * @return The User that was created.
+     * @param user the new User object to be added to the system
+     * @param id the id of new User to create in the system
+     * @return Task that indicates when the user has been created
      */
-    public User createNewUser(String id) {
+    public Task<Void> createNewUser(User user, String id) {
         String username = userCollection.document().getId();
-        User user = new User();
         user.setUsername(username);
         user.setId(id);
         Log.d(TAG, String.format("Generating new User %s for device %s.", username, id));
@@ -123,7 +122,7 @@ public class UserManager {
 
         // Check that device id does not already exist in the system
         Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(ID_FIELD, user.getId()).get();
-        queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
+        return queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
             @Override
             public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
                 if (task.getResult().size() == 0) {
@@ -147,8 +146,6 @@ public class UserManager {
                 Log.d(TAG, String.format("Failed to create User for device %s.", id));
             }
         });
-
-        return user;
     }
 
     /**

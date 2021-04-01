@@ -68,7 +68,8 @@ public class CurrentUserHandler {
                     @Override
                     public void onUserFetch(User user) {
                         if (user == null) {
-                            currentUser = manager.createNewUser(currentUserId);
+                            currentUser = new User();
+                            manager.createNewUser(currentUser, currentUserId);
                         } else {
                             currentUser = user;
                         }

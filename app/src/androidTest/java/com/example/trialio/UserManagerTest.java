@@ -37,6 +37,9 @@ public class UserManagerTest {
      * https://stackoverflow.com/a/1829949/15048024
      */
 
+    /**
+     * Sets up the test class by populating list of testUserIds
+     */
     @BeforeClass
     public static void setUp() {
         initTestUserIds.add("001");
@@ -46,39 +49,57 @@ public class UserManagerTest {
         unInitTestUserIds.add("005");
     }
 
-    private UserManager mockUserManager() {
+    /**
+     * Creates a mock UserManager
+     * @return a UserManager
+     */
+    private UserManager mockUserManager() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
         UserManager userManager = new UserManager(testCollection);
-        for (String id: initTestUserIds) {
-            userManager.createNewUser(id);
+        for (String id : initTestUserIds) {
+            userManager.createNewUser(new User(), id).addOnCompleteListener(task->{lock.countDown();});
         }
+        lock.await(5, TimeUnit.SECONDS);
         return userManager;
     }
 
+    /**
+     * Creates a mock UserManager with no Users in it
+     * @return a UserManager
+     */
     private UserManager mockEmptyUserManager() {
         return new UserManager(testCollection);
     }
 
     /**
      * Deletes all test users in the database
-     * @throws InterruptedException the thread lock was interrupted
      */
     @After
     public void tearDown() throws InterruptedException {
+        // Aggregate the ids of the documents to delete
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<String> allIds = new ArrayList<>();
         allIds.addAll(initTestUserIds);
         allIds.addAll(unInitTestUserIds);
-        CountDownLatch lock = new CountDownLatch(allIds.size());
-        for (String id : allIds) {
-            db.collection(testCollection).document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    lock.countDown();
-                }
-            });
-        }
 
-        lock.await(2000, TimeUnit.MILLISECONDS);
+        // Run delete query on all ids
+        /* Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen,
+         * "How to delete document from firestore using where clause", 2017-11-18, CC BY-SA 3.0
+         * https://stackoverflow.com/a/47180442/15048024
+         */
+        CountDownLatch lock = new CountDownLatch(allIds.size());
+        db.collection(testCollection).whereIn("id", allIds).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot result = task.getResult();
+                        for (DocumentSnapshot doc : result.getDocuments()) {
+                            doc.getReference().delete().addOnCompleteListener(task1 -> lock.countDown());
+                        }
+                    }
+                });
+
+        lock.await(5000, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -87,16 +108,22 @@ public class UserManagerTest {
     @Test
     public void testCreateNewUser() throws Exception {
         // Create the user
-        String userId =  unInitTestUserIds.get(0);
+        String userId = unInitTestUserIds.get(0);
+        User newUser = new User();
         UserManager userManager = mockEmptyUserManager();
-        User user = userManager.createNewUser(userId);
+
+        CountDownLatch createLock = new CountDownLatch(1);
+        userManager.createNewUser(newUser, userId).addOnCompleteListener(task -> createLock.countDown());
 
         // Assert the initialized User is correct
-        assertEquals(user.getId(), userId);
-        assertNotNull(user.getUsername());
+        assertEquals(newUser.getId(), userId);
+        assertNotNull(newUser.getUsername());
+
+        // Wait until user create task completes
+        createLock.await(10, TimeUnit.SECONDS);
 
         // Fetch the created user
-        CountDownLatch lock = new CountDownLatch(1);
+        CountDownLatch readLock = new CountDownLatch(1);
         FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("id", userId).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -109,6 +136,8 @@ public class UserManagerTest {
                             // Check User document has expected data
                             DocumentSnapshot doc = query.getDocuments().get(0);
                             assertEquals(userId, doc.get("id"));
+
+                            readLock.countDown();
                         } else {
                             // Error occurred connecting to firebase
                             fail();
@@ -116,91 +145,7 @@ public class UserManagerTest {
                     }
                 });
 
-        lock.await(2000, TimeUnit.MILLISECONDS);
+        // Wait until user fetch is complete
+        readLock.await(10, TimeUnit.SECONDS);
     }
-
-//    /**
-//     * Test the fetching of a User from the datbase
-//     */
-//    @Test
-//    public void testGetUser() throws InterruptedException {
-//        CountDownLatch lock = new CountDownLatch(1);
-//        String deviceId = "100003";
-//        String username = "M0t37Y1DJPSJZNHbizUM";
-//        userManager.getUser(username, new UserManager.OnUserFetchListener() {
-//            @Override
-//            public void onUserFetch(User user) {
-//                assertEquals(deviceId, user.getUsername());
-//                assertEquals(username, user.getDeviceId());
-//                lock.countDown();
-//            }
-//        });
-//
-//        lock.await();
-//    }
-//
-
-    User retrievedData;
-
-//    /**
-//     * Test the listening of User updates to the database
-//     */
-//    @Test
-//    public void testAddUserUpdateListener() throws InterruptedException {
-//        String deviceId = "100002";
-//        String username = "CTUVUuG4P6kkheVUyFtz";
-//
-//        CountDownLatch lock = new CountDownLatch(1);
-//        CountDownLatch lock1 = new CountDownLatch(1);
-//        CountDownLatch lock2 = new CountDownLatch(1);
-//
-//        String firstPhone = "780-111-1111";
-//        String firstEmail = "email1@email.com";
-//        String secondPhone = "780-222-2222";
-//        String secondEmail = "email2@email.com";
-//
-//        Map<String, Object> initialData = new HashMap<String, Object>();
-//        initialData.put("email", firstEmail);
-//        initialData.put("phone", firstPhone);
-//        FirebaseFirestore.getInstance().collection(testCollection)
-//                .document(username)
-//                .update(initialData)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        lock.countDown();
-//                    }
-//                });
-//
-//        lock.await(2000, TimeUnit.MILLISECONDS);
-//
-//        userManager.addUserUpdateListener(username, new UserManager.OnUserFetchListener() {
-//            @Override
-//            public void onUserFetch(User user) {
-//                String email = user.getContactInfo().getEmail();
-//                if (email.equals(firstEmail)) {
-//                    retrievedData = user;
-//                    lock1.countDown();
-//                } else if (email.equals(secondEmail)) {
-//                    retrievedData = user;
-//                    lock2.countDown();
-//                } else {
-//                    fail();
-//                }
-//            }
-//        });
-//
-//        lock1.await(2000, TimeUnit.MILLISECONDS);
-//        assertEquals(firstPhone, retrievedData.getContactInfo().getPhone());
-//
-//        Map<String, Object> updateData = new HashMap<String, Object>();
-//        updateData.put("email", secondEmail);
-//        updateData.put("phone", secondPhone);
-//        FirebaseFirestore.getInstance().collection(testCollection)
-//                .document(username)
-//                .update(updateData);
-//
-//        lock2.await();
-//        assertEquals(secondPhone, retrievedData.getContactInfo().getPhone());
-//    }
 }
