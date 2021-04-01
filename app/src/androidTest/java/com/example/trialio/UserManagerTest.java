@@ -28,6 +28,7 @@ public class UserManagerTest {
 
     private final String testCollection = "user-test";
     private static final ArrayList<String> initTestUserIds = new ArrayList<>();
+    private static final ArrayList<String> initTestUsernames = new ArrayList<>();
     private static final ArrayList<String> unInitTestUserIds = new ArrayList<>();
 
     /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
@@ -58,8 +59,10 @@ public class UserManagerTest {
         CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
         UserManager userManager = new UserManager(testCollection);
         for (String id : initTestUserIds) {
-            userManager.createNewUser(new User(), id).addOnCompleteListener(task -> {
+            User user = new User();
+            userManager.createNewUser(user, id).addOnCompleteListener(task -> {
                 lock.countDown();
+                initTestUsernames.add(user.getUsername());
             });
         }
         lock.await(5, TimeUnit.SECONDS);
@@ -189,32 +192,14 @@ public class UserManagerTest {
     public void testGetUserByUsername() throws Exception {
         UserManager userManager = mockUserManager();
 
-        // Get user by id
-        CountDownLatch prepLock = new CountDownLatch(1);
-        String userId = initTestUserIds.get(0);
-        final User[] fetchedUserHolder = new User[1];
-        fetchedUserHolder[0] = null;
-        userManager.getUserById(userId, new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                fetchedUserHolder[0] = user;
-                prepLock.countDown();
-            }
-        });
-
-        // Wait for user fetch to complete then collect the username
-        prepLock.await(5, TimeUnit.SECONDS);
-        User expectedUser = fetchedUserHolder[0];
-        assertNotNull(expectedUser);
-
         // Get a user using username
-        String username = expectedUser.getUsername();
-        assertNotNull(username);
-
+        String username = initTestUsernames.get(1);
+        String userId = initTestUserIds.get(1);
         CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
         fetchedUserHolder[0] = null;
 
-        userManager.getUserById(userId, new UserManager.OnUserFetchListener() {
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 fetchedUserHolder[0] = user;
@@ -222,14 +207,12 @@ public class UserManagerTest {
             }
         });
 
-        // Wait for user fetch to complete, then check all values of user are the same
+        // Wait for user fetch to complete, then check if values of user are as expected
         getLock.await(5, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
-        assertEquals(expectedUser.getUsername(), user.getUsername());
-        assertEquals(expectedUser.getId(), user.getId());
-        assertEquals(expectedUser.getContactInfo().getEmail(), user.getContactInfo().getEmail());
-        assertEquals(expectedUser.getContactInfo().getPhone(), user.getContactInfo().getPhone());
+        assertEquals(username, user.getUsername());
+        assertEquals(userId, user.getId());
 
     }
 
