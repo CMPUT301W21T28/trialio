@@ -92,7 +92,6 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         TextView textOwner = findViewById(R.id.settings_text_owner);
         TextView textType = findViewById(R.id.settings_text_type);
         TextView textStatus = findViewById(R.id.settings_text_status);
-        //TextView textTotalTrials = findViewById(R.id.numTrials);
 
 
 
@@ -100,7 +99,6 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         textDescription.setText("Description: " + "\n" + experiment.getSettings().getDescription());
         textType.setText("Type: " + "\n" + experiment.getTrialManager().getType());
         textStatus.setText("Status: " + "\n" + (experiment.getTrialManager().getIsOpen()  ? "OPEN" : "CLOSED"));
-        //textTotalTrials.setText("Total: " + "\n" + trialList.size());
 
         // get the owner's username and set the appropriate fields
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
