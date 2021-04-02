@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.trialio.R;
+import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.fragments.RegisterBarcodeFragment;
 import com.example.trialio.models.Experiment;
@@ -100,6 +101,14 @@ public class QRBinomialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setBarcodeView();
+            }
+        });
+
+        registerBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterBarcodeFragment registerBarcodeFragment = new RegisterBarcodeFragment();
+                registerBarcodeFragment.show(getSupportFragmentManager(), "registerbarcode");
             }
         });
 

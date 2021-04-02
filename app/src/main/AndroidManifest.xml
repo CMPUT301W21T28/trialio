@@ -23,18 +23,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
+        <activity android:name=".Gallary"></activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-        <activity android:name=".activities.QRMeasurementActivity"></activity>
+
+        <activity android:name=".activities.QRMeasurementActivity" />
         <activity android:name=".activities.QRNonnegActivity" />
         <activity android:name=".activities.QRCountActivity" />
         <activity
             android:name=".activities.ScanningActivity"
-
             android:parentActivityName=".activities.ExperimentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,7 +49,6 @@
         <activity android:name=".activities.QuestionRepliesActivity" />
         <activity android:name=".activities.ViewUserActivity" />
         <activity android:name=".activities.MapViewActivity" />
-
         <activity
             android:name=".activities.ExperimentActivity"
             android:parentActivityName=".activities.MainActivity">
