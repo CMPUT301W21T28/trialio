@@ -20,6 +20,7 @@ import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
@@ -144,6 +145,11 @@ public class TrialActivity extends AppCompatActivity {
                         } else if (menuItem.getItemId() == R.id.item_view_profile) {
                             Log.d(TAG, "View profile: " + clickedUserId);
                             menuViewProfile(clickedUserId);
+                        } else if (menuItem.getItemId() == R.id.item_register_barcode){
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("experiment", experiment);
+
+
                         } else {
                             Log.d(TAG, "onMenuItemClick: Invalid item.");
                         }

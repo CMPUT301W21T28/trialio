@@ -51,7 +51,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_weight="0"
         android:layout_marginHorizontal="5dp"
         android:background="@color/section_grey">
@@ -59,7 +59,7 @@
         <Button
 
             android:id="@+id/btnshowQR"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
@@ -69,7 +69,7 @@
 
         <Button
             android:id="@+id/btnshowBarcode"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
@@ -102,12 +102,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/experimentInfoIL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/section_grey"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:background="@color/section_grey"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -116,27 +117,25 @@
 
             <TextView
                 android:id="@+id/qr_description"
-                android:text="Description"
-                android:textSize="12sp"
-                android:backgroundTint="@color/special_yellow"
-                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
-                android:layout_marginRight="2dp"
                 android:layout_marginTop="2.5dp"
-
+                android:layout_marginRight="2dp"
                 android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
                 android:background="#9c9c9c"
+
+                android:backgroundTint="@color/special_yellow"
+                android:fontFamily="monospace"
                 android:padding="5dp"
+                android:text="Description"
 
                 android:textColor="@color/black"
-                android:fontFamily="monospace"
-                >
+                android:textSize="12sp">
 
             </TextView>
-
 
 
             <ImageView
@@ -154,8 +153,6 @@
         </LinearLayout>
 
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,21 +160,21 @@
 
             <TextView
                 android:id="@+id/qr_text_type"
-                android:text="Type"
-                android:textSize="12sp"
-                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
                 android:layout_marginBottom="2.5dp"
-
-
                 android:layout_weight="2.4"
                 android:background="@color/button_dark_grey"
+
+
+                android:fontFamily="monospace"
                 android:padding="3dp"
+                android:text="Type"
                 android:textColor="@color/white"
-                android:fontFamily="monospace">
+                android:textSize="12sp">
 
             </TextView>
 
@@ -185,112 +182,165 @@
             <TextView
 
                 android:id="@+id/qr_text_owner"
-                android:text="Owner"
-                android:textSize="12sp"
-
-                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
+                android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginBottom="2.5dp"
 
+                android:layout_marginBottom="2.5dp"
                 android:layout_weight="5"
                 android:background="@color/button_dark_grey"
+
+                android:fontFamily="monospace"
                 android:padding="3dp"
+                android:text="Owner"
 
                 android:textColor="@color/white"
-                android:fontFamily="monospace">
-            </TextView>
-
+                android:textSize="12sp"></TextView>
 
 
             <TextView
                 android:id="@+id/qr_text_status"
-                android:text="Status"
-                android:textSize="12sp"
-
-                android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
+                android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="2.5dp"
+
                 android:layout_marginRight="2.5dp"
                 android:layout_marginBottom="2.5dp"
-
                 android:layout_weight="2"
                 android:background="@color/button_dark_grey"
+
+                android:fontFamily="monospace"
                 android:padding="3dp"
+                android:text="Status"
                 android:textColor="@color/white"
-                android:fontFamily="monospace">
-            </TextView>
+                android:textSize="12sp"></TextView>
 
 
         </LinearLayout>
 
     </LinearLayout>
 
-
-    <LinearLayout
+    //barcode
+    <FrameLayout
+        android:id="@+id/barcodeFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
+        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
 
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="20dp"
+            android:orientation="vertical">
 
-            android:fontFamily="monospace"
-            android:gravity="center_horizontal"
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-            android:text="QR Codes"
-            android:textColor="@color/special_yellow" />
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
 
-    </LinearLayout>
+                android:fontFamily="monospace"
+                android:gravity="center_horizontal"
+                android:text="Barcode"
+                android:textColor="@color/special_yellow" />
+
+            <ListView
+                android:id="@+id/listBarcode"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp" />
+
+            <Button
+                android:id="@+id/btnRegisterBarcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/special_yellow"
+                android:text="Register Barcode"
+                android:textColor="@color/black">
+
+            </Button>
 
 
-    <!--  List of blocked users  -->
+        </LinearLayout>
 
+    </FrameLayout>
 
-
-    <LinearLayout
+    // QR Code
+    <FrameLayout
+        android:id="@+id/QRFrame"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="3dp"
-        android:layout_weight="1">
+        android:layout_height="75dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
 
-
-        <Switch
-            android:id="@+id/swtQR"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Switch"
-            android:textColor="@color/black"
-            android:focusable="true"
-            app:backgroundTint="@color/special_yellow"
-            />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnQRBinomial"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Create QR Code"
-            android:textColor="@color/button_dark_grey"
-            android:focusable="true"
-            app:backgroundTint="@color/special_yellow"/>
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-    </LinearLayout>
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
+
+                android:fontFamily="monospace"
+                android:gravity="center_horizontal"
+                android:text="QR Code"
+                android:textColor="@color/special_yellow" />
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+                <Switch
+                    android:id="@+id/swtQR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:text="Switch"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/special_yellow" />
+
+                <Button
+                    android:id="@+id/btnQRBinomial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:text="Create QR Code"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/special_yellow" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
 
