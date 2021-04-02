@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Represents a general trial, experiment type not specified
  */
-public class Trial implements Serializable {
+public abstract class Trial implements Serializable {
     protected String experimenterId;
     protected Location location;
     protected Date date;

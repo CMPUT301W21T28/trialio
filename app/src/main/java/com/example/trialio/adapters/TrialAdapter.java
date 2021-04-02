@@ -25,21 +25,19 @@ import java.util.ArrayList;
 /**
  * This is an ArrayAdapter which contains a trial list. Used in TrialActivity.
  */
-public class ArrayAdapterTrials extends ArrayAdapter {
+public class TrialAdapter extends ArrayAdapter<Trial> {
     private final String TAG = "ArrayAdapterTrials";
 
-    private Context context;
-    private ArrayList<Trial> trialList;
-    private UserManager userManager;
-    private String experimentType;
+    private final Context context;
+    private final ArrayList<Trial> trialList;
+    private final UserManager userManager;
+    private final String experimentType;
 
-    public ArrayAdapterTrials(Context context, ArrayList<Trial> new_trialList, String experimentType) {
-        super(context, 0, new_trialList);
+    public TrialAdapter(Context context, ArrayList<Trial> trialList, String experimentType) {
+        super(context, 0, trialList);
         this.context = context;
-
-        this.trialList = new_trialList;
+        this.trialList = trialList;
         this.experimentType = experimentType;
-
         this.userManager = new UserManager();
     }
 
@@ -54,21 +52,22 @@ public class ArrayAdapterTrials extends ArrayAdapter {
 
         Trial trial = trialList.get(position);
 
-        // get the textviews
+        // get the text views
         TextView textOwner = view.findViewById(R.id.text_trial_owner);
         TextView textDate = view.findViewById(R.id.text_trial_date);
         TextView textResult = view.findViewById(R.id.text_trial_result);
 
-        // set the textviews
-        // get the owner's username
+        // set the text views
         userManager.getUserById(trial.getExperimenterId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText("Username: " + user.getUsername());
+                String ownerText = "Username: " + user.getUsername();
+                textOwner.setText(ownerText);
             }
         });
 
-        textDate.setText("Date: "+trial.getDate().toString());
+        String dateText = "Date: " + trial.getDate().toString();
+        textDate.setText(dateText);
 
         if (ExperimentTypeUtility.isBinomial(experimentType)) {
             textResult.setText("Result: " + ((BinomialTrial) trial).getIsSuccess());
