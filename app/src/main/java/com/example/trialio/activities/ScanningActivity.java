@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,12 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private ZXingScannerView scannerView;
     private User currentUser;
+    private Experiment experiment;
+    private String result;
+    private Boolean isBarcode;
+
+    private final String TAG = "scanningactivity";
+
 
     /**
      * onCreate first ask for user permission, then proceeds to scan using camera
@@ -42,6 +49,10 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         setContentView(R.layout.activity_scanning);
         Bundle bundle = getIntent().getExtras();
         currentUser = (User) bundle.getSerializable("user_scan");
+        experiment = (Experiment) bundle.getSerializable("experiment");
+        result = (String) bundle.getSerializable("result");
+        isBarcode = (Boolean) bundle.getBoolean("isBarcode");
+
         scannerView = (ZXingScannerView)findViewById(R.id.scanner);
 
         Dexter.withActivity(this)
@@ -85,8 +96,15 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      * @param text
      */
     private void processResult(String text){
-        String processed = text;
-        String [] items = processed.split("\n");
-        QRCodeGenerator.readQR(items, currentUser);
+        if(isBarcode){
+            String processed = text;
+            Log.d(TAG,processed);
+
+        }else{
+            String processed = text;
+            String [] items = processed.split("\n");
+            QRCodeGenerator.readQR(items, currentUser);
+        }
+
     }
 }
