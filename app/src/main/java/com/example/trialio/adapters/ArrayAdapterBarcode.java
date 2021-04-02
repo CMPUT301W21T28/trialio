@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.TrialManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -26,22 +28,18 @@ public class ArrayAdapterBarcode extends ArrayAdapter{
     private ArrayList<Trial> trialList;
     private Experiment experiment;
 
-    public ArrayAdapterBarcode(@NonNull Context context, int resource) {
-        super(context, resource);
-    }
 
     /**
      * takes in experiment and store relevant information needed for listview
      * @param context
-     * @param experiment
+     * @param trialList
      */
-    //public ArrayAdapterBarcode(Context context, Experiment experiment) {
-    //    super(context, 0, experiment.getTrialManager().getTrials());
-    //
-    //    this.trialList = experiment.getTrialManager().getTrials();
-    //    this.context = context;
-    //    this.experiment = experiment;
-    //}
+
+    public ArrayAdapterBarcode(Context context, ArrayList<Trial> trialList) {
+        super(context, 0, trialList);
+        this.context = context;
+        this.trialList = trialList;
+    }
 
 
     /**

@@ -44,7 +44,6 @@ public class QRNonnegActivity extends AppCompatActivity {
         barcodeFrame = findViewById(R.id.barcodeFrame);
         qrFrame = findViewById(R.id.QRFrame);
         registerBarcode = findViewById(R.id.btnRegisterBarcode);
-        input = findViewById(R.id.txtMeasurementQRValue);
 
 
         // get the experiment that was passed in
