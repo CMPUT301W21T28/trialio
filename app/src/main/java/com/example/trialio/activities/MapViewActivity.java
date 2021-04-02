@@ -14,14 +14,11 @@ Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
  */
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterTrials;
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
