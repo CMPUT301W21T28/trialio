@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -225,59 +226,145 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView"
+    //barcode
+    <FrameLayout
+        android:id="@+id/barcodeFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-
-        android:layout_marginHorizontal="20dp"
-        android:layout_weight="0"
-
-        android:fontFamily="monospace"
-        android:gravity="center_horizontal"
-        android:text="Create QR Code:"
-        android:textColor="@color/special_yellow" />
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-
+        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/txtNonNegQRValue"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:layout_marginHorizontal="20dp"
                 android:layout_weight="1"
-                android:ems="10"
-                android:hint="Enter value here"
-                android:inputType="number" />
+
+                android:fontFamily="monospace"
+                android:gravity="center_horizontal"
+                android:text="Barcode"
+                android:textColor="@color/special_yellow" />
+
+            <ListView
+                android:id="@+id/listBarcode"
+                android:layout_width="wrap_content"
+                android:layout_height="357dp" />
 
             <Button
-                android:id="@+id/btnQRNonneg"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnRegisterBarcode"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
-                android:text="Create QR Code" />
+                android:text="Register Barcode"
+                android:backgroundTint="@color/special_yellow"
+                android:textColor="@color/black">
+
+            </Button>
+
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
+
+    // QR Code
+    <FrameLayout
+        android:id="@+id/QRFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
+
+                android:fontFamily="monospace"
+                android:gravity="center_horizontal"
+                android:text="QR Code"
+                android:textColor="@color/special_yellow" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="10"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/txtNonNegQRValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="Enter value here"
+                            android:inputType="number" />
+
+                        <Button
+                            android:id="@+id/btnQRNonneg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Create QR Code"
+                            android:backgroundTint="@color/special_yellow"
+                            android:textColor="@color/black"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+
 
 </LinearLayout
     >

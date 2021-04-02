@@ -38,7 +38,8 @@ public class QRCountActivity extends AppCompatActivity {
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
         barcodeFrame = findViewById(R.id.barcodeFrame);
-        qrFrame = findViewById(R.id.QRFrame);        // get the experiment that was passed in
+        qrFrame = findViewById(R.id.QRFrame);
+        // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
         setExperimentInfo();

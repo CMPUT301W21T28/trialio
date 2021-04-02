@@ -93,19 +93,7 @@ public class QRBinomialActivity extends AppCompatActivity {
             }
         });
 
-        //registerBarcode.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        RegisterBarcodeFragment registerBarcodeFragment = new RegisterBarcodeFragment();
-        //        Bundle bundle = new Bundle();
-        //        isSuccess = aSwitch.isChecked();
-        //        bundle.putSerializable("experiment",experiment);
-        //        bundle.putString("result", String.valueOf(isSuccess));
-        //        registerBarcodeFragment.setArguments(bundle);
-        //        registerBarcodeFragment.show(getSupportFragmentManager(), "Barcode");
-        //
-        //    }
-        //});
+
     }
 
     private void setExperimentInfo(){

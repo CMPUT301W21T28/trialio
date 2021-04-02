@@ -264,7 +264,8 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/special_yellow"
-                android:text="Register Barcode" >
+                android:text="Register Barcode"
+                android:textColor="@color/black">
 
             </Button>
 
@@ -325,7 +326,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Create QR Code"
-                        android:backgroundTint="@color/special_yellow"/>
+                        android:backgroundTint="@color/special_yellow"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
             </LinearLayout>
