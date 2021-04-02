@@ -36,7 +36,7 @@ public class UserManagerTest {
     /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
      * Martin, https://stackoverflow.com/users/187492/martin, 2009-12-02,
      * Evin1_, https://stackoverflow.com/users/2503185/evin1, 2017-04-05,
-     * "How to use JUnit to test asynchronous processes", date, CC BY-SA 3.0
+     * "How to use JUnit to test asynchronous processes", CC BY-SA 3.0
      * https://stackoverflow.com/a/1829949/15048024
      */
 
@@ -49,7 +49,6 @@ public class UserManagerTest {
         initTestUserIds.add("002");
         unInitTestUserIds.add("003");
         unInitTestUserIds.add("004");
-        unInitTestUserIds.add("005");
     }
 
     /**
@@ -389,7 +388,56 @@ public class UserManagerTest {
      * Test the user update listener
      */
     @Test
-    public void testAddUserUpdateListener() {
+    public void testAddUserUpdateListener() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(0);
+        String newEmail = "new new new";
+        String newPhone = "3243244";
+
+        // Set up synchronization locks and callback result containers
+        CountDownLatch setLock = new CountDownLatch(1);
+        CountDownLatch updateLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        int[] operationNum = new int[1];
+
+        // Get the user
+        operationNum[0] = 1; // indicate we intend to set the listener
+        userManager.addUserUpdateListener(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;    // store the fetched user
+                if (operationNum[0] == 1) {
+                    setLock.countDown();        // indicate set listener operation is done
+                } else if (operationNum[0] == 2) {
+                    updateLock.countDown();     // indicate updated read operation is done
+                }
+            }
+        });
+        setLock.await(5, TimeUnit.SECONDS);
+        assertNotNull(fetchedUserHolder[0]);
+        assertEquals(username, fetchedUserHolder[0].getUsername());
+
+        // Create a copy of the User object and update some values
+        User copy = new User();
+        copy.setUsername(fetchedUserHolder[0].getUsername());
+        copy.setId(fetchedUserHolder[0].getId());
+        copy.getContactInfo().setPhone(fetchedUserHolder[0].getContactInfo().getPhone());
+        copy.getContactInfo().setEmail(fetchedUserHolder[0].getContactInfo().getEmail());
+        copy.getContactInfo().setEmail(newEmail);   // set a new email
+        copy.getContactInfo().setPhone(newPhone);   // set a new phone
+
+
+        // Update the copied object
+        operationNum[0] = 2;
+        userManager.updateUser(copy);
+        updateLock.await(5, TimeUnit.SECONDS);
+
+        // Assert changes observed in original object
+        assertNotNull(fetchedUserHolder[0]);
+        assertEquals(copy.getUsername(), fetchedUserHolder[0].getUsername());
+        assertEquals(copy.getId(), fetchedUserHolder[0].getId());
+        assertEquals(copy.getContactInfo().getEmail(), fetchedUserHolder[0].getContactInfo().getEmail());
+        assertEquals(copy.getContactInfo().getPhone(), fetchedUserHolder[0].getContactInfo().getPhone());
 
     }
 
