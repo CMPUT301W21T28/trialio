@@ -1,5 +1,7 @@
 package com.example.trialio.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,10 +20,14 @@ import com.example.trialio.R;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.fragments.RegisterBarcodeFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
+
+import java.io.Serializable;
 
 import javax.annotation.Nullable;
 
 public class QRBinomialActivity extends AppCompatActivity {
+    private Context context = this;
     private Experiment experiment;
     private Switch aSwitch;
     private Button createQR;
@@ -36,6 +42,8 @@ public class QRBinomialActivity extends AppCompatActivity {
     private Button showQR;
     private Button showBarcode;
     private Button registerBarcode;
+    private Boolean locationRequired;
+
 
 
     /**
@@ -74,6 +82,11 @@ public class QRBinomialActivity extends AppCompatActivity {
                 isSuccess = aSwitch.isChecked();
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isSuccess));
+                Location location = new Location();
+                if (experiment.getSettings().getGeoLocationRequired()){
+                    location.getCurrentLocation(context, (Activity) context);
+                }
+                bundle.putSerializable("location", location);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"QrCode");
             }

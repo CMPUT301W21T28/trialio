@@ -1,5 +1,6 @@
 package com.example.trialio.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -39,10 +40,7 @@ public class QRFragment extends DialogFragment {
     private ImageView imgQR;
     private Experiment experiment;
     private String result;
-    private String unit;
-    private Trial trial;
-    private Integer position;
-    private Boolean location;
+    private Location location;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -52,17 +50,10 @@ public class QRFragment extends DialogFragment {
         Bundle bundle = getArguments();
         experiment = (Experiment) bundle.getSerializable("experiment");
         result = bundle.getString("result");
-
-        location = experiment.getSettings().getGeoLocationRequired();
-        Location loc = new Location();
-        Date date = new Date();
-
-        if (location){
-            loc.getCurrentLocation(getContext(),getActivity());
-        }
+        location = (Location) bundle.getSerializable("location");
 
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result, loc);
+        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result, location);
         imgQR.setImageBitmap(qrcode);
 
 
