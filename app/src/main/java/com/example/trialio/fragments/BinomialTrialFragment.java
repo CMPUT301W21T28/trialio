@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
@@ -51,8 +52,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 }
                 Date date = new Date();
 
-                UserManager userManager = new UserManager();
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
                         //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission

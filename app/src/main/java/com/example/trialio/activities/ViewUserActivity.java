@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.ChangeUsernameCommand;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.fragments.ChangeUsernameFragment;
 import com.example.trialio.fragments.EditContactInfoFragment;
 import com.example.trialio.models.User;
@@ -93,15 +94,15 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
     public void setVisibility() {
         // by default the editUserProfile button is invisible
         // get current user and check if same as displayed user
-        UserManager userManager = new UserManager();
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
-            public void onUserFetch(User currentUser) {
+            public void onUserFetch(User u) {
                 // compare current user with arg user. If same id, make the edit button visible
-                if (user.getUsername().equals(currentUser.getUsername())) {
+                if (user.getUsername().equals(u.getUsername())) {
                     editContactInfo.setVisibility(View.VISIBLE);
                     changeUsername.setVisibility(View.VISIBLE);
                 }
+
             }
         });
     }
