@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -77,16 +78,12 @@ public class QRBinomialActivity extends AppCompatActivity {
         createQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 isSuccess = aSwitch.isChecked();
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isSuccess));
-                Location location = new Location();
-                if (experiment.getSettings().getGeoLocationRequired()){
-                    location.getCurrentLocation(context, (Activity) context);
-                }
-                bundle.putSerializable("location", location);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"QrCode");
             }

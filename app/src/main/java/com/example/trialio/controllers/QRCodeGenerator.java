@@ -44,17 +44,17 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static Boolean locationRequired;
     private static Context context;
 
-    public static Bitmap generateForTrial(Experiment experiment, String strResult, Location location){
+    public static Bitmap generateForTrial(Experiment experiment, String strResult){
         String infoResult = "";
         Date date = new Date();
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("COUNT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")){
-            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID() + "\n" + location.getLatitude()+ "\n" + location.getLongitude();
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         }
         BitMatrix result = null;
         try{
@@ -90,9 +90,6 @@ public class QRCodeGenerator extends AppCompatActivity {
             Location location = new Location();
             Date date = new Date();
 
-            location.setLatitude(Double.valueOf(input[3]));
-            location.setLongitude(Double.valueOf(input[3]));
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -108,9 +105,6 @@ public class QRCodeGenerator extends AppCompatActivity {
             Date date = new Date();
             Location location = new Location();
 
-            location.setLatitude(Double.valueOf(input[3]));
-            location.setLongitude(Double.valueOf(input[3]));
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -124,9 +118,6 @@ public class QRCodeGenerator extends AppCompatActivity {
             current_user = user;
             Date date = new Date();
             Location location = new Location();
-
-            location.setLatitude(Double.valueOf(input[3]));
-            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
@@ -142,8 +133,6 @@ public class QRCodeGenerator extends AppCompatActivity {
             Date date = new Date();
             Location location = new Location();
 
-            location.setLatitude(Double.valueOf(input[3]));
-            location.setLongitude(Double.valueOf(input[3]));
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
