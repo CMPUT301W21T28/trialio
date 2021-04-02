@@ -183,9 +183,9 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         Geocoder geocoder = new Geocoder(getApplicationContext());
         List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         String regionName = addresses.get(0).getLocality();
-        if (regionName == null) {
+        if (regionName == null || regionName.length() > 20) {
             regionName = addresses.get(0).getAdminArea();
-            if (regionName == null) {
+            if (regionName == null || regionName.length() > 20) {
                 regionName = addresses.get(0).getCountryName();
             }
         }
