@@ -64,7 +64,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_experiment);
+        setContentView(R.layout.activity_create_experiment);
 
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
