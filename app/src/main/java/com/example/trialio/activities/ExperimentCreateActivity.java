@@ -2,7 +2,10 @@ package com.example.trialio.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,20 +22,34 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
 import com.example.trialio.models.ExperimentSettings;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
  */
 
-public class ExperimentCreateActivity extends AppCompatActivity {
-    private final String TAG = "ExperimentCreateActivity";
+public class ExperimentCreateActivity extends AppCompatActivity implements OnMapReadyCallback{
+    private final String TAG = "ExpCreateActivity";
     private Experiment experiment;
     private ExperimentManager experimentManager;
     private UserManager userManager;
     private final Context context = this;
     private String selectedType = "";
+    private GoogleMap regionMap;
+    private Location regionLocation;
+    private String regionName;
+    private UiSettings uiSettings;
 
     /**
      * the On create the takes in the saved instance from the main activity
@@ -47,6 +64,8 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.regionMap);
+        mapFragment.getMapAsync(this);
 
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
 
@@ -80,6 +99,10 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
+
+                if (regionName != null) {
+                    editRegion.setText(regionName);
+                }
 
                 //----------------------------------
                 // prepare ExperimentSettings object
@@ -148,9 +171,47 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         cancelNewExperiment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+                /*
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
+
+                 */
             }
         });
     }
+
+    private String findRegionName(Location location) throws IOException {
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        String regionName = addresses.get(0).getAdminArea();
+        Log.d(TAG, "City name = " + regionName);
+        return regionName;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        regionMap = googleMap;
+
+        uiSettings = regionMap.getUiSettings();
+
+        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setMapToolbarEnabled(false);
+
+        regionLocation = new Location();
+
+        regionMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                regionLocation.setLatitude(latLng.latitude);
+                regionLocation.setLongitude(latLng.longitude);
+                try {
+                    regionName = findRegionName(regionLocation);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 }

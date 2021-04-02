@@ -1,78 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#747474" >
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#747474"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:layout_weight="3"
+        android:orientation="horizontal">
 
         <ImageButton
-            android:src="@drawable/ic_outline_search_24"
-            android:scaleType="fitCenter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="10dp">
-        </ImageButton>
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_outline_search_24"></ImageButton>
 
         <ImageButton
-            android:src="@drawable/temp_logo"
-            android:scaleType="fitCenter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:padding="15dp">
-        </ImageButton>
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/temp_logo"></ImageButton>
 
 
         <ImageButton
-            android:src="@drawable/ic_baseline_settings_24"
-            android:scaleType="fitCenter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="10dp">
-        </ImageButton>
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_baseline_settings_24"></ImageButton>
 
     </LinearLayout>
 
 
-
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:background="#9c9c9c"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:hint="Description" />
+            android:hint="Description"
+            android:padding="10dp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0">
+        android:layout_weight="0"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:background="#9c9c9c"
-            android:layout_margin="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#9c9c9c">
 
             <Spinner
                 android:id="@+id/typeDropdown"
@@ -85,16 +81,16 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="#9c9c9c"
-            android:layout_margin="5dp"            >
+            android:background="#9c9c9c">
 
             <EditText
                 android:id="@+id/regionEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Region:"/>
+                android:hint="Region:" />
 
 
         </LinearLayout>
@@ -102,18 +98,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0">
+        android:layout_weight="0"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:background="#9c9c9c"
-            android:layout_margin="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="7dp"
-            android:layout_weight="1">
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#9c9c9c"
+            android:padding="7dp">
 
 
             <Switch
@@ -128,10 +124,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#9c9c9c"
-            android:padding="7dp"
-            android:layout_margin="5dp">
+            android:padding="7dp">
 
             <Switch
                 android:id="@+id/open_switch"
@@ -147,27 +143,43 @@
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:layout_weight="0"
         android:background="#9c9c9c"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/numTrialsEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Minimum # of trials: "
-            android:padding="10dp"/>
+            android:padding="10dp" />
 
     </LinearLayout>
 
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <fragment
+            android:id="@+id/regionMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            tools:context=".activities.ExperimentCreateActivity"
+            android:layout_width="380dp"
+            android:layout_height="340dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9" >
+        android:layout_weight="5"
+        android:orientation="horizontal">
 
 
         <Button
@@ -198,9 +210,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtExperimentMinTrials" />
     </LinearLayout>
-
-
-
 
 
 </LinearLayout>
