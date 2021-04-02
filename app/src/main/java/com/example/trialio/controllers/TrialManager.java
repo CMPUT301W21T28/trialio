@@ -296,7 +296,9 @@ public class TrialManager implements Serializable {
         Map<String, Object> data = document.getData();
 
         // initialize trial
-        Trial trial = new Trial(); // this trial is overwritten immediately
+        Trial trial = null;
+
+        // set Trial subclass specific attributes
         if (ExperimentTypeUtility.isBinomial(type)){
             trial = new BinomialTrial();
 
@@ -335,6 +337,9 @@ public class TrialManager implements Serializable {
             assert false;
         }
 
+        // fail if we don't have a trial at this point
+        assert trial != null;
+
         // set experimenterID
         String experimenterID = (String) data.get(EXPERIMENTERID_FIELD);
         assert experimenterID != null;
@@ -356,6 +361,7 @@ public class TrialManager implements Serializable {
         assert date != null;
         trial.setDate(date);
 
+        // return the trial we extracted
         return trial;
     }
 }
