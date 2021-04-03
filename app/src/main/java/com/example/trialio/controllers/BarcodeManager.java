@@ -1,10 +1,13 @@
 package com.example.trialio.controllers;
 
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.trialio.models.Barcode;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
 import com.example.trialio.models.User;
@@ -17,12 +20,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 public class BarcodeManager implements Serializable {
 
@@ -33,7 +44,6 @@ public class BarcodeManager implements Serializable {
     private static final String EXPERIMENT_PATH = "experiments-v5";
     private static final String TRIAL_PATH = "trials";
     private static final String BARCODES_PATH = "barcodes";
-
 
 
     /**
@@ -62,11 +72,11 @@ public class BarcodeManager implements Serializable {
     public interface OnBarcodeFetchListener {
         /**
          * This method will be called when a Question is fetched from the database.
+         *
          * @param barcode the barcode that was fetched from the database
          */
         void onBarcodeFetch(String barcode);
     }
-
 
 
     /**
@@ -83,8 +93,7 @@ public class BarcodeManager implements Serializable {
     }
 
 
-
-    public void createBarcode (String barcodeString) {
+    public void createBarcode(String barcodeString) {
         Log.d(TAG, "Posting barcode string " + barcodeString);
         barcodeCollection
                 .add(barcodeString)   //TODO: might be annoying to use the document name with the functions bellow ****
@@ -103,7 +112,7 @@ public class BarcodeManager implements Serializable {
     }
 
 
-    public void deleteBarcode (String barcodeString) {
+    public void deleteBarcode(String barcodeString) {
         Log.d(TAG, "Deleting barcode " + barcodeString);
         barcodeCollection
                 .document(barcodeString)
@@ -125,11 +134,11 @@ public class BarcodeManager implements Serializable {
     }
 
 
-
     /**
      * Sets a function to be called when a barcode is fetched
-     * @param barcodeString  the id of the barcode to fetch
-     * @param listener       the function to be called when the experiment is fetched
+     *
+     * @param barcodeString the id of the barcode to fetch
+     * @param listener      the function to be called when the experiment is fetched
      */
     public void setOnBarcodeFetchListener(String barcodeString, BarcodeManager.OnBarcodeFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
@@ -156,7 +165,6 @@ public class BarcodeManager implements Serializable {
             }
         });
     }
-
 
 
     /**
@@ -194,55 +202,38 @@ public class BarcodeManager implements Serializable {
                 });
     }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//    /**
-//     * Extracts a Question object from a Firestore sub-collection (barcodeForum). This method assumes the document
-//     * hold a valid barcode.
-//     *
-//     * @param document the document to be extracted
-//     * @return the extracted barcode
-//     */
-//
-//    // TODO: this seems to good to be true -> test the limitations of this function heavily
-//    private Barcode extractBarcodeDocument(DocumentSnapshot document) {
-//        Barcode barcode = document.toObject(Barcode.class);
-//        return barcode;
-//    }
+    /*
+     * TODO:
+     *  1) how to get experiment field + where
+     *
+     * */
 
+    public static Bitmap generateBarcode(String barcodeID) {
+        String infoResult = "";
+        BitMatrix result = null;
+        try {
+            infoResult = barcodeID;
+            result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.CODE_128, 1000, 200, null);
+        } catch (WriterException writerException) {
+            writerException.printStackTrace();
+            return null;
+        }
+        int width = result.getWidth();
+        int height = result.getHeight();
+        int[] pixels = new int[width * height];
 
+        for (int x = 0; x < height; x++) {
+            int offset = x * width;
+            for (int k = 0; k < width; k++) {
+                pixels[offset + k] = result.get(k, x) ? BLACK : WHITE;
+            }
+        }
 
-//    /**
-//     * Extracts a Reply object from a Firestore sub-collection (barcodeForum). This method assumes the document
-//     * hold a valid barcode.
-//     *
-//     * @param document the document to be extracted
-//     * @return the extracted reply
-//     */
-//
-//    // TODO: this seems to good to be true -> test the limitations of this function heavily
-//    private Reply extractReplyDocument(DocumentSnapshot document) {
-//        Reply reply = document.toObject(Reply.class);
-//
-//        return reply;
-//    }
-
-
-//    /**
-//     * Compresses a User into a Map for storage in a Firestore document.
-//     *
-//     * @param user The User to be compressed
-//     * @return A Map of fields to be stored
-//     */
-//    private Map<String, Object> compressUser(User user) {
-//        Map<String, Object> userData = new HashMap<>();
-//        userData.put(USERNAME_FIELD, user.getUsername());
-//        userData.put(DEVICE_ID_FIELD, user.getDeviceId());
-//        userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
-//        userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
-//        userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
-//        return userData;
-//    }
-
-
+        Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        myBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return myBitmap;
+    }
 
 }
