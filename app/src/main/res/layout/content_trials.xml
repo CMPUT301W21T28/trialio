@@ -19,7 +19,7 @@
 
             <TextView
                 android:id="@+id/text_trial_owner"
-                android:text="Owner"
+                android:text=""
                 android:textSize="12sp"
                 android:fontFamily="monospace"
                 android:textColor="@color/button_dark_grey"
@@ -43,7 +43,7 @@
 
 
                 android:id="@+id/text_trial_date"
-                android:text="Date"
+                android:text=""
                 android:textSize="12sp"
                 android:fontFamily="monospace"
                 android:textColor="@color/button_dark_grey"
@@ -76,7 +76,7 @@
             <TextView
 
                 android:id="@+id/text_trial_result"
-                android:text="Result"
+                android:text=""
                 android:textSize="12sp"
                 android:fontFamily="monospace"
 

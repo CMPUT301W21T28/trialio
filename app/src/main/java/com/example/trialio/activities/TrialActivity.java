@@ -2,6 +2,7 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.TrialAdapter;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
@@ -96,8 +98,7 @@ public class TrialActivity extends AppCompatActivity {
      * Initialize the state for the Activity
      */
     private void initState() {
-        UserManager userManager = new UserManager();
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
                 // determine if user is the owner

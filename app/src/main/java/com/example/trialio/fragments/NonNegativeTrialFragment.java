@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.NonNegativeTrial;
@@ -50,8 +51,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         }
                         Date date = new Date();
 
-                        UserManager userManager = new UserManager();
-                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                             @Override
                             public void onUserFetch(User user) {
 
