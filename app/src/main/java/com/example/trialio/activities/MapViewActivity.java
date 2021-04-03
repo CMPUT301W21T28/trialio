@@ -19,11 +19,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-<<<<<<< HEAD
-=======
+
+
 import com.example.trialio.adapters.TrialAdapter;
 import com.example.trialio.controllers.ExperimentManager;
->>>>>>> e6c02109e9048ba3a8e3bbdd63e04b763167eb3a
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.BinomialTrial;
