@@ -1,23 +1,247 @@
 package com.example.trialio.controllers;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.example.trialio.models.Barcode;
+import com.example.trialio.models.Question;
+import com.example.trialio.models.Reply;
+import com.example.trialio.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class BarcodeManager {
+public class BarcodeManager implements Serializable {
 
-    public Collection<Barcode> barcodes;
+    private CollectionReference barcodeCollection;   // does this have to be final ???
 
-    // public void generateQRCode (Experiment experiment, Trial trial) { }
+    private static final String TAG = "BarcodeForumManager";
 
-    // public void registerBarcode (Experiment experiment, Trial trial, Image barcodeImage) { }
-
-    // public Collection<Barcode> getBarcodes() { }
-
-    // public void removeBarcode (Barcode barcode) { }
+    private static final String EXPERIMENT_PATH = "experiments-v5";
+    private static final String TRIAL_PATH = "trials";
+    private static final String BARCODES_PATH = "barcodes";
 
 
 
+    /**
+     * Constructor for QuestionForumManager
+     */
+    public BarcodeManager(String associatedExperimentID, String associatedTrialID) {
+        barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(TRIAL_PATH).document(associatedTrialID).collection(BARCODES_PATH);
+    }
+
+
+//    /**
+//     * Generates a new unique barcode ID
+//     * @return unique ID for a new barcode which is about to be posted
+//     */
+//
+//    public String getNewPostID() { return this.barcodeForumCollection.document().getId(); }
+//
+//    public String getNewReplyID(String barcodeID) {
+//        return this.barcodeForumCollection.document(barcodeID).collection("Replies").document().getId();
+//    }
+
+
+    /**
+     * This interface represents an action to be taken when an Question document is fetched from the database.
+     */
+    public interface OnBarcodeFetchListener {
+        /**
+         * This method will be called when a Question is fetched from the database.
+         * @param barcode the barcode that was fetched from the database
+         */
+        void onBarcodeFetch(String barcode);
+    }
+
+
+
+    /**
+     * This interface represents an action to be taken when a collection of Questions is fetched
+     * from the database.
+     */
+    public interface OnManyBarcodesFetchListener {
+        /**
+         * This method will be called when a collection of Questions is fetched from the database.
+         *
+         * @param barcodes all the barcodes that were fetched from the database (belong to the current experiment)
+         */
+        void onManyBarcodesFetch(List<String> barcodes);
+    }
+
+
+
+    public void createBarcode (String barcodeString) {
+        Log.d(TAG, "Posting barcode string " + barcodeString);
+        barcodeCollection
+                .add(barcodeString)   //TODO: might be annoying to use the document name with the functions bellow ****
+                //TODO ERROR HERE
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding barcode", e);
+                    }
+                });
+    }
+
+
+    public void deleteBarcode (String barcodeString) {
+        Log.d(TAG, "Deleting barcode " + barcodeString);
+        barcodeCollection
+                .document(barcodeString)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String message = String.format("Experiment %s was deleted successfully", barcodeString);
+                        Log.d(TAG, message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String message = String.format("Failed to delete experiment %s", barcodeString);
+                        Log.d(TAG, message);
+                    }
+                });
+    }
+
+
+
+    /**
+     * Sets a function to be called when a barcode is fetched
+     * @param barcodeString  the id of the barcode to fetch
+     * @param listener       the function to be called when the experiment is fetched
+     */
+    public void setOnBarcodeFetchListener(String barcodeString, BarcodeManager.OnBarcodeFetchListener listener) {
+        /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
+         */
+        Log.d(TAG, "Fetching barcode");
+        DocumentReference docRef = barcodeCollection.document(barcodeString);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        String barcode = doc.getString("barcodeID");
+
+                        listener.onBarcodeFetch(barcode);
+                        Log.d(TAG, "Barcode fetched successfully.");
+                    } else {
+                        Log.d(TAG, "No barcode(s) found");
+                    }
+                } else {
+                    Log.d(TAG, "Barcode fetch failed with " + task.getException());
+                }
+            }
+        });
+    }
+
+
+
+    /**
+     * Sets a function to be called when all barcodes are fetched
+     *
+     * @param listener the function to be called when the barcodes are fetched
+     */
+    public void setOnAllBarcodesFetchCallback(BarcodeManager.OnManyBarcodesFetchListener listener) {
+        /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
+         * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
+         */
+        Log.d(TAG, "Fetching all barcodes from collection");
+        barcodeCollection.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String message = "All barcodes fetched successfully";
+                            Log.d(TAG, message);
+
+                            QuerySnapshot qs = task.getResult();
+                            ArrayList<String> barcodeList = new ArrayList<>();
+
+                            for (DocumentSnapshot doc : qs.getDocuments()) {
+                                // retrieves all documents (barcodes) within barcodeForum collection
+                                String barcodeString = doc.getString("barcodeID");
+                                barcodeList.add(barcodeString);
+                            }
+                            listener.onManyBarcodesFetch(barcodeList);
+                        } else {
+                            String message = "Failed to fetch all barcodes";
+                            Log.d(TAG, message);
+                        }
+                    }
+                });
+    }
+
+
+//    /**
+//     * Extracts a Question object from a Firestore sub-collection (barcodeForum). This method assumes the document
+//     * hold a valid barcode.
+//     *
+//     * @param document the document to be extracted
+//     * @return the extracted barcode
+//     */
+//
+//    // TODO: this seems to good to be true -> test the limitations of this function heavily
+//    private Barcode extractBarcodeDocument(DocumentSnapshot document) {
+//        Barcode barcode = document.toObject(Barcode.class);
+//        return barcode;
+//    }
+
+
+
+//    /**
+//     * Extracts a Reply object from a Firestore sub-collection (barcodeForum). This method assumes the document
+//     * hold a valid barcode.
+//     *
+//     * @param document the document to be extracted
+//     * @return the extracted reply
+//     */
+//
+//    // TODO: this seems to good to be true -> test the limitations of this function heavily
+//    private Reply extractReplyDocument(DocumentSnapshot document) {
+//        Reply reply = document.toObject(Reply.class);
+//
+//        return reply;
+//    }
+
+
+//    /**
+//     * Compresses a User into a Map for storage in a Firestore document.
+//     *
+//     * @param user The User to be compressed
+//     * @return A Map of fields to be stored
+//     */
+//    private Map<String, Object> compressUser(User user) {
+//        Map<String, Object> userData = new HashMap<>();
+//        userData.put(USERNAME_FIELD, user.getUsername());
+//        userData.put(DEVICE_ID_FIELD, user.getDeviceId());
+//        userData.put(EMAIL_FIELD, user.getContactInfo().getEmail());
+//        userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
+//        userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
+//        return userData;
+//    }
 
 
 

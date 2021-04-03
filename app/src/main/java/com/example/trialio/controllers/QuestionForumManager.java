@@ -33,7 +33,6 @@ public class QuestionForumManager implements Serializable {
     private static final String EXPERIMENT_PATH = "experiments-v5";
     private static final String REPLY_FORUM_PATH = "Replies";
 
-
     /**
      * Constructor for QuestionForumManager
      */
