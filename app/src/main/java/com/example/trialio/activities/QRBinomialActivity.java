@@ -78,8 +78,10 @@ public class QRBinomialActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 isQRSuccess = aSwitch.isChecked();
+                Boolean isBarcode = false;
                 bundle.putSerializable("experiment",experiment);
                 bundle.putString("result", String.valueOf(isQRSuccess));
+                bundle.putBoolean("isBarcode", isBarcode);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"QrCode");
             }
