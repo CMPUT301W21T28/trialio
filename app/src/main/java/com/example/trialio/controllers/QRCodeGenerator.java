@@ -57,12 +57,8 @@ public class QRCodeGenerator extends AppCompatActivity {
             infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
         }
         BitMatrix result = null;
-
-        //*****
         try{
             result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
-        // rese
-
         } catch (WriterException writerException) {
             writerException.printStackTrace();
             return null;

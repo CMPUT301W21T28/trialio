@@ -45,6 +45,7 @@ public class QRFragment extends DialogFragment {
     private String result;
     private Location location;
     private String TAG = "QRF";
+    private Boolean isBarcode;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -56,7 +57,7 @@ public class QRFragment extends DialogFragment {
         result = bundle.getString("result");
 
         imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result);
+        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result, isBarcode);
         imgQR.setImageBitmap(qrcode);
 
 
