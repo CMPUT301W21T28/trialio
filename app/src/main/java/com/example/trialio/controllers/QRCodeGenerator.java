@@ -43,8 +43,10 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static User current_user;
     private static Boolean locationRequired;
     private static Context context;
+    private static Boolean isBarcode; //TODO: bad practice?
 
-    public static Bitmap generateForTrial(Experiment experiment, String strResult){
+    public static Bitmap generateForTrial(Experiment experiment, String strResult, Boolean isBarcode){
+
         String infoResult = "";
         Date date = new Date();
         if (experiment.getTrialManager().getType().equals("BINOMIAL")){
@@ -58,7 +60,11 @@ public class QRCodeGenerator extends AppCompatActivity {
         }
         BitMatrix result = null;
         try{
-            result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
+            if (isBarcode) {
+                result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.CODE_128, 1000, 200, null);
+            } else {
+                result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
+            }
         } catch (WriterException writerException) {
             writerException.printStackTrace();
             return null;
