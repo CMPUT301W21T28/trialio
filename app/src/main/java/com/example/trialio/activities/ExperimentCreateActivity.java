@@ -1,9 +1,13 @@
 package com.example.trialio.activities;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.net.ConnectivityManagerCompat;
 
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
@@ -25,6 +31,7 @@ import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -32,6 +39,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,6 +59,10 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
     private String regionName;
     private UiSettings uiSettings;
 
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
+
     /**
      * the On create the takes in the saved instance from the main activity
      *
@@ -59,7 +71,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_experiment);
+        setContentView(R.layout.activity_create_experiment);
 
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
@@ -100,9 +112,6 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
 
-                if (regionName != null) {
-                    editRegion.setText(regionName);
-                }
 
                 //----------------------------------
                 // prepare ExperimentSettings object
@@ -172,26 +181,57 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             @Override
             public void onClick(View v) {
                 finish();
-                /*
-                Intent intent = new Intent(context, MainActivity.class);
-                startActivity(intent);
-
-                 */
             }
         });
     }
 
-    private String findRegionName(Location location) throws IOException {
-        Geocoder geocoder = new Geocoder(getApplicationContext());
-        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        String regionName = addresses.get(0).getAdminArea();
-        Log.d(TAG, "City name = " + regionName);
+    public static boolean isConnected(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (connectivityManager != null) {
+                networkInfo = connectivityManager.getActiveNetworkInfo();
+            }
+
+            return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
+    }
+
+
+
+    private String findRegionName(Location location) {
+        if (isConnected(ExperimentCreateActivity.this)) {
+            //carry on with function
+        } else {
+            try {
+                wait(60);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "Getting Location Name");
+        Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
+        List<Address> addresses = new ArrayList<>();
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+            Log.e(TAG, "Getting Location Name: " +e.getMessage());
+        }
+        String regionName = addresses.get(0).getLocality();
+        if (regionName == null || regionName.length() > 20) {
+            regionName = addresses.get(0).getAdminArea();
+                if (regionName == null || regionName.length() > 20) {
+                    regionName = addresses.get(0).getCountryName();
+                }
+            }
         return regionName;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         regionMap = googleMap;
+
+        EditText editRegion = (EditText) findViewById(R.id.regionEditText);
+
 
         uiSettings = regionMap.getUiSettings();
 
@@ -205,10 +245,9 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             public void onMapClick(LatLng latLng) {
                 regionLocation.setLatitude(latLng.latitude);
                 regionLocation.setLongitude(latLng.longitude);
-                try {
-                    regionName = findRegionName(regionLocation);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                setRegionName(findRegionName(regionLocation));
+                if (regionName != null) {
+                    editRegion.setText(regionName, TextView.BufferType.EDITABLE);
                 }
             }
         });

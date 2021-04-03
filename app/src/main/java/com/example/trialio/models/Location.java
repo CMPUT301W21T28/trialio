@@ -78,12 +78,11 @@ public class Location implements Serializable{
      *         double checks permission for the user location
      *
      * @param context  the context used by location
-     * @param activity the activity used by location
      */
-    public void getCurrentLocation(Context context, Activity activity) {
+    public void getCurrentLocation(Context context) {
         //getting location permission from the user
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locClient = LocationServices.getFusedLocationProviderClient(activity);
+            locClient = LocationServices.getFusedLocationProviderClient(context);
             Task<android.location.Location> locationTask = locClient.getLastLocation();
             locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                 @Override

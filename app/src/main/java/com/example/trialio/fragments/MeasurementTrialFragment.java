@@ -51,7 +51,7 @@ public class MeasurementTrialFragment extends DialogFragment {
 
                         Location location = new Location();
                         if (geoLocationReq) {
-                            location.getCurrentLocation(getContext(), getActivity());
+                            location.getCurrentLocation(getContext());
                         }
                         Date date = new Date();
                         String unit = "UNIT";  // TODO: change this
