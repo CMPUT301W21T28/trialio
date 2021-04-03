@@ -17,7 +17,9 @@ import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.ChangeUsernameCommand;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Barcode;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
+import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.ArrayList;
@@ -26,12 +28,16 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
 
     private Context context;
     private ArrayList<String> barcodeList;
+    private Experiment experiment;
 
-    public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList) {
+    public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList, Experiment experiment) {
         super(context, 0, barcodeList);
         this.barcodeList = barcodeList;
         this.context = context;
+        this.experiment = experiment;
     }
+
+
 
     @NonNull
     @Override
@@ -42,7 +48,8 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.content_barcode, parent, false);
         }
 
-        BarcodeManager barcodeManager = new BarcodeManager();
+        //(String associatedExperimentID, String associatedTrialID) {
+        BarcodeManager barcodeManager = new BarcodeManager(experiment.getExperimentID());
 
         String barcodeID = barcodeList.get(position);
 

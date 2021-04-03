@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,8 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterBarcode;
+import com.example.trialio.adapters.TrialAdapter;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Trial;
+
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -39,6 +45,10 @@ public class QRBinomialActivity extends AppCompatActivity {
     private Button showBarcode;
     private Button registerBarcode;
     private Boolean locationRequired;
+    private ListView listviewBarcode;
+
+    private ArrayList<String> BarcodeList;
+    private ArrayAdapterBarcode arrayAdapterBarcode;
 
 
 
@@ -59,6 +69,12 @@ public class QRBinomialActivity extends AppCompatActivity {
         barcodeFrame = findViewById(R.id.barcodeFrame);
         qrFrame = findViewById(R.id.QRFrame);
         registerBarcode = findViewById(R.id.btnRegisterBarcode);
+        listviewBarcode = findViewById(R.id.listBarcode);
+
+
+        BarcodeList = new ArrayList<>();
+        arrayAdapterBarcode = new ArrayAdapterBarcode(this, BarcodeList, experiment);
+        listviewBarcode.setAdapter(arrayAdapterBarcode);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
