@@ -1,10 +1,13 @@
 package com.example.trialio.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.net.ConnectivityManagerCompat;
 
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
@@ -35,6 +39,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -180,16 +185,44 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         });
     }
 
-    private String findRegionName(Location location) throws IOException {
-        Geocoder geocoder = new Geocoder(getApplicationContext());
-        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+    public static boolean isConnected(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (connectivityManager != null) {
+                networkInfo = connectivityManager.getActiveNetworkInfo();
+            }
+
+            return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
+    }
+
+
+
+    private String findRegionName(Location location) {
+        if (isConnected(ExperimentCreateActivity.this)) {
+            //carry on with function
+        } else {
+            try {
+                wait(60);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "Getting Location Name");
+        Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
+        List<Address> addresses = new ArrayList<>();
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+            Log.e(TAG, "Getting Location Name: " +e.getMessage());
+        }
         String regionName = addresses.get(0).getLocality();
         if (regionName == null || regionName.length() > 20) {
             regionName = addresses.get(0).getAdminArea();
-            if (regionName == null || regionName.length() > 20) {
-                regionName = addresses.get(0).getCountryName();
+                if (regionName == null || regionName.length() > 20) {
+                    regionName = addresses.get(0).getCountryName();
+                }
             }
-        }
         return regionName;
     }
 
@@ -212,15 +245,9 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             public void onMapClick(LatLng latLng) {
                 regionLocation.setLatitude(latLng.latitude);
                 regionLocation.setLongitude(latLng.longitude);
-                try {
-                    setRegionName(findRegionName(regionLocation));
-                    Log.i(TAG, "City name = " + regionName);
-                    if (regionName != null) {
-                        editRegion.setText(regionName, TextView.BufferType.EDITABLE);
-                    }
-                    //regionName = ;
-                } catch (IOException e) {
-                    e.printStackTrace();
+                setRegionName(findRegionName(regionLocation));
+                if (regionName != null) {
+                    editRegion.setText(regionName, TextView.BufferType.EDITABLE);
                 }
             }
         });
