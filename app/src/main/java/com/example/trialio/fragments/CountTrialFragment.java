@@ -46,7 +46,7 @@ public class CountTrialFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int i) {
                         Location location = new Location();
                         if (geoLocationReq) {
-                            location.getCurrentLocation(getContext(),getActivity());
+                            location.getCurrentLocation(getContext());
                         }
                         Date date = new Date();
 
