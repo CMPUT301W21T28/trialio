@@ -1,6 +1,7 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         String barcodeID = barcodeList.get(position);
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
-        ImageView barcodeImage = view.findViewById(R.id.barcodeImageView);
+        ImageView barcodeImageView = view.findViewById(R.id.barcodeImageView);
 
 //        // set text views
 //        UserManager manager = new UserManager();
@@ -61,10 +62,10 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         barcodeResult.setText(barcodeID);
 
         // generate image
-        barcodeImage = barcodeManager.generateBarcode(barcodeID);
+        Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
 
         // set image
-        barcodeImageView.setImageResource(generatedImage);
+        barcodeImageView.setImageResource(barcodeImage);
 
         return view;
     }
