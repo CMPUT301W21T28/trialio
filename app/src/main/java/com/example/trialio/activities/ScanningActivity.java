@@ -97,9 +97,6 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      */
     private void processResult(String text){
         if(isBarcode){
-            Log.d(TAG, String.valueOf(currentUser.getId()));
-            Log.d(TAG, String.valueOf(experiment.getExperimentID()));
-            Log.d(TAG, String.valueOf(result));
             QRCodeGenerator.readBarcode(text, currentUser, experiment, result);
         }else{
             String processed = text;
