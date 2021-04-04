@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -225,20 +226,23 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             }
         }
         Log.d(TAG, "Getting Location Name");
+
+        //working on running the geocoder in a background thread
         Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
+        String regionName = null;
         List<Address> addresses = new ArrayList<>();
         try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        } catch (IOException e) {
-            Log.e(TAG, "Getting Location Name: " +e.getMessage());
-        }
-        String regionName = addresses.get(0).getLocality();
-        if (regionName == null || regionName.length() > 20) {
-            regionName = addresses.get(0).getAdminArea();
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
+            regionName = addresses.get(0).getLocality();
+            if (regionName == null || regionName.length() > 20) {
+                regionName = addresses.get(0).getAdminArea();
                 if (regionName == null || regionName.length() > 20) {
                     regionName = addresses.get(0).getCountryName();
                 }
             }
+        } catch (IOException e) {
+            Log.e(TAG, "Getting Location Name: " +e.getMessage());
+        }
         return regionName;
     }
 
