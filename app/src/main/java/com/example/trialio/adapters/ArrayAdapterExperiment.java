@@ -19,7 +19,8 @@ import com.example.trialio.models.User;
 import java.util.ArrayList;
 
 /**
- * This is an ArrayAdapter which contains an experiment list. Used in MainActivity.
+ * This class inherits from ArrayAdapter and is responsible for adapting a Experiment object into the GUI
+ * ListView item to be displayed on the app screen. This ArrayAdapter is referenced in MainActivity.
  */
 public class    ArrayAdapterExperiment extends ArrayAdapter {
     private Context context;

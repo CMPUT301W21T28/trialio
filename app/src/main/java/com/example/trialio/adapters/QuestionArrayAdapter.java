@@ -18,7 +18,12 @@ import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
-public class QuestionArrayAdapter extends ArrayAdapter {
+/**
+ * This class inherits from ArrayAdapter and is responsible for adapting a Question object into
+ * the GUI ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
+ * QuestionForumActivity.
+ */
+public class QuestionArrayAdapter extends ArrayAdapter<Question> {
 
     private Context context;
     private ArrayList<Question> questionsList;

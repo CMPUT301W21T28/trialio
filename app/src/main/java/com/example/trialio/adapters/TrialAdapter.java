@@ -23,7 +23,9 @@ import com.example.trialio.utils.ExperimentTypeUtility;
 import java.util.ArrayList;
 
 /**
- * This is an ArrayAdapter which contains a trial list. Used in TrialActivity.
+ * This class inherits from ArrayAdapter and is responsible for adapting a Trial object into the GUI
+ * ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
+ * TrialActivity.
  */
 public class TrialAdapter extends ArrayAdapter<Trial> {
     private final String TAG = "ArrayAdapterTrials";

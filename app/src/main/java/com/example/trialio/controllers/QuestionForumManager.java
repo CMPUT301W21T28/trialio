@@ -23,9 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * QuestionForumManager manages Question and Reply Posts for an experiment and is responsible
+ * for the persistence of Post data. This class is used to perform create, read, update and delete
+ * functionality on questions and replies that are to be stored for an experiment. This class
+ * communicates with the Firebase database.
+ */
 public class QuestionForumManager implements Serializable {
 
-    private CollectionReference questionForumCollection;   // does this have to be final ???
+    private final CollectionReference questionForumCollection;   // does this have to be final ???
     private CollectionReference replyForumCollection;
 
     private static final String TAG = "QuestionForumManager";

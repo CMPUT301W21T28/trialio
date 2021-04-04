@@ -12,13 +12,16 @@ import com.google.firebase.installations.FirebaseInstallations;
 import java.util.ArrayList;
 
 /**
- * Handles accesses to the current user for an app instance. This is a utility class that provides
+ * CurrentUserHandler handles accesses to the current user for an app instance. This is a utility class that provides
  * methods to get the state of the User that corresponds to the device the app is running on
  */
 public class CurrentUserHandler {
 
     private static final String TAG = "CurrentUserHandler";
 
+    /**
+     * This interface represents an action to be taken when a User object is fetched.
+     */
     public interface OnUserFetchCallback {
 
         void onUserFetch(User user);

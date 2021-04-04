@@ -11,13 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
 /**
- * This is an ArrayAdapter which contains a list of users. Used in ExperimentSettingsActivity.
+ * This class inherits from ArrayAdapter and is responsible for adapting a User object into the GUI
+ * ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
+ * ExperimentSettingsActivity
  */
-public class ArrayAdapterUsers extends ArrayAdapter {
+public class ArrayAdapterUsers extends ArrayAdapter<String> {
     private Context context;
     private ArrayList<String> ignoredList;
 

@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class manages experiments and handles the persistence of experiment data.
+ * ExperimentManager manages Experiments and is responsible for the persistence of Experiment data.
+ * This class is used to perform create, read, update and delete functionality on Experiments. This
+ * class communicates with the Firebase database.
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
