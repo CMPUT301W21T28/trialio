@@ -101,11 +101,12 @@ public class ExperimentManager {
      * This adds an experiment to the database
      *
      * @param experiment Candidate experiment to add to the database
+     * @return Task indicating the completion of the publish operation
      */
-    public void publishExperiment(Experiment experiment) {
+    public Task<Void> publishExperiment(Experiment experiment) {
         Log.d(TAG, "Adding experiment " + experiment.toString());
         String ID = experiment.getExperimentID();
-        experimentsCollection
+        return experimentsCollection
                 .document(ID)
                 .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -151,6 +152,7 @@ public class ExperimentManager {
                         }
                     } else {
                         Log.d(TAG, "No experiment found with id " + experimentId);
+                        listener.onExperimentFetch(null);
                     }
                 } else {
                     Log.d(TAG, "Experiment fetch failed with " + task.getException());
@@ -202,10 +204,11 @@ public class ExperimentManager {
      *
      * @param experimentId Experiment ID of candidate experiment to edit
      * @param experiment   Candidate edited experiment to set
+     * @return Task that indicates when the edit is complete
      */
-    public void editExperiment(String experimentId, Experiment experiment) {
+    public Task<Void> editExperiment(String experimentId, Experiment experiment) {
         Log.d(TAG, "Editing " + experimentId + "with" + experiment.toString());
-        experimentsCollection
+        return experimentsCollection
                 .document(experimentId)
                 .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -229,7 +232,7 @@ public class ExperimentManager {
      *
      * @param experimentId Experiment ID of the candidate experiment to delete
      */
-    public void unpublishExperiment(String experimentId) {
+    public void deleteExperiment(String experimentId) {
         Log.d(TAG, "Deleting experiment" + experimentId);
         experimentsCollection
                 .document(experimentId)
@@ -335,6 +338,7 @@ public class ExperimentManager {
     /**
      * Compresses an experiment into a Map which can be stored as a Firebase document. This method
      * does not compress the trials ArrayList of the experiment (see TrialManager addTrial method).
+     *
      * @param experiment The experiment to compress.
      * @return Returns the map representing the compressed experiment.
      */
@@ -418,7 +422,7 @@ public class ExperimentManager {
         experiment.getSettings().getRegion().getGeoLocation().setLatitude(latitude);
 
         // set kmRadius in region in settings
-        double kmRadius = (double) data.get(ES_R_KMRADIUS_FIELD);
+        Double kmRadius = (Double) data.get(ES_R_KMRADIUS_FIELD);
         experiment.getSettings().getRegion().setKmRadius(kmRadius);
 
         // set ownerID in settings

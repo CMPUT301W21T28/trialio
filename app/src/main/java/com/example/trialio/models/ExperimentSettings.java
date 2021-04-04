@@ -16,7 +16,11 @@ public class ExperimentSettings implements Serializable {
     /**
      * Constructor for an Experiment
      */
-    public ExperimentSettings() { }
+    public ExperimentSettings() {
+        this.description = "";
+        this.region = new Region();
+        this.ownerID = null;
+    }
 
     /**
      * Constructor for an ExperimentSettings
