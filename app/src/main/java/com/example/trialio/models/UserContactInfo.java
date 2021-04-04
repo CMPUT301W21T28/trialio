@@ -3,7 +3,7 @@ package com.example.trialio.models;
 import java.io.Serializable;
 
 /**
- * This class contains the contact information for a User.
+ * Represents the contact information for a User.
  */
 public class UserContactInfo implements Serializable {
 

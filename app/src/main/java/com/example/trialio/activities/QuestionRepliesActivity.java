@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ReplyArrayAdapter;
+import com.example.trialio.adapters.ReplyAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
@@ -27,9 +27,11 @@ import java.util.List;
 
 
 /**
- * This activity opens an question (w/ details) with all of it's replies. The activity is opened when a question is clicked in the list view from QuestionForumActivity.
+ * This activity opens an question (w/ details) with all of it's replies. The activity is opened
+ * when a question is clicked in the list view from QuestionForumActivity.
+ * <p>
+ * This activity navigates to no other activities
  */
-
 public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener {
     private final Context context = this;
 
@@ -37,7 +39,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
 
     private ArrayList<Reply> replyList;
-    private ReplyArrayAdapter replyAdapter;
+    private ReplyAdapter replyAdapter;
 
 
     private String associatedExperimentID;
@@ -71,7 +73,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         replyList = new ArrayList<>();
-        replyAdapter = new ReplyArrayAdapter(this, replyList);
+        replyAdapter = new ReplyAdapter(this, replyList);
 
         // TODO: do we need this ???
         experimentManager = new ExperimentManager();

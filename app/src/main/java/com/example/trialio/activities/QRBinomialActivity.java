@@ -16,6 +16,9 @@ import com.example.trialio.utils.HomeButtonUtility;
 
 import javax.annotation.Nullable;
 
+/**
+ * This activity provides the interface for creating a Binomial Trial QR code.
+ */
 public class QRBinomialActivity extends AppCompatActivity {
     private Experiment experiment;
     private Switch aSwitch;

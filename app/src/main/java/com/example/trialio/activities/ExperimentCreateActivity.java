@@ -46,6 +46,12 @@ import java.util.Locale;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
+ *
+ * This activity navigates to:
+ * <ul>
+ *  <li>ExperimentActivity</li>
+ *  <li>MainActivity</li>
+ * </ul>
  */
 
 public class ExperimentCreateActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -112,6 +118,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
 
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
+                Switch publishedSwitch = (Switch) findViewById(R.id.published_switch);
 
 
                 //----------------------------------
@@ -124,6 +131,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 // prepare region
                 Region region = new Region();
                 region.setRegionText(editRegion.getText().toString());
+                region.setGeoLocation(regionLocation);
 
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
@@ -141,6 +149,9 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 // prepare open
                 boolean open = openSwitch.isChecked();
 
+                // prepare published
+                boolean published = publishedSwitch.isChecked();
+
                 // prepare minimum number of trials
                 String int_popup = "Please enter a positive integer for minimum number of trials";
                 try {
@@ -157,7 +168,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                                 ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
                                 // create Experiment object
-                                experiment = new Experiment(newID, settings, type, open, numTrials);
+                                experiment = new Experiment(newID, settings, type, open, numTrials, published);
                                 experimentManager.publishExperiment(experiment);
 
                                 Bundle args = new Bundle();

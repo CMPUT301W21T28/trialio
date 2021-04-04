@@ -29,11 +29,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class manages trials and handles the persistence of trial data.
+ * TrialManager manages Trials for an experiment and is responsible for the persistence of Trial
+ * data. This class is used to perform create, read, update and delete functionality on experiment
+ * trials that are uploaded for an experiment. This class communicates with the Firebase database.
  */
 public class TrialManager implements Serializable {
     private final String TAG = "TrialManager";
-    private static final String EXPERIMENT_COLLECTION_PATH = "experiments-v5";
+    private static final String EXPERIMENT_COLLECTION_PATH = "experiments-v6";
     private static final String TRIALS_COLLECTION_PATH = "trials";
 
     private static final String EXPERIMENTERID_FIELD = "experimenterID";

@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Region implements Serializable {
 
     private String regionText;
-    // private Location geoLocation;
+    private Location geoLocation;
     private double kmRadius;
 
     /**
@@ -45,5 +45,21 @@ public class Region implements Serializable {
      */
     public void setKmRadius(double kmRadius) {
         this.kmRadius = kmRadius;
+    }
+
+    /**
+     * Gets the geo location of the experiment.
+     * @return The geo location of the experiment.
+     */
+    public Location getGeoLocation() {
+        return geoLocation;
+    }
+
+    /**
+     * Sets the geo location of the experiment.
+     * @param geoLocation The location to set as the geo location of the experiment.
+     */
+    public void setGeoLocation(Location geoLocation) {
+        this.geoLocation = geoLocation;
     }
 }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.QuestionArrayAdapter;
+import com.example.trialio.adapters.QuestionAdapter;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddQuestionFragment;
@@ -24,6 +24,14 @@ import com.example.trialio.utils.HomeButtonUtility;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This activity displays a list of questions about a given experiment/
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *     <li>QuestionRepliesActivity</li>
+ * </ul>
+ */
 public class QuestionForumActivity extends AppCompatActivity implements AddQuestionFragment.OnFragmentInteractionListener {
 
     private final String TAG = "QuestionForumActivity";
@@ -32,7 +40,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     private Experiment experiment;
     private QuestionForumManager questionForumManager;
     private ArrayList<Question> questionList;
-    private QuestionArrayAdapter questionAdapter;
+    private QuestionAdapter questionAdapter;
 
 
     @Override
@@ -49,7 +57,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         // Initialize attributes for the activity
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         questionList = new ArrayList<>();
-        questionAdapter = new QuestionArrayAdapter(this, questionList);
+        questionAdapter = new QuestionAdapter(this, questionList);
 
         // Set up the adapter for the ListView
         ListView questionsListView = findViewById(R.id.questionForumListView);

@@ -211,14 +211,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_unpublish_experiment"
-            android:textColor="@color/button_dark_grey"
-            android:backgroundTint="@color/special_yellow"
+            android:id="@+id/button_delete_experiment"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="Unpublish"
-            android:layout_marginHorizontal="5dp" />
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="3"
+            android:backgroundTint="@color/special_yellow"
+            android:text="DELETE"
+            android:textColor="@color/button_dark_grey" />
 
         <Switch
             android:id="@+id/switch_isopen_settings"
@@ -228,6 +228,20 @@
             android:layout_height="wrap_content"
 
             android:text="Open"
+            android:fontFamily="monospace"
+            android:textColor="@color/special_yellow"
+
+            android:layout_marginHorizontal="5dp"
+            />
+
+        <Switch
+            android:id="@+id/switch_ispublished_settings"
+
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+
+            android:text="Published"
             android:fontFamily="monospace"
             android:textColor="@color/special_yellow"
 

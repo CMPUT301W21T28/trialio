@@ -32,6 +32,11 @@ public class Experiment implements Serializable {
     private ArrayList<String> keywords;
 
     /**
+     * Boolean representing if the experiment is published or not.
+     */
+    private boolean isPublished;
+
+    /**
      * Constructor for an Experiment
      */
     public Experiment() {
@@ -51,11 +56,12 @@ public class Experiment implements Serializable {
      * @param isOpen         the open/close status of an experiment
      * @param minNumOfTrials the minimum number of trials required for an experiment
      */
-    public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials) {
+    public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials, boolean isPublished) {
         this.experimentID = experimentID;
         this.settings = settings;
         this.trialManager = new TrialManager(experimentID, type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();
+        this.isPublished = isPublished;
         parseKeywords();
     }
 
@@ -150,6 +156,22 @@ public class Experiment implements Serializable {
     public void setKeywords(ArrayList<String> keywords) {
         this.keywords = keywords;
         parseKeywords();
+    }
+
+    /**
+     * This checks if the experiment is published or not.
+     * @return A boolean representing whether or not the experiment is published.
+     */
+    public boolean getIsPublished() {
+        return isPublished;
+    }
+
+    /**
+     * This sets the experiment as either published or unpublished.
+     * @param published The boolean to set as isPublished.
+     */
+    public void setIsPublished(boolean published) {
+        isPublished = published;
     }
 
     /**
