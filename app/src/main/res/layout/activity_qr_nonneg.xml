@@ -257,17 +257,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="357dp" />
 
-            <Button
-                android:id="@+id/btnRegisterBarcode"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                android:text="Register Barcode"
-                android:backgroundTint="@color/special_yellow"
-                android:textColor="@color/black">
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
-            </Button>
+                <EditText
+                    android:id="@+id/txtNonNegBarcodeValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:hint="Enter value here"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/btnRegisterBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:text="Create Barcode"
+                    android:backgroundTint="@color/special_yellow"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
 
 
         </LinearLayout>

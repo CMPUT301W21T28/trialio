@@ -41,11 +41,13 @@ public class QRBinomialActivity extends AppCompatActivity {
     private Button createQR;
     private Boolean isQRSuccess;
     private Boolean isBarcodeSuccess;
+
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+
     private FrameLayout barcodeFrame;
     private FrameLayout qrFrame;
     private Button showQR;
@@ -83,7 +85,6 @@ public class QRBinomialActivity extends AppCompatActivity {
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
 
 
-
         barcodeManager = new BarcodeManager(experiment.getExperimentID());
         barcodeList = new ArrayList<>();
         barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
@@ -91,7 +92,7 @@ public class QRBinomialActivity extends AppCompatActivity {
         listviewBarcode.setAdapter(barcodeAdapter);
 
 
-
+        setExperimentInfo();
         setQRView();
         setOnClickListeners();
     }
@@ -199,8 +200,6 @@ public class QRBinomialActivity extends AppCompatActivity {
 
 
     }
-
-
 
     private void setBarcodeView (){
         barcodeFrame.setVisibility(View.VISIBLE);

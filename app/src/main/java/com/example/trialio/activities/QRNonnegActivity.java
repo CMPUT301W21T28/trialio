@@ -5,32 +5,45 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterBarcode;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QRNonnegActivity extends AppCompatActivity {
     private Button createQR;
     private EditText input;
     private Experiment experiment;
+
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+
     private Button showQR;
     private Button showBarcode;
     private FrameLayout barcodeFrame;
     private FrameLayout qrFrame;
     private Button registerBarcode;
+    private ListView listviewBarcode;
 
+    private ArrayList<String> barcodeList;
+    private ArrayAdapterBarcode barcodeAdapter;
+    private BarcodeManager barcodeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,37 +58,48 @@ public class QRNonnegActivity extends AppCompatActivity {
         qrFrame = findViewById(R.id.QRFrame);
         registerBarcode = findViewById(R.id.btnRegisterBarcode);
 
+        listviewBarcode = findViewById(R.id.listBarcode);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
 
-        // get views
-        experimentDescriptionTextView = findViewById(R.id.qr_description);
-        experimentLocationImageView = findViewById(R.id.qr_location);
-        experimentTypeTextView = findViewById(R.id.qr_text_type);
-        experimentOwnerTextView = findViewById(R.id.qr_text_owner);
-        experimentStatusTextView = findViewById(R.id.qr_text_status);
 
-        // set experiment info
+        barcodeManager = new BarcodeManager(experiment.getExperimentID());
+        barcodeList = new ArrayList<>();
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
 
-        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
-        experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+        listviewBarcode.setAdapter(barcodeAdapter);
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
-            experimentStatusTextView.setText("Open");
-        } else {
-            experimentStatusTextView.setText("Closed");
-        }
 
-        if (!experiment.getSettings().getGeoLocationRequired()) {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
-        } else {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
-        }
-
+        setExperimentInfo();
+        setQRView();
         setOnClickListeners();
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setBarcodeList();
+        setExperimentInfo();
+    }
+
+
+    /**
+     * Sets the questionList and updates the ArrayAdapter of the activity
+     */
+    private void setBarcodeList() {
+        barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
+            @Override
+            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+                Log.w("", "Successfully fetched barcodes");
+                barcodeList.clear();
+                barcodeList.addAll(barcodes);   // TODO: check for errors
+                barcodeAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void setOnClickListeners() {
