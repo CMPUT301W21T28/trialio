@@ -180,8 +180,11 @@ public class ExperimentManager {
                             QuerySnapshot qs = task.getResult();
                             ArrayList<Experiment> experimentList = new ArrayList<>();
                             for (DocumentSnapshot doc : qs.getDocuments()) {
-                                Experiment experiment = extractExperiment(doc);
-                                experimentList.add(experiment);
+                                // if the experiment is published, extract and add it
+                                if ((boolean) doc.get(E_ISPUBLISHED_FIELD)) {
+                                    Experiment experiment = extractExperiment(doc);
+                                    experimentList.add(experiment);
+                                }
                             }
                             listener.onManyExperimentsFetch(experimentList);
                         } else {
