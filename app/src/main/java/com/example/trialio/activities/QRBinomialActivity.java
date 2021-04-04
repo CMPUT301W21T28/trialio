@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -18,11 +19,17 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterBarcode;
 import com.example.trialio.adapters.TrialAdapter;
+import com.example.trialio.controllers.BarcodeManager;
+import com.example.trialio.controllers.QuestionForumManager;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Question;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -47,9 +54,9 @@ public class QRBinomialActivity extends AppCompatActivity {
     private Boolean locationRequired;
     private ListView listviewBarcode;
 
-    private ArrayList<String> BarcodeList;
-    private ArrayAdapterBarcode arrayAdapterBarcode;
-
+    private ArrayList<String> barcodeList;
+    private ArrayAdapterBarcode barcodeAdapter;
+    private BarcodeManager barcodeManager;
 
 
     /**
@@ -71,18 +78,76 @@ public class QRBinomialActivity extends AppCompatActivity {
         registerBarcode = findViewById(R.id.btnRegisterBarcode);
         listviewBarcode = findViewById(R.id.listBarcode);
 
-
-        BarcodeList = new ArrayList<>();
-        arrayAdapterBarcode = new ArrayAdapterBarcode(this, BarcodeList, experiment);
-        listviewBarcode.setAdapter(arrayAdapterBarcode);
-
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
-        setExperimentInfo();
+
+
+
+        barcodeManager = new BarcodeManager(experiment.getExperimentID());
+        barcodeList = new ArrayList<>();
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
+
+        listviewBarcode.setAdapter(barcodeAdapter);
+
+
+
         setQRView();
         setOnClickListeners();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setBarcodeList();
+        setExperimentInfo();
+    }
+
+
+    /**
+     * Sets the questionList and updates the ArrayAdapter of the activity
+     */
+    private void setBarcodeList() {
+        barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
+            @Override
+            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+                Log.w("", "Successfully fetched barcodes");
+                barcodeList.clear();
+                barcodeList.addAll(barcodes);   // TODO: check for errors
+                barcodeAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
+    private void setExperimentInfo(){
+        // get views
+        experimentDescriptionTextView = findViewById(R.id.qr_description);
+        experimentLocationImageView = findViewById(R.id.qr_location);
+        experimentTypeTextView = findViewById(R.id.qr_text_type);
+        experimentOwnerTextView = findViewById(R.id.qr_text_owner);
+        experimentStatusTextView = findViewById(R.id.qr_text_status);
+
+        // set experiment info
+
+        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
+        experimentTypeTextView.setText(experiment.getTrialManager().getType());
+        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            experimentStatusTextView.setText("Open");
+        } else {
+            experimentStatusTextView.setText("Closed");
+        }
+
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
+    }
+
 
 
 
@@ -135,32 +200,7 @@ public class QRBinomialActivity extends AppCompatActivity {
 
     }
 
-    private void setExperimentInfo(){
-        // get views
-        experimentDescriptionTextView = findViewById(R.id.qr_description);
-        experimentLocationImageView = findViewById(R.id.qr_location);
-        experimentTypeTextView = findViewById(R.id.qr_text_type);
-        experimentOwnerTextView = findViewById(R.id.qr_text_owner);
-        experimentStatusTextView = findViewById(R.id.qr_text_status);
 
-        // set experiment info
-
-        experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
-        experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
-
-        if ( experiment.getTrialManager().getIsOpen() ) {
-            experimentStatusTextView.setText("Open");
-        } else {
-            experimentStatusTextView.setText("Closed");
-        }
-
-        if (!experiment.getSettings().getGeoLocationRequired()) {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
-        } else {
-            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
-        }
-    }
 
     private void setBarcodeView (){
         barcodeFrame.setVisibility(View.VISIBLE);
