@@ -13,7 +13,7 @@ public class Region implements Serializable {
     private Double kmRadius;
 
     public Region() {
-        this.regionText = null;
+        this.regionText = "";
         this.geoLocation = new Location();
         this.kmRadius = null;
     }

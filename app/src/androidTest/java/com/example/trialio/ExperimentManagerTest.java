@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -103,7 +104,20 @@ public class ExperimentManagerTest {
         CountDownLatch lock = new CountDownLatch(initTestExperimentIds.size());
         ExperimentManager experimentManager = new ExperimentManager(testCollection);
         for (String id : initTestExperimentIds) {
-            Experiment experiment = new Experiment(id, ExperimentTypeUtility.getBinomialType());
+            ExperimentSettings settings = new ExperimentSettings(
+                "mock experiment",
+                new Region("region"),
+                "owner",
+                true
+            );
+            Experiment experiment = new Experiment(
+                id,
+                settings,
+                ExperimentTypeUtility.getCountType(),
+                true,
+                1,
+                true
+            );
             experimentManager.publishExperiment(experiment);
         }
         return experimentManager;
@@ -183,8 +197,26 @@ public class ExperimentManagerTest {
     }
 
     @Test
-    public void testSetOnExperimentFetchListener() {
-        fail();
+    public void testSetOnExperimentFetchListener() throws InterruptedException {
+        ExperimentManager em = mockExperimentManager();
+
+        // Get an experiment
+        CountDownLatch getLock = new CountDownLatch(1);
+        String expId = initTestExperimentIds.get(0);
+        final Experiment[] fetchedExperimentHolder = new Experiment[1];
+        em.setOnExperimentFetchListener(expId, new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment experiment) {
+                fetchedExperimentHolder[0] = experiment;
+                getLock.countDown();
+            }
+        });
+
+        // Wait fot experiment fetch to complete, then check the fetch was correct
+        getLock.await(10, TimeUnit.SECONDS);
+        Experiment experiment = fetchedExperimentHolder[0];
+        assertNotNull(experiment);
+        assertEquals(expId, experiment.getExperimentID());
     }
 
     @Test

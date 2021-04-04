@@ -150,6 +150,7 @@ public class ExperimentManager {
                         }
                     } else {
                         Log.d(TAG, "No experiment found with id " + experimentId);
+                        listener.onExperimentFetch(null);
                     }
                 } else {
                     Log.d(TAG, "Experiment fetch failed with " + task.getException());
@@ -417,7 +418,7 @@ public class ExperimentManager {
         experiment.getSettings().getRegion().getGeoLocation().setLatitude(latitude);
 
         // set kmRadius in region in settings
-        double kmRadius = (double) data.get(ES_R_KMRADIUS_FIELD);
+        Double kmRadius = (Double) data.get(ES_R_KMRADIUS_FIELD);
         experiment.getSettings().getRegion().setKmRadius(kmRadius);
 
         // set ownerID in settings
