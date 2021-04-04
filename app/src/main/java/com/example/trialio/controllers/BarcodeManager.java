@@ -100,7 +100,7 @@ public class BarcodeManager implements Serializable {
 
     public void createBarcode(String barcodeString) {
         Map<String, Object> newBarcode = new HashMap<>();
-        newBarcode.put(barcodeString, "Barcode");
+        newBarcode.put("Barcode Info", barcodeString);
 
         Log.d(TAG, "Posting barcode string " + barcodeString);
         barcodeCollection
@@ -160,7 +160,7 @@ public class BarcodeManager implements Serializable {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        String barcode = doc.getString("barcodeID");
+                        String barcode = extractBarcodeDocument(doc);
 
                         listener.onBarcodeFetch(barcode);
                         Log.d(TAG, "Barcode fetched successfully.");
@@ -208,6 +208,12 @@ public class BarcodeManager implements Serializable {
                         }
                     }
                 });
+    }
+
+    private String extractBarcodeDocument(DocumentSnapshot document) {
+        // TODO custom mapping here
+        String barcodeInfo = document.getString("Barcode Info");
+        return barcodeInfo;
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
