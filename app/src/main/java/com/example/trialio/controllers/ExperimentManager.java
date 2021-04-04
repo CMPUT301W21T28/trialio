@@ -202,10 +202,11 @@ public class ExperimentManager {
      *
      * @param experimentId Experiment ID of candidate experiment to edit
      * @param experiment   Candidate edited experiment to set
+     * @return Task that indicates when the edit is complete
      */
-    public void editExperiment(String experimentId, Experiment experiment) {
+    public Task<Void> editExperiment(String experimentId, Experiment experiment) {
         Log.d(TAG, "Editing " + experimentId + "with" + experiment.toString());
-        experimentsCollection
+        return experimentsCollection
                 .document(experimentId)
                 .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -335,6 +336,7 @@ public class ExperimentManager {
     /**
      * Compresses an experiment into a Map which can be stored as a Firebase document. This method
      * does not compress the trials ArrayList of the experiment (see TrialManager addTrial method).
+     *
      * @param experiment The experiment to compress.
      * @return Returns the map representing the compressed experiment.
      */

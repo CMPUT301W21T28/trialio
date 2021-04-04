@@ -246,8 +246,67 @@ public class ExperimentManagerTest {
     }
 
     @Test
-    public void testEditExperiment() {
-        fail();
+    public void testEditExperiment() throws InterruptedException {
+        ExperimentManager userManager = mockExperimentManager();
+        String newEmail = "email@email.com";
+        String newPhone = "123456789";
+
+        // First get Experiment that will be edited
+        String expId = initTestExperimentIds.get(1);
+        CountDownLatch prepLock = new CountDownLatch(1);
+        Experiment[] fetchedExpHolder = new Experiment[1];
+        fetchedExpHolder[0] = null;
+
+        userManager.setOnExperimentFetchListener(expId, new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment experiment) {
+                fetchedExpHolder[0] = experiment;
+                prepLock.countDown();
+            }
+        });
+
+        // Wait for user fetch to complete, then check if values of user are as expected
+        prepLock.await(5, TimeUnit.SECONDS);
+        Experiment exp = fetchedExpHolder[0];
+        assertNotNull(exp);
+        assertEquals(expId, exp.getExperimentID());
+
+        // Change values of the user, then update in the system
+        exp.getSettings().setDescription("this is a new description");
+        exp.getTrialManager().setMinNumOfTrials(10);
+        exp.setIsPublished(false);
+
+        CountDownLatch updateLock = new CountDownLatch(1);
+        userManager.editExperiment(expId, exp).addOnCompleteListener(task -> updateLock.countDown());
+        updateLock.await(5, TimeUnit.SECONDS);
+
+        // Get the user again and make sure updates persist
+        CountDownLatch getLock = new CountDownLatch(1);
+        fetchedExpHolder[0] = null;
+        userManager.setOnExperimentFetchListener(expId, new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment experiment) {
+                fetchedExpHolder[0] = experiment;
+                getLock.countDown();
+            }
+        });
+
+        // Wait for experiment fetch to complete, then check if values of user are as expected
+        getLock.await(5, TimeUnit.SECONDS);
+        Experiment updatedExp = fetchedExpHolder[0];
+        assertNotNull(updatedExp);
+        assertEquals(
+                exp.getSettings().getDescription(),
+                updatedExp.getSettings().getDescription()
+        );
+        assertEquals(
+                exp.getTrialManager().getMinNumOfTrials(),
+                updatedExp.getTrialManager().getMinNumOfTrials()
+        );
+        assertEquals(
+                exp.getIsPublished(),
+                updatedExp.getIsPublished()
+        );
     }
 
     @Test
