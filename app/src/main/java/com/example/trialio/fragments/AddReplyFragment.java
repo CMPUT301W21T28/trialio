@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -17,15 +16,9 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trialio.R;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.QuestionForumManager;
-import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddReplyFragment extends DialogFragment {
 
@@ -62,7 +55,7 @@ public class AddReplyFragment extends DialogFragment {
                         String replyBody = replyBodyInput.getText().toString();
                         QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID);
 
-                        String newReplyID = questionForumManager.getNewReplyID(associatedQuestion.getPostID());   // TODO error check this a lot
+                        String newReplyID = questionForumManager.getNewReplyID(associatedQuestion.getPostId());   // TODO error check this a lot
 
                         //confirm update to user profile
                         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {

@@ -32,8 +32,10 @@ import javax.annotation.Nullable;
 
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
+ * <p>
+ * This activity navigates to no other activities.
  */
-public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener{
+public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
 
@@ -56,6 +58,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * the On create the takes in the saved instance from the experiment activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -102,7 +105,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             }
         });
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
+        if (experiment.getTrialManager().getIsOpen()) {
             experimentStatusTextView.setText("Open");
         } else {
             experimentStatusTextView.setText("Closed");
@@ -189,7 +192,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
-                                assert(false);
+                                assert (false);
                                 break;
                         }
                         return false;
@@ -238,6 +241,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * This removes a username from the ignore list of the experiment.
+     *
      * @param username The string of the userID to remove from the ignore list of the experiment.
      */
     public void menuUnignoreUsername(String username) {

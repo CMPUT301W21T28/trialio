@@ -23,6 +23,14 @@ import com.example.trialio.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This activity displays a list of questions about a given experiment/
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *     <li>QuestionRepliesActivity</li>
+ * </ul>
+ */
 public class QuestionForumActivity extends AppCompatActivity implements AddQuestionFragment.OnFragmentInteractionListener {
 
     private final String TAG = "QuestionForumActivity";
@@ -125,7 +133,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 args.putString("experimentID", associatedExperimentID);
                 args.putSerializable("question", tempQuestion);
 
-                Log.w("QUESTION ID: ", tempQuestion.getPostID());
+                Log.w("QUESTION ID: ", tempQuestion.getPostId());
                 Log.w("QUESTION USERNAME: ", tempQuestion.getUserId());
 
                 intent.putExtras(args);

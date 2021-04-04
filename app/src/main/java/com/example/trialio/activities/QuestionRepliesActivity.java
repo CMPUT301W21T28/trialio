@@ -26,9 +26,11 @@ import java.util.List;
 
 
 /**
- * This activity opens an question (w/ details) with all of it's replies. The activity is opened when a question is clicked in the list view from QuestionForumActivity.
+ * This activity opens an question (w/ details) with all of it's replies. The activity is opened
+ * when a question is clicked in the list view from QuestionForumActivity.
+ * <p>
+ * This activity navigates to no other activities
  */
-
 public class QuestionRepliesActivity extends AppCompatActivity implements AddReplyFragment.OnFragmentInteractionListener {
     private final Context context = this;
 
@@ -65,7 +67,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         selectedQuestion = (Question) bundle.getSerializable("question");
         //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
         associatedExperimentID = bundle.getString("experimentID");
-        associatedQuestionID = selectedQuestion.getPostID();
+        associatedQuestionID = selectedQuestion.getPostId();
 
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
@@ -173,7 +175,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     @Override
     public void onOkPressed(Reply newReply) {
         // Log.d(TAG, "Reply");
-        questionForumManager.createReply(selectedQuestion.getPostID(), newReply);
+        questionForumManager.createReply(selectedQuestion.getPostId(), newReply);
 
         setReplyList();
     }

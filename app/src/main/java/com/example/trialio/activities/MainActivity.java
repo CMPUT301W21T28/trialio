@@ -34,6 +34,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This activity is the main entry point into the application and displays a list of available
+ * experiments which can be toggled to show different experiment lists.
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *     <li>ExperimentActivity</li>
+ *     <li>CreateExperimentActivity</li>
+ *     <li>ViewUserActivity</li>
+ * </ul>
+ */
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 

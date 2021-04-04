@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
-import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,9 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * QuestionForumManager manages Question and Reply Posts for an experiment and is responsible
@@ -124,7 +121,7 @@ public class QuestionForumManager implements Serializable {
     public void createQuestion (Question newQuestion) {
         Log.d(TAG, "Posting question " + newQuestion.getTitle());
         questionForumCollection
-                .document(newQuestion.getPostID()).set(newQuestion)    //TODO ERROR HERE
+                .document(newQuestion.getPostId()).set(newQuestion)    //TODO ERROR HERE
 //                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
 //                    @Override
 //                    public void onSuccess(DocumentReference documentReference) {
