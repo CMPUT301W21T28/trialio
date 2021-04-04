@@ -59,6 +59,11 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
 
         // set the home button
         HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
+
+        // need to set this here so we don't have to wait too long for the listener (for UI tests)
+        setFields();            // set fields
+        setVisibility();        // set visibility
+        setOnClickListeners();  // set listeners
     }
 
     @Override

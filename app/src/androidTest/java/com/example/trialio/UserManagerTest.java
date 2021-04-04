@@ -11,13 +11,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -32,10 +31,11 @@ import static org.junit.Assert.fail;
  */
 public class UserManagerTest {
 
-    private final String testCollection = "user-test";
+    private static final String testCollection = "test-um";
     private static final ArrayList<String> initTestUserIds = new ArrayList<>();
     private static final ArrayList<String> initTestUsernames = new ArrayList<>();
     private static final ArrayList<String> unInitTestUserIds = new ArrayList<>();
+    private static final int ASYNC_DELAY = 10;
 
     /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
      * Martin, https://stackoverflow.com/users/187492/martin, 2009-12-02,
@@ -71,7 +71,7 @@ public class UserManagerTest {
                 lock.countDown();
             });
         }
-        lock.await(5, TimeUnit.SECONDS);
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         return userManager;
     }
 
@@ -88,7 +88,7 @@ public class UserManagerTest {
      * Deletes all test users in the database
      */
     @After
-    public void tearDown() throws InterruptedException {
+    public void clean() throws Exception {
         // Aggregate the ids of the documents to delete
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<String> allIds = new ArrayList<>();
@@ -112,7 +112,39 @@ public class UserManagerTest {
                     }
                 });
 
-        lock.await(5000, TimeUnit.MILLISECONDS);
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Deletes all test users in the database
+     */
+    @BeforeClass
+    @AfterClass
+    public static void tearDown() throws Exception {
+        // Aggregate the ids of the documents to delete
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<String> allIds = new ArrayList<>();
+        allIds.addAll(initTestUserIds);
+        allIds.addAll(unInitTestUserIds);
+
+        // Run delete query on all ids
+        /* Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen,
+         * "How to delete document from firestore using where clause", 2017-11-18, CC BY-SA 3.0
+         * https://stackoverflow.com/a/47180442/15048024
+         */
+        CountDownLatch lock = new CountDownLatch(allIds.size());
+        db.collection(testCollection).whereIn("id", allIds).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot result = task.getResult();
+                        for (DocumentSnapshot doc : result.getDocuments()) {
+                            doc.getReference().delete().addOnCompleteListener(task1 -> lock.countDown());
+                        }
+                    }
+                });
+
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
     }
 
     /**
@@ -134,7 +166,7 @@ public class UserManagerTest {
         assertNotNull(newUser.getUsername());
 
         // Wait until user create task completes
-        createLock.await(10, TimeUnit.SECONDS);
+        createLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Fetch the created user
         CountDownLatch readLock = new CountDownLatch(1);
@@ -160,7 +192,7 @@ public class UserManagerTest {
                 });
 
         // Wait until user fetch is complete
-        readLock.await(10, TimeUnit.SECONDS);
+        readLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
     }
 
     /**
@@ -183,7 +215,7 @@ public class UserManagerTest {
         });
 
         // Wait for user fetch to complete, then check the fetch was correct
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
         assertEquals(userId, user.getId());
@@ -214,7 +246,7 @@ public class UserManagerTest {
         });
 
         // Wait for user fetch to complete, then check if values of user are as expected
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
         assertEquals(username, user.getUsername());
@@ -246,7 +278,7 @@ public class UserManagerTest {
         });
 
         // Wait for user fetch to complete, then check if values of user are as expected
-        prepLock.await(5, TimeUnit.SECONDS);
+        prepLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
         assertEquals(username, user.getUsername());
@@ -258,7 +290,7 @@ public class UserManagerTest {
 
         CountDownLatch updateLock = new CountDownLatch(1);
         userManager.updateUser(user).addOnCompleteListener(task -> updateLock.countDown());
-        updateLock.await(5, TimeUnit.SECONDS);
+        updateLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Get the user again and make sure updates persist
         CountDownLatch getLock = new CountDownLatch(1);
@@ -272,7 +304,7 @@ public class UserManagerTest {
         });
 
         // Wait for user fetch to complete, then check if values of user are as expected
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User updatedUser = fetchedUserHolder[0];
         assertNotNull(updatedUser);
         assertEquals(user.getUsername(), updatedUser.getUsername());
@@ -299,7 +331,7 @@ public class UserManagerTest {
                 getLock.countDown();
             }
         });
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
         assertEquals(username, user.getUsername());
@@ -312,7 +344,7 @@ public class UserManagerTest {
                 deleteLock.countDown();
             }
         });
-        deleteLock.await(5, TimeUnit.SECONDS);
+        deleteLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Assert the user was actually deleted
         CountDownLatch afterLock = new CountDownLatch(1);
@@ -324,7 +356,7 @@ public class UserManagerTest {
                 afterLock.countDown();
             }
         });
-        afterLock.await(5, TimeUnit.SECONDS);
+        afterLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         User after = fetchedUserHolder[0];
         assertNull(after);
@@ -349,7 +381,7 @@ public class UserManagerTest {
                 getLock.countDown();
             }
         });
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User user = fetchedUserHolder[0];
         assertNotNull(user);
         assertEquals(username, user.getUsername());
@@ -357,7 +389,7 @@ public class UserManagerTest {
         // Change the username of the user
         CountDownLatch transferLock = new CountDownLatch(1);
         userManager.transferUsername(user, newUsername).addOnCompleteListener(task -> transferLock.countDown());
-        transferLock.await(5, TimeUnit.SECONDS);
+        transferLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Fetch from the new username should return the user
         fetchedUserHolder[0] = null;
@@ -369,7 +401,7 @@ public class UserManagerTest {
                 newLock.countDown();
             }
         });
-        newLock.await(5, TimeUnit.SECONDS);
+        newLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User newUser = fetchedUserHolder[0];
         assertNotNull(newUser);
         assertEquals(newUser.getUsername(), newUsername);
@@ -383,7 +415,7 @@ public class UserManagerTest {
                 oldLock.countDown();
             }
         });
-        oldLock.await(5, TimeUnit.SECONDS);
+        oldLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         User oldUser = fetchedUserHolder[0];
         assertNull(oldUser);
     }
@@ -417,7 +449,7 @@ public class UserManagerTest {
                 }
             }
         });
-        setLock.await(5, TimeUnit.SECONDS);
+        setLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         assertNotNull(fetchedUserHolder[0]);
         assertEquals(username, fetchedUserHolder[0].getUsername());
 
@@ -434,7 +466,7 @@ public class UserManagerTest {
         // Update the copied object
         operationNum[0] = 2;
         userManager.updateUser(copy);
-        updateLock.await(5, TimeUnit.SECONDS);
+        updateLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Assert changes observed in original object
         assertNotNull(fetchedUserHolder[0]);
