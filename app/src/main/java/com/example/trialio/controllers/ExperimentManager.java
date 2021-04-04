@@ -99,11 +99,12 @@ public class ExperimentManager {
      * This adds an experiment to the database
      *
      * @param experiment Candidate experiment to add to the database
+     * @return Task indicating the completion of the publish operation
      */
-    public void publishExperiment(Experiment experiment) {
+    public Task<Void> publishExperiment(Experiment experiment) {
         Log.d(TAG, "Adding experiment " + experiment.toString());
         String ID = experiment.getExperimentID();
-        experimentsCollection
+        return experimentsCollection
                 .document(ID)
                 .set(compressExperiment(experiment))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
