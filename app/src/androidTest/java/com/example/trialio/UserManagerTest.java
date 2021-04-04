@@ -11,13 +11,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -88,7 +87,39 @@ public class UserManagerTest {
      * Deletes all test users in the database
      */
     @After
-    public void tearDown() throws InterruptedException {
+    public void clean() throws Exception {
+        // Aggregate the ids of the documents to delete
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<String> allIds = new ArrayList<>();
+        allIds.addAll(initTestUserIds);
+        allIds.addAll(unInitTestUserIds);
+
+        // Run delete query on all ids
+        /* Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen,
+         * "How to delete document from firestore using where clause", 2017-11-18, CC BY-SA 3.0
+         * https://stackoverflow.com/a/47180442/15048024
+         */
+        CountDownLatch lock = new CountDownLatch(allIds.size());
+        db.collection(testCollection).whereIn("id", allIds).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot result = task.getResult();
+                        for (DocumentSnapshot doc : result.getDocuments()) {
+                            doc.getReference().delete().addOnCompleteListener(task1 -> lock.countDown());
+                        }
+                    }
+                });
+
+        lock.await(5000, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Deletes all test users in the database
+     */
+    @BeforeClass
+    @AfterClass
+    public static void tearDown() throws Exception {
         // Aggregate the ids of the documents to delete
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<String> allIds = new ArrayList<>();

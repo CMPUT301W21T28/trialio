@@ -37,13 +37,27 @@ public class Experiment implements Serializable {
     private boolean isPublished;
 
     /**
-     * Constructor for an Experiment
+     * No-argument constructor for an Experiment
      */
     public Experiment() {
         this.experimentID = null;
         this.settings = new ExperimentSettings();
         this.trialManager = new TrialManager();
         this.keywords = new ArrayList<>();
+        parseKeywords();
+    }
+
+    /**
+     * Constructor for an Experiment
+     * @param experimentID   the unique identifier of an experiment
+     * @param type           the type for an experiment
+     */
+    public Experiment(String experimentID, String type) {
+        this.experimentID = experimentID;
+        this.settings = new ExperimentSettings();
+        this.trialManager = new TrialManager(experimentID, type, true, 1);
+        this.keywords = new ArrayList<String>();
+        this.isPublished = true;
         parseKeywords();
     }
 
