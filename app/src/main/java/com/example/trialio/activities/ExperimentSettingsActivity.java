@@ -40,8 +40,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private ExperimentManager experimentManager;
     private Experiment experiment;
     private UserManager userManager;
-    private Button unpublishButton;
+    private Button deleteButton;
     private Switch isOpenSwitch;
+    private Switch isPublishedSwitch;
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
     private ArrayAdapterUsers ignoredAdapter;
@@ -85,8 +86,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         experimentOwnerTextView = findViewById(R.id.settings_text_owner);
         experimentStatusTextView = findViewById(R.id.settings_text_status);
 
-        unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
+        deleteButton = (Button) findViewById(R.id.button_delete_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
+        isPublishedSwitch = (Switch) findViewById(R.id.switch_ispublished_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
 
@@ -130,6 +132,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      */
     public void setFields() {
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
+        isPublishedSwitch.setChecked(experiment.isPublished());
     }
 
     /**
@@ -137,7 +140,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      */
     public void setOnClickListeners() {
 
-        // when the switch is switched onCheckedChanged is called
+        // when the isOpen switch is switched onCheckedChanged is called
         isOpenSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -153,8 +156,24 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             }
         });
 
+        // when the isPublished switch is switched onCheckedChanged is called
+        isPublishedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                // get the most updated experiment from firebase, update it's isPublished field, and set it back in firebase
+                experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                    @Override
+                    public void onExperimentFetch(Experiment new_experiment) {
+                        experiment = new_experiment;
+                        experiment.setPublished(b);
+                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    }
+                });
+            }
+        });
+
         // remove the experiment from firebase and return to the home page
-        unpublishButton.setOnClickListener(new View.OnClickListener() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 experimentManager.unpublishExperiment(experiment.getExperimentID());

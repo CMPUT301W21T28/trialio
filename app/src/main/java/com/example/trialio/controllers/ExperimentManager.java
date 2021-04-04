@@ -32,6 +32,7 @@ public class ExperimentManager {
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
+    private static final String E_ISPUBLISHED_FIELD = "isPublished";
     private static final String ES_DESCRIPTION_FIELD = "description";
     private static final String ES_R_REGIONTEXT_FIELD = "regionText";
     private static final String ES_R_KMRADIUS_FIELD = "kmRadius";
@@ -337,6 +338,7 @@ public class ExperimentManager {
         // set Experiment fields
         data.put(E_EXPERIMENTID_FIELD, experiment.getExperimentID());
         data.put(E_KEYWORDS_FIELD, experiment.getKeywords());
+        data.put(E_ISPUBLISHED_FIELD, experiment.isPublished());
 
         // set ExperimentSettings fields
         data.put(ES_DESCRIPTION_FIELD, experiment.getSettings().getDescription());
@@ -373,6 +375,10 @@ public class ExperimentManager {
         String experimentID = (String) data.get(E_EXPERIMENTID_FIELD);
         assert experimentID != null;
         experiment.setExperimentID(experimentID);
+
+        // set isPublished
+        boolean isPublished = (boolean) data.get(E_ISPUBLISHED_FIELD);
+        experiment.setPublished(isPublished);
 
         // set settings
         experiment.setSettings(new ExperimentSettings());
