@@ -6,12 +6,30 @@ import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+/**
+ * This class follows the Command design pattern and represents the tasks to be
+ * performed to change the username of a given user in the system.
+ */
 public class ChangeUsernameCommand {
 
+    /**
+     * The user that requested a username change
+     */
     private final User user;
+
+    /**
+     * The requested username for the user
+     */
     private final String requestedUsername;
+
+    /**
+     * The receiving listener that indicates the success of the operation.
+     */
     private final OnResultListener listener;
 
+    /**
+     * Interface which represent the receiver for the invoker when the command finished execution
+     */
     public interface OnResultListener {
         public void onResult(Boolean isSuccess);
     }

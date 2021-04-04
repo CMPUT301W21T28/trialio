@@ -25,12 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manages Users in the system and is responsible for the persistence of User data. This class
+ * UserManager manages Users in the system and is responsible for the persistence of User data. This class
  * is used to perform create, read, update and delete functionality on Users which are to be
  * maintained by the system. This class communicates with the Firebase database where User data is
  * maintained.
- * <p>
- * Version 2.0.1
  */
 public class UserManager {
     private static final String TAG = "UserManager";

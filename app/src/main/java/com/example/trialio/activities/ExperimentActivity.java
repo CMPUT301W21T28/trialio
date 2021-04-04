@@ -47,7 +47,22 @@ import com.example.trialio.utils.StatisticsUtility;
 import java.util.ArrayList;
 
 /**
- * This activity opens an experiment when clicked from the main activity, and displays information about it
+ * This activity displays overview experiment information and allows for the user to navigate to other
+ * activities to access related experiment information
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *  <li>TrailActivity</li>
+ *  <li>QuestionForumActivity</li>
+ *  <li>ScanningActivity</li>
+ *  <li>StatActivity</li>
+ *  <li>ExperimentSettingsActivity</li>
+ *  <li>MapViewActivity</li>
+ *  <li>QRBinomialActivity</li>
+ *  <li>QRCountActivity</li>
+ *  <li>QRNonnegActivity</li>
+ *  <li>QRMeasurementActivity</li>
+ * </ul>
  */
 
 public class ExperimentActivity extends AppCompatActivity implements NonNegativeTrialFragment.OnFragmentInteractionListener, BinomialTrialFragment.OnFragmentInteractionListener, CountTrialFragment.OnFragmentInteractionListener, MeasurementTrialFragment.OnFragmentInteractionListener {

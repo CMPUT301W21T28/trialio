@@ -10,6 +10,9 @@ import com.example.trialio.R;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 
+/**
+ * This activity provides the interface for creating a Count Trial QR code.
+ */
 public class QRCountActivity extends AppCompatActivity {
     private Button createQR;
     private Experiment experiment;

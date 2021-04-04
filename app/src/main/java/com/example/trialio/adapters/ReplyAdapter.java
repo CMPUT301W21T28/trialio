@@ -17,12 +17,17 @@ import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 
-public class ReplyArrayAdapter extends ArrayAdapter {
+/**
+ * This class inherits from ArrayAdapter and is responsible for adapting a Reply object into the GUI
+ * ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
+ * QuestionRepliesActivity.
+ */
+public class ReplyAdapter extends ArrayAdapter<Reply> {
 
     private Context context;
     private ArrayList<Reply> replyList;
 
-    public ReplyArrayAdapter(Context context, ArrayList<Reply> replyList) {
+    public ReplyAdapter(Context context, ArrayList<Reply> replyList) {
         super(context, 0, replyList);
         this.replyList = replyList;
         this.context = context;

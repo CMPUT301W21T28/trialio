@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Represents a Question that an experimenter can ask about an experiment.
+ */
 public class Question extends Post implements Serializable {
     private String title;
     private ArrayList<Reply> replies;
@@ -13,11 +16,6 @@ public class Question extends Post implements Serializable {
     public Question () {
 
     }
-
-//    public Question(String postID, String body, User user, String title) {
-//        super(postID, body, user);
-//        this.title = title;
-//    }
 
     public Question(String postID, String body, String userId, String title) {
         super(postID, body, userId);
