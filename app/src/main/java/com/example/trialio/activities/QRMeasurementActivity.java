@@ -5,16 +5,23 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterBarcode;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QRMeasurementActivity extends AppCompatActivity {
     private Button createQR;
@@ -33,6 +40,13 @@ public class QRMeasurementActivity extends AppCompatActivity {
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
 
+    private ListView listviewBarcode;
+
+    private ArrayList<String> barcodeList;
+    private ArrayAdapterBarcode barcodeAdapter;
+    private BarcodeManager barcodeManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +59,47 @@ public class QRMeasurementActivity extends AppCompatActivity {
         registerBarcode = findViewById(R.id.btnRegisterBarcode);
         input = findViewById(R.id.txtMeasurementQRValue);
         Warning = findViewById(R.id.txtWarning);
+        listviewBarcode = findViewById(R.id.listBarcode);
+
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
+
+        barcodeManager = new BarcodeManager(experiment.getExperimentID());
+        barcodeList = new ArrayList<>();
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
+
+        listviewBarcode.setAdapter(barcodeAdapter);
+
         setExperimentInfo();
         setQRView();
         setOnClickListeners();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setBarcodeList();
+        setExperimentInfo();
+    }
+
+    /**
+     * Sets the questionList and updates the ArrayAdapter of the activity
+     */
+    private void setBarcodeList() {
+        barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
+            @Override
+            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+                Log.w("", "Successfully fetched barcodes");
+                barcodeList.clear();
+                barcodeList.addAll(barcodes);   // TODO: check for errors
+                barcodeAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
 
 
     public void setOnClickListeners() {

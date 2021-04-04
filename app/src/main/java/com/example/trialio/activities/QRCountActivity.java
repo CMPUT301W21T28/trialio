@@ -5,6 +5,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -19,6 +20,7 @@ import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class QRCountActivity extends AppCompatActivity {
     private Button createQR;
@@ -48,6 +50,9 @@ public class QRCountActivity extends AppCompatActivity {
         showBarcode = findViewById(R.id.btnshowBarcode);
         barcodeFrame = findViewById(R.id.barcodeFrame);
         qrFrame = findViewById(R.id.QRFrame);
+        listviewBarcode = findViewById(R.id.listBarcode);
+
+
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
@@ -60,10 +65,35 @@ public class QRCountActivity extends AppCompatActivity {
         listviewBarcode.setAdapter(barcodeAdapter);
 
 
-
+        setExperimentInfo();
         setQRView();
         setOnClickListeners();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setBarcodeList();
+        setExperimentInfo();
+    }
+
+
+    /**
+     * Sets the questionList and updates the ArrayAdapter of the activity
+     */
+    private void setBarcodeList() {
+        barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
+            @Override
+            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+                Log.w("", "Successfully fetched barcodes");
+                barcodeList.clear();
+                barcodeList.addAll(barcodes);   // TODO: check for errors
+                barcodeAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 
     public void setOnClickListeners() {
         createQR.setOnClickListener(new View.OnClickListener() {
