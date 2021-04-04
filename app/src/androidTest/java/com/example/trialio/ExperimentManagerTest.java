@@ -227,7 +227,7 @@ public class ExperimentManagerTest {
         // Get an experiment
         CountDownLatch getLock = new CountDownLatch(1);
         final Experiment[] fetchedExperimentHolder = new Experiment[2];
-        em.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+        em.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(List<Experiment> experiments) {
                 assertEquals(2, experiments.size());
