@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.example.trialio.R;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.utils.HomeButtonUtility;
 
 /**
  * This activity provides the interface for creating a Count Trial QR code.
@@ -26,6 +27,9 @@ public class QRCountActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
         setOnClickListeners();
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     public void setOnClickListeners() {

@@ -18,7 +18,7 @@
 
 
         <ImageButton
-            android:id="@+id/btnLogo"
+            android:id="@+id/button_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"

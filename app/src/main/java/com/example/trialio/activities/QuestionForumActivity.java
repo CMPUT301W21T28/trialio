@@ -19,6 +19,7 @@ import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,8 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         // Set up onClick listeners
         setUpOnClickListeners();
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
