@@ -27,7 +27,7 @@ public class CurrentUserHandler {
     /**
      * The singleton instance that is initialized on startup
      */
-    private static final CurrentUserHandler instance = new CurrentUserHandler();
+    private static CurrentUserHandler instance = new CurrentUserHandler();
 
     /**
      * The current user for the application instance
@@ -89,6 +89,13 @@ public class CurrentUserHandler {
      */
     public static CurrentUserHandler getInstance() {
         return instance;
+    }
+
+    /**
+     * Forces the CurrentUserHandler to fetch the current user again from scratch
+     */
+    public void refresh() {
+        instance = new CurrentUserHandler();
     }
 
     /**

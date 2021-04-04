@@ -37,6 +37,7 @@ public class ChangeUsernameCommand {
             @Override
             public void onSuccess(Void aVoid) {
                 // Username change was successful
+                CurrentUserHandler.getInstance().refresh();
                 listener.onResult(true);
             }
         }).addOnFailureListener(new OnFailureListener() {
