@@ -133,7 +133,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 args.putString("experimentID", associatedExperimentID);
                 args.putSerializable("question", tempQuestion);
 
-                Log.w("QUESTION ID: ", tempQuestion.getPostId());
+                Log.w("QUESTION ID: ", tempQuestion.getPostID());
                 Log.w("QUESTION USERNAME: ", tempQuestion.getUserId());
 
                 intent.putExtras(args);

@@ -55,7 +55,7 @@ public class AddReplyFragment extends DialogFragment {
                         String replyBody = replyBodyInput.getText().toString();
                         QuestionForumManager questionForumManager = new QuestionForumManager(associatedExperimentID);
 
-                        String newReplyID = questionForumManager.getNewReplyID(associatedQuestion.getPostId());   // TODO error check this a lot
+                        String newReplyID = questionForumManager.getNewReplyID(associatedQuestion.getPostID());   // TODO error check this a lot
 
                         //confirm update to user profile
                         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {

@@ -67,7 +67,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         selectedQuestion = (Question) bundle.getSerializable("question");
         //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
         associatedExperimentID = bundle.getString("experimentID");
-        associatedQuestionID = selectedQuestion.getPostId();
+        associatedQuestionID = selectedQuestion.getPostID();
 
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
@@ -175,7 +175,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     @Override
     public void onOkPressed(Reply newReply) {
         // Log.d(TAG, "Reply");
-        questionForumManager.createReply(selectedQuestion.getPostId(), newReply);
+        questionForumManager.createReply(selectedQuestion.getPostID(), newReply);
 
         setReplyList();
     }

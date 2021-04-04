@@ -1,7 +1,5 @@
 package com.example.trialio.models;
 
-import com.example.trialio.models.User;
-
 import java.io.Serializable;
 
 /**
@@ -13,7 +11,7 @@ public abstract class Post implements Serializable {
     /**
      * The id of the post
      */
-    private String postId;
+    private String postID;
 
     /**
      * The body text of the post
@@ -45,7 +43,7 @@ public abstract class Post implements Serializable {
      * @param userId the id of the User that created the post
      */
     public Post(String postID, String body, String userId) {
-        this.postId = postID;
+        this.postID = postID;
         this.body = body;
         this.userId = userId;
     }
@@ -61,15 +59,15 @@ public abstract class Post implements Serializable {
      *
      * @return the post id
      */
-    public String getPostId() {
-        return this.postId;
+    public String getPostID() {
+        return this.postID;
     }
 
     /**
      * Sets the id of the post
      */
-    public void setPostId(String id) {
-        this.postId = id;
+    public void setPostID(String id) {
+        this.postID = id;
     }
 
     /**

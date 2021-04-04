@@ -121,7 +121,7 @@ public class QuestionForumManager implements Serializable {
     public void createQuestion (Question newQuestion) {
         Log.d(TAG, "Posting question " + newQuestion.getTitle());
         questionForumCollection
-                .document(newQuestion.getPostId()).set(newQuestion)    //TODO ERROR HERE
+                .document(newQuestion.getPostID()).set(newQuestion)    //TODO ERROR HERE
 //                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
 //                    @Override
 //                    public void onSuccess(DocumentReference documentReference) {
