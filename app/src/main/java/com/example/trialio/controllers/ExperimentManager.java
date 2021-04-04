@@ -159,11 +159,11 @@ public class ExperimentManager {
 
 
     /**
-     * Sets a function to be called when all experiment are fetched
+     * Sets a function to be called when all published experiment are fetched
      *
      * @param listener the function to be called when the experiments are fetched
      */
-    public void setOnAllExperimentsFetchCallback(OnManyExperimentsFetchListener listener) {
+    public void setOnAllPublishedExperimentsFetchCallback(OnManyExperimentsFetchListener listener) {
         /* Firebase Developer Docs, "Get all documents in a collection", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
          */
@@ -298,7 +298,7 @@ public class ExperimentManager {
          */
         if (keywords.size() == 0) {
             // Do a standard all experiment get
-            setOnAllExperimentsFetchCallback(listener);
+            setOnAllPublishedExperimentsFetchCallback(listener);
         } else {
             experimentsCollection.whereArrayContainsAny("keywords", keywords)
                     .get()

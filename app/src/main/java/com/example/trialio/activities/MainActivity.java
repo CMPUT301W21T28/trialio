@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setExperimentListToAll() {
         // Fetch data for the list view
-        experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+        experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(List<Experiment> experiments) {
                 experimentList.clear();
