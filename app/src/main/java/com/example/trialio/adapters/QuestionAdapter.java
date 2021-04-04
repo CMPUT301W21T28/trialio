@@ -23,12 +23,12 @@ import java.util.ArrayList;
  * the GUI ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
  * QuestionForumActivity.
  */
-public class QuestionArrayAdapter extends ArrayAdapter<Question> {
+public class QuestionAdapter extends ArrayAdapter<Question> {
 
     private Context context;
     private ArrayList<Question> questionsList;
 
-    public QuestionArrayAdapter(Context context, ArrayList<Question> questionsList) {
+    public QuestionAdapter(Context context, ArrayList<Question> questionsList) {
         super(context, 0, questionsList);
         this.questionsList = questionsList;
         this.context = context;

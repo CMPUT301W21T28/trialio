@@ -19,7 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterUsers;
+import com.example.trialio.adapters.UserAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddIgnoredFragment;
@@ -46,7 +46,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private Switch isOpenSwitch;
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
-    private ArrayAdapterUsers ignoredAdapter;
+    private UserAdapter ignoredAdapter;
     private Button addIgnoredButton;
 
 
@@ -79,7 +79,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         // get managers
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
-        ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
+        ignoredAdapter = new UserAdapter(context, ignoredList);
 
         // get views
         experimentDescriptionTextView = findViewById(R.id.settings_description);

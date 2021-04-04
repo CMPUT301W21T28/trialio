@@ -20,11 +20,11 @@ import java.util.ArrayList;
  * ListView item to be displayed on the app screen. This ArrayAdapter is referenced from
  * ExperimentSettingsActivity
  */
-public class ArrayAdapterUsers extends ArrayAdapter<String> {
+public class UserAdapter extends ArrayAdapter<String> {
     private Context context;
     private ArrayList<String> ignoredList;
 
-    public ArrayAdapterUsers(Context context, ArrayList<String> ignoredList) {
+    public UserAdapter(Context context, ArrayList<String> ignoredList) {
         super(context, 0, ignoredList);
         this.context = context;
 

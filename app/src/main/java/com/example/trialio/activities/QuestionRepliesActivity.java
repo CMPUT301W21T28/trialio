@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ReplyArrayAdapter;
+import com.example.trialio.adapters.ReplyAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
@@ -38,7 +38,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
 
     private ArrayList<Reply> replyList;
-    private ReplyArrayAdapter replyAdapter;
+    private ReplyAdapter replyAdapter;
 
 
     private String associatedExperimentID;
@@ -72,7 +72,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         replyList = new ArrayList<>();
-        replyAdapter = new ReplyArrayAdapter(this, replyList);
+        replyAdapter = new ReplyAdapter(this, replyList);
 
         // TODO: do we need this ???
         experimentManager = new ExperimentManager();
