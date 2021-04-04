@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 public class ChangeUsernameCommand {
 

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.ExperimentSettings;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,13 +29,15 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static final String COLLECTION_PATH = "experiments-v5";
+    private static final String COLLECTION_PATH = "experiments-v6";
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
     private static final String E_ISPUBLISHED_FIELD = "isPublished";
     private static final String ES_DESCRIPTION_FIELD = "description";
     private static final String ES_R_REGIONTEXT_FIELD = "regionText";
+    private static final String ES_R_L_LONGITUDE_FIELD = "longitude";
+    private static final String ES_R_L_LATITUDE_FIELD = "latitude";
     private static final String ES_R_KMRADIUS_FIELD = "kmRadius";
     private static final String ES_OWNERID_FIELD = "ownerID";
     private static final String ES_GEOLOCATIONREQUIRED_FIELD = "geoLocationRequired";
@@ -343,6 +346,8 @@ public class ExperimentManager {
         // set ExperimentSettings fields
         data.put(ES_DESCRIPTION_FIELD, experiment.getSettings().getDescription());
         data.put(ES_R_REGIONTEXT_FIELD, experiment.getSettings().getRegion().getRegionText());
+        data.put(ES_R_L_LONGITUDE_FIELD, experiment.getSettings().getRegion().getGeoLocation().getLongitude());
+        data.put(ES_R_L_LATITUDE_FIELD, experiment.getSettings().getRegion().getGeoLocation().getLatitude());
         data.put(ES_R_KMRADIUS_FIELD, experiment.getSettings().getRegion().getKmRadius());
         data.put(ES_OWNERID_FIELD, experiment.getSettings().getOwnerID());
         data.put(ES_GEOLOCATIONREQUIRED_FIELD, experiment.getSettings().getGeoLocationRequired());
@@ -395,6 +400,17 @@ public class ExperimentManager {
         String regionText = (String) data.get(ES_R_REGIONTEXT_FIELD);
         assert regionText != null;
         experiment.getSettings().getRegion().setRegionText(regionText);
+
+        // set geoLocation in region in settings
+        experiment.getSettings().getRegion().setGeoLocation(new Location());
+
+        // set longitude in geoLocation in region in settings
+        double longitude = (double) data.get(ES_R_L_LONGITUDE_FIELD);
+        experiment.getSettings().getRegion().getGeoLocation().setLongitude(longitude);
+
+        // set latitude in geoLocation in region in settings
+        double latitude = (double) data.get(ES_R_L_LATITUDE_FIELD);
+        experiment.getSettings().getRegion().getGeoLocation().setLatitude(latitude);
 
         // set kmRadius in region in settings
         double kmRadius = (double) data.get(ES_R_KMRADIUS_FIELD);
