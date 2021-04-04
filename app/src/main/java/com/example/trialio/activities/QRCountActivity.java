@@ -9,11 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.R;
+import com.example.trialio.adapters.ArrayAdapterBarcode;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+
+import java.util.ArrayList;
 
 public class QRCountActivity extends AppCompatActivity {
     private Button createQR;
@@ -28,6 +33,10 @@ public class QRCountActivity extends AppCompatActivity {
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+    private ArrayList<String> barcodeList;
+    private ArrayAdapterBarcode barcodeAdapter;
+    private BarcodeManager barcodeManager;
+    private ListView listviewBarcode;
 
 
     @Override
@@ -42,7 +51,16 @@ public class QRCountActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
-        setExperimentInfo();
+
+
+        barcodeManager = new BarcodeManager(experiment.getExperimentID());
+        barcodeList = new ArrayList<>();
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
+
+        listviewBarcode.setAdapter(barcodeAdapter);
+
+
+
         setQRView();
         setOnClickListeners();
     }

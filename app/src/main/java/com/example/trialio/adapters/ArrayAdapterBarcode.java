@@ -49,7 +49,7 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         }
 
 
-        BarcodeManager barcodeManager = new BarcodeManager();   // TODO: double check if empty constructor is appropriate for use in this example
+        BarcodeManager barcodeManager = new BarcodeManager(experiment.getExperimentID());   // TODO: double check if empty constructor is appropriate for use in this example
         String barcodeID = barcodeList.get(position);
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
@@ -60,10 +60,10 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         barcodeResult.setText(barcodeID);
 
         // generate image
-        //Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
+        Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
 
         // set image
-        //barcodeImageView.setImageBitmap(barcodeImage);
+        barcodeImageView.setImageBitmap(barcodeImage);
 
         return view;
     }

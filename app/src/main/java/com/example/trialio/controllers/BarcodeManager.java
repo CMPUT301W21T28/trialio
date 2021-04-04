@@ -198,7 +198,7 @@ public class BarcodeManager implements Serializable {
 
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                 // retrieves all documents (barcodes) within barcodeForum collection
-                                String barcodeString = doc.getString("barcodeID");
+                                String barcodeString = doc.getString("Barcode Info");
                                 barcodeList.add(barcodeString);
                             }
                             listener.onManyBarcodesFetch(barcodeList);
@@ -233,11 +233,9 @@ public class BarcodeManager implements Serializable {
      * @return
      */
     public static Bitmap generateBarcode(String barcodeID) {
-        String infoResult = "";
         BitMatrix result = null;
         try {
-            infoResult = barcodeID;
-            result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.CODE_128, 1000, 200, null);
+            result = new MultiFormatWriter().encode(barcodeID, BarcodeFormat.CODE_128, 1000, 200, null);
         } catch (WriterException writerException) {
             writerException.printStackTrace();
             return null;
