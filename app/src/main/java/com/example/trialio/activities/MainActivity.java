@@ -2,15 +2,11 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.CompoundButtonCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,7 +22,6 @@ import com.example.trialio.adapters.ArrayAdapterExperiment;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
-import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 
@@ -271,8 +266,11 @@ public class MainActivity extends AppCompatActivity {
                 experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
-                        experimentList.add(experiment);
-                        experimentAdapter.notifyDataSetChanged();
+                        // if the experiment is published and the user is subscribed, add it to the list to display
+                        if (experiment.getIsPublished()) {
+                            experimentList.add(experiment);
+                            experimentAdapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
