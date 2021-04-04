@@ -42,30 +42,21 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.content_barcode, parent, false);
         }
 
-        BarcodeManager barcodeManager = new BarcodeManager();
-
+        BarcodeManager barcodeManager = new BarcodeManager();   // TODO: double check if empty constructor is appropriate for use in this example
         String barcodeID = barcodeList.get(position);
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
         ImageView barcodeImageView = view.findViewById(R.id.barcodeImageView);
 
-//        // set text views
-//        UserManager manager = new UserManager();
-//        manager.getUserById(question.getUserId(), new UserManager.OnUserFetchListener() {
-//            @Override
-//            public void onUserFetch(User user) {
-//                authorID.setText(user.getUsername());
-//            }
-//        });
 
-
+        // set text view
         barcodeResult.setText(barcodeID);
 
         // generate image
         Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
 
         // set image
-        barcodeImageView.setImageResource(barcodeImage);
+        barcodeImageView.setImageBitmap(barcodeImage);
 
         return view;
     }

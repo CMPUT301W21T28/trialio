@@ -53,6 +53,8 @@ public class BarcodeManager implements Serializable {
         barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(TRIAL_PATH).document(associatedTrialID).collection(BARCODES_PATH);
     }
 
+    public BarcodeManager() {    }
+
 
 //    /**
 //     * Generates a new unique barcode ID
@@ -209,7 +211,6 @@ public class BarcodeManager implements Serializable {
      *  1) how to get experiment field + where
      *
      * */
-
     public static Bitmap generateBarcode(String barcodeID) {
         String infoResult = "";
         BitMatrix result = null;
@@ -235,5 +236,19 @@ public class BarcodeManager implements Serializable {
         myBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
         return myBitmap;
     }
+
+
+//    public static void readBarcode(String input, User user, Experiment experiment, String result){
+//        if (experiment.getTrialManager().getType().equals("BINOMIAL")){
+//            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" +  result + "\n" +  experiment.getExperimentID();
+//            Bitmap barcode = generateForTrial(experiment, result, isBarcode, infoResult);
+//            // barcode contains recreated barcode with original information + new trial information
+//        }
+
+//
+//
+//    }
+
+
 
 }
