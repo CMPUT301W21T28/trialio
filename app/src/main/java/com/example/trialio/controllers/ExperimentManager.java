@@ -230,7 +230,7 @@ public class ExperimentManager {
      *
      * @param experimentId Experiment ID of the candidate experiment to delete
      */
-    public void unpublishExperiment(String experimentId) {
+    public void deleteExperiment(String experimentId) {
         Log.d(TAG, "Deleting experiment" + experimentId);
         experimentsCollection
                 .document(experimentId)
