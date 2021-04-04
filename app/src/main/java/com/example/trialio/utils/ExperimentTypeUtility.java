@@ -1,6 +1,9 @@
 package com.example.trialio.utils;
 
-public class ExperimentTypeUtility {
+public final class ExperimentTypeUtility {
+
+    // private constructor so people do not make instances
+    private ExperimentTypeUtility() { }
 
     /**
      * This checks whether a string matches the count experiment type.
