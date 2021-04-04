@@ -11,7 +11,6 @@ import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
-import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;

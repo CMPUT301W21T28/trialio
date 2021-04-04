@@ -123,6 +123,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 // prepare region
                 Region region = new Region();
                 region.setRegionText(editRegion.getText().toString());
+                region.setGeoLocation(regionLocation);
 
                 // prepare geo
                 boolean geo = geoSwitch.isChecked();
