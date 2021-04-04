@@ -119,9 +119,17 @@ public class MainActivity extends AppCompatActivity {
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ViewUserActivity.class);
-                intent.putExtra("user", currentUser);
-                startActivity(intent);
+
+                // get the current user and go to view user activity
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        currentUser = user;
+                        Intent intent = new Intent(context, ViewUserActivity.class);
+                        intent.putExtra("user", currentUser);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -286,7 +294,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             experimentAdapter.notifyDataSetChanged();
-
         }
     }
 }

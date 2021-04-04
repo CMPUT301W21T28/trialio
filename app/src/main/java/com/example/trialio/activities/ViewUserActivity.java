@@ -55,6 +55,11 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
         changeUsername = (Button) findViewById(R.id.changeUsernameButton);
 
         setUserDataListener();
+
+        // need to set this here so we don't have to wait too long for the listener (for UI tests)
+        setFields();            // set fields
+        setVisibility();        // set visibility
+        setOnClickListeners();  // set listeners
     }
 
     @Override

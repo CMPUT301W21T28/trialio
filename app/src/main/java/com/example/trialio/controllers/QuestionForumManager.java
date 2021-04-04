@@ -33,9 +33,8 @@ public class QuestionForumManager implements Serializable {
 
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum";
-    private static final String EXPERIMENT_PATH = "experiments-v6";
+    private static String EXPERIMENT_PATH = "experiments-v6";
     private static final String REPLY_FORUM_PATH = "Replies";
-
 
     /**
      * Constructor for QuestionForumManager
@@ -388,6 +387,11 @@ public class QuestionForumManager implements Serializable {
 //        return userData;
 //    }
 
-
-
+    /**
+     * Sets the collection path of all QuestionForumManagers. Used for injection during testing.
+     * @param newPath String of the new collection path.
+     */
+    public static void setCollectionPath(String newPath) {
+        EXPERIMENT_PATH = newPath;
+    }
 }

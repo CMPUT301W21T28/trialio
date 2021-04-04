@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
  */
 public class UserManagerTest {
 
-    private static final String testCollection = "user-test";
+    private final String testCollection = "users-test";
     private static final ArrayList<String> initTestUserIds = new ArrayList<>();
     private static final ArrayList<String> initTestUsernames = new ArrayList<>();
     private static final ArrayList<String> unInitTestUserIds = new ArrayList<>();
