@@ -40,8 +40,8 @@ public class QuestionForumActivityTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
 
         // collection paths for testing
-        String experimentTestPath = "experimentsTest";
-        String usersTestPath = "usersTest";
+        String experimentTestPath = "experiments-test";
+        String usersTestPath = "users-test";
 
         // set the static collection paths using injection
         ExperimentManager.setCollectionPath(experimentTestPath);
@@ -53,7 +53,7 @@ public class QuestionForumActivityTest {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click add experiment button
-        Button addExperimentButton = (Button) solo.getView("btnNewExperiment");
+        Button addExperimentButton = (Button) solo.getView(R.id.btnNewExperiment);
         solo.clickOnView(addExperimentButton);
 
         // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show “Wrong Activity”
@@ -63,14 +63,14 @@ public class QuestionForumActivityTest {
         solo.enterText((EditText) solo.getView(R.id.numTrialsEditText), "1");
 
         // click on create button
-        Button createButton = (Button) solo.getView("btnAddNewExperiment");
+        Button createButton = (Button) solo.getView(R.id.btnAddNewExperiment);
         solo.clickOnView(createButton);
 
         // Asserts that the current activity is the ExperimentActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", ExperimentActivity.class);
 
         // click on Q&A button
-        Button qaButton = (Button) solo.getView("btnQA");
+        Button qaButton = (Button) solo.getView(R.id.btnQA);
         solo.clickOnView(qaButton);
 
         // Asserts that the current activity is the QuestionForumActivity. Otherwise, show “Wrong Activity”
@@ -85,7 +85,7 @@ public class QuestionForumActivityTest {
     public void experimenterAskQuestion() {
 
         // click the Neq Question button
-        Button newQuestionButton = (Button) solo.getView("newQuestion");
+        Button newQuestionButton = (Button) solo.getView(R.id.newQuestion);
         solo.clickOnView(newQuestionButton);
 
         // set required fields
