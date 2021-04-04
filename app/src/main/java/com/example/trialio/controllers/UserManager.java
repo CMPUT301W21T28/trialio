@@ -19,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +36,7 @@ public class UserManager {
     private static final String TAG = "UserManager";
     private static String COLLECTION_PATH = "users-v5";
     private final CollectionReference userCollection;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static String fid;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String USERNAME_FIELD = "username";
     private static final String ID_FIELD = "id";
@@ -87,7 +84,7 @@ public class UserManager {
      * Creates a UserManager
      */
     public UserManager() {
-        userCollection = FirebaseFirestore.getInstance().collection(COLLECTION_PATH);
+        userCollection = db.collection(COLLECTION_PATH);
     }
 
     /**
@@ -96,7 +93,7 @@ public class UserManager {
      * @param collection The collection in which to store User documents
      */
     public UserManager(String collection) {
-        userCollection = FirebaseFirestore.getInstance().collection(collection);
+        userCollection = db.collection(collection);
     }
 
 
@@ -107,12 +104,12 @@ public class UserManager {
      * User document. If you need to receive all database updates for the User, fetch the
      * User using UserManager#addUserUpdateListener()
      *
-     * @param id The device id of new User to create in the database
-     * @return The User that was created.
+     * @param user the new User object to be added to the system
+     * @param id the id of new User to create in the system
+     * @return Task that indicates when the user has been created
      */
-    public User createNewUser(String id) {
+    public Task<Void> createNewUser(User user, String id) {
         String username = userCollection.document().getId();
-        User user = new User();
         user.setUsername(username);
         user.setId(id);
         Log.d(TAG, String.format("Generating new User %s for device %s.", username, id));
@@ -124,7 +121,7 @@ public class UserManager {
 
         // Check that device id does not already exist in the system
         Task<QuerySnapshot> queryRef = userCollection.whereEqualTo(ID_FIELD, user.getId()).get();
-        queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
+        return queryRef.continueWithTask(new Continuation<QuerySnapshot, Task<Void>>() {
             @Override
             public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
                 if (task.getResult().size() == 0) {
@@ -148,30 +145,6 @@ public class UserManager {
                 Log.d(TAG, String.format("Failed to create User for device %s.", id));
             }
         });
-
-        return user;
-    }
-
-    /**
-     * Gets the User for the current device from the database. If the current User does not exist
-     * in the system already, a new User document is created.
-     *
-     * @param listener the callback to be called when the User object is retrieved
-     */
-    public void getCurrentUser(OnUserFetchListener listener) {
-        if (fid == null) {
-            Task<String> userIdTask = getFID();
-            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                    // Once FID has been received, fetch from database with userId=FID
-                    fid = task.getResult();
-                    fetchUserByDevice(fid, listener);
-                }
-            });
-        } else {
-            fetchUserByDevice(fid, listener);
-        }
     }
 
     /**
@@ -185,40 +158,41 @@ public class UserManager {
     }
 
     /**
-     * Gets a User from the database. If the current User does not exist in the
-     * system already, a new User document is created.
+     * Gets a User from the database by the user id. If a user with the given id is found, the User
+     * object is passed into the given callback listener. If a User with the given id does not exist
+     * in the system, NULL is passed into the callback.
      *
      * @param id       the id of the User to retrieve
      * @param listener the callback to be called when the User is fetched
      */
     public void getUserById(String id, OnUserFetchListener listener) {
-        fetchUserByDevice(id, listener);
+        fetchUserById(id, listener);
     }
 
     /**
-     * Gets a User from the database and calls the specified callback function with the User given
-     * as a parameter. If a user does not exist for the given device id, a new user is created.
+     * Gets a User from the database by the user id. If a user with the given id is found, the User
+     * object is passed into the given callback listener. If a User with the given id does not exist
+     * in the system, NULL is passed into the callback.
      *
-     * @param deviceId the fid of the User to fetch
+     * @param userId the fid of the User to fetch
      * @param listener the callback listener to be called when the User is fetched
      */
-    private void fetchUserByDevice(String deviceId, OnUserFetchListener listener) {
-        userCollection.whereEqualTo(ID_FIELD, deviceId).get()
+    private void fetchUserById(String userId, OnUserFetchListener listener) {
+        userCollection.whereEqualTo(ID_FIELD, userId).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         ArrayList<DocumentSnapshot> docs = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
                         if (docs.size() == 0) {
-                            // User does not exist, create a new user
-                            User newUser = createNewUser(deviceId);
-                            listener.onUserFetch(newUser);
+                            // User does not exist
+                            listener.onUserFetch(null);
                         } else if (docs.size() == 1) {
                             // Successfully fetched the User
                             User user = extractUser(docs.get(0));
                             listener.onUserFetch(user);
                         } else {
                             // Exception, should not be more than 1 user with same id
-                            Log.e(TAG, "Found more than one user for device " + deviceId);
+                            Log.e(TAG, "Found more than one user for device " + userId);
                             User user = extractUser(docs.get(0));
                             listener.onUserFetch(user);
                         }
@@ -299,73 +273,15 @@ public class UserManager {
     }
 
     /**
-     * Add a listener to the current User document that will listen for updates to the User data.
-     * This method is used to fetch User data from the database and continue to fetch real-time
-     * data for the current User.
-     *
-     * <pre>
-     * UserManager manager = new UserManager();
-     * manager.addCurrentUserUpdateListener(new UserManager.OnUserUpdateListener() {
-     *     &#64;Override
-     *     public void onUserUpdate(User user) {
-     *         // Do something with the User every time the database is updated
-     *     }
-     * });
-     * </pre>
-     *
-     * @param listener the listener to be called when the User document is fetched
-     * @deprecated
-     */
-    public void addCurrentUserUpdateListener(OnUserFetchListener listener) {
-        if (fid == null) {
-            Task<String> userIdTask = getFID();
-            userIdTask.addOnCompleteListener(new OnCompleteListener<String>() {
-                @Override
-                public void onComplete(@NonNull Task<String> task) {
-                    // Once FID has been received, fetch from database with userId=FID
-                    fid = task.getResult();
-                    setOnUpdateFetchListener(fid, listener);
-                }
-            });
-        } else {
-            setOnUpdateFetchListener(fid, listener);
-        }
-    }
-
-    /**
-     * Sets a listener to a the user identified by userId. This function sets up a listener so that
-     * listener.onUserUpdate() is called whenever the User document is updated in the database.
-     *
-     * @param userId   the id of the User to attach the listener to
-     * @param listener the listener with the callback function to be called when the User is updated
-     * @deprecated
-     */
-    private void setOnUpdateFetchListener(String userId, OnUserFetchListener listener) {
-        userCollection.document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                assert value != null;
-                User currentUser;
-                if (value.exists()) {
-                    Log.d(TAG, "User fetched from database: " + value.getData());
-                    currentUser = extractUser(value);
-                } else {
-                    currentUser = createNewUser(userId);
-                }
-                listener.onUserFetch(currentUser);
-            }
-        });
-    }
-
-    /**
      * Updates a User in the system.
      *
      * @param user the User to update
+     * @return Task which indicates completion and success of the update
      */
-    public void updateUser(User user) {
+    public Task<Void> updateUser(User user) {
         String username = user.getUsername();
         Map<String, Object> compressUser = compressUser(user);
-        userCollection.document(username)
+        return userCollection.document(username)
                 .set(compressUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -441,10 +357,11 @@ public class UserManager {
      * Deletes a User from the system.
      *
      * @param user the user to be deleted
+     * @return Task that indicates the completion and success of the delete
      */
-    public void deleteUser(User user) {
+    public Task<Void> deleteUser(User user) {
         String username = user.getUsername();
-        userCollection.document(username)
+        return userCollection.document(username)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -479,28 +396,6 @@ public class UserManager {
                 listener.onManyUsersFetch(users);
             }
         });
-    }
-
-    /**
-     * Gets the Firebase Installation ID of the device installation
-     *
-     * @return The Task containing the FID
-     */
-    private Task<String> getFID() {
-        Task<String> task = FirebaseInstallations.getInstance().getId();
-        task.addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful()) {
-                    // FID was retrieved successfully
-                    Log.d(TAG, "Installation ID: " + task.getResult());
-                } else {
-                    // Failed to retrieve FID
-                    Log.e(TAG, "Unable to get Installation ID");
-                }
-            }
-        });
-        return task;
     }
 
     /**
@@ -548,14 +443,6 @@ public class UserManager {
         userData.put(PHONE_FIELD, user.getContactInfo().getPhone());
         userData.put(SUBBED_EXPERIMENTS_FIELD, user.getSubscribedExperiments());
         return userData;
-    }
-
-    public static String getFid() {
-        return fid;
-    }
-
-    public static void setFid(String fid) {
-        UserManager.fid = fid;
     }
 
     /**

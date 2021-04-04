@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.trialio.adapters.ArrayAdapterExperiment;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
      * Sets the current user attribute for the activity
      */
     private void setCurrentUser() {
-        UserManager userManager = new UserManager();
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
                 currentUser = user;
@@ -113,10 +113,9 @@ public class MainActivity extends AppCompatActivity {
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserManager userManager = new UserManager();
 
                 // get the current user and go to view user activity
-                userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
                         currentUser = user;
@@ -286,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             experimentAdapter.notifyDataSetChanged();
-
         }
     }
 }

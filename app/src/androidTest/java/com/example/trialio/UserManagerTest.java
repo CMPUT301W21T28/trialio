@@ -10,9 +10,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.junit.Before;
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,48 +22,119 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class UserManagerTest {
 
-    private static final String testCollection = "user-test";
-    private ArrayList<String> testUserIds;
-    private UserManager userManager;
-
-    @Before
-    public void initUserManager() {
-        FirebaseFirestore.getInstance().collection(testCollection).get();
-        userManager = new UserManager(testCollection);
-        testUserIds = new ArrayList<>();
-        testUserIds.add("100000");
-        testUserIds.add("100001");
-        testUserIds.add("100002");
-        testUserIds.add("100003");
-        testUserIds.add("100004");
-        testUserIds.add("100005");
-
-        for (String id : testUserIds) {
-            FirebaseFirestore.getInstance().collection(testCollection).document(id).delete();
-        }
-    }
+    private final String testCollection = "users-test";
+    private static final ArrayList<String> initTestUserIds = new ArrayList<>();
+    private static final ArrayList<String> initTestUsernames = new ArrayList<>();
+    private static final ArrayList<String> unInitTestUserIds = new ArrayList<>();
 
     /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
      * Martin, https://stackoverflow.com/users/187492/martin, 2009-12-02,
      * Evin1_, https://stackoverflow.com/users/2503185/evin1, 2017-04-05,
-     * "How to use JUnit to test asynchronous processes", date, CC BY-SA 3.0
+     * "How to use JUnit to test asynchronous processes", CC BY-SA 3.0
      * https://stackoverflow.com/a/1829949/15048024
      */
 
     /**
-     * Test the updating of User info in the database
+     * Sets up the test class by populating list of testUserIds
+     */
+    @BeforeClass
+    public static void setUp() {
+        initTestUserIds.add("001");
+        initTestUserIds.add("002");
+        unInitTestUserIds.add("003");
+        unInitTestUserIds.add("004");
+    }
+
+    /**
+     * Creates a mock UserManager
+     *
+     * @return a UserManager
+     */
+    private UserManager mockUserManager() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
+        UserManager userManager = new UserManager(testCollection);
+        initTestUsernames.clear();
+        for (String id : initTestUserIds) {
+            User user = new User();
+            userManager.createNewUser(user, id).addOnCompleteListener(task -> {
+                initTestUsernames.add(user.getUsername());
+                lock.countDown();
+            });
+        }
+        lock.await(5, TimeUnit.SECONDS);
+        return userManager;
+    }
+
+    /**
+     * Creates a mock UserManager with no Users in it
+     *
+     * @return a UserManager
+     */
+    private UserManager mockEmptyUserManager() {
+        return new UserManager(testCollection);
+    }
+
+    /**
+     * Deletes all test users in the database
+     */
+    @After
+    public void tearDown() throws InterruptedException {
+        // Aggregate the ids of the documents to delete
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<String> allIds = new ArrayList<>();
+        allIds.addAll(initTestUserIds);
+        allIds.addAll(unInitTestUserIds);
+
+        // Run delete query on all ids
+        /* Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen,
+         * "How to delete document from firestore using where clause", 2017-11-18, CC BY-SA 3.0
+         * https://stackoverflow.com/a/47180442/15048024
+         */
+        CountDownLatch lock = new CountDownLatch(allIds.size());
+        db.collection(testCollection).whereIn("id", allIds).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot result = task.getResult();
+                        for (DocumentSnapshot doc : result.getDocuments()) {
+                            doc.getReference().delete().addOnCompleteListener(task1 -> lock.countDown());
+                        }
+                    }
+                });
+
+        lock.await(5000, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Test the creating of a User in the system
      */
     @Test
     public void testCreateNewUser() throws Exception {
-        String deviceId = "100003";
-        User user = userManager.createNewUser(deviceId);
-        CountDownLatch lock = new CountDownLatch(1);
+        UserManager userManager = mockEmptyUserManager();
 
-        FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("device_id", deviceId).get()
+        // Create the user
+        String userId = unInitTestUserIds.get(0);
+        User newUser = new User();
+
+        CountDownLatch createLock = new CountDownLatch(1);
+        userManager.createNewUser(newUser, userId).addOnCompleteListener(task -> createLock.countDown());
+
+        // Assert the initialized User is correct
+        assertEquals(newUser.getId(), userId);
+        assertNotNull(newUser.getUsername());
+
+        // Wait until user create task completes
+        createLock.await(10, TimeUnit.SECONDS);
+
+        // Fetch the created user
+        CountDownLatch readLock = new CountDownLatch(1);
+        FirebaseFirestore.getInstance().collection(testCollection).whereEqualTo("id", userId).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -69,11 +142,12 @@ public class UserManagerTest {
                             // Check a single User was created
                             QuerySnapshot query = task.getResult();
                             assertEquals(1, query.size());
-                            fail();
 
                             // Check User document has expected data
                             DocumentSnapshot doc = query.getDocuments().get(0);
-                            assertEquals(deviceId, doc.get("device_id"));
+                            assertEquals(userId, doc.get("id"));
+
+                            readLock.countDown();
                         } else {
                             // Error occurred connecting to firebase
                             fail();
@@ -81,112 +155,291 @@ public class UserManagerTest {
                     }
                 });
 
-        lock.await(2000, TimeUnit.MILLISECONDS);
-    }
-
-    /***
-     * Test the fetching of a User from the datbase
-     */
-    @Test
-    public void testGetCurrentUser() throws InterruptedException {
-        CountDownLatch lock = new CountDownLatch(1);
-        String deviceId = "100000";
-        String username = "NkwmOGk7T76Z6f5MiEiO";
-        UserManager.setFid(deviceId);
-        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                assertEquals(deviceId, user.getUsername());
-                assertEquals(username, user.getDeviceId());
-                lock.countDown();
-            }
-        });
-
-        lock.await();
+        // Wait until user fetch is complete
+        readLock.await(10, TimeUnit.SECONDS);
     }
 
     /**
-     * Test the fetching of a User from the datbase
+     * Test the getting of a user from the system
      */
     @Test
-    public void testGetUser() throws InterruptedException {
-        CountDownLatch lock = new CountDownLatch(1);
-        String deviceId = "100003";
-        String username = "M0t37Y1DJPSJZNHbizUM";
-        userManager.getUser(username, new UserManager.OnUserFetchListener() {
+    public void testGetUserById() throws Exception {
+        UserManager userManager = mockUserManager();
+
+        // Get user by id
+        CountDownLatch getLock = new CountDownLatch(1);
+        String userId = initTestUserIds.get(0);
+        final User[] fetchedUserHolder = new User[1];
+        userManager.getUserById(userId, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                assertEquals(deviceId, user.getUsername());
-                assertEquals(username, user.getDeviceId());
-                lock.countDown();
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
             }
         });
 
-        lock.await();
+        // Wait for user fetch to complete, then check the fetch was correct
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(userId, user.getId());
+        assertNotNull(user.getUsername());
+
     }
 
-
-    User retrievedData;
-
     /**
-     * Test the listening of User updates to the database
+     * Test the getting of a user from the system
      */
     @Test
-    public void testAddUserUpdateListener() throws InterruptedException {
-        String deviceId = "100002";
-        String username = "CTUVUuG4P6kkheVUyFtz";
+    public void testGetUserByUsername() throws Exception {
+        UserManager userManager = mockUserManager();
 
-        CountDownLatch lock = new CountDownLatch(1);
-        CountDownLatch lock1 = new CountDownLatch(1);
-        CountDownLatch lock2 = new CountDownLatch(1);
+        // Get a user using username
+        String username = initTestUsernames.get(1);
+        String userId = initTestUserIds.get(1);
+        CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        fetchedUserHolder[0] = null;
 
-        String firstPhone = "780-111-1111";
-        String firstEmail = "email1@email.com";
-        String secondPhone = "780-222-2222";
-        String secondEmail = "email2@email.com";
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
 
-        Map<String, Object> initialData = new HashMap<String, Object>();
-        initialData.put("email", firstEmail);
-        initialData.put("phone", firstPhone);
-        FirebaseFirestore.getInstance().collection(testCollection)
-                .document(username)
-                .update(initialData)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        lock.countDown();
-                    }
-                });
+        // Wait for user fetch to complete, then check if values of user are as expected
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+        assertEquals(userId, user.getId());
+    }
 
-        lock.await(2000, TimeUnit.MILLISECONDS);
+    /**
+     * Test the updating of a user in the system
+     */
+    @Test
+    public void testUpdateUser() throws Exception {
+        UserManager userManager = mockUserManager();
+        String newEmail = "email@email.com";
+        String newPhone = "123456789";
 
+        // First get that will be updated
+        String username = initTestUsernames.get(1);
+        String userId = initTestUserIds.get(1);
+        CountDownLatch prepLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        fetchedUserHolder[0] = null;
+
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                prepLock.countDown();
+            }
+        });
+
+        // Wait for user fetch to complete, then check if values of user are as expected
+        prepLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+        assertEquals(userId, user.getId());
+
+        // Change values of the user, then update in the system
+        user.getContactInfo().setEmail(newEmail);
+        user.getContactInfo().setPhone(newPhone);
+
+        CountDownLatch updateLock = new CountDownLatch(1);
+        userManager.updateUser(user).addOnCompleteListener(task -> updateLock.countDown());
+        updateLock.await(5, TimeUnit.SECONDS);
+
+        // Get the user again and make sure updates persist
+        CountDownLatch getLock = new CountDownLatch(1);
+        fetchedUserHolder[0] = null;
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+
+        // Wait for user fetch to complete, then check if values of user are as expected
+        getLock.await(5, TimeUnit.SECONDS);
+        User updatedUser = fetchedUserHolder[0];
+        assertNotNull(updatedUser);
+        assertEquals(user.getUsername(), updatedUser.getUsername());
+        assertEquals(user.getId(), updatedUser.getId());
+        assertEquals(user.getContactInfo().getEmail(), updatedUser.getContactInfo().getEmail());
+        assertEquals(user.getContactInfo().getPhone(), updatedUser.getContactInfo().getPhone());
+    }
+
+    /**
+     * Test the deleting of a user in the system
+     */
+    @Test
+    public void testDeleteUser() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(0);
+
+        // Get the user
+        CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+
+        // Delete the user from the system
+        CountDownLatch deleteLock = new CountDownLatch(1);
+        userManager.deleteUser(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                deleteLock.countDown();
+            }
+        });
+        deleteLock.await(5, TimeUnit.SECONDS);
+
+        // Assert the user was actually deleted
+        CountDownLatch afterLock = new CountDownLatch(1);
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                // Fetched user should be null
+                fetchedUserHolder[0] = user;
+                afterLock.countDown();
+            }
+        });
+        afterLock.await(5, TimeUnit.SECONDS);
+
+        User after = fetchedUserHolder[0];
+        assertNull(after);
+    }
+
+    /**
+     * Test the transferring of a user to a new username
+     */
+    @Test
+    public void testTransferUsername() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(1);
+        String newUsername = "new";
+
+        // Get the user
+        CountDownLatch getLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                getLock.countDown();
+            }
+        });
+        getLock.await(5, TimeUnit.SECONDS);
+        User user = fetchedUserHolder[0];
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+
+        // Change the username of the user
+        CountDownLatch transferLock = new CountDownLatch(1);
+        userManager.transferUsername(user, newUsername).addOnCompleteListener(task -> transferLock.countDown());
+        transferLock.await(5, TimeUnit.SECONDS);
+
+        // Fetch from the new username should return the user
+        fetchedUserHolder[0] = null;
+        CountDownLatch newLock = new CountDownLatch(1);
+        userManager.getUserByUsername(newUsername, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                newLock.countDown();
+            }
+        });
+        newLock.await(5, TimeUnit.SECONDS);
+        User newUser = fetchedUserHolder[0];
+        assertNotNull(newUser);
+        assertEquals(newUser.getUsername(), newUsername);
+
+        // Fetch from the old username should return NULL
+        CountDownLatch oldLock = new CountDownLatch(1);
+        userManager.getUserByUsername(username, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                fetchedUserHolder[0] = user;
+                oldLock.countDown();
+            }
+        });
+        oldLock.await(5, TimeUnit.SECONDS);
+        User oldUser = fetchedUserHolder[0];
+        assertNull(oldUser);
+    }
+
+    /**
+     * Test the user update listener
+     */
+    @Test
+    public void testAddUserUpdateListener() throws Exception {
+        UserManager userManager = mockUserManager();
+        String username = initTestUsernames.get(0);
+        String newEmail = "new new new";
+        String newPhone = "3243244";
+
+        // Set up synchronization locks and callback result containers
+        CountDownLatch setLock = new CountDownLatch(1);
+        CountDownLatch updateLock = new CountDownLatch(1);
+        User[] fetchedUserHolder = new User[1];
+        int[] operationNum = new int[1];
+
+        // Get the user
+        operationNum[0] = 1; // indicate we intend to set the listener
         userManager.addUserUpdateListener(username, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                String email = user.getContactInfo().getEmail();
-                if (email.equals(firstEmail)) {
-                    retrievedData = user;
-                    lock1.countDown();
-                } else if (email.equals(secondEmail)) {
-                    retrievedData = user;
-                    lock2.countDown();
-                } else {
-                    fail();
+                fetchedUserHolder[0] = user;    // store the fetched user
+                if (operationNum[0] == 1) {
+                    setLock.countDown();        // indicate set listener operation is done
+                } else if (operationNum[0] == 2) {
+                    updateLock.countDown();     // indicate updated read operation is done
                 }
             }
         });
+        setLock.await(5, TimeUnit.SECONDS);
+        assertNotNull(fetchedUserHolder[0]);
+        assertEquals(username, fetchedUserHolder[0].getUsername());
 
-        lock1.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(firstPhone, retrievedData.getContactInfo().getPhone());
+        // Create a copy of the User object and update some values
+        User copy = new User();
+        copy.setUsername(fetchedUserHolder[0].getUsername());
+        copy.setId(fetchedUserHolder[0].getId());
+        copy.getContactInfo().setPhone(fetchedUserHolder[0].getContactInfo().getPhone());
+        copy.getContactInfo().setEmail(fetchedUserHolder[0].getContactInfo().getEmail());
+        copy.getContactInfo().setEmail(newEmail);   // set a new email
+        copy.getContactInfo().setPhone(newPhone);   // set a new phone
 
-        Map<String, Object> updateData = new HashMap<String, Object>();
-        updateData.put("email", secondEmail);
-        updateData.put("phone", secondPhone);
-        FirebaseFirestore.getInstance().collection(testCollection)
-                .document(username)
-                .update(updateData);
 
-        lock2.await();
-        assertEquals(secondPhone, retrievedData.getContactInfo().getPhone());
+        // Update the copied object
+        operationNum[0] = 2;
+        userManager.updateUser(copy);
+        updateLock.await(5, TimeUnit.SECONDS);
+
+        // Assert changes observed in original object
+        assertNotNull(fetchedUserHolder[0]);
+        assertEquals(copy.getUsername(), fetchedUserHolder[0].getUsername());
+        assertEquals(copy.getId(), fetchedUserHolder[0].getId());
+        assertEquals(copy.getContactInfo().getEmail(), fetchedUserHolder[0].getContactInfo().getEmail());
+        assertEquals(copy.getContactInfo().getPhone(), fetchedUserHolder[0].getContactInfo().getPhone());
+
     }
+
+
 }

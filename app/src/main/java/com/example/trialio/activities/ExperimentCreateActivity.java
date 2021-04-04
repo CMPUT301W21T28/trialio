@@ -1,50 +1,83 @@
 package com.example.trialio.activities;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.net.ConnectivityManagerCompat;
 
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.R;
 import com.example.trialio.models.ExperimentSettings;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
  */
 
-public class ExperimentCreateActivity extends AppCompatActivity {
-    private final String TAG = "ExperimentCreateActivity";
+public class ExperimentCreateActivity extends AppCompatActivity implements OnMapReadyCallback{
+    private final String TAG = "ExpCreateActivity";
     private Experiment experiment;
     private ExperimentManager experimentManager;
     private UserManager userManager;
     private final Context context = this;
     private String selectedType = "";
+    private GoogleMap regionMap;
+    private Location regionLocation;
+    private String regionName;
+    private UiSettings uiSettings;
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
 
     /**
      * the On create the takes in the saved instance from the main activity
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_experiment);
+        setContentView(R.layout.activity_create_experiment);
 
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.regionMap);
+        mapFragment.getMapAsync(this);
 
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
 
@@ -53,16 +86,15 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         // LICENSE:	CC BY 4.0 [https://creativecommons.org/licenses/by/4.0/]
         // SOURCE:  Working with Spinners in Android [https://www.studytonight.com/android/spinner-example-in-android#]
         // AUTHOR: 	Studytonight tutorial developers
-        selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        selectType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedType = parent.getItemAtPosition(position).toString();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         Button addNewExperiment = (Button) findViewById(R.id.btnAddNewExperiment);
@@ -79,6 +111,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
 
                 Switch geoSwitch = (Switch) findViewById(R.id.geo_switch);
                 Switch openSwitch = (Switch) findViewById(R.id.open_switch);
+
 
                 //----------------------------------
                 // prepare ExperimentSettings object
@@ -116,7 +149,7 @@ public class ExperimentCreateActivity extends AppCompatActivity {
                         Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
                     } else {
                         // get owner id
-                        userManager.getCurrentUser(new UserManager.OnUserFetchListener() {
+                        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                             @Override
                             public void onUserFetch(User user) {
                                 // prepare experiment settings
@@ -147,9 +180,77 @@ public class ExperimentCreateActivity extends AppCompatActivity {
         cancelNewExperiment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
+
+    public static boolean isConnected(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (connectivityManager != null) {
+                networkInfo = connectivityManager.getActiveNetworkInfo();
+            }
+
+            return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
+    }
+
+
+
+    private String findRegionName(Location location) {
+        if (isConnected(ExperimentCreateActivity.this)) {
+            //carry on with function
+        } else {
+            try {
+                wait(60);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "Getting Location Name");
+        Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
+        List<Address> addresses = new ArrayList<>();
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+            Log.e(TAG, "Getting Location Name: " +e.getMessage());
+        }
+        String regionName = addresses.get(0).getLocality();
+        if (regionName == null || regionName.length() > 20) {
+            regionName = addresses.get(0).getAdminArea();
+                if (regionName == null || regionName.length() > 20) {
+                    regionName = addresses.get(0).getCountryName();
+                }
+            }
+        return regionName;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        regionMap = googleMap;
+
+        EditText editRegion = (EditText) findViewById(R.id.regionEditText);
+
+
+        uiSettings = regionMap.getUiSettings();
+
+        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setMapToolbarEnabled(false);
+
+        regionLocation = new Location();
+
+        regionMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                regionLocation.setLatitude(latLng.latitude);
+                regionLocation.setLongitude(latLng.longitude);
+                setRegionName(findRegionName(regionLocation));
+                if (regionName != null) {
+                    editRegion.setText(regionName, TextView.BufferType.EDITABLE);
+                }
+            }
+        });
+    }
+
 }

@@ -17,14 +17,15 @@
         android:layout_marginHorizontal="5dp">
 
         <ImageButton
+            android:id="@+id/btnMap"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="@color/section_grey"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:tint="#fbd700"
             android:src="@android:drawable/ic_dialog_map"
-            android:backgroundTint="@color/section_grey"/>
+            android:tint="#fbd700" />
 
         <ImageButton
             android:layout_width="0dp"

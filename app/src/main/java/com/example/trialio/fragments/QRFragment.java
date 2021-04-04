@@ -58,7 +58,7 @@ public class QRFragment extends DialogFragment {
         Date date = new Date();
 
         if (location){
-            loc.getCurrentLocation(getContext(),getActivity());
+            loc.getCurrentLocation(getContext());
         }
 
         imgQR = view.findViewById(R.id.imgQRCode);
