@@ -271,8 +271,11 @@ public class MainActivity extends AppCompatActivity {
                 experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
-                        experimentList.add(experiment);
-                        experimentAdapter.notifyDataSetChanged();
+                        // if the experiment is published and the user is subscribed, add it to the list to display
+                        if (experiment.isPublished()) {
+                            experimentList.add(experiment);
+                            experimentAdapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
