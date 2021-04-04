@@ -45,6 +45,12 @@ import java.util.Locale;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
+ *
+ * This activity navigates to:
+ * <ul>
+ *  <li>ExperimentActivity</li>
+ *  <li>MainActivity</li>
+ * </ul>
  */
 
 public class ExperimentCreateActivity extends AppCompatActivity implements OnMapReadyCallback{

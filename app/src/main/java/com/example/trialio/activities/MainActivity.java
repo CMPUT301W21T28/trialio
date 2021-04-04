@@ -18,7 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.trialio.adapters.ArrayAdapterExperiment;
+import com.example.trialio.adapters.ExperimentAdapter;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
@@ -29,6 +29,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This activity is the main entry point into the application and displays a list of available
+ * experiments which can be toggled to show different experiment lists.
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *     <li>ExperimentActivity</li>
+ *     <li>CreateExperimentActivity</li>
+ *     <li>ViewUserActivity</li>
+ * </ul>
+ */
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
@@ -37,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ExperimentManager experimentManager;
     private ArrayList<Experiment> experimentList;
-    private ArrayAdapterExperiment experimentAdapter;
+    private ExperimentAdapter experimentAdapter;
     private User currentUser;
 
     @Override
@@ -49,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize attributes for the activity
         experimentManager = new ExperimentManager();
         experimentList = new ArrayList<>();
-        experimentAdapter = new ArrayAdapterExperiment(this, experimentList);
+        experimentAdapter = new ExperimentAdapter(this, experimentList);
 
         // Set up the adapter for the ListView
         ListView experimentListView = findViewById(R.id.list_experiment);
@@ -241,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setExperimentListToAll() {
         // Fetch data for the list view
-        experimentManager.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+        experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(List<Experiment> experiments) {
                 experimentList.clear();

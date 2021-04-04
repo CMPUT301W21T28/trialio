@@ -18,7 +18,10 @@ import com.example.trialio.controllers.UserManager;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
- * This activity allows a user to view their own profile and edit it to make changes to their username and contract info
+ * This activity allows a user to view their own profile and edit it to make changes to their
+ * username and contract info.
+ * <p>
+ * This activity navigates to no other activities.
  */
 public class ViewUserActivity extends AppCompatActivity implements ChangeUsernameFragment.OnFragmentInteractionListener, EditContactInfoFragment.OnFragmentInteractionListener {
     private final String TAG = "ViewUserActivity";
