@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static final String COLLECTION_PATH = "experiments-v5";
+    private static String COLLECTION_PATH = "experiments-v5";
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
@@ -430,5 +430,14 @@ public class ExperimentManager {
         experiment.getTrialManager().setExperimentID(experimentID);
 
         return experiment;
+    }
+
+
+    /**
+     * Sets the collection path of all ExperimentManagers. Used for injection during testing.
+     * @param newPath String of the new collection path.
+     */
+    public static void setCollectionPath(String newPath) {
+        COLLECTION_PATH = newPath;
     }
 }

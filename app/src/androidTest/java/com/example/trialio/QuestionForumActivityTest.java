@@ -10,6 +10,10 @@ import com.example.trialio.activities.ExperimentActivity;
 import com.example.trialio.activities.ExperimentCreateActivity;
 import com.example.trialio.activities.MainActivity;
 import com.example.trialio.activities.QuestionForumActivity;
+import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.QuestionForumManager;
+import com.example.trialio.controllers.TrialManager;
+import com.example.trialio.controllers.UserManager;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -32,8 +36,18 @@ public class QuestionForumActivityTest {
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+
+        // collection paths for testing
+        String experimentTestPath = "experimentsTest";
+        String usersTestPath = "usersTest";
+
+        // set the static collection paths using injection
+        ExperimentManager.setCollectionPath(experimentTestPath);
+        QuestionForumManager.setCollectionPath(experimentTestPath);
+        TrialManager.setCollectionPath(experimentTestPath);
+        UserManager.setCollectionPath(usersTestPath);
 
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
@@ -79,7 +93,7 @@ public class QuestionForumActivityTest {
         solo.enterText((EditText) solo.getView(R.id.editQuestionBody), "experimenterAskQuestion Body");
 
         // click confirm
-        solo.clickOnText("CONFIRM");
+        solo.clickOnText("Confirm");
 
         // look for fields
         assertTrue(solo.waitForText("experimenterAskQuestion Title", 1, 2000));

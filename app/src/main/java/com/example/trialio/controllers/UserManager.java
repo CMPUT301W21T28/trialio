@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static final String COLLECTION_PATH = "users-v5";
+    private static String COLLECTION_PATH = "users-v5";
     private final CollectionReference userCollection;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -556,5 +556,13 @@ public class UserManager {
 
     public static void setFid(String fid) {
         UserManager.fid = fid;
+    }
+
+    /**
+     * Sets the collection path of all UserManagers. Used for injection during testing.
+     * @param newPath String of the new collection path.
+     */
+    public static void setCollectionPath(String newPath) {
+        COLLECTION_PATH = newPath;
     }
 }
