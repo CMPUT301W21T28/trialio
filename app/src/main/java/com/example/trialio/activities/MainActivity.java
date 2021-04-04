@@ -29,6 +29,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         // Set up onClick listeners
         setUpOnClickListeners();
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.example.trialio.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.trialio.activities.MainActivity;
 
@@ -14,7 +14,7 @@ public class HomeButtonUtility {
      * activity.
      * @param homeButton Button to set as a home button.
      */
-    public void setHomeButtonListener(Button homeButton) {
+    public static void setHomeButtonListener(ImageButton homeButton) {
 
         // get the activity context
         Context context = homeButton.getContext();

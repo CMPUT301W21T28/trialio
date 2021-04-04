@@ -29,6 +29,7 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -71,6 +72,9 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
                 textTotalTrials.setText("Total: " + "\n" + trialList.size());
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override

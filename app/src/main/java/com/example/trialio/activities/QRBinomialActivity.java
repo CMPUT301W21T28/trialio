@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trialio.R;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import javax.annotation.Nullable;
 
@@ -71,6 +72,8 @@ public class QRBinomialActivity extends AppCompatActivity {
 
         setOnClickListeners();
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
 

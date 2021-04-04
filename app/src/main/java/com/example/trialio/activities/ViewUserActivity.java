@@ -15,6 +15,7 @@ import com.example.trialio.fragments.ChangeUsernameFragment;
 import com.example.trialio.fragments.EditContactInfoFragment;
 import com.example.trialio.models.User;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -52,6 +53,9 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
         changeUsername = (Button) findViewById(R.id.changeUsernameButton);
 
         setUserDataListener();
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override

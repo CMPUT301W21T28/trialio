@@ -31,6 +31,7 @@ import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -183,6 +184,9 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 finish();
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     public static boolean isConnected(Context context) {
