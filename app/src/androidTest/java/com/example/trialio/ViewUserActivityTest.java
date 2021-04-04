@@ -48,14 +48,14 @@ public class ViewUserActivityTest {
         TrialManager.setCollectionPath(experimentTestPath);
         UserManager.setCollectionPath(usersTestPath);
 
-        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the MainActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click add experiment button
         ImageButton viewUserButton = (ImageButton) solo.getView(R.id.editUserBtn);
         solo.clickOnView(viewUserButton);
 
-        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", ViewUserActivity.class);
     }
 

@@ -49,14 +49,14 @@ public class QuestionForumActivityTest {
         TrialManager.setCollectionPath(experimentTestPath);
         UserManager.setCollectionPath(usersTestPath);
 
-        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the MainActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click add experiment button
         Button addExperimentButton = (Button) solo.getView(R.id.btnNewExperiment);
         solo.clickOnView(addExperimentButton);
 
-        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", ExperimentCreateActivity.class);
 
         // set required fields
@@ -66,14 +66,14 @@ public class QuestionForumActivityTest {
         Button createButton = (Button) solo.getView(R.id.btnAddNewExperiment);
         solo.clickOnView(createButton);
 
-        // Asserts that the current activity is the ExperimentActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the ExperimentActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", ExperimentActivity.class);
 
         // click on Q&A button
         Button qaButton = (Button) solo.getView(R.id.btnQA);
         solo.clickOnView(qaButton);
 
-        // Asserts that the current activity is the QuestionForumActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the QuestionForumActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", QuestionForumActivity.class);
     }
 
