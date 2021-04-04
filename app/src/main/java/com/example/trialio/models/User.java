@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Represents a user of the application system.
+ * Represents a user in the system.
  */
 public class User implements Serializable {
 

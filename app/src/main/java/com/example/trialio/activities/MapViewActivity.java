@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback{
     private Experiment experiment;
     private UserManager userManager;

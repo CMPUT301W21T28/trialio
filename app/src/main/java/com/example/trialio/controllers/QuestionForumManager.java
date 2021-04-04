@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
-import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,18 +18,22 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * QuestionForumManager manages Question and Reply Posts for an experiment and is responsible
+ * for the persistence of Post data. This class is used to perform create, read, update and delete
+ * functionality on questions and replies that are to be stored for an experiment. This class
+ * communicates with the Firebase database.
+ */
 public class QuestionForumManager implements Serializable {
 
-    private CollectionReference questionForumCollection;   // does this have to be final ???
+    private final CollectionReference questionForumCollection;   // does this have to be final ???
     private CollectionReference replyForumCollection;
 
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum";
-    private static final String EXPERIMENT_PATH = "experiments-v5";
+    private static final String EXPERIMENT_PATH = "experiments-v6";
     private static final String REPLY_FORUM_PATH = "Replies";
 
     /**

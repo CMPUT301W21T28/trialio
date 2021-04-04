@@ -39,7 +39,9 @@ import java.util.Collections;
 import java.util.Date;
 
 /**
- * This activity allows a user to view stats about an experiment
+ * This activity allows a user to view stats about an experiment.
+ * <p>
+ * This activity navigates to no other activities.
  */
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";

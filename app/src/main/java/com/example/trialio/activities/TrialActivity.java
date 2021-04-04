@@ -30,6 +30,11 @@ import java.util.ArrayList;
 /**
  * This activity shows a list of trials for an experiment when a user clicks the "trials" button from the
  * experiment activity
+ * <p>
+ * This activity navigates to:
+ * <ul>
+ *     <li>ViewUserActivity</li>
+ * </ul>
  */
 public class TrialActivity extends AppCompatActivity {
     private final String TAG = "TrialActivity";

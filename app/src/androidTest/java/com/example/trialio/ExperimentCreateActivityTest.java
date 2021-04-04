@@ -55,14 +55,14 @@ public class ExperimentCreateActivityTest {
      */
     @Test
     public void createExperiment() {
-        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the MainActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
         // click add experiment button
         FloatingActionButton addExperimentButton = (FloatingActionButton) solo.getView("btnNewExperiment");
         solo.clickOnView(addExperimentButton);
 
-        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the ExperimentCreateActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", ExperimentCreateActivity.class);
 
         // set text fields
@@ -86,7 +86,7 @@ public class ExperimentCreateActivityTest {
         Button createButton = (Button) solo.getView("btnAddNewExperiment");
         solo.clickOnView(createButton);
 
-        // Asserts that the current activity is the ExperimentActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the ExperimentActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", ExperimentActivity.class);
 
         // look for fields

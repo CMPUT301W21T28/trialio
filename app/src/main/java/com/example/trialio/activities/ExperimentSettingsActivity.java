@@ -19,7 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
-import com.example.trialio.adapters.ArrayAdapterUsers;
+import com.example.trialio.adapters.UserAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddIgnoredFragment;
@@ -32,19 +32,22 @@ import javax.annotation.Nullable;
 
 /**
  * This activity allows an experiment owner to modify the settings of an experiment they own
+ * <p>
+ * This activity navigates to no other activities.
  */
-public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener{
+public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener {
     private final String TAG = "ExperimentSettingsActivity";
     private Context context;
 
     private ExperimentManager experimentManager;
     private Experiment experiment;
     private UserManager userManager;
-    private Button unpublishButton;
+    private Button deleteButton;
     private Switch isOpenSwitch;
+    private Switch isPublishedSwitch;
     private ListView ignoredListView;
     private ArrayList<String> ignoredList;
-    private ArrayAdapterUsers ignoredAdapter;
+    private UserAdapter ignoredAdapter;
     private Button addIgnoredButton;
 
 
@@ -56,6 +59,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * the On create the takes in the saved instance from the experiment activity
+     *
      * @param savedInstanceState
      */
     @Override
@@ -76,7 +80,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         // get managers
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
-        ignoredAdapter = new ArrayAdapterUsers(context, ignoredList);
+        ignoredAdapter = new UserAdapter(context, ignoredList);
 
         // get views
         experimentDescriptionTextView = findViewById(R.id.settings_description);
@@ -85,8 +89,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         experimentOwnerTextView = findViewById(R.id.settings_text_owner);
         experimentStatusTextView = findViewById(R.id.settings_text_status);
 
-        unpublishButton = (Button) findViewById(R.id.button_unpublish_experiment);
+        deleteButton = (Button) findViewById(R.id.button_delete_experiment);
         isOpenSwitch = (Switch) findViewById(R.id.switch_isopen_settings);
+        isPublishedSwitch = (Switch) findViewById(R.id.switch_ispublished_settings);
         ignoredListView = (ListView) findViewById(R.id.list_ignored_experimenters);
         addIgnoredButton = (Button) findViewById(R.id.button_add_ignored);
 
@@ -102,7 +107,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             }
         });
 
-        if ( experiment.getTrialManager().getIsOpen() ) {
+        if (experiment.getTrialManager().getIsOpen()) {
             experimentStatusTextView.setText("Open");
         } else {
             experimentStatusTextView.setText("Closed");
@@ -130,6 +135,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      */
     public void setFields() {
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
+        isPublishedSwitch.setChecked(experiment.getIsPublished());
     }
 
     /**
@@ -137,7 +143,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      */
     public void setOnClickListeners() {
 
-        // when the switch is switched onCheckedChanged is called
+        // when the isOpen switch is switched onCheckedChanged is called
         isOpenSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -153,8 +159,24 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             }
         });
 
+        // when the isPublished switch is switched onCheckedChanged is called
+        isPublishedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                // get the most updated experiment from firebase, update it's isPublished field, and set it back in firebase
+                experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                    @Override
+                    public void onExperimentFetch(Experiment new_experiment) {
+                        experiment = new_experiment;
+                        experiment.setIsPublished(b);
+                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    }
+                });
+            }
+        });
+
         // remove the experiment from firebase and return to the home page
-        unpublishButton.setOnClickListener(new View.OnClickListener() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 experimentManager.unpublishExperiment(experiment.getExperimentID());
@@ -189,7 +211,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
-                                assert(false);
+                                assert (false);
                                 break;
                         }
                         return false;
@@ -238,6 +260,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
     /**
      * This removes a username from the ignore list of the experiment.
+     *
      * @param username The string of the userID to remove from the ignore list of the experiment.
      */
     public void menuUnignoreUsername(String username) {

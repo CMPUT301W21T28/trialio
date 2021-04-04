@@ -23,6 +23,9 @@ import com.example.trialio.models.Experiment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This activity provides the interface for creating a Meaurement Trial QR code.
+ */
 public class QRMeasurementActivity extends AppCompatActivity {
     private Button createQR;
     private Experiment experiment;

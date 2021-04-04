@@ -26,6 +26,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+/**
+ * Test suite for the UserManager class. This class tests all public methods of the UserManager
+ * class, emphasizing the CRUD functionality.
+ */
 public class UserManagerTest {
 
     private final String testCollection = "user-test";

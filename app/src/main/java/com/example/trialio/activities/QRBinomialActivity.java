@@ -34,6 +34,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+/**
+ * This activity provides the interface for creating a Binomial Trial QR code.
+ */
 public class QRBinomialActivity extends AppCompatActivity {
     private Context context = this;
     private Experiment experiment;

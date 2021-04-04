@@ -47,7 +47,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
                         Location location = new Location();
                         if (geoLocationReq) {
-                            location.getCurrentLocation(getContext(),getActivity());
+                            location.getCurrentLocation(getContext());
                         }
                         Date date = new Date();
 

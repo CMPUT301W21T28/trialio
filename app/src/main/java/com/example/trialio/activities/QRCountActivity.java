@@ -22,6 +22,9 @@ import com.example.trialio.models.Experiment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This activity provides the interface for creating a Count Trial QR code.
+ */
 public class QRCountActivity extends AppCompatActivity {
     private Button createQR;
     private Experiment experiment;

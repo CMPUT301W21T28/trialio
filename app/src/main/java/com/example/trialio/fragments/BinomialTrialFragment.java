@@ -48,7 +48,7 @@ public class BinomialTrialFragment extends DialogFragment {
                 boolean isSuccess = s.isChecked();
                 Location location = new Location();
                 if (geoLocationReq) {
-                    location.getCurrentLocation(getContext(),getActivity());
+                    location.getCurrentLocation(getContext());
                 }
                 Date date = new Date();
 
