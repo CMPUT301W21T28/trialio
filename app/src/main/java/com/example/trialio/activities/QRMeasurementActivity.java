@@ -54,11 +54,7 @@ public class QRMeasurementActivity extends AppCompatActivity {
         createQR = findViewById(R.id.btnQRMeasurement);
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
-        barcodeFrame = findViewById(R.id.barcodeFrame);
-        qrFrame = findViewById(R.id.QRFrame);
-        registerBarcode = findViewById(R.id.btnRegisterBarcode);
         input = findViewById(R.id.txtMeasurementQRValue);
-        Warning = findViewById(R.id.txtWarning);
         listviewBarcode = findViewById(R.id.listBarcode);
 
 

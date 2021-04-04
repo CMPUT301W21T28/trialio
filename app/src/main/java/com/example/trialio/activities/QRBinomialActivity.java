@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -177,7 +178,7 @@ public class QRBinomialActivity extends AppCompatActivity {
                 setBarcodeView();
             }
         });
-
+        //TODO: check if isBarcode is true then put following code in the first createQR
         createQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,6 +191,20 @@ public class QRBinomialActivity extends AppCompatActivity {
                 bundle.putBoolean("isBarcode", isBarcode);
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+        });
+
+        listviewBarcode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                QRFragment qrFragment = new QRFragment();
+                Bundle bundle = new Bundle();
+                isQRSuccess = aSwitch.isChecked();
+                Boolean isBarcode = true;
+                bundle.putString("barcode",barcodeList.get(i));
+                bundle.putBoolean("isBarcode", isBarcode);
+                qrFragment.setArguments(bundle);
+                qrFragment.show(getSupportFragmentManager(),"barcode");
             }
         });
 

@@ -54,9 +54,6 @@ public class QRNonnegActivity extends AppCompatActivity {
         createQR = findViewById(R.id.btnQRNonneg);
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
-        barcodeFrame = findViewById(R.id.barcodeFrame);
-        qrFrame = findViewById(R.id.QRFrame);
-        registerBarcode = findViewById(R.id.btnRegisterBarcode);
 
         listviewBarcode = findViewById(R.id.listBarcode);
 

@@ -22,8 +22,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.activities.QRBinomialActivity;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -46,6 +48,7 @@ public class QRFragment extends DialogFragment {
     private Location location;
     private String TAG = "QRF";
     private Boolean isBarcode;
+    private String barcode;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -54,14 +57,24 @@ public class QRFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         experiment = (Experiment) bundle.getSerializable("experiment");
+        barcode = bundle.getString("barcode");
+        isBarcode = bundle.getBoolean("isBarcode");
         result = bundle.getString("result");
+        if (isBarcode){
+            imgQR = view.findViewById(R.id.imgQRCode);
+            String[] info = barcode.split("\n");
+            Bitmap barcode = BarcodeManager.generateBarcode(info[0]);
+            imgQR.setImageBitmap(barcode);
+            builder.setView(view).setTitle("Show Barcode:").setNegativeButton("Cancel",null);
 
-        imgQR = view.findViewById(R.id.imgQRCode);
-        Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result,"");
-        imgQR.setImageBitmap(qrcode);
+        }else{
+            imgQR = view.findViewById(R.id.imgQRCode);
+            Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result,"");
+            imgQR.setImageBitmap(qrcode);
+            builder.setView(view).setTitle("Show QR:").setNegativeButton("Cancel",null);
 
+        }
 
-        builder.setView(view).setTitle("Show QR:").setNegativeButton("Cancel",null);
         return builder.create();
     }
 

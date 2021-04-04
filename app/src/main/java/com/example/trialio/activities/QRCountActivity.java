@@ -48,8 +48,6 @@ public class QRCountActivity extends AppCompatActivity {
         createQR = findViewById(R.id.btnQRCount);
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
-        barcodeFrame = findViewById(R.id.barcodeFrame);
-        qrFrame = findViewById(R.id.QRFrame);
         listviewBarcode = findViewById(R.id.listBarcode);
 
 
