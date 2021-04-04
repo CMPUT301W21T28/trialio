@@ -18,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -217,6 +218,31 @@ public class ExperimentManagerTest {
         Experiment experiment = fetchedExperimentHolder[0];
         assertNotNull(experiment);
         assertEquals(expId, experiment.getExperimentID());
+    }
+
+    @Test
+    public void testSetOnAllExperimentsFetchCallback() throws InterruptedException {
+        ExperimentManager em = mockExperimentManager();
+
+        // Get an experiment
+        CountDownLatch getLock = new CountDownLatch(1);
+        final Experiment[] fetchedExperimentHolder = new Experiment[2];
+        em.setOnAllExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
+            @Override
+            public void onManyExperimentsFetch(List<Experiment> experiments) {
+                assertEquals(2, experiments.size());
+                fetchedExperimentHolder[0] = experiments.get(0);
+                fetchedExperimentHolder[1] = experiments.get(1);
+                getLock.countDown();
+            }
+        });
+
+        // Wait fot experiment fetch to complete, then check the fetch was correct
+        getLock.await(10, TimeUnit.SECONDS);
+        assertNotNull(fetchedExperimentHolder[0]);
+        assertNotNull(fetchedExperimentHolder[1]);
+        assertEquals(initTestExperimentIds.get(0), fetchedExperimentHolder[0].getExperimentID());
+        assertEquals(initTestExperimentIds.get(1), fetchedExperimentHolder[1].getExperimentID());
     }
 
     @Test
