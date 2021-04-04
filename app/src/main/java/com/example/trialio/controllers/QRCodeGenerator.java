@@ -44,21 +44,14 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static Boolean locationRequired;
     private static Context context;
 
-    private static Boolean isBarcode; //TODO: bad practice?
 
-    public static Bitmap generateForTrial(Experiment experiment, String strResult, Boolean isBarcode, String information){
+    public static Bitmap generateForTrial(Experiment experiment, String strResult, String information){
         String infoResult = "";
         Date date = new Date();
         BitMatrix result = null;
         try{
-            if (isBarcode) {
-                infoResult = information;
-                result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.CODE_128, 1000, 200, null);
-            } else {
-                infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
-                result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
-            }
-
+            infoResult = experiment.getTrialManager().getType() + "\n" +  strResult + "\n" +  experiment.getExperimentID();
+            result = new MultiFormatWriter().encode(infoResult, BarcodeFormat.QR_CODE, 300, 300, null);
         } catch (WriterException writerException) {
             writerException.printStackTrace();
             return null;
@@ -149,14 +142,6 @@ public class QRCodeGenerator extends AppCompatActivity {
     }
 
 
-    public static void readBarcode(String input, User user, Experiment experiment, String result){
-        if (experiment.getTrialManager().getType().equals("BINOMIAL")){
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" +  result + "\n" +  experiment.getExperimentID();
-            Bitmap barcode = generateForTrial(experiment, result, isBarcode, infoResult);
-            // barcode contains recreated barcode with original information + new trial information
-        }
-
-    }
 
 
 

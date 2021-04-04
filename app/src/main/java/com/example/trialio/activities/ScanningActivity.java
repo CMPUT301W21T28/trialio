@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -97,7 +98,9 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      */
     private void processResult(String text){
         if(isBarcode){
-            QRCodeGenerator.readBarcode(text, currentUser, experiment, result);
+            //String associatedExperimentID, String associatedTrialID
+            BarcodeManager barcodeManager = new BarcodeManager(experiment.getExperimentID(), experiment.getTrialManager().extractTrial());
+            barcodeManager.registerBarcode(text, currentUser, experiment, result);
         }else{
             String processed = text;
             String [] items = processed.split("\n");
