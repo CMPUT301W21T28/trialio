@@ -132,7 +132,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
      */
     public void setFields() {
         isOpenSwitch.setChecked(experiment.getTrialManager().getIsOpen());
-        isPublishedSwitch.setChecked(experiment.isPublished());
+        isPublishedSwitch.setChecked(experiment.getIsPublished());
     }
 
     /**
@@ -165,7 +165,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                     @Override
                     public void onExperimentFetch(Experiment new_experiment) {
                         experiment = new_experiment;
-                        experiment.setPublished(b);
+                        experiment.setIsPublished(b);
                         experimentManager.editExperiment(experiment.getExperimentID(), experiment);
                     }
                 });

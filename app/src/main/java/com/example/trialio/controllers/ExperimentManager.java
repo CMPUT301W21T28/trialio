@@ -344,7 +344,7 @@ public class ExperimentManager {
         // set Experiment fields
         data.put(E_EXPERIMENTID_FIELD, experiment.getExperimentID());
         data.put(E_KEYWORDS_FIELD, experiment.getKeywords());
-        data.put(E_ISPUBLISHED_FIELD, experiment.isPublished());
+        data.put(E_ISPUBLISHED_FIELD, experiment.getIsPublished());
 
         // set ExperimentSettings fields
         data.put(ES_DESCRIPTION_FIELD, experiment.getSettings().getDescription());
@@ -386,7 +386,7 @@ public class ExperimentManager {
 
         // set isPublished
         boolean isPublished = (boolean) data.get(E_ISPUBLISHED_FIELD);
-        experiment.setPublished(isPublished);
+        experiment.setIsPublished(isPublished);
 
         // set settings
         experiment.setSettings(new ExperimentSettings());

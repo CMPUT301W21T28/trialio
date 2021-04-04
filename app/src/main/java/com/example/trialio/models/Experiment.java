@@ -162,7 +162,7 @@ public class Experiment implements Serializable {
      * This checks if the experiment is published or not.
      * @return A boolean representing whether or not the experiment is published.
      */
-    public boolean isPublished() {
+    public boolean getIsPublished() {
         return isPublished;
     }
 
@@ -170,7 +170,7 @@ public class Experiment implements Serializable {
      * This sets the experiment as either published or unpublished.
      * @param published The boolean to set as isPublished.
      */
-    public void setPublished(boolean published) {
+    public void setIsPublished(boolean published) {
         isPublished = published;
     }
 
