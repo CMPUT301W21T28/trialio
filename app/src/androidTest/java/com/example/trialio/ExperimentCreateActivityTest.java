@@ -1,5 +1,6 @@
 package com.example.trialio;
 
+import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -14,8 +15,6 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.Experiment;
-import com.example.trialio.models.User;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class ExperimentCreateActivityTest {
     private Solo solo;
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, true);
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, false);
 
     /**
      * Runs before all tests. Create a new experiment.
@@ -39,7 +38,6 @@ public class ExperimentCreateActivityTest {
      */
     @Before
     public void setUp() throws Exception {
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
 
         // collection paths for testing
         String experimentTestPath = "experiments-test";
@@ -50,6 +48,10 @@ public class ExperimentCreateActivityTest {
         QuestionForumManager.setCollectionPath(experimentTestPath);
         TrialManager.setCollectionPath(experimentTestPath);
         UserManager.setCollectionPath(usersTestPath);
+
+        // get solo instance
+        rule.launchActivity(new Intent());
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
 
         // Asserts that the current activity is the MainActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
