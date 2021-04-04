@@ -48,7 +48,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_weight="0"
         android:layout_marginHorizontal="5dp"
         android:background="@color/section_grey">
@@ -77,9 +77,8 @@
     // "parent experiment"
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
-
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical">
 
@@ -229,114 +228,39 @@
     </LinearLayout>
     //barcode
 
-    <FrameLayout
-        android:id="@+id/barcodeFrame"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_weight="1"
 
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:gravity="center_horizontal"
+            android:text="Barcode"
+            android:textColor="@color/special_yellow" />
 
-                android:fontFamily="monospace"
-                android:gravity="center_horizontal"
-                android:text="Barcode"
-                android:textColor="@color/special_yellow" />
-
-            <ListView
-                android:id="@+id/listBarcode"
-                android:layout_width="wrap_content"
-                android:layout_height="400dp" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/special_yellow"
-                android:text="Register Barcode"
-                android:textColor="@color/black">
-
-            </Button>
-
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    // QR Code
-    <FrameLayout
-        android:id="@+id/QRFrame"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
-
-        <LinearLayout
+        <ListView
+            android:id="@+id/listBarcode"
+            android:layout_width="match_parent"
+            android:layout_height="480dp" />
+        <Button
+            android:id="@+id/btnQRCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
-
-                android:fontFamily="monospace"
-                android:gravity="center_horizontal"
-                android:text="QR Code"
-                android:textColor="@color/special_yellow" />
+            android:text="Create QR Code"
+            android:backgroundTint="@color/special_yellow"
+            android:textColor="@color/black"/>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="10"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnQRCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Create QR Code"
-                        android:backgroundTint="@color/special_yellow"
-                        android:textColor="@color/black"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </FrameLayout>
-
+    </LinearLayout>
 
 
 </LinearLayout

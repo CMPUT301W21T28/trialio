@@ -227,140 +227,70 @@
 
     </LinearLayout>
 
-    //barcode
-    <FrameLayout
-        android:id="@+id/barcodeFrame"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_marginHorizontal="20dp"
+            android:layout_weight="1"
+
+            android:fontFamily="monospace"
+            android:gravity="center_horizontal"
+            android:text="Barcode"
+            android:textColor="@color/special_yellow" />
+
+        <ListView
+            android:id="@+id/listBarcode"
+            android:layout_width="wrap_content"
+            android:layout_height="480dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+        <LinearLayout
 
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-                android:fontFamily="monospace"
-                android:gravity="center_horizontal"
-                android:text="Barcode"
-                android:textColor="@color/special_yellow" />
 
-            <ListView
-                android:id="@+id/listBarcode"
+            <Switch
+                android:id="@+id/swtQR"
                 android:layout_width="wrap_content"
-                android:layout_height="400dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:focusable="true"
+                android:text="Success/Fail"
+                android:textColor="@color/black"
+                app:backgroundTint="@color/special_yellow" />
 
-                <Switch
-                    android:id="@+id/swtBarcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:text="Success/Fail"
-                    android:textColor="@color/black"
-                    app:backgroundTint="@color/special_yellow" />
-                <Button
-                    android:id="@+id/btnRegisterBarcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/special_yellow"
-                    android:text="Register Barcode"
-                    android:textColor="@color/black">
-
-                </Button>
-
-
-            </LinearLayout>
-
-
-
+            <Button
+                android:id="@+id/btnQRBinomial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:text="Create QR Code"
+                android:textColor="@color/black"
+                app:backgroundTint="@color/special_yellow" />
 
         </LinearLayout>
 
-    </FrameLayout>
 
-    // QR Code
-    <FrameLayout
-        android:id="@+id/QRFrame"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/experimentInfoIL">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
-
-                android:fontFamily="monospace"
-                android:gravity="center_horizontal"
-                android:text="QR Code"
-                android:textColor="@color/special_yellow" />
-
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="3dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-
-                <Switch
-                    android:id="@+id/swtQR"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:text="Success/Fail"
-                    android:textColor="@color/black"
-                    app:backgroundTint="@color/special_yellow" />
-
-                <Button
-                    android:id="@+id/btnQRBinomial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:text="Create QR Code"
-                    android:textColor="@color/black"
-                    app:backgroundTint="@color/special_yellow" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>
 

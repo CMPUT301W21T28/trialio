@@ -269,10 +269,16 @@ public class BarcodeManager implements Serializable {
             this.createBarcode(infoResult);
         } else if (experiment.getTrialManager().getType().equals("COUNT")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
+            this.createBarcode(infoResult);
+
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
+            this.createBarcode(infoResult);
+
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
+            this.createBarcode(infoResult);
+
         }
     }
 

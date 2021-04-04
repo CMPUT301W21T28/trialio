@@ -46,13 +46,11 @@ public class QRBinomialActivity extends AppCompatActivity {
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
-    private FrameLayout barcodeFrame;
-    private FrameLayout qrFrame;
     private Button showQR;
     private Button showBarcode;
-    private Button registerBarcode;
     private Boolean locationRequired;
     private ListView listviewBarcode;
+    private TextView txtMode;
 
     private ArrayList<String> barcodeList;
     private ArrayAdapterBarcode barcodeAdapter;
@@ -69,14 +67,11 @@ public class QRBinomialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_binomial);
         aSwitch = findViewById(R.id.swtQR);
-        switchBarcode = findViewById(R.id.swtBarcode);
         createQR = findViewById(R.id.btnQRBinomial);
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
-        barcodeFrame = findViewById(R.id.barcodeFrame);
-        qrFrame = findViewById(R.id.QRFrame);
-        registerBarcode = findViewById(R.id.btnRegisterBarcode);
         listviewBarcode = findViewById(R.id.listBarcode);
+        txtMode = findViewById(R.id.txtMode);
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -182,13 +177,13 @@ public class QRBinomialActivity extends AppCompatActivity {
             }
         });
 
-        registerBarcode.setOnClickListener(new View.OnClickListener() {
+        createQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ScanningActivity.class);
                 Bundle bundle = new Bundle();
                 Boolean isBarcode = true;
-                isBarcodeSuccess = switchBarcode.isChecked();
+                isBarcodeSuccess = aSwitch.isChecked();
                 bundle.putSerializable("experiment", experiment);
                 bundle.putSerializable("result", String.valueOf(isBarcodeSuccess));
                 bundle.putBoolean("isBarcode", isBarcode);
@@ -203,15 +198,20 @@ public class QRBinomialActivity extends AppCompatActivity {
 
 
     private void setBarcodeView (){
-        barcodeFrame.setVisibility(View.VISIBLE);
-        qrFrame.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowBarcode);
+        listviewBarcode.setVisibility(View.VISIBLE);
+        createQR.setText("Register Barcode: ");
+        txtMode.setText("Barcode");
+
+
     }
 
     private void setQRView(){
-        barcodeFrame.setVisibility(View.INVISIBLE);
-        qrFrame.setVisibility(View.VISIBLE);
+        listviewBarcode.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowQR);
+        createQR.setText("Create QR: ");
+        txtMode.setText("QR Code");
+
     }
 
     private void toggleListButton(int btn) {
