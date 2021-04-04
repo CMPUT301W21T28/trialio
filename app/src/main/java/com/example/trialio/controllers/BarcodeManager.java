@@ -46,15 +46,14 @@ public class BarcodeManager implements Serializable {
     private static final String TAG = "BarcodeForumManager";
 
     private static final String EXPERIMENT_PATH = "experiments-v5";
-    private static final String TRIAL_PATH = "trials";
     private static final String BARCODES_PATH = "barcodes";
 
 
     /**
      * Constructor for QuestionForumManager
      */
-    public BarcodeManager(String associatedExperimentID, String associatedTrialID) {
-        barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(TRIAL_PATH).document(associatedTrialID).collection(BARCODES_PATH);
+    public BarcodeManager(String associatedExperimentID) {
+        barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(BARCODES_PATH);
     }
 
     public BarcodeManager() {    }
@@ -100,9 +99,12 @@ public class BarcodeManager implements Serializable {
 
 
     public void createBarcode(String barcodeString) {
+        Map<String, Object> newBarcode = new HashMap<>();
+        newBarcode.put(barcodeString, "Barcode");
+
         Log.d(TAG, "Posting barcode string " + barcodeString);
         barcodeCollection
-                .add(barcodeString)   //TODO: might be annoying to use the document name with the functions bellow ****
+                .add(newBarcode)   //TODO: might be annoying to use the document name with the functions bellow ****
                 //TODO ERROR HERE
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -210,11 +212,20 @@ public class BarcodeManager implements Serializable {
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+//    TODO: do you need me ?
+//    public static void readBarcode() {}
     /*
      * TODO:
      *  1) how to get experiment field + where
      *
      * */
+
+    /**
+     * to generateBarcode for qrfragment
+     * @param barcodeID
+     * @return
+     */
     public static Bitmap generateBarcode(String barcodeID) {
         String infoResult = "";
         BitMatrix result = null;
@@ -241,26 +252,26 @@ public class BarcodeManager implements Serializable {
         return myBitmap;
     }
 
-
-    public static void registerBarcode(String input, User user, Experiment experiment, String result) {
+    /**
+     * for storing barcode to barcode collection
+     * @param input
+     * @param user
+     * @param experiment
+     * @param result
+     */
+    public void registerBarcode(String input, User user, Experiment experiment, String result) {
         if (experiment.getTrialManager().getType().equals("BINOMIAL")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            Bitmap barcode = generateBarcode(infoResult);
-            // barcode contains recreated barcode with original information + new trial information
+            this.createBarcode(infoResult);
         } else if (experiment.getTrialManager().getType().equals("COUNT")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            Bitmap barcode = generateBarcode(infoResult);
         } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            Bitmap barcode = generateBarcode(infoResult);
         } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
             String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            Bitmap barcode = generateBarcode(infoResult);
         }
     }
 
-//    TODO: do you need me ?
-//    public static void readBarcode() {}
 
 
 

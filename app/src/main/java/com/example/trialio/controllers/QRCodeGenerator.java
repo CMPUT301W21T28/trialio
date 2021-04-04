@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -40,6 +42,7 @@ Uploader's channel: https://www.youtube.com/channel/UC0gObgODeCoWwk5wYysAidQ
 public class QRCodeGenerator extends AppCompatActivity {
     private static final String TAG = "qrgenerator";
     private static ExperimentManager experimentManager;
+    private static BarcodeManager barcodeManager;
     private static User current_user;
     private static Boolean locationRequired;
     private static Context context;
@@ -140,6 +143,8 @@ public class QRCodeGenerator extends AppCompatActivity {
         }
 
     }
+
+
 
 
 

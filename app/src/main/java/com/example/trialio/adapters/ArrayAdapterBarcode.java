@@ -60,10 +60,10 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         barcodeResult.setText(barcodeID);
 
         // generate image
-        Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
+        //Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
 
         // set image
-        barcodeImageView.setImageBitmap(barcodeImage);
+        //barcodeImageView.setImageBitmap(barcodeImage);
 
         return view;
     }

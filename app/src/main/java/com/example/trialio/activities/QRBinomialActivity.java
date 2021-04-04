@@ -127,7 +127,7 @@ public class QRBinomialActivity extends AppCompatActivity {
                 bundle.putSerializable("experiment", experiment);
                 bundle.putSerializable("result", String.valueOf(isBarcodeSuccess));
                 bundle.putBoolean("isBarcode", isBarcode);
-                intent.putExtra("bundle", bundle);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

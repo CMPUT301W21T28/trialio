@@ -36,6 +36,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     private Experiment experiment;
     private String result;
     private Boolean isBarcode;
+    private BarcodeManager barcodeManager;
 
     private final String TAG = "scanningactivity";
 
@@ -52,7 +53,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         currentUser = (User) bundle.getSerializable("user_scan");
         experiment = (Experiment) bundle.getSerializable("experiment");
         result = (String) bundle.getSerializable("result");
-        isBarcode = (Boolean) bundle.getBoolean("isBarcode");
+        isBarcode = bundle.getBoolean("isBarcode");
 
         scannerView = (ZXingScannerView)findViewById(R.id.scanner);
 
@@ -97,9 +98,12 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      * @param text
      */
     private void processResult(String text){
+        Log.d(TAG,"in ProcessResult");
+        Log.d(TAG,String.valueOf(isBarcode));
+
         if(isBarcode){
             //String associatedExperimentID, String associatedTrialID
-            BarcodeManager barcodeManager = new BarcodeManager(experiment.getExperimentID(), experiment.getTrialManager().extractTrial());
+            barcodeManager = new BarcodeManager(experiment.getExperimentID());
             barcodeManager.registerBarcode(text, currentUser, experiment, result);
         }else{
             String processed = text;
