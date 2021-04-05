@@ -201,7 +201,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         // set the home button
         HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
-    
+
 
     private String findRegionName(Location location) {
         Log.d(TAG, "Getting Location Name");
