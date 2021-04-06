@@ -197,7 +197,7 @@ public class TrialManager implements Serializable {
                 for (DocumentSnapshot doc : value.getDocuments()) {
                     try {
                         Trial trial = extractTrial(doc);
-                        if (!ignoredUserIDs.contains(trial.getExperimenterId())) {
+                        if (!ignoredUserIDs.contains(trial.getExperimenterID())) {
                             trialList.add(trial);
                         }
                         Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
@@ -252,7 +252,7 @@ public class TrialManager implements Serializable {
         Map<String, Object> data = new HashMap<String, Object>();
 
         // set Trial fields
-        data.put(EXPERIMENTERID_FIELD, trial.getExperimenterId());
+        data.put(EXPERIMENTERID_FIELD, trial.getExperimenterID());
         data.put(DATE_FIELD, trial.getDate());
         data.put(L_LONGITUDE_FIELD, trial.getLocation().getLongitude());
         data.put(L_LATITUDE_FIELD, trial.getLocation().getLatitude());
@@ -345,7 +345,7 @@ public class TrialManager implements Serializable {
         // set experimenterID
         String experimenterID = (String) data.get(EXPERIMENTERID_FIELD);
         assert experimenterID != null;
-        trial.setExperimenterId(experimenterID);
+        trial.setExperimenterID(experimenterID);
 
         // set location
         trial.setLocation(new Location());

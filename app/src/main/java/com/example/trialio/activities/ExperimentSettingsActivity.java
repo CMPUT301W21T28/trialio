@@ -198,7 +198,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // get clicked username
-                String clickedUsername = ignoredList.get(i);
+                String clickedUserID = ignoredList.get(i);
 
                 // create the popup menu
                 PopupMenu popup = new PopupMenu(context, view);
@@ -210,8 +210,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.item_unignore:
-                                Log.d(TAG, "UnIgnore user: " + clickedUsername);
-                                menuUnignoreUsername(clickedUsername);
+                                Log.d(TAG, "UnIgnore user: " + clickedUserID);
+                                menuUnignoreID(clickedUserID);
                                 break;
                             default:
                                 Log.d(TAG, "onMenuItemClick: Invalid item.");
@@ -265,9 +265,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     /**
      * This removes a username from the ignore list of the experiment.
      *
-     * @param username The string of the userID to remove from the ignore list of the experiment.
+     * @param userID The string of the userID to remove from the ignore list of the experiment.
      */
-    public void menuUnignoreUsername(String username) {
+    public void menuUnignoreID(String userID) {
 
         // update the experiment and remove a
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -278,7 +278,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 experiment = newExperiment;
 
                 // edit experiment in firebase
-                experiment.getTrialManager().removeIgnoredUsers(username);
+                experiment.getTrialManager().removeIgnoredUsers(userID);
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
 
                 // update data in activity
@@ -288,7 +288,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     }
 
     @Override
-    public void onOkPressed(String username) {
+    public void onOkPressed(String userID) {
         // update the experiment and remove a
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
@@ -298,7 +298,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 experiment = newExperiment;
 
                 // edit experiment in firebase
-                experiment.getTrialManager().addIgnoredUser(username);
+                experiment.getTrialManager().addIgnoredUser(userID);
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);
 
                 // update data in activity
