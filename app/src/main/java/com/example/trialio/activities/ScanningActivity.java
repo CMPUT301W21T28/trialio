@@ -6,10 +6,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.QRCodeGenerator;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -31,6 +33,13 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanningActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private ZXingScannerView scannerView;
     private User currentUser;
+    private Experiment experiment;
+    private String result;
+    private Boolean isBarcode;
+    private BarcodeManager barcodeManager;
+
+    private final String TAG = "scanningactivity";
+
 
     /**
      * onCreate first ask for user permission, then proceeds to scan using camera
@@ -42,6 +51,10 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         setContentView(R.layout.activity_scanning);
         Bundle bundle = getIntent().getExtras();
         currentUser = (User) bundle.getSerializable("user_scan");
+        experiment = (Experiment) bundle.getSerializable("experiment");
+        result = (String) bundle.getSerializable("result");
+        isBarcode = bundle.getBoolean("isBarcode");
+
         scannerView = (ZXingScannerView)findViewById(R.id.scanner);
 
         Dexter.withActivity(this)
@@ -85,8 +98,18 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      * @param text
      */
     private void processResult(String text){
-        String processed = text;
-        String [] items = processed.split("\n");
-        QRCodeGenerator.readQR(items, currentUser);
+        Log.d(TAG,"in ProcessResult");
+        Log.d(TAG,String.valueOf(isBarcode));
+
+        if(isBarcode){
+            //String associatedExperimentID, String associatedTrialID
+            barcodeManager = new BarcodeManager(experiment.getExperimentID());
+            barcodeManager.registerBarcode(text, currentUser, experiment, result);
+        }else{
+            String processed = text;
+            String [] items = processed.split("\n");
+            QRCodeGenerator.readQR(items, currentUser);
+        }
+
     }
 }

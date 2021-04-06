@@ -31,6 +31,12 @@ public class Experiment implements Serializable {
      */
     private ArrayList<String> keywords;
 
+
+    /**
+     * Barcode data that can be retrieved, and used to populate list view when barcode activity is created   //TODO ????
+     */
+    private ArrayList<String> barcodes;
+
     /**
      * Boolean representing if the experiment is published or not.
      */
@@ -44,7 +50,9 @@ public class Experiment implements Serializable {
         this.settings = new ExperimentSettings();
         this.trialManager = new TrialManager();
         this.keywords = new ArrayList<>();
+        this.barcodes = new ArrayList<>();
         parseKeywords();
+
     }
 
     /**
@@ -75,6 +83,7 @@ public class Experiment implements Serializable {
         this.settings = settings;
         this.trialManager = new TrialManager(experimentID, type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();
+        this.barcodes = new ArrayList<String>();
         this.isPublished = isPublished;
         parseKeywords();
     }
@@ -171,6 +180,16 @@ public class Experiment implements Serializable {
         this.keywords = keywords;
         parseKeywords();
     }
+
+
+    public ArrayList<String> getBarcodes() {
+        return barcodes;
+    }
+
+    // TODO: do we need this ????
+//    public void setBarcodes(ArrayList<String> barcodes) {
+//        this.barcodes = barcodes;
+//    }
 
     /**
      * This checks if the experiment is published or not.
