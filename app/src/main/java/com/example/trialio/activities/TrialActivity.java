@@ -166,6 +166,18 @@ public class TrialActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        // set the click listener to view the owner profile
+        TextView textOwner = findViewById(R.id.trials_text_owner);
+        textOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
     }
 
     /**
