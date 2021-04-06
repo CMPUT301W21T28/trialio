@@ -18,6 +18,7 @@ import com.example.trialio.adapters.ArrayAdapterBarcode;
 import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,9 @@ public class QRCountActivity extends AppCompatActivity {
         setExperimentInfo();
         setQRView();
         setOnClickListeners();
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
 

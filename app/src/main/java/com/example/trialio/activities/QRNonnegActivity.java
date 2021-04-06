@@ -19,6 +19,7 @@ import com.example.trialio.adapters.ArrayAdapterBarcode;
 import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,10 @@ public class QRNonnegActivity extends AppCompatActivity {
         barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
 
         listviewBarcode.setAdapter(barcodeAdapter);
+
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
 
 
         setExperimentInfo();
@@ -160,6 +165,7 @@ public class QRNonnegActivity extends AppCompatActivity {
         barcodeFrame.setVisibility(View.VISIBLE);
         qrFrame.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowBarcode);
+        setOnClickListeners();
     }
 
     private void setQRView(){

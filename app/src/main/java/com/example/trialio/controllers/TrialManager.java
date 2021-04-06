@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class TrialManager implements Serializable {
     private final String TAG = "TrialManager";
-    private static final String EXPERIMENT_COLLECTION_PATH = "experiments-v6";
+    private static String EXPERIMENT_COLLECTION_PATH = "experiments-v6";
     private static final String TRIALS_COLLECTION_PATH = "trials";
 
     private static final String EXPERIMENTERID_FIELD = "experimenterID";
@@ -365,5 +365,13 @@ public class TrialManager implements Serializable {
 
         // return the trial we extracted
         return trial;
+    }
+
+    /**
+     * Sets the experiment collection path of all TrialManagers. Used for injection during testing.
+     * @param newPath String of the new collection path.
+     */
+    public static void setCollectionPath(String newPath) {
+        EXPERIMENT_COLLECTION_PATH = newPath;
     }
 }

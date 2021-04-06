@@ -25,6 +25,7 @@ import com.example.trialio.controllers.UserManager;
 import com.example.trialio.fragments.AddIgnoredFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 
@@ -121,6 +122,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
         // set adapter
         ignoredListView.setAdapter(ignoredAdapter);
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -179,7 +183,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                experimentManager.unpublishExperiment(experiment.getExperimentID());
+                experimentManager.deleteExperiment(experiment.getExperimentID());
                 Intent intent = new Intent(context, MainActivity.class);
 
                 // start an ExperimentActivity

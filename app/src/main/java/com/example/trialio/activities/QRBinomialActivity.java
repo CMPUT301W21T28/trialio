@@ -31,6 +31,7 @@ import com.example.trialio.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import javax.annotation.Nullable;
 
@@ -146,6 +147,12 @@ public class QRBinomialActivity extends AppCompatActivity {
         } else {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
+
+
+        setOnClickListeners();
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
 

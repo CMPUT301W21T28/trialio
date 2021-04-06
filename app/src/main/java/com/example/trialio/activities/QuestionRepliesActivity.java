@@ -20,6 +20,7 @@ import com.example.trialio.fragments.AddReplyFragment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,8 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         setUpOnClickListeners();
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override

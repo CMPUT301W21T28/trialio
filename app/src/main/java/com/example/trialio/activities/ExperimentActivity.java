@@ -42,6 +42,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.example.trialio.utils.StatisticsUtility;
 
 import java.util.ArrayList;
@@ -113,6 +114,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showQR = (Button) findViewById(R.id.btnQRCode);
         mapView = (ImageButton) findViewById(R.id.btnMap);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override

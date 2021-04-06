@@ -24,6 +24,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         // Set up onClick listeners
         setUpOnClickListeners();
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -119,9 +122,17 @@ public class MainActivity extends AppCompatActivity {
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ViewUserActivity.class);
-                intent.putExtra("user", currentUser);
-                startActivity(intent);
+
+                // get the current user and go to view user activity
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        currentUser = user;
+                        Intent intent = new Intent(context, ViewUserActivity.class);
+                        intent.putExtra("user", currentUser);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -286,7 +297,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             experimentAdapter.notifyDataSetChanged();
-
         }
     }
 }
