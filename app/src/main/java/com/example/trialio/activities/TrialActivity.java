@@ -2,7 +2,7 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +19,7 @@ import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
  */
 public class TrialActivity extends AppCompatActivity {
     private final String TAG = "TrialActivity";
+    private Context context;
 
     /**
      * The ListView of submitted trials
@@ -68,6 +70,9 @@ public class TrialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trials);
+
+        // get the context
+        context = this;
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -121,7 +126,7 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // get the id of the clicked user
-                String clickedUserId = trialList.get(i).getExperimenterID();
+                String userID = trialList.get(i).getExperimenterID();
 
                 int popupViewID;
                 if (isUserOwner) {
@@ -141,20 +146,24 @@ public class TrialActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.item_ignore_user) {
-                            Log.d(TAG, "Ignore user: " + clickedUserId);
-                            menuIgnoreUsername(clickedUserId);
+                            Log.d(TAG, "Ignore user: " + userID);
+                            menuIgnoreUsername(userID);
                         } else if (menuItem.getItemId() == R.id.item_view_profile) {
-                            Log.d(TAG, "View profile: " + clickedUserId);
-                            menuViewProfile(clickedUserId);
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
                         } else {
                             Log.d(TAG, "onMenuItemClick: Invalid item.");
                         }
+
                         return false;
                     }
                 });
                 popup.show();
 
-                return false;
+                return true;
             }
         });
     }
@@ -195,27 +204,6 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public void onUserFetch(User user) {
                 experimentOwnerTextView.setText(user.getUsername());
-            }
-        });
-    }
-
-    /**
-     * This switches to a ViewUserActivity with the given user as the argument.
-     */
-    private void menuViewProfile(String userID) {
-        UserManager userManager = new UserManager();
-        userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
-            @Override
-            public void onUserFetch(User user) {
-                Intent intent = new Intent(getApplicationContext(), ViewUserActivity.class);
-
-                // pass in experiment as an argument
-                Bundle args = new Bundle();
-                args.putSerializable("user", user);
-                intent.putExtras(args);
-
-                // start an ExperimentActivity
-                startActivity(intent);
             }
         });
     }
