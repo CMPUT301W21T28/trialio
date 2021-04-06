@@ -3,10 +3,12 @@ package com.example.trialio.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import com.example.trialio.adapters.ReplyAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.AddReplyFragment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
@@ -99,9 +102,6 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         questionsListView.setAdapter(replyAdapter);
 
         setUpOnClickListeners();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -146,6 +146,41 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
             }
         });
 
+        // set up the listener to view the profile of the user who posted a question in the list view
+        replyListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // get the userID
+                String userID = replyList.get(i).getUserId();
+
+                // create the popup menu
+                int popupViewID = R.layout.menu_trials_experimenter;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_view_profile) {
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
+                        } else {
+                            Log.d(TAG, "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
+            }
+        });
+
 
         /**
          * Adds new reply
@@ -167,6 +202,21 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
             }
         });
+
+        // sets a listener to view the author profile when their username is clicked
+        TextView authorID = findViewById(R.id.selectedQuestionAuthorID);
+        authorID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, selectedQuestion.getUserId());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**

@@ -201,6 +201,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             }
         });
 
+        // sets a listener to view the owner profile when their username is clicked
         TextView ownerView = findViewById(R.id.experiment_text_owner);
         ownerView.setOnClickListener(new View.OnClickListener() {
             @Override
