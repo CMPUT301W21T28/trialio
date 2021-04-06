@@ -47,7 +47,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
     private Switch isOpenSwitch;
     private Switch isPublishedSwitch;
     private ListView ignoredListView;
-    private ArrayList<String> ignoredList;
+    private ArrayList<String> ignoredIDList;
     private UserAdapter ignoredAdapter;
     private Button addIgnoredButton;
 
@@ -76,12 +76,12 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         experiment = (Experiment) bundle.getSerializable("experiment");
 
         // initialize the ignored list
-        ignoredList = new ArrayList<String>();
+        ignoredIDList = new ArrayList<String>();
 
         // get managers
         experimentManager = new ExperimentManager();
         userManager = new UserManager();
-        ignoredAdapter = new UserAdapter(context, ignoredList);
+        ignoredAdapter = new UserAdapter(context, ignoredIDList);
 
         // get views
         experimentDescriptionTextView = findViewById(R.id.settings_description);
@@ -198,7 +198,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // get clicked username
-                String clickedUserID = ignoredList.get(i);
+                String clickedUserID = ignoredIDList.get(i);
 
                 // create the popup menu
                 PopupMenu popup = new PopupMenu(context, view);
@@ -249,8 +249,8 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 experiment = new_experiment;
 
                 // update ignored listView
-                ignoredList.clear();
-                ignoredList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
+                ignoredIDList.clear();
+                ignoredIDList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
                 ignoredAdapter.notifyDataSetChanged();
 
                 // set fields
