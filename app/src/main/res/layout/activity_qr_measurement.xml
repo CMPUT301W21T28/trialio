@@ -228,7 +228,6 @@
 
     </LinearLayout>
 
-    //barcode
 
     <LinearLayout
         android:id="@+id/barcodeFrame"
@@ -242,13 +241,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/txtMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
 
                 android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
+                android:layout_weight="0"
 
                 android:fontFamily="monospace"
                 android:gravity="center_horizontal"
@@ -258,12 +257,20 @@
             <ListView
                 android:id="@+id/listBarcode"
                 android:layout_width="wrap_content"
-                android:layout_height="460dp" />
+                android:layout_height="423dp" />
+            <TextView
+                android:id="@+id/warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:textColor="@color/special_yellow" >
+            </TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="0">
 
                 <EditText
                     android:id="@+id/txtMeasurementQRValue"
@@ -276,9 +283,8 @@
 
                 <Button
                     android:id="@+id/btnQRMeasurement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:backgroundTint="@color/special_yellow"
                     android:text="Create QR Code"
                     android:textColor="@color/black" />

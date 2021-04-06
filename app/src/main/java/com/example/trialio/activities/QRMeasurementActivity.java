@@ -3,6 +3,8 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,8 @@ import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.utils.HomeButtonUtility;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +32,15 @@ import java.util.List;
  * This activity provides the interface for creating a Meaurement Trial QR code.
  */
 public class QRMeasurementActivity extends AppCompatActivity {
+    private Context context = this;
     private Button createQR;
     private Experiment experiment;
     private TextView Warning;
     private EditText input;
     private Button showQR;
     private Button showBarcode;
-    private FrameLayout barcodeFrame;
-    private FrameLayout qrFrame;
-    private Button registerBarcode;
+    private TextView txtMode;
+    private Boolean onBarcodeView;
 
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
@@ -60,6 +64,8 @@ public class QRMeasurementActivity extends AppCompatActivity {
         showBarcode = findViewById(R.id.btnshowBarcode);
         input = findViewById(R.id.txtMeasurementQRValue);
         listviewBarcode = findViewById(R.id.listBarcode);
+        Warning = findViewById(R.id.warning);
+        txtMode = findViewById(R.id.txtMode);
 
 
         // get the experiment that was passed in
@@ -109,15 +115,31 @@ public class QRMeasurementActivity extends AppCompatActivity {
         createQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QRFragment qrFragment = new QRFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("experiment",experiment);
-                if (input.getText().toString().matches("")){
-                    Warning.setText("Measurement cannot be blank.");
+                if (onBarcodeView){
+                    if (input.getText().toString().matches("")){
+                        Warning.setText("Measurement cannot be blank.");
+                    }else{
+                        Intent intent = new Intent(context, ScanningActivity.class);
+                        Bundle bundle = new Bundle();
+                        Boolean isBarcode = true;
+                        bundle.putSerializable("experiment", experiment);
+                        bundle.putBoolean("isBarcode", isBarcode);
+                        bundle.putString("result", input.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
                 }else{
-                    bundle.putString("result", input.getText().toString());
-                    qrFragment.setArguments(bundle);
-                    qrFragment.show(getSupportFragmentManager(),"QrCode");
+                    if (input.getText().toString().matches("")){
+                        Warning.setText("Measurement cannot be blank.");
+                    }else{
+                        QRFragment qrFragment = new QRFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("experiment",experiment);
+                        bundle.putString("result", input.getText().toString());
+                        qrFragment.setArguments(bundle);
+                        qrFragment.show(getSupportFragmentManager(),"QrCode");
+                    }
                 }
             }
         });
@@ -164,15 +186,19 @@ public class QRMeasurementActivity extends AppCompatActivity {
     }
 
     private void setBarcodeView (){
-        barcodeFrame.setVisibility(View.VISIBLE);
-        qrFrame.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowBarcode);
+        listviewBarcode.setVisibility(View.VISIBLE);
+        createQR.setText("Register Barcode: ");
+        txtMode.setText("Barcode");
+        onBarcodeView = true;
     }
 
     private void setQRView(){
-        barcodeFrame.setVisibility(View.INVISIBLE);
-        qrFrame.setVisibility(View.VISIBLE);
+        listviewBarcode.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowQR);
+        createQR.setText("Create QR: ");
+        txtMode.setText("QR Code");
+        onBarcodeView = false;
     }
 
     private void toggleListButton(int btn) {

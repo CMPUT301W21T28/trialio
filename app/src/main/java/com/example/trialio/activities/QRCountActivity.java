@@ -3,6 +3,8 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,8 @@ import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.utils.HomeButtonUtility;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +35,18 @@ public class QRCountActivity extends AppCompatActivity {
     private Experiment experiment;
     private Button showQR;
     private Button showBarcode;
-    private FrameLayout barcodeFrame;
-    private FrameLayout qrFrame;
-
+    private Context context = this;
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
+    private TextView txtMode;
     private ArrayList<String> barcodeList;
     private ArrayAdapterBarcode barcodeAdapter;
     private BarcodeManager barcodeManager;
     private ListView listviewBarcode;
+    private Boolean onBarcodeView;
 
 
     @Override
@@ -53,6 +57,7 @@ public class QRCountActivity extends AppCompatActivity {
         showQR = findViewById(R.id.btnshowQR);
         showBarcode = findViewById(R.id.btnshowBarcode);
         listviewBarcode = findViewById(R.id.listBarcode);
+        txtMode = findViewById(R.id.txtMode);
 
 
         // get the experiment that was passed in
@@ -104,12 +109,23 @@ public class QRCountActivity extends AppCompatActivity {
         createQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QRFragment qrFragment = new QRFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("experiment",experiment);
-                bundle.putString("result", String.valueOf(1));
-                qrFragment.setArguments(bundle);
-                qrFragment.show(getSupportFragmentManager(),"QrCode");
+                if (onBarcodeView){
+                    Intent intent = new Intent(context, ScanningActivity.class);
+                    Bundle bundle = new Bundle();
+                    Boolean isBarcode = true;
+                    bundle.putSerializable("experiment", experiment);
+                    bundle.putSerializable("result", String.valueOf(1));
+                    bundle.putBoolean("isBarcode", isBarcode);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    QRFragment qrFragment = new QRFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("experiment",experiment);
+                    bundle.putString("result", String.valueOf(1));
+                    qrFragment.setArguments(bundle);
+                    qrFragment.show(getSupportFragmentManager(),"QrCode");
+                }
             }
         });
 
@@ -156,15 +172,19 @@ public class QRCountActivity extends AppCompatActivity {
     }
 
     private void setBarcodeView (){
-        barcodeFrame.setVisibility(View.VISIBLE);
-        qrFrame.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowBarcode);
+        listviewBarcode.setVisibility(View.VISIBLE);
+        createQR.setText("Register Barcode: ");
+        txtMode.setText("Barcode");
+        onBarcodeView = true;
     }
 
     private void setQRView(){
-        barcodeFrame.setVisibility(View.INVISIBLE);
-        qrFrame.setVisibility(View.VISIBLE);
+        listviewBarcode.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowQR);
+        createQR.setText("Create QR: ");
+        txtMode.setText("QR Code");
+        onBarcodeView = false;
     }
 
     private void toggleListButton(int btn) {
