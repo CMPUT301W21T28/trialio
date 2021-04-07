@@ -172,6 +172,7 @@ public class QRBinomialActivity extends AppCompatActivity {
                     bundle.putSerializable("experiment", experiment);
                     bundle.putSerializable("result", String.valueOf(isBarcodeSuccess));
                     bundle.putBoolean("isBarcode", isBarcode);
+                    intent.putExtra("Parent", "QRActivity");
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
@@ -207,7 +208,6 @@ public class QRBinomialActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
-                isQRSuccess = aSwitch.isChecked();
                 Boolean isBarcode = true;
                 bundle.putString("barcode",barcodeList.get(i));
                 bundle.putBoolean("isBarcode", isBarcode);

@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -122,6 +123,7 @@ public class QRMeasurementActivity extends AppCompatActivity {
                         bundle.putSerializable("experiment", experiment);
                         bundle.putBoolean("isBarcode", isBarcode);
                         bundle.putString("result", input.getText().toString());
+                        intent.putExtra("Parent", "QRActivity");
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -162,6 +164,19 @@ public class QRMeasurementActivity extends AppCompatActivity {
                 // create and execute a ViewUserProfileCommand
                 ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
                 command.execute();
+            }
+        });
+
+        listviewBarcode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                QRFragment qrFragment = new QRFragment();
+                Bundle bundle = new Bundle();
+                Boolean isBarcode = true;
+                bundle.putString("barcode",barcodeList.get(i));
+                bundle.putBoolean("isBarcode", isBarcode);
+                qrFragment.setArguments(bundle);
+                qrFragment.show(getSupportFragmentManager(),"barcode");
             }
         });
 
