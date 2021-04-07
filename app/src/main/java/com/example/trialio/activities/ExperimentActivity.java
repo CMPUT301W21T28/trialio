@@ -409,6 +409,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 Intent intent = new Intent(context, ScanningActivity.class);
                 Bundle args = new Bundle();
                 args.putSerializable("user_scan", currentUser);
+                intent.putExtra("Parent", "ExperimentActivity");
                 intent.putExtras(args);
                 startActivity(intent);
             }

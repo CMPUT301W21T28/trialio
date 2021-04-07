@@ -285,63 +285,63 @@ public class BarcodeManager implements Serializable {
     }
 
     public static void readBarcode(String[] input, User user){
-        if (input[0].equals("BINOMIAL")){
+        if (input[1].equals("BINOMIAL")){
             current_user = user;
             Location location = new Location();
             Date date = new Date();
 
             ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
+                    BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[2]));
                     new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    experimentManager.editExperiment(input[3],new_experiment);
                 }
             });
 
-        } else if (input[0].equals("COUNT")){
+        } else if (input[1].equals("COUNT")){
             current_user = user;
             Date date = new Date();
             Location location = new Location();
 
             ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
                     CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
                     new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    experimentManager.editExperiment(input[3],new_experiment);
                 }
             });
-        } else if (input[0].equals("NONNEGATIVE")){
+        } else if (input[1].equals("NONNEGATIVE")){
             current_user = user;
             Date date = new Date();
             Location location = new Location();
 
             ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[1]));
+                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[2]));
                     new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    experimentManager.editExperiment(input[3],new_experiment);
                 }
             });
-        } else if (input[0].equals("MEASUREMENT")){
+        } else if (input[1].equals("MEASUREMENT")){
             current_user = user;
             Date date = new Date();
             Location location = new Location();
 
 
             ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
 
-                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[1]), input[3]);
+                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[2]), input[3]);
                     new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    experimentManager.editExperiment(input[3],new_experiment);
                 }
             });
         }
