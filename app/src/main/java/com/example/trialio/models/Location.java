@@ -58,11 +58,6 @@ public class Location implements Serializable{
     }
 
     /**
-        This function requests the wifi or gps of the device to return the current location, and
-        double checks permission for the user location
-     */
-
-    /**
      * This function requests the wifi or GPS of the device to return the current location, and
      *         double checks permission for the user location
      *
