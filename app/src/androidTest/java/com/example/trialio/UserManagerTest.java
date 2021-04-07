@@ -27,7 +27,21 @@ import static org.junit.Assert.fail;
 
 /**
  * Test suite for the UserManager class. This class tests all public methods of the UserManager
- * class, emphasizing the CRUD functionality.
+ * class, emphasizing the CRUD functionality. These tests disable network connectivity to speed things
+ * up.
+ * <p>
+ * WARNING: UserManager interfaces with Firestore, so some tests may fail to due timeout.
+ * In particular, this seems to be an issue when running the entire test suite at once on an
+ * emulator (which is slow). Often the emulator gets slowed down for a while after this too many runs.
+ * Problem appears fixed since network connectivity was turned off, but if it occurs the most effective
+ * troubleshooting method is to wipe data on the emulator.
+ * <p>
+ * Troubleshooting tips:
+ * - Wipe data on emulator
+ * - Run on real device instead of emulator
+ * - Run tests one at a time
+ * <p>
+ * Tests run successfully as of 2021-04-06
  */
 public class UserManagerTest {
 
@@ -56,39 +70,10 @@ public class UserManagerTest {
     }
 
     /**
-     * Creates a mock UserManager
-     *
-     * @return a UserManager
-     */
-    private UserManager mockUserManager() throws InterruptedException {
-        CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
-        UserManager userManager = new UserManager(testCollection);
-        initTestUsernames.clear();
-        for (String id : initTestUserIds) {
-            User user = new User();
-            userManager.createNewUser(user, id).addOnCompleteListener(task -> {
-                initTestUsernames.add(user.getUsername());
-                lock.countDown();
-            });
-        }
-        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
-        return userManager;
-    }
-
-    /**
-     * Creates a mock UserManager with no Users in it
-     *
-     * @return a UserManager
-     */
-    private UserManager mockEmptyUserManager() {
-        return new UserManager(testCollection);
-    }
-
-    /**
      * Deletes all test users in the database
      */
     @After
-    public void clean() throws Exception {
+    public void cleanAfterTest() throws Exception {
         // Aggregate the ids of the documents to delete
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<String> allIds = new ArrayList<>();
@@ -145,6 +130,35 @@ public class UserManagerTest {
                 });
 
         lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Creates a mock UserManager
+     *
+     * @return a UserManager
+     */
+    private UserManager mockUserManager() throws InterruptedException {
+        CountDownLatch lock = new CountDownLatch(initTestUserIds.size());
+        UserManager userManager = new UserManager(testCollection);
+        initTestUsernames.clear();
+        for (String id : initTestUserIds) {
+            User user = new User();
+            userManager.createNewUser(user, id).addOnCompleteListener(task -> {
+                initTestUsernames.add(user.getUsername());
+                lock.countDown();
+            });
+        }
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+        return userManager;
+    }
+
+    /**
+     * Creates a mock UserManager with no Users in it
+     *
+     * @return a UserManager
+     */
+    private UserManager mockEmptyUserManager() {
+        return new UserManager(testCollection);
     }
 
     /**
