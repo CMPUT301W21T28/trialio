@@ -19,8 +19,11 @@ import android.widget.TextView;
 import com.example.trialio.R;
 import com.example.trialio.adapters.ArrayAdapterBarcode;
 import com.example.trialio.controllers.BarcodeManager;
+import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
 
 import org.w3c.dom.Text;
@@ -76,9 +79,6 @@ public class QRCountActivity extends AppCompatActivity {
         setExperimentInfo();
         setQRView();
         setOnClickListeners();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
 
@@ -145,6 +145,17 @@ public class QRCountActivity extends AppCompatActivity {
             }
         });
 
+        // set the click listener to view the owner profile
+        experimentOwnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
         listviewBarcode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -158,6 +169,8 @@ public class QRCountActivity extends AppCompatActivity {
             }
         });
 
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     private void setExperimentInfo(){
@@ -172,7 +185,15 @@ public class QRCountActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+
+        // get the username from the userManager
+        UserManager userManager = new UserManager();
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                experimentOwnerTextView.setText(user.getUsername());
+            }
+        });
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");

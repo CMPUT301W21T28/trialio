@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -16,12 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.trialio.adapters.ExperimentAdapter;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private ExperimentAdapter experimentAdapter;
     private User currentUser;
 
+    private enum listMode {ALL, OWNED, SUBS}  // enum used to specify which experiment list to show
+    private listMode mode;  // specify which list to show at a given time
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,20 +73,36 @@ public class MainActivity extends AppCompatActivity {
         ListView experimentListView = findViewById(R.id.list_experiment);
         experimentListView.setAdapter(experimentAdapter);
 
+        // set the list mode as default ALL
+        mode = listMode.ALL;
+
         // Set up onClick listeners
         setUpOnClickListeners();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        setExperimentListToAll();
+        // set the experiment list and the current user
+        setExperimentList();
         setCurrentUser();
+    }
 
+    /**
+     * Sets the experiment list depending on the mode.
+     */
+    public void setExperimentList() {
+        if (mode == listMode.ALL) {
+            setExperimentListToAll();
+        } else if (mode == listMode.OWNED) {
+            setExperimentListToOwned();
+        } else if (mode == listMode.SUBS) {
+            setExperimentListToSubs();
+        } else {
+            Log.d(TAG, "Error: Invalid listMode.");
+            assert false;
+        }
     }
 
     /**
@@ -114,6 +136,42 @@ public class MainActivity extends AppCompatActivity {
 
                 // start an ExperimentActivity
                 startActivity(intent);
+            }
+        });
+
+        // set up the listener to view the profile of the owner of an experiment in the list view
+        experimentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // get the userID
+                String userID = experimentList.get(i).getSettings().getOwnerID();
+
+                // create the popup menu
+                int popupViewID = R.layout.menu_view_profile;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_view_profile) {
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
+                        } else {
+                            Log.d(TAG, "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
             }
         });
 
@@ -158,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // Called when the Subs button is clicked
         Button subsToggleButton = (Button) findViewById(R.id.btnSubs);
         subsToggleButton.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 setExperimentListToSubs();
             }
         });
-
 
         // Called when the Add button is clicked
         Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
@@ -183,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         /* Android Developer Docs, "TextView", 2021-03-17, Apache 2.0,
          * https://developer.android.com/reference/android/widget/TextView.html#setOnEditorActionListener(android.widget.TextView.OnEditorActionListener)
@@ -218,6 +273,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**
@@ -254,6 +312,10 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void setExperimentListToAll() {
+
+        // set the experiment list mode to ALL
+        mode = listMode.ALL;
+
         // Fetch data for the list view
         experimentList.clear();
         experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
@@ -266,6 +328,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setExperimentListToOwned() {
+
+        // set the experiment list mode to OWNED
+        mode = listMode.OWNED;
+
         // Fetch data for the list view
         experimentList.clear();
         if (currentUser != null) {
@@ -280,6 +346,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setExperimentListToSubs() {
+
+        // set the experiment list mode to SUBS
+        mode = listMode.SUBS;
+
         // Fetch data for the list view
         if (currentUser != null) {
             ArrayList<String> expIds = currentUser.getSubscribedExperiments();

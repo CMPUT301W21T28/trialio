@@ -23,6 +23,7 @@ import com.example.trialio.adapters.TrialAdapter;
 import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
@@ -134,7 +135,15 @@ public class QRBinomialActivity extends AppCompatActivity {
 
         experimentDescriptionTextView.setText(experiment.getSettings().getDescription());
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
-        experimentOwnerTextView.setText(experiment.getSettings().getOwnerID());
+
+        // get the username from the userManager
+        UserManager userManager = new UserManager();
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+                experimentOwnerTextView.setText(user.getUsername());
+            }
+        });
 
         if ( experiment.getTrialManager().getIsOpen() ) {
             experimentStatusTextView.setText("Open");
@@ -148,15 +157,8 @@ public class QRBinomialActivity extends AppCompatActivity {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
 
-
         setOnClickListeners();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
-
-
-
 
     public void setOnClickListeners() {
         createQR.setOnClickListener(new View.OnClickListener() {
@@ -213,9 +215,23 @@ public class QRBinomialActivity extends AppCompatActivity {
                 qrFragment.show(getSupportFragmentManager(),"barcode");
             }
         });
+
+        // set the click listener to view the owner profile
+        experimentOwnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
-    private void setBarcodeView (){
+    private void setBarcodeView () {
         toggleListButton(R.id.btnshowBarcode);
         listviewBarcode.setVisibility(View.VISIBLE);
         createQR.setText("Register Barcode: ");
@@ -223,7 +239,7 @@ public class QRBinomialActivity extends AppCompatActivity {
         onBarcodeView = true;
     }
 
-    private void setQRView(){
+    private void setQRView() {
         listviewBarcode.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowQR);
         createQR.setText("Create QR: ");
@@ -251,7 +267,5 @@ public class QRBinomialActivity extends AppCompatActivity {
         selectedBtn.setBackground(buttonDrawable);
 
         showQR = selectedBtn;
-
     }
-
 }
