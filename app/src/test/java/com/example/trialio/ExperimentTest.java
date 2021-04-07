@@ -39,7 +39,7 @@ public class ExperimentTest {
 
         String type = ExperimentTypeUtility.getCountType();
         ExperimentSettings es = new ExperimentSettings();
-        Experiment e2 = new Experiment("experiment2", es, type, true, 12);
+        Experiment e2 = new Experiment("experiment2", es, type, true, 12, true);
 
         assertEquals(e2.getExperimentID(), "experiment2");
         assertTrue(e2.getTrialManager().getIsOpen());

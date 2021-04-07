@@ -26,13 +26,13 @@ public class UserTest {
     Experiment mockExperiment1() {
         String type = ExperimentTypeUtility.getBinomialType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp1", settings, type, true, 10);
+        return new Experiment("exp1", settings, type, true, 10, true);
     }
 
     Experiment mockExperiment2() {
         String type = ExperimentTypeUtility.getCountType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp2", settings, type, true, 12);
+        return new Experiment("exp2", settings, type, true, 12, true);
     }
 
     /**
@@ -47,8 +47,8 @@ public class UserTest {
 
         assertNull(u1.getUsername());
         User u2 = new User("1234", "user1");
-        assertEquals("1234", u2.getUsername());
-        assertEquals("user1", u2.getDeviceId());
+        assertEquals("1234", u2.getId());
+        assertEquals("user1", u2.getUsername());
     }
 
     /**
