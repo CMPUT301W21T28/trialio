@@ -2,7 +2,6 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,11 +59,6 @@ public class TrialActivity extends AppCompatActivity {
     private Experiment experiment;
 
     /**
-     * The trial manager for the activity experiment
-     */
-    private TrialManager trialManager;
-
-    /**
      * Flag indicating if current user owns the experiment
      */
     private Boolean isUserOwner = false;
@@ -78,7 +72,6 @@ public class TrialActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_trial");
-        trialManager = experiment.getTrialManager();
 
         // set the trialList and adapter
         trialList = new ArrayList<>();
@@ -128,7 +121,7 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // get the id of the clicked user
-                String clickedUserId = trialList.get(i).getExperimenterId();
+                String clickedUserId = trialList.get(i).getExperimenterID();
 
                 int popupViewID;
                 if (isUserOwner) {
@@ -242,9 +235,10 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
                 experiment = newExperiment;                                                     // update the local experiment
-                trialManager.addIgnoredUser(userId);                            // add the userID to the list of ignored userIDs
+                experiment.getTrialManager().addIgnoredUser(userId);                            // add the userID to the list of ignored userIDs
                 experimentManager.editExperiment(experiment.getExperimentID(), experiment);     // update the experiment
                 updateExperimentData();
+                updateTrialData();
             }
         });
     }
@@ -267,7 +261,7 @@ public class TrialActivity extends AppCompatActivity {
      * Updates the trial data displayed in the activity with database data
      */
     private void updateTrialData() {
-        trialManager.setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
             @Override
             public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
                 trialList.clear();

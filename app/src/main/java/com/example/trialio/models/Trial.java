@@ -7,7 +7,7 @@ import java.util.Date;
  * Represents a general trial, experiment type not specified
  */
 public abstract class Trial implements Serializable {
-    protected String experimenterId;
+    protected String experimenterID;
     protected Location location;
     protected Date date;
 
@@ -19,12 +19,12 @@ public abstract class Trial implements Serializable {
     /**
      * Constructor for a Trial
      *
-     * @param experimenterId the unique identifier of an experimenter
+     * @param experimenterID the unique identifier of an experimenter
      * @param location       the location of a trial
      * @param date           the date of a trial
      */
-    public Trial(String experimenterId, Location location, Date date) {
-        this.experimenterId = experimenterId;
+    public Trial(String experimenterID, Location location, Date date) {
+        this.experimenterID = experimenterID;
         this.location = location;
         this.date = date;
     }
@@ -34,17 +34,17 @@ public abstract class Trial implements Serializable {
      *
      * @return the experimenter id
      */
-    public String getExperimenterId() {
-        return experimenterId;
+    public String getExperimenterID() {
+        return experimenterID;
     }
 
     /**
      * Sets the experimenter Id
      *
-     * @param experimenterId the experimenter id to be set
+     * @param experimenterID the experimenter id to be set
      */
-    public void setExperimenterId(String experimenterId) {
-        this.experimenterId = experimenterId;
+    public void setExperimenterID(String experimenterID) {
+        this.experimenterID = experimenterID;
     }
 
     /**
