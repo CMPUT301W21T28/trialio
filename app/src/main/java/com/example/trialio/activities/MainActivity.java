@@ -294,10 +294,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setExperimentListToAll() {
         // Fetch data for the list view
+        experimentList.clear();
         experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(List<Experiment> experiments) {
-                experimentList.clear();
                 experimentList.addAll(experiments);
                 experimentAdapter.notifyDataSetChanged();
             }
@@ -306,11 +306,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setExperimentListToOwned() {
         // Fetch data for the list view
+        experimentList.clear();
         if (currentUser != null) {
             experimentManager.getOwnedExperiments(currentUser, new ExperimentManager.OnManyExperimentsFetchListener() {
                 @Override
                 public void onManyExperimentsFetch(List<Experiment> experiments) {
-                    experimentList.clear();
                     experimentList.addAll(experiments);
                     experimentAdapter.notifyDataSetChanged();
                 }
