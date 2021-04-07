@@ -30,18 +30,17 @@ import static org.junit.Assert.fail;
  * class, emphasizing the CRUD functionality. These tests disable network connectivity to speed things
  * up.
  * <p>
- * WARNING: UserManager interfaces with Firestore, so some tests may fail to due timeout.
- * In particular, this seems to be an issue when running the entire test suite at once on an
- * emulator (which is slow). Often the emulator gets slowed down for a while after this too many runs.
- * Problem appears fixed since network connectivity was turned off, but if it occurs the most effective
- * troubleshooting method is to wipe data on the emulator.
+ * WARNING: UserManager interfaces with Firestore, so some tests may fail to due timeout, depending
+ * on the speed of the machine. In particular, this seems to be an issue when running the entire
+ * test suite at once on a slow emulator. Often the emulator gets slowed down for a while after this
+ * too many runs.
  * <p>
  * Troubleshooting tips:
  * - Wipe data on emulator
  * - Run on real device instead of emulator
  * - Run tests one at a time
  * <p>
- * Tests run successfully as of 2021-04-06
+ * Tests run successfully as of 2021-04-07
  */
 public class UserManagerTest {
 
