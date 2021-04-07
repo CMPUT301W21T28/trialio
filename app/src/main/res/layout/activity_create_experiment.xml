@@ -8,7 +8,7 @@
     tools:context=".activities.ExperimentCreateActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/header"
         android:layout_width="408dp"
         android:layout_height="63dp"
         android:layout_marginStart="5dp"
@@ -19,7 +19,7 @@
         android:layout_marginBottom="5dp"
         android:layout_weight="0"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_outline_search_24"></ImageButton>
+            android:src="@drawable/ic_outline_search_24" />
 
 
         <ImageButton
@@ -40,7 +40,7 @@
             android:layout_weight="4"
             android:padding="15dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/temp_logo"></ImageButton>
+            android:src="@drawable/temp_logo" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -48,12 +48,12 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24"></ImageButton>
+            android:src="@drawable/ic_baseline_settings_24" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
+        android:id="@+id/descriptionContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -65,10 +65,10 @@
         android:layout_marginBottom="5dp"
         android:background="#9c9c9c"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintBottom_toTopOf="@+id/typeRegionContaner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <EditText
             android:id="@+id/descriptionEditText"
@@ -79,7 +79,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
+        android:id="@+id/typeRegionContaner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -90,10 +90,10 @@
         android:layout_marginBottom="5dp"
         android:layout_weight="0"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
+        app:layout_constraintBottom_toTopOf="@+id/geoContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/descriptionContainer">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Region:" />
+                android:hint="Region" />
 
 
         </LinearLayout>
@@ -130,7 +130,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
+        android:id="@+id/geoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -141,10 +141,10 @@
         android:layout_marginBottom="5dp"
         android:layout_weight="0"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+        app:layout_constraintBottom_toTopOf="@+id/minTrialsContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+        app:layout_constraintTop_toBottomOf="@+id/typeRegionContaner">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -181,6 +181,25 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/minTrialsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/mapContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geoContainer">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -195,65 +214,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Published" />
+                android:text="Publish" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="#9c9c9c">
+
+        <EditText
+            android:id="@+id/numTrialsEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Min. # of trials"
+            android:inputType="number"/>
+
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
+        android:id="@+id/mapContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="0"
-        android:background="#9c9c9c"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
-
-        <EditText
-            android:id="@+id/numTrialsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Minimum # of trials: "
-            android:padding="10dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_height="280sp"
+        android:padding="15dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
+        app:layout_constraintTop_toBottomOf="@+id/minTrialsContainer">
 
         <fragment
             android:id="@+id/regionMap"
             android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="380dp"
-            android:layout_height="340dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginRight="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             tools:context=".activities.ExperimentCreateActivity" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
@@ -262,12 +266,12 @@
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
-        android:orientation="horizontal"
         android:layout_weight="3"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+        app:layout_constraintTop_toBottomOf="@+id/mapContainer">
 
 
         <Button

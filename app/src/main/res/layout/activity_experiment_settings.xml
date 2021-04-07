@@ -210,16 +210,6 @@
         android:layout_marginHorizontal="5dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_delete_experiment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="3"
-            android:backgroundTint="@color/special_yellow"
-            android:text="DELETE"
-            android:textColor="@color/button_dark_grey" />
-
         <Switch
             android:id="@+id/switch_isopen_settings"
 
@@ -231,8 +221,8 @@
             android:fontFamily="monospace"
             android:textColor="@color/special_yellow"
 
-            android:layout_marginHorizontal="5dp"
-            />
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="25dp"/>
 
         <Switch
             android:id="@+id/switch_ispublished_settings"
@@ -244,9 +234,24 @@
             android:text="Published"
             android:fontFamily="monospace"
             android:textColor="@color/special_yellow"
-
-            android:layout_marginHorizontal="5dp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="25dp"
             />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_delete_experiment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:backgroundTint="@color/special_yellow"
+            android:text="DELETE"
+            android:textColor="@color/button_dark_grey" />
 
     </LinearLayout>
 
