@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private ExperimentAdapter experimentAdapter;
     private User currentUser;
 
+    private enum listMode {ALL, OWNED, SUBS}  // enum used to specify which experiment list to show
+    private listMode mode;  // specify which list to show at a given time
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,20 +73,36 @@ public class MainActivity extends AppCompatActivity {
         ListView experimentListView = findViewById(R.id.list_experiment);
         experimentListView.setAdapter(experimentAdapter);
 
+        // set the list mode as default ALL
+        mode = listMode.ALL;
+
         // Set up onClick listeners
         setUpOnClickListeners();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        setExperimentListToAll();
+        // set the experiment list and the current user
+        setExperimentList();
         setCurrentUser();
+    }
 
+    /**
+     * Sets the experiment list depending on the mode.
+     */
+    public void setExperimentList() {
+        if (mode == listMode.ALL) {
+            setExperimentListToAll();
+        } else if (mode == listMode.OWNED) {
+            setExperimentListToOwned();
+        } else if (mode == listMode.SUBS) {
+            setExperimentListToSubs();
+        } else {
+            Log.d(TAG, "Error: Invalid listMode.");
+            assert false;
+        }
     }
 
     /**
@@ -197,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // Called when the Subs button is clicked
         Button subsToggleButton = (Button) findViewById(R.id.btnSubs);
         subsToggleButton.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 setExperimentListToSubs();
             }
         });
-
 
         // Called when the Add button is clicked
         Button addExperiment = (Button) findViewById(R.id.btnNewExperiment);
@@ -222,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         /* Android Developer Docs, "TextView", 2021-03-17, Apache 2.0,
          * https://developer.android.com/reference/android/widget/TextView.html#setOnEditorActionListener(android.widget.TextView.OnEditorActionListener)
@@ -257,6 +273,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**
@@ -293,6 +312,10 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void setExperimentListToAll() {
+
+        // set the experiment list mode to ALL
+        mode = listMode.ALL;
+
         // Fetch data for the list view
         experimentList.clear();
         experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
@@ -305,6 +328,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setExperimentListToOwned() {
+
+        // set the experiment list mode to OWNED
+        mode = listMode.OWNED;
+
         // Fetch data for the list view
         experimentList.clear();
         if (currentUser != null) {
@@ -319,6 +346,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setExperimentListToSubs() {
+
+        // set the experiment list mode to SUBS
+        mode = listMode.SUBS;
+
         // Fetch data for the list view
         if (currentUser != null) {
             ArrayList<String> expIds = currentUser.getSubscribedExperiments();
