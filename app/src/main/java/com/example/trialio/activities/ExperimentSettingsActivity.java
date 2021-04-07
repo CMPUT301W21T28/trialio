@@ -101,7 +101,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         experimentTypeTextView.setText(experiment.getTrialManager().getType());
 
         // get the username of the owner
-        userManager.addUserUpdateListener(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 experimentOwnerTextView.setText(user.getUsername());
