@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -16,12 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.trialio.adapters.ExperimentAdapter;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.R;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
@@ -114,6 +117,42 @@ public class MainActivity extends AppCompatActivity {
 
                 // start an ExperimentActivity
                 startActivity(intent);
+            }
+        });
+
+        // set up the listener to view the profile of the owner of an experiment in the list view
+        experimentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // get the userID
+                String userID = experimentList.get(i).getSettings().getOwnerID();
+
+                // create the popup menu
+                int popupViewID = R.layout.menu_view_profile;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_view_profile) {
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
+                        } else {
+                            Log.d(TAG, "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
             }
         });
 

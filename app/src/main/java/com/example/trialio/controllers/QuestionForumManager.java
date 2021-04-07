@@ -162,11 +162,12 @@ public class QuestionForumManager implements Serializable {
         questionForumCollection
                 .document(selectedQuestionID)
                 .collection("Replies")
-                .add(newReply)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(newReply.getPostID())
+                .set(newReply)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Reply submitted successfully with ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Reply submitted successfully with ID: " + newReply.getPostID());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
