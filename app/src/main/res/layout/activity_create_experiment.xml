@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#535353"
+    android:background="@color/background_grey"
     tools:context=".activities.ExperimentCreateActivity">
 
     <LinearLayout
@@ -25,17 +25,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_outline_search_24" />
+            android:scaleType="fitCenter" />
 
 
         <ImageButton
             android:id="@+id/button_home"
             android:layout_width="0dp"
+            android:backgroundTint="@color/section_grey"
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:padding="15dp"
@@ -43,12 +44,13 @@
             android:src="@drawable/temp_logo" />
 
         <ImageButton
+            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_settings_24" />
+             />
 
     </LinearLayout>
 
