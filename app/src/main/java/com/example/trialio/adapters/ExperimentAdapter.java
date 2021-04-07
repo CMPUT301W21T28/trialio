@@ -54,7 +54,7 @@ public class ExperimentAdapter extends ArrayAdapter {
         // set the textviews
         textDescription.setText(experiment.getSettings().getDescription());
         textType.setText(experiment.getTrialManager().getType());
-        textStatus.setText(experiment.getTrialManager().getIsOpen() ? "OPEN" : "CLOSED");
+        textStatus.setText(experiment.getTrialManager().getIsOpen() ? R.string.experiment_status_open : R.string.experiment_status_closed);
         locNeed.setImageResource(R.drawable.ic_baseline_location_on_24);
 
         UserManager userManager = new UserManager();
