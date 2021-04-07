@@ -30,6 +30,22 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Tests for the ExperimentManager class. This class tests all public methods of the ExperimentManager
+ * class, emphasizing the CRUD functionality. These tests disable network connectivity to speed things
+ * up.
+ * <p>
+ * WARNING: ExperimentManager interfaces with Firestore, so some tests may fail to due timeout.
+ * In particular, this seems to be an issue when running the entire test suite at once on an
+ * emulator (which is slow). Often the emulator gets slowed down for a while after too many runs.
+ * <p>
+ * Troubleshooting tips:
+ *  - Wipe data on emulator
+ *  - Run tests one at a time
+ *  - Run on a real device (faster)
+ *  <p>
+ *  Tests run successfully as of 2021-04-06
+ */
 public class ExperimentManagerTest {
 
     private static final String testCollection = "test-em";
@@ -49,7 +65,9 @@ public class ExperimentManagerTest {
      * Initialize the string ids of Experiments to be used in all tests.
      */
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws InterruptedException {
+        FirebaseFirestore.getInstance().disableNetwork();
+        tearDown();
         initTestExperimentIds.add("em-tests-001");
         initTestExperimentIds.add("em-tests-002");
         unInitTestExperimentIds.add("em-tests-003");
@@ -80,7 +98,6 @@ public class ExperimentManagerTest {
     /**
      * Clean up the database before/after all tests by deleting all documents in the collection
      */
-    @BeforeClass
     @AfterClass
     public static void tearDown() throws InterruptedException {
         // Aggregate the ids of the documents to delete
@@ -97,6 +114,8 @@ public class ExperimentManagerTest {
         }
 
         lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+
+        db.enableNetwork();
 
     }
 
@@ -137,6 +156,13 @@ public class ExperimentManagerTest {
         return new ExperimentManager(testCollection);
     }
 
+    /**
+     * Creates a mock experiment for getting owned experiments
+     *
+     * @param user         the owner of the mock experiment
+     * @param experimentId the id of the mock experiment
+     * @return the mock experiment
+     */
     private Experiment mockOwnedExperiment(User user, String experimentId) {
         ExperimentSettings settings = new ExperimentSettings(
                 "owned experiment",
@@ -150,6 +176,31 @@ public class ExperimentManagerTest {
                 settings,
                 ExperimentTypeUtility.getBinomialType(),
                 true,
+                1,
+                true
+        );
+    }
+
+    /**
+     * Creates a mock experiment for searching experiments
+     *
+     * @param description  the description the mock experiment
+     * @param experimentId the id of the mock experiment
+     * @return the mock experiment
+     */
+    private Experiment mockSearchExperiment(String description, String experimentId) {
+        ExperimentSettings settings = new ExperimentSettings(
+                description,
+                new Region("region"),
+                "owner",
+                false
+        );
+
+        return new Experiment(
+                experimentId,
+                settings,
+                ExperimentTypeUtility.getMeasurementType(),
+                false,
                 1,
                 true
         );
@@ -238,7 +289,7 @@ public class ExperimentManagerTest {
         // Wait fot experiment fetch to complete, then check the fetch was correct
         getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment experiment = fetchedExperimentHolder[0];
-        assertNotNull(experiment);
+        assertNotNull(experiment);  // this line may fail due to timeout
         assertEquals(expId, experiment.getExperimentID());
     }
 
@@ -290,7 +341,7 @@ public class ExperimentManagerTest {
         // Wait for user fetch to complete, then check if values of user are as expected
         prepLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment exp = fetchedExpHolder[0];
-        assertNotNull(exp);
+        assertNotNull(exp); // this line may fail due to timeout
         assertEquals(expId, exp.getExperimentID());
 
         // Change values of the user, then update in the system
@@ -316,7 +367,7 @@ public class ExperimentManagerTest {
         // Wait for experiment fetch to complete, then check if values of user are as expected
         getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment updatedExp = fetchedExpHolder[0];
-        assertNotNull(updatedExp);
+        assertNotNull(updatedExp);      // this line may fail due to timeout
         assertEquals(
                 exp.getSettings().getDescription(),
                 updatedExp.getSettings().getDescription()
@@ -354,7 +405,7 @@ public class ExperimentManagerTest {
         });
         getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment deletedExp = fetchedExperimentHolder[0];
-        assertNull(deletedExp);
+        assertNull(deletedExp);     // this line may fail due to timeout
 
     }
 
@@ -438,7 +489,46 @@ public class ExperimentManagerTest {
     }
 
     @Test
-    public void testSearchByKeyword() {
-        fail();
+    public void testSearchByKeyword() throws InterruptedException {
+        ExperimentManager em = mockEmptyExperimentManager();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("apple");
+        keywords.add("flop");
+
+        // Create the mock experiments
+        Experiment search1 = mockSearchExperiment("apple and bananas", initTestExperimentIds.get(0));
+        Experiment search2 = mockSearchExperiment("that is a big flop man", initTestExperimentIds.get(1));
+        Experiment notSearch1 = mockSearchExperiment("no way jose", unInitTestExperimentIds.get(0));
+
+        // Publish the mock experiments
+        CountDownLatch prepLock = new CountDownLatch(3);
+        em.publishExperiment(search1).addOnCompleteListener(task -> prepLock.countDown());
+        em.publishExperiment(search2).addOnCompleteListener(task -> prepLock.countDown());
+        em.publishExperiment(notSearch1).addOnCompleteListener(task -> prepLock.countDown());
+        prepLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+
+        // Search for the experiments
+        CountDownLatch searchLock = new CountDownLatch(1);
+        boolean[] callbackTriggered = new boolean[1];
+        em.searchByKeyword(keywords, new ExperimentManager.OnManyExperimentsFetchListener() {
+            @Override
+            public void onManyExperimentsFetch(List<Experiment> experiments) {
+                // check num of experiments found
+                assertEquals(2, experiments.size());
+
+                // check ids of experiments
+                if (experiments.get(0).getExperimentID().equals(search1.getExperimentID())) {
+                    assertEquals(experiments.get(1).getExperimentID(), search2.getExperimentID());
+                } else if (experiments.get(0).getExperimentID().equals(search2.getExperimentID())) {
+                    assertEquals(experiments.get(1).getExperimentID(), search1.getExperimentID());
+                }
+
+                // done
+                callbackTriggered[0] = true;
+                searchLock.countDown();
+            }
+        });
+        searchLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+        assertTrue(callbackTriggered[0]);
     }
 }
