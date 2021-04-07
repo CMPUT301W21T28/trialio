@@ -67,7 +67,7 @@ public class QRFragment extends DialogFragment {
             imgQR.setImageBitmap(barcode);
             builder.setView(view).setTitle("Barcode").setNegativeButton("Close",null);
 
-        }else {
+        } else {
             imgQR = view.findViewById(R.id.imgQRCode);
             Bitmap qrcode = QRCodeGenerator.generateForTrial(experiment, result, "");
             imgQR.setImageBitmap(qrcode);

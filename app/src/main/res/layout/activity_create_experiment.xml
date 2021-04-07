@@ -25,6 +25,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -36,6 +37,7 @@
         <ImageButton
             android:id="@+id/button_home"
             android:layout_width="0dp"
+            android:backgroundTint="@color/section_grey"
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:padding="15dp"
@@ -43,6 +45,7 @@
             android:src="@drawable/temp_logo" />
 
         <ImageButton
+            android:backgroundTint="@color/section_grey"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
