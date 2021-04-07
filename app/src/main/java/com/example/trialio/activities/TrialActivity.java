@@ -87,9 +87,6 @@ public class TrialActivity extends AppCompatActivity {
         trialListView.setAdapter(trialAdapter);
 
         initState();
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -134,7 +131,7 @@ public class TrialActivity extends AppCompatActivity {
                     popupViewID = R.layout.menu_trials_owner;
                 } else {
                     // if the current user is not the owner, use experimenter menu
-                    popupViewID = R.layout.menu_trials_experimenter;
+                    popupViewID = R.layout.menu_view_profile;
                 }
 
                 // create the popup menu
@@ -178,6 +175,9 @@ public class TrialActivity extends AppCompatActivity {
                 command.execute();
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**

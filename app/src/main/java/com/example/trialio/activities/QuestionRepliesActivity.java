@@ -154,7 +154,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
                 String userID = replyList.get(i).getUserId();
 
                 // create the popup menu
-                int popupViewID = R.layout.menu_trials_experimenter;
+                int popupViewID = R.layout.menu_view_profile;
                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
                 popup.inflate(popupViewID);
 
