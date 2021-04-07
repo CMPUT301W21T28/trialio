@@ -6,4 +6,8 @@
     <item
         android:id="@+id/item_view_profile"
         android:title="View Profile"/>
+
+    <item
+        android:id="@+id/item_register_barcode"
+        android:title="Register Barcode"/>
 </menu>

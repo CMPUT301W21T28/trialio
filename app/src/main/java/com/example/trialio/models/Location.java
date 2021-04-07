@@ -13,31 +13,20 @@ Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
  */
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.trialio.R;
-import com.example.trialio.activities.ExperimentActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.type.LatLng;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Represents a location with a latitude and a longitude
@@ -78,8 +67,9 @@ public class Location implements Serializable{
      *         double checks permission for the user location
      *
      * @param context  the context used by location
+     * @return
      */
-    public void getCurrentLocation(Context context) {
+    public Task<android.location.Location> getCurrentLocation(Context context) {
         //getting location permission from the user
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locClient = LocationServices.getFusedLocationProviderClient(context);
@@ -101,7 +91,10 @@ public class Location implements Serializable{
                     Log.e(TAG, "OnFailure" + e.getLocalizedMessage());
                 }
             });
+            return locationTask;
         }
+
+        return null;
     }
 
     /**
