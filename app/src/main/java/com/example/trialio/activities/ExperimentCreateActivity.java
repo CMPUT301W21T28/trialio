@@ -1,15 +1,11 @@
 package com.example.trialio.activities;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.net.ConnectivityManagerCompat;
 
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
@@ -33,7 +28,6 @@ import com.example.trialio.models.Location;
 import com.example.trialio.models.Region;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -44,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * This activity allows a user to create an experiment, with full settings for the user to make it
@@ -202,34 +195,11 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
-
-    private String findRegionName(Location location) {
-        Log.d(TAG, "Getting Location Name");
-        //working on running the geocoder in a background thread
-        Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
-        String regionName = null;
-        List<Address> addresses = new ArrayList<>();
-        try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
-            regionName = addresses.get(0).getLocality();
-            if (regionName == null || regionName.length() > 20) {
-                regionName = addresses.get(0).getAdminArea();
-                if (regionName == null || regionName.length() > 20) {
-                    regionName = addresses.get(0).getCountryName();
-                }
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Getting Location Name: " +e.getMessage());
-        }
-        return regionName;
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         regionMap = googleMap;
 
         EditText editRegion = (EditText) findViewById(R.id.regionEditText);
-
 
         uiSettings = regionMap.getUiSettings();
 
@@ -245,10 +215,43 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 regionMap.addMarker(new MarkerOptions().position(latLng));
                 regionLocation.setLatitude(latLng.latitude);
                 regionLocation.setLongitude(latLng.longitude);
-                setRegionName(findRegionName(regionLocation));
-                if (regionName != null) {
-                    editRegion.setText(regionName, TextView.BufferType.EDITABLE);
-                }
+
+                final Handler handler = new Handler();
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "Getting Location Name in thread: " + Thread.currentThread().getName());
+                        Geocoder geocoder = new Geocoder(ExperimentCreateActivity.this);
+                        String regionName = null;
+                        List<Address> addresses = new ArrayList<>();
+                        try {
+                            addresses = geocoder.getFromLocation(regionLocation.getLatitude(), regionLocation.getLongitude(), 3);
+                            regionName = addresses.get(0).getLocality();
+                            if (regionName == null || regionName.length() > 20) {
+                                regionName = addresses.get(0).getAdminArea();
+                                if (regionName == null || regionName.length() > 20) {
+                                    regionName = addresses.get(0).getCountryName();
+                                }
+                            }
+                            setRegionName(regionName);
+                            String finalRegionName = regionName;
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (finalRegionName != null) {
+                                        editRegion.setText(finalRegionName, TextView.BufferType.EDITABLE);
+                                    }
+                                }
+                            });
+                            Log.d(TAG, "Successfully found name: " + regionName);
+                        } catch (IOException e) {
+                            Log.e(TAG, "Could not get Location Name: " +e.getMessage());
+                        }
+                    }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
     }
