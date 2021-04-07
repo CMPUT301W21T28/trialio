@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private ExperimentAdapter experimentAdapter;
     private User currentUser;
 
-    private enum listMode {ALL, OWNED, SUBS}
-    private listMode mode;
+    private enum listMode {ALL, OWNED, SUBS}  // enum used to specify which experiment list to show
+    private listMode mode;  // specify which list to show at a given time
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
