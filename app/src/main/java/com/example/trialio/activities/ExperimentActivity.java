@@ -450,7 +450,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     new AlertDialog.Builder(ExperimentActivity.this)
                             .setMessage("Map view is not available for this experiment")
                             .setCancelable(false)
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.dismiss();
