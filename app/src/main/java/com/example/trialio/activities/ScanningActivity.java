@@ -1,5 +1,6 @@
 package com.example.trialio.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -13,9 +14,13 @@ import android.widget.Toast;
 import com.example.trialio.R;
 import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.QRCodeGenerator;
+import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -38,6 +43,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     private Boolean isBarcode;
     private BarcodeManager barcodeManager;
     private String parentActivity;
+    private Context context = this;
 
     private final String TAG = "scanningactivity";
 
@@ -112,11 +118,23 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
             String [] items = processed.split("\n");
             Log.d(TAG,String.valueOf(items.length));
             Log.d(TAG,processed);
+            // if its a QRCode the length is 3
             if(String.valueOf(items.length).equals("3")){
-                QRCodeGenerator.readQR(items, currentUser);
+                if (experiment.getSettings().getGeoLocationRequired()){
+                    Location location = new Location();
+                    location.getCurrentLocation(context).addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<android.location.Location> task) {
+                            QRCodeGenerator.readQR(items, location, currentUser);
+                        }
+                    });
+
+                }
+            // if its a Barcode
             }else{
                 barcodeManager.readBarcode(items, currentUser);
             }
+        // if intent is not coming from Experiment Activity i.e. QRActivity
         }else{
             barcodeManager = new BarcodeManager(experiment.getExperimentID());
             barcodeManager.registerBarcode(text, currentUser, experiment, result);

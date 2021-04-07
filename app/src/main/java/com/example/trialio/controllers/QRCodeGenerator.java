@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.example.trialio.fragments.QRFragment;
 import com.example.trialio.models.Barcode;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
@@ -43,7 +44,6 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static ExperimentManager experimentManager;
     private static BarcodeManager barcodeManager;
     private static User current_user;
-    private static Boolean locationRequired;
     private static Context context;
 
 
@@ -80,16 +80,16 @@ public class QRCodeGenerator extends AppCompatActivity {
      * @param input 
      * @param user
      */
-    public static void readQR(String[] input, User user){
+    public static void readQR(String[] input, Location location, User user){
         if (input[0].equals("BINOMIAL")){
             current_user = user;
-            Location location = new Location();
             Date date = new Date();
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
+
                     BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[1]));
                     new_experiment.getTrialManager().addTrial(new_trial);
                     experimentManager.editExperiment(input[2],new_experiment);
@@ -99,10 +99,11 @@ public class QRCodeGenerator extends AppCompatActivity {
         } else if (input[0].equals("COUNT")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
+
 
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
+
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
                     CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
@@ -113,8 +114,6 @@ public class QRCodeGenerator extends AppCompatActivity {
         } else if (input[0].equals("NONNEGATIVE")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -127,7 +126,6 @@ public class QRCodeGenerator extends AppCompatActivity {
         } else if (input[0].equals("MEASUREMENT")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
 
 
             ExperimentManager experimentManager = new ExperimentManager();
