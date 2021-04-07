@@ -101,15 +101,22 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         Log.d(TAG,"in ProcessResult");
         Log.d(TAG,String.valueOf(isBarcode));
 
-        if(isBarcode){
-            //String associatedExperimentID, String associatedTrialID
-            barcodeManager = new BarcodeManager(experiment.getExperimentID());
-            barcodeManager.registerBarcode(text, currentUser, experiment, result);
-        }else{
+        // it reads in from which activity is scanning activity called from
+        // if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
+        // if its not experiment activity it means user is trying to register a barcode
+        if (String.valueOf(getParentActivityIntent()).contains("ExperimentActivity")){
+
             String processed = text;
             String [] items = processed.split("\n");
+            Log.d(TAG,String.valueOf(items.length));
             QRCodeGenerator.readQR(items, currentUser);
+
+        }else{
+            barcodeManager = new BarcodeManager(experiment.getExperimentID());
+            barcodeManager.registerBarcode(text, currentUser, experiment, result);
         }
+
+
 
     }
 }
