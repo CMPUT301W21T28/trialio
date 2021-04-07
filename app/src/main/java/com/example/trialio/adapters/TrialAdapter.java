@@ -60,7 +60,7 @@ public class TrialAdapter extends ArrayAdapter<Trial> {
         TextView textResult = view.findViewById(R.id.text_trial_result);
 
         // set the text views
-        userManager.getUserById(trial.getExperimenterId(), new UserManager.OnUserFetchListener() {
+        userManager.getUserById(trial.getExperimenterID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
                 String ownerText = "Username: " + user.getUsername();
