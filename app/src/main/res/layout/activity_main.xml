@@ -125,8 +125,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@color/section_grey"
                 android:dividerHeight="10dp">
+                
+<!--                android:background="@color/section_grey"-->
 
             </ListView>
 

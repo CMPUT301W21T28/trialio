@@ -22,7 +22,9 @@ import java.util.ArrayList;
  * This class inherits from ArrayAdapter and is responsible for adapting a Experiment object into the GUI
  * ListView item to be displayed on the app screen. This ArrayAdapter is referenced in MainActivity.
  */
-public class ExperimentAdapter extends ArrayAdapter {
+public class ExperimentAdapter extends ArrayAdapter<Experiment>{
+
+    private final int MAX_USERNAME_LENGTH = 15;
     private Context context;
     private ArrayList<Experiment> experimentList;
 
@@ -61,7 +63,9 @@ public class ExperimentAdapter extends ArrayAdapter {
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText(user.getUsername());
+                String displayUsername = user.getUsername();
+                displayUsername = displayUsername.length() > MAX_USERNAME_LENGTH ? displayUsername.substring(0, MAX_USERNAME_LENGTH) + "..." : displayUsername;
+                textOwner.setText(displayUsername);
             }
         });
 

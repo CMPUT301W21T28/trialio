@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/section_grey"
+    android:orientation="vertical"
 
+    android:padding="3sp">
 
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    <!--    android:layout_marginLeft="4dp"-->
+    <!--    android:layout_marginRight="4dp"-->
+    <!--    android:layout_marginTop="4dp"-->
+    <!--    android:layout_marginBottom="4dp"-->
 
 
     <LinearLayout
@@ -20,32 +21,31 @@
 
         <TextView
             android:id="@+id/text_description"
-            android:text="Description"
-            android:textSize="12sp"
-            android:backgroundTint="@color/special_yellow"
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="2dp"
             android:layout_marginTop="2.5dp"
-
+            android:layout_marginRight="2dp"
             android:layout_marginBottom="2.5dp"
             android:layout_weight="5"
             android:background="#9c9c9c"
-            android:padding="5dp"
-            android:textColor="@color/black">
+
+            android:backgroundTint="@color/special_yellow"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="6dp"
+            android:text="Description"
+            android:textColor="@color/black"
+            android:textSize="14sp">
 
         </TextView>
-
 
 
         <ImageView
             android:id="@+id/location"
 
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-
+            android:layout_width="24dp"
+            android:layout_height="24dp"
 
             android:layout_gravity="center"
             android:foregroundGravity="center"
@@ -55,29 +55,27 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-          <TextView
+        <TextView
             android:id="@+id/text_type"
-            android:text="Type"
-            android:textSize="12sp"
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="2.5dp"
             android:layout_marginBottom="2.5dp"
-
-
-            android:layout_weight="2.4"
+            android:layout_weight="3"
             android:background="@color/button_dark_grey"
+
+
             android:padding="3dp"
-            android:textColor="@color/white">
+            android:text="Type"
+            android:textColor="@color/white"
+            android:textSize="12sp">
 
         </TextView>
 
@@ -85,49 +83,45 @@
         <TextView
 
             android:id="@+id/text_owner"
-            android:text="Owner"
-            android:textSize="12sp"
-
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
+            android:layout_gravity="center"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="2.5dp"
-            android:layout_marginBottom="2.5dp"
 
+            android:layout_marginBottom="2.5dp"
             android:layout_weight="5"
             android:background="@color/button_dark_grey"
+
             android:padding="3dp"
+            android:text="Owner"
+            android:textColor="@color/white"
 
-            android:textColor="@color/white">
-        </TextView>
-
+            android:textSize="12sp" />
 
 
         <TextView
             android:id="@+id/text_status"
-            android:text="Status"
-            android:textSize="12sp"
-
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2.5dp"
+
             android:layout_marginRight="2.5dp"
             android:layout_marginBottom="2.5dp"
-
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:background="@color/button_dark_grey"
+
             android:padding="3dp"
-            android:textColor="@color/white">
-        </TextView>
+            android:text="Status"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>
