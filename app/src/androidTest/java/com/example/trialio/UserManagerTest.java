@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,19 +27,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Test suite for the UserManager class. This class tests all public methods of the UserManager
- * class, emphasizing the CRUD functionality. These tests disable network connectivity to speed things
- * up.
- * <p>
- * WARNING: UserManager interfaces with Firestore, so some tests may fail to due timeout.
- * In particular, this seems to be an issue when running the entire test suite at once on an
- * emulator (which is slow). Often the emulator gets slowed down for a while after this too many runs.
- * <p>
- * Troubleshooting tips:
- * - Wipe data on emulator
- * - Run on real device instead of emulator
- * - Run tests one at a time
- * <p>
- * Tests run successfully as of 2021-04-06
+ * class, emphasizing the CRUD functionality.
  */
 public class UserManagerTest {
 
@@ -61,9 +48,7 @@ public class UserManagerTest {
      * Sets up the test class by populating list of testUserIds
      */
     @BeforeClass
-    public static void setUp() throws Exception {
-        FirebaseFirestore.getInstance().disableNetwork();
-        tearDown();
+    public static void setUp() {
         initTestUserIds.add("001");
         initTestUserIds.add("002");
         unInitTestUserIds.add("003");
@@ -133,6 +118,7 @@ public class UserManagerTest {
     /**
      * Deletes all test users in the database
      */
+    @BeforeClass
     @AfterClass
     public static void tearDown() throws Exception {
         // Aggregate the ids of the documents to delete
@@ -159,8 +145,6 @@ public class UserManagerTest {
                 });
 
         lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
-
-        db.enableNetwork();
     }
 
     /**
