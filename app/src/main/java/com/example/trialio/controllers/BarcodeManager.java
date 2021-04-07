@@ -284,12 +284,10 @@ public class BarcodeManager implements Serializable {
         }
     }
 
-    public static void readBarcode(String[] input, User user){
+    public static void readBarcode(String[] input, Location location, User user){
         if (input[1].equals("BINOMIAL")){
             current_user = user;
-            Location location = new Location();
             Date date = new Date();
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -303,8 +301,6 @@ public class BarcodeManager implements Serializable {
         } else if (input[1].equals("COUNT")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -317,8 +313,6 @@ public class BarcodeManager implements Serializable {
         } else if (input[1].equals("NONNEGATIVE")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
@@ -331,9 +325,6 @@ public class BarcodeManager implements Serializable {
         } else if (input[1].equals("MEASUREMENT")){
             current_user = user;
             Date date = new Date();
-            Location location = new Location();
-
-
             ExperimentManager experimentManager = new ExperimentManager();
             experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
