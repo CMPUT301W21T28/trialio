@@ -15,11 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.ReplyAdapter;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.AddReplyFragment;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
 import com.example.trialio.models.User;
@@ -56,6 +58,10 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     private UserManager userManager;
     private ExperimentManager experimentManager;
 
+    private Boolean isUserOwner = false;
+    private Experiment experiment;
+
+
     /**
      * the On create the takes in the saved instance from the question forum activity
      *
@@ -70,9 +76,9 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         selectedQuestion = (Question) bundle.getSerializable("question");
         //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
-        associatedExperimentID = bundle.getString("experimentID");
+        experiment = (Experiment) bundle.getSerializable("experiment");
+        associatedExperimentID = experiment.getExperimentID();
         associatedQuestionID = selectedQuestion.getPostID();
-
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         replyList = new ArrayList<>();
@@ -101,7 +107,22 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         ListView questionsListView = findViewById(R.id.replyListView);
         questionsListView.setAdapter(replyAdapter);
 
-        setUpOnClickListeners();
+        // initialize the state of the activity
+        initState();
+    }
+
+    /**
+     * Initialize the state for the Activity
+     */
+    private void initState() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                // determine if user is the owner
+                isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
+                setUpOnClickListeners();
+            }
+        });
     }
 
     @Override
@@ -153,8 +174,13 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
                 // get the userID
                 String userID = replyList.get(i).getUserId();
 
-                // create the popup menu
+                // set the menu layout
                 int popupViewID = R.layout.menu_view_profile;
+                if (isUserOwner) {
+                    popupViewID = R.layout.menu_replies_owner;
+                }
+
+                // create the popup menu
                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
                 popup.inflate(popupViewID);
 
@@ -168,6 +194,12 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
                             // create and execute a ViewUserProfileCommand
                             ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
                             command.execute();
+                        } else if (menuItem.getItemId() == R.id.item_delete_reply) {
+                            Log.d(TAG, "Delete reply: " + replyList.get(i).getPostID() + " from " + associatedQuestionID + " from " + associatedExperimentID);
+
+                            // delete reply
+                            questionForumManager.deleteReply(associatedQuestionID, replyList.get(i).getPostID());
+                            setReplyList();
                         } else {
                             Log.d(TAG, "onMenuItemClick: Invalid item.");
                         }

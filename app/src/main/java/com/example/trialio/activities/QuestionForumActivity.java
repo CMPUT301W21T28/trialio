@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionAdapter;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
@@ -47,6 +48,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     private ArrayList<Question> questionList;
     private QuestionAdapter questionAdapter;
 
+    private Boolean isUserOwner = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +73,22 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         ListView questionsListView = findViewById(R.id.questionForumListView);
         questionsListView.setAdapter(questionAdapter);
 
-        // Set up onClick listeners
-        setUpOnClickListeners();
+        // initialize the state of the activity
+        initState();
+    }
+
+    /**
+     * Initialize the state for the Activity
+     */
+    private void initState() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                // determine if user is the owner
+                isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
+                setUpOnClickListeners();
+            }
+        });
     }
 
     @Override
@@ -138,7 +154,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
                 Question tempQuestion = questionList.get(i);
 
-                args.putString("experimentID", associatedExperimentID);
+                args.putSerializable("experiment", experiment);
                 args.putSerializable("question", tempQuestion);
 
                 Log.w("QUESTION ID: ", tempQuestion.getPostID());
@@ -157,8 +173,13 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 // get the userID
                 String userID = questionList.get(i).getUserId();
 
-                // create the popup menu
+                // set the menu layout
                 int popupViewID = R.layout.menu_view_profile;
+                if (isUserOwner) {
+                    popupViewID = R.layout.menu_questions_owner;
+                }
+
+                // create the popup menu
                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
                 popup.inflate(popupViewID);
 
@@ -172,6 +193,12 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                             // create and execute a ViewUserProfileCommand
                             ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
                             command.execute();
+                        } else if (menuItem.getItemId() == R.id.item_delete_question) {
+                            Log.d(TAG, "Delete question: " + questionList.get(i).getPostID() + " from " + experiment.getExperimentID());
+
+                            // delete question
+                            questionForumManager.deleteQuestion(questionList.get(i).getPostID());
+                            setQuestionList();
                         } else {
                             Log.d(TAG, "onMenuItemClick: Invalid item.");
                         }
@@ -229,6 +256,4 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         questionForumManager.createQuestion(newQuestion);
         setQuestionList();
     }
-
-
 }
