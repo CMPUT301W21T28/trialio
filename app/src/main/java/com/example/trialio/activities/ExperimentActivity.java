@@ -501,15 +501,24 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         statsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, StatActivity.class);
 
-                // pass in experiment as an argument
-                Bundle args = new Bundle();
-                args.putSerializable("experiment_stat", experiment);
-                intent.putExtras(args);
+                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+                    @Override
+                    public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
 
-                // start a StatActivity
-                startActivity(intent);
+                        Intent intent = new Intent(context, StatActivity.class);
+
+                        // pass in experiment as an argument
+                        Bundle args = new Bundle();
+                        args.putSerializable("experiment_stat", experiment);
+                        args.putSerializable("trialList_stat", trialList);
+
+                        intent.putExtras(args);
+
+                        // start a StatActivity
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
