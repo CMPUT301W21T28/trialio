@@ -231,10 +231,11 @@ public class ExperimentManager {
      * This deletes an experiment associated with a given experiment ID
      *
      * @param experimentId Experiment ID of the candidate experiment to delete
+     * @return Task that indicates when the delete is complete
      */
-    public void deleteExperiment(String experimentId) {
+    public Task<Void> deleteExperiment(String experimentId) {
         Log.d(TAG, "Deleting experiment" + experimentId);
-        experimentsCollection
+        return experimentsCollection
                 .document(experimentId)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

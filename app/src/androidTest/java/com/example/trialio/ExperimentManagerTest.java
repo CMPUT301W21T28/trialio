@@ -6,6 +6,7 @@ import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.ExperimentSettings;
 import com.example.trialio.models.Region;
+import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +18,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -33,6 +35,8 @@ public class ExperimentManagerTest {
     private static final String testCollection = "test-em";
     private static final ArrayList<String> initTestExperimentIds = new ArrayList<>();
     private static final ArrayList<String> unInitTestExperimentIds = new ArrayList<>();
+    private static final int ASYNC_DELAY = 10;
+
 
     /* All use of CountDownLatch to manage testing of asynchronous methods follows the below citation
      * Martin, https://stackoverflow.com/users/187492/martin, 2009-12-02,
@@ -70,7 +74,7 @@ public class ExperimentManagerTest {
                     .addOnCompleteListener(task -> lock.countDown());
         }
 
-        lock.await(10000, TimeUnit.MILLISECONDS);
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
     }
 
     /**
@@ -92,7 +96,7 @@ public class ExperimentManagerTest {
                     .addOnCompleteListener(task -> lock.countDown());
         }
 
-        lock.await(10000, TimeUnit.MILLISECONDS);
+        lock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
     }
 
@@ -106,18 +110,18 @@ public class ExperimentManagerTest {
         ExperimentManager experimentManager = new ExperimentManager(testCollection);
         for (String id : initTestExperimentIds) {
             ExperimentSettings settings = new ExperimentSettings(
-                "mock experiment",
-                new Region("region"),
-                "owner",
-                true
+                    "mock experiment",
+                    new Region("region"),
+                    "owner",
+                    true
             );
             Experiment experiment = new Experiment(
-                id,
-                settings,
-                ExperimentTypeUtility.getCountType(),
-                true,
-                1,
-                true
+                    id,
+                    settings,
+                    ExperimentTypeUtility.getCountType(),
+                    true,
+                    1,
+                    true
             );
             experimentManager.publishExperiment(experiment);
         }
@@ -131,6 +135,24 @@ public class ExperimentManagerTest {
      */
     private ExperimentManager mockEmptyExperimentManager() {
         return new ExperimentManager(testCollection);
+    }
+
+    private Experiment mockOwnedExperiment(User user, String experimentId) {
+        ExperimentSettings settings = new ExperimentSettings(
+                "owned experiment",
+                new Region("region"),
+                user.getId(),
+                false
+        );
+
+        return new Experiment(
+                experimentId,
+                settings,
+                ExperimentTypeUtility.getBinomialType(),
+                true,
+                1,
+                true
+        );
     }
 
     /**
@@ -160,7 +182,7 @@ public class ExperimentManagerTest {
         // Publish experiment
         CountDownLatch createLock = new CountDownLatch(1);
         experimentManager.publishExperiment(newExperiment).addOnCompleteListener(task -> createLock.countDown());
-        createLock.await(5, TimeUnit.SECONDS);
+        createLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Fetch the published experiment
         CountDownLatch readLock = new CountDownLatch(1);
@@ -191,7 +213,7 @@ public class ExperimentManagerTest {
                 });
 
         // Wait until experiment read and asserts complete
-        readLock.await(5, TimeUnit.SECONDS);
+        readLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         assertTrue(callbackTriggeredFlag[0]);
 
 
@@ -214,7 +236,7 @@ public class ExperimentManagerTest {
         });
 
         // Wait fot experiment fetch to complete, then check the fetch was correct
-        getLock.await(10, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment experiment = fetchedExperimentHolder[0];
         assertNotNull(experiment);
         assertEquals(expId, experiment.getExperimentID());
@@ -238,7 +260,7 @@ public class ExperimentManagerTest {
         });
 
         // Wait fot experiment fetch to complete, then check the fetch was correct
-        getLock.await(10, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         assertNotNull(fetchedExperimentHolder[0]);
         assertNotNull(fetchedExperimentHolder[1]);
         assertEquals(initTestExperimentIds.get(0), fetchedExperimentHolder[0].getExperimentID());
@@ -266,7 +288,7 @@ public class ExperimentManagerTest {
         });
 
         // Wait for user fetch to complete, then check if values of user are as expected
-        prepLock.await(5, TimeUnit.SECONDS);
+        prepLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment exp = fetchedExpHolder[0];
         assertNotNull(exp);
         assertEquals(expId, exp.getExperimentID());
@@ -278,7 +300,7 @@ public class ExperimentManagerTest {
 
         CountDownLatch updateLock = new CountDownLatch(1);
         userManager.editExperiment(expId, exp).addOnCompleteListener(task -> updateLock.countDown());
-        updateLock.await(5, TimeUnit.SECONDS);
+        updateLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Get the user again and make sure updates persist
         CountDownLatch getLock = new CountDownLatch(1);
@@ -292,7 +314,7 @@ public class ExperimentManagerTest {
         });
 
         // Wait for experiment fetch to complete, then check if values of user are as expected
-        getLock.await(5, TimeUnit.SECONDS);
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
         Experiment updatedExp = fetchedExpHolder[0];
         assertNotNull(updatedExp);
         assertEquals(
@@ -310,13 +332,109 @@ public class ExperimentManagerTest {
     }
 
     @Test
-    public void testUnpublishExperiment() {
-        fail();
+    public void testDeleteExperiment() throws InterruptedException {
+        ExperimentManager em = mockExperimentManager();
+        String id = initTestExperimentIds.get(0);
+
+        // Delete the experiment
+        CountDownLatch deleteLock = new CountDownLatch(1);
+        em.deleteExperiment(id).addOnCompleteListener(task -> deleteLock.countDown());
+        deleteLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+
+        // Fetch the deleted experiment and make sure it was deleted
+        Experiment[] fetchedExperimentHolder = new Experiment[1];
+        fetchedExperimentHolder[0] = new Experiment();  // ensure callback gets called and this is replaced
+        CountDownLatch getLock = new CountDownLatch(1);
+        em.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
+            @Override
+            public void onExperimentFetch(Experiment experiment) {
+                fetchedExperimentHolder[0] = experiment;
+                getLock.countDown();
+            }
+        });
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+        Experiment deletedExp = fetchedExperimentHolder[0];
+        assertNull(deletedExp);
+
     }
 
     @Test
-    public void testGetOwnedExperiments() {
-        fail();
+    public void testGetOwnedExperiments() throws InterruptedException {
+        ExperimentManager em = mockExperimentManager();
+
+        // Create objects
+        User user = new User("userId", "username");
+        Experiment ownedExp1 = mockOwnedExperiment(user, unInitTestExperimentIds.get(0));
+        Experiment ownedExp2 = mockOwnedExperiment(user, unInitTestExperimentIds.get(1));
+
+        // Create the experiments
+        CountDownLatch createLock = new CountDownLatch(2);
+        em.publishExperiment(ownedExp1).addOnCompleteListener(task -> createLock.countDown());
+        em.publishExperiment(ownedExp2).addOnCompleteListener(task -> createLock.countDown());
+        createLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+
+        // Get owned experiments for the user
+        CountDownLatch getLock = new CountDownLatch(1);
+        Experiment[] fetchedExperimentHolder = new Experiment[2];
+        em.getOwnedExperiments(user, new ExperimentManager.OnManyExperimentsFetchListener() {
+            @Override
+            public void onManyExperimentsFetch(List<Experiment> experiments) {
+                assertEquals(2, experiments.size());
+                fetchedExperimentHolder[0] = experiments.get(0);
+                fetchedExperimentHolder[1] = experiments.get(1);
+                getLock.countDown();
+            }
+        });
+        getLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
+
+        // Make sure the experiments were fetched correctly
+        assertNotNull(fetchedExperimentHolder[0]);
+        assertNotNull(fetchedExperimentHolder[1]);
+
+        if (fetchedExperimentHolder[0].getExperimentID().equals(ownedExp1.getExperimentID())) {
+            // first fetched corresponds to ownedExp1
+            assertEquals(ownedExp2.getExperimentID(), fetchedExperimentHolder[1].getExperimentID());
+
+            // checks for first
+            assertEquals(user.getId(), fetchedExperimentHolder[0].getSettings().getOwnerID());
+            assertEquals(
+                    ownedExp1.getSettings().getDescription(),
+                    fetchedExperimentHolder[0].getSettings().getDescription()
+            );
+            assertEquals(ownedExp1.getIsPublished(), fetchedExperimentHolder[0].getIsPublished());
+
+            // checks for second
+            assertEquals(user.getId(), fetchedExperimentHolder[1].getSettings().getOwnerID());
+            assertEquals(
+                    ownedExp2.getSettings().getDescription(),
+                    fetchedExperimentHolder[1].getSettings().getDescription()
+            );
+            assertEquals(ownedExp2.getIsPublished(), fetchedExperimentHolder[1].getIsPublished());
+
+        } else if (fetchedExperimentHolder[0].getExperimentID().equals(ownedExp2.getExperimentID())) {
+            // first fetched corresponds to ownedExp2
+            assertEquals(ownedExp1.getExperimentID(), fetchedExperimentHolder[1].getExperimentID());
+
+            // checks for first
+            assertEquals(user.getId(), fetchedExperimentHolder[0].getSettings().getOwnerID());
+            assertEquals(
+                    ownedExp2.getSettings().getDescription(),
+                    fetchedExperimentHolder[0].getSettings().getDescription()
+            );
+            assertEquals(ownedExp2.getIsPublished(), fetchedExperimentHolder[0].getIsPublished());
+
+            // checks for second
+            assertEquals(user.getId(), fetchedExperimentHolder[1].getSettings().getOwnerID());
+            assertEquals(
+                    ownedExp1.getSettings().getDescription(),
+                    fetchedExperimentHolder[1].getSettings().getDescription()
+            );
+            assertEquals(ownedExp1.getIsPublished(), fetchedExperimentHolder[1].getIsPublished());
+
+        } else {
+            // fetched experiment matched neither of expected values
+            fail();
+        }
     }
 
     @Test
