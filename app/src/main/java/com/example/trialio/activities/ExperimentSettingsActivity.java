@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * This activity navigates to no other activities.
  */
 public class ExperimentSettingsActivity extends AppCompatActivity implements AddIgnoredFragment.OnFragmentInteractionListener {
-    private final String TAG = "ExperimentSettingsActivity";
+    private final String TAG = "ExpSettingsActivity";
     private Context context;
 
     private ExperimentManager experimentManager;
@@ -109,9 +109,9 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         });
 
         if (experiment.getTrialManager().getIsOpen()) {
-            experimentStatusTextView.setText("Open");
+            experimentStatusTextView.setText(R.string.experiment_status_open);
         } else {
-            experimentStatusTextView.setText("Closed");
+            experimentStatusTextView.setText(R.string.experiment_status_closed);
         }
 
         if (!experiment.getSettings().getGeoLocationRequired()) {
