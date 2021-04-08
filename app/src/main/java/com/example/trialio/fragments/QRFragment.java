@@ -60,11 +60,11 @@ public class QRFragment extends DialogFragment {
         experiment = (Experiment) bundle.getSerializable("experiment");
         barcode = (Barcode) bundle.getSerializable("barcode");
 
-        String barcodeID = barcode.getBarcodeID();
 
         isBarcode = bundle.getBoolean("isBarcode");
         location = (Location)bundle.getSerializable("location");
         if (isBarcode){
+            String barcodeID = barcode.getBarcodeID();
             imgQR = view.findViewById(R.id.imgQRCode);
             Bitmap barcode = BarcodeManager.generateBarcode(barcodeID);
             imgQR.setImageBitmap(barcode);
