@@ -139,25 +139,34 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                         }
                     });
                 }
-
-            // if its a Barcode
-            }else{
-                if (experiment.getSettings().getGeoLocationRequired()){
-                    Location location = new Location();
-                    location.getCurrentLocation(context).addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
+                // if its a Barcode
+            } else {
+                if (experiment.getSettings().getGeoLocationRequired()) {
+                    Task<android.location.Location> locTask = Location.requestLocation(context);
+                    if (locTask == null) {
+                        return;
+                    }
+                    locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                         @Override
-                        public void onComplete(@NonNull Task<android.location.Location> task) {
-                            barcodeManager.readBarcode(items, location, currentUser);
+                        public void onSuccess(android.location.Location loc) {
+                            Location location = new Location();
+                            location.setLatitude(loc.getLatitude());
+                            location.setLongitude(loc.getLongitude());
+                            barcodeManager = new BarcodeManager(currentUser.getUsername());
+                            barcodeManager.readBarcode(processed, location, currentUser);
                         }
                     });
-
+                }else {
+                    Location location = new Location();
+                    barcodeManager = new BarcodeManager(currentUser.getUsername());
+                    barcodeManager.readBarcode(processed, location, currentUser);
                 }
             }
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
         } else {
-            barcodeManager = new BarcodeManager(experiment.getExperimentID());
-            barcodeManager.registerBarcode(text, currentUser, experiment, result);
+            barcodeManager = new BarcodeManager(currentUser.getUsername());
+            barcodeManager.registerBarcode(text, experiment, result);
         }
 
 

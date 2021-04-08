@@ -252,68 +252,74 @@ public class BarcodeManager implements Serializable {
 
     /**
      * for storing barcode to barcode collection
-     * @param input
-     * @param user
+     * @param barcodeID
      * @param experiment
      * @param result
      */
-    public void registerBarcode(String input, User user, Experiment experiment, String result) {
-        Barcode barcode = new Barcode(experiment, result, input);
+    public void registerBarcode(String barcodeID, Experiment experiment, String result) {
+        Barcode barcode = new Barcode(experiment, result, barcodeID);
         this.createBarcode(barcode);
     }
 
-    public static void readBarcode(String[] input, Location location, User user){
-        if (input[1].equals("BINOMIAL")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[2]));
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[3],new_experiment);
-                }
-            });
+    /**
+     * readBarcode reads registered barcode and add a new trial to its responsible experiment
+     * @param input
+     * @param location
+     * @param user
+     */
+    //input contains barcode info, use the info to fetch the document from firebase
+    public void readBarcode(String input, Location location, User user){
+        this.setOnBarcodeFetchListener(input, new OnBarcodeFetchListener() {
+            @Override
+            public void onBarcodeFetch(Barcode barcode) {
+                Experiment experiment = barcode.getExperiment();
+                String type = barcode.getExperiment().getTrialManager().getType();
+                ExperimentManager experimentManager = new ExperimentManager();
+                Date date = new Date();
 
-        } else if (input[1].equals("COUNT")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[3],new_experiment);
+                if (type.equals("COUNT")){
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            CountTrial new_trial = new CountTrial(user.getId(), location, date);
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                        }
+                    });
                 }
-            });
-        } else if (input[1].equals("NONNEGATIVE")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[2]));
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[3],new_experiment);
-                }
-            });
-        } else if (input[1].equals("MEASUREMENT")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-
-                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[2]), input[3]);
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[3],new_experiment);
-                }
-            });
-        }
+//                if (type.equals("BINOMIAL")){
+//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+//                        @Override
+//                        public void onExperimentFetch(Experiment new_experiment) {
+//                            BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(barcode.getTrialResult()));
+//                            new_experiment.getTrialManager().addTrial(new_trial);
+//                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+//                        }
+//                    });
+//                }
+//                if (type.equals("NONNEGATIVE")) {
+//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+//                        @Override
+//                        public void onExperimentFetch(Experiment new_experiment) {
+//                            NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getId(), location, date, Integer.parseInt(barcode.getTrialResult()));
+//                            new_experiment.getTrialManager().addTrial(new_trial);
+//                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
+//                        }
+//                    });
+//                }
+//                }else if (type.equals("MEASUREMENT")){
+//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+//                        @Override
+//                        public void onExperimentFetch(Experiment new_experiment) {
+//                            String unit =
+//                            MeasurementTrial new_trial = new MeasurementTrial(current_user.getId(), location, date, Double.parseDouble(barcode.getTrialResult()), "UNIT");
+//                            new_experiment.getTrialManager().addTrial(new_trial);
+//                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+//                        }
+//                    });
+//                }
+            }
+        });
 
     }
 
