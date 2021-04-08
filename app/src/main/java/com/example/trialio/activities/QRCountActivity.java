@@ -189,14 +189,15 @@ public class QRCountActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
+                        setBarcodeList();
                         return true;
                     }
                 });
                 popup.show();
-
                 // return true so that the regular on click does not occur
                 return true;
             }
+
         });
 
         // set the home button
