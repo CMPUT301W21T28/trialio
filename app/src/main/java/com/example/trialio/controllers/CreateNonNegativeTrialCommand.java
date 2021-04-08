@@ -49,6 +49,5 @@ public class CreateNonNegativeTrialCommand extends CreateTrialCommand {
         Location location = new Location();
         Trial trial = new NonNegativeTrial(user.getId(), location, date, nonNegCount);
         listener.onResult(trial);
-
     }
 }
