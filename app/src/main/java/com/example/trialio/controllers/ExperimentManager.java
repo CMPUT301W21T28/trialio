@@ -235,6 +235,10 @@ public class ExperimentManager {
      */
     public Task<Void> deleteExperiment(String experimentId) {
 
+        // remove experimentID from the subscribed list of all users.
+        UserManager userManager = new UserManager();
+        userManager.removeExperimentFromSubs(experimentId);
+
         // delete all trials
         TrialManager trialManager = new TrialManager();
         trialManager.setExperimentID(experimentId);

@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
                         // if the experiment is published and the user is subscribed, add it to the list to display
-                        if (experiment.getIsPublished()) {
+                        if (experiment != null && experiment.getIsPublished()) {
                             experimentList.add(experiment);
                             experimentAdapter.notifyDataSetChanged();
                         }
