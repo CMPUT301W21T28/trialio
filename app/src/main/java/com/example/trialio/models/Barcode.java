@@ -2,10 +2,12 @@ package com.example.trialio.models;
 
 import android.text.TextPaint;
 
+import java.io.Serializable;
+
 /**
  * Represents a barcode that a user can scan/register
  */
-public class Barcode {
+public class Barcode implements Serializable {
 
     private Experiment experiment;
     private String trialResult;

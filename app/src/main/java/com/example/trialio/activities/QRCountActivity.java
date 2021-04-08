@@ -24,6 +24,7 @@ import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.QRFragment;
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
@@ -37,18 +38,21 @@ import java.util.List;
  * This activity provides the interface for creating a Count Trial QR code.
  */
 public class QRCountActivity extends AppCompatActivity {
+
     private Button createQR;
     private Experiment experiment;
     private Button showQR;
     private Button showBarcode;
     private Context context = this;
+
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
     private TextView txtMode;
-    private ArrayList<String> barcodeList;
+
+    private ArrayList<Barcode> barcodeList;
     private ArrayAdapterBarcode barcodeAdapter;
     private BarcodeManager barcodeManager;
     private ListView listviewBarcode;
@@ -73,7 +77,7 @@ public class QRCountActivity extends AppCompatActivity {
         user = (User) bundle.getSerializable("user");
 
         barcodeManager = new BarcodeManager(user.getUsername());
-        barcodeList = new ArrayList<>();
+        barcodeList = new ArrayList<Barcode>();
         barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment, user);
 
         listviewBarcode.setAdapter(barcodeAdapter);
@@ -99,7 +103,7 @@ public class QRCountActivity extends AppCompatActivity {
     private void setBarcodeList() {
         barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
             @Override
-            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+            public void onManyBarcodesFetch(List<Barcode> barcodes) {  // TODO: why not ArrayList ***
                 Log.w("", "Successfully fetched barcodes");
                 barcodeList.clear();
                 barcodeList.addAll(barcodes);   // TODO: check for errors
@@ -166,7 +170,7 @@ public class QRCountActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 Boolean isBarcode = true;
-                bundle.putString("barcode",barcodeList.get(i));
+                bundle.putSerializable("barcode",barcodeList.get(i));
                 bundle.putBoolean("isBarcode", isBarcode);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"barcode");
@@ -184,7 +188,7 @@ public class QRCountActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        barcodeManager.deleteBarcode(barcodeList.get(position));
+                        barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
                         return true;
                     }
                 });

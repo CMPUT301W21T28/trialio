@@ -61,18 +61,6 @@ public class BarcodeManager implements Serializable {
     public BarcodeManager() {    }
 
 
-//    /**
-//     * Generates a new unique barcode ID
-//     * @return unique ID for a new barcode which is about to be posted
-//     */
-//
-//    public String getNewPostID() { return this.barcodeForumCollection.document().getId(); }
-//
-//    public String getNewReplyID(String barcodeID) {
-//        return this.barcodeForumCollection.document(barcodeID).collection("Replies").document().getId();
-//    }
-
-
     /**
      * This interface represents an action to be taken when an Question document is fetched from the database.
      */
@@ -100,9 +88,6 @@ public class BarcodeManager implements Serializable {
     }
 
     public void createBarcode(Barcode newBarcode) {
-//        String [] items = barcodeString.split("\n");
-//        Map<String, Object> newBarcode = new HashMap<>();
-//        newBarcode.put("Barcode Info", barcodeString);
 
         Log.d(TAG, "Posting barcode string " + newBarcode.getBarcodeID());
         barcodeCollection
