@@ -99,49 +99,49 @@ public class BarcodeManager implements Serializable {
         void onManyBarcodesFetch(List<String> barcodes);
     }
 
+    // hey jeff
+    public void createBarcode(Barcode newBarcode) {
+//        String [] items = barcodeString.split("\n");
+//        Map<String, Object> newBarcode = new HashMap<>();
+//        newBarcode.put("Barcode Info", barcodeString);
 
-    public void createBarcode(String barcodeString) {
-        String [] items = barcodeString.split("\n");
-        Map<String, Object> newBarcode = new HashMap<>();
-        newBarcode.put("Barcode Info", barcodeString);
-
-        Log.d(TAG, "Posting barcode string " + barcodeString);
+        Log.d(TAG, "Posting barcode string " + newBarcode.getBarcodeID());
         barcodeCollection
-                .document(items[0])
+                .document(newBarcode.getBarcodeID())
                 .set(newBarcode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        String message = String.format("Experiment %s was added successfully", barcodeString);
+                        String message = String.format("Experiment %s was added successfully", newBarcode.getBarcodeID());
                         Log.d(TAG, message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        String message = String.format("Failed to add experiment %s", barcodeString);
+                        String message = String.format("Failed to add experiment %s", newBarcode.getBarcodeID());
                         Log.d(TAG, message);
                     }
                 });
     }
 
 
-    public void deleteBarcode(String barcodeString) {
-        Log.d(TAG, "Deleting barcode " + barcodeString);
+    public void deleteBarcode(String barcodeID) {
+        Log.d(TAG, "Deleting barcode " + barcodeID);
         barcodeCollection
-                .document(barcodeString)
+                .document(barcodeID)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        String message = String.format("Experiment %s was deleted successfully", barcodeString);
+                        String message = String.format("Experiment %s was deleted successfully", barcodeID);
                         Log.d(TAG, message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        String message = String.format("Failed to delete experiment %s", barcodeString);
+                        String message = String.format("Failed to delete experiment %s", barcodeID);
                         Log.d(TAG, message);
                     }
                 });
@@ -151,15 +151,15 @@ public class BarcodeManager implements Serializable {
     /**
      * Sets a function to be called when a barcode is fetched
      *
-     * @param barcodeString the id of the barcode to fetch
+     * @param barcodeID the id of the barcode to fetch
      * @param listener      the function to be called when the experiment is fetched
      */
-    public void setOnBarcodeFetchListener(String barcodeString, BarcodeManager.OnBarcodeFetchListener listener) {
+    public void setOnBarcodeFetchListener(String barcodeID, BarcodeManager.OnBarcodeFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
         Log.d(TAG, "Fetching barcode");
-        DocumentReference docRef = barcodeCollection.document(barcodeString);
+        DocumentReference docRef = barcodeCollection.document(barcodeID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -204,8 +204,8 @@ public class BarcodeManager implements Serializable {
 
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                 // retrieves all documents (barcodes) within barcodeForum collection
-                                String barcodeString = doc.getString("Barcode Info");
-                                barcodeList.add(barcodeString);
+                                String barcodeID = doc.getString("Barcode Info");
+                                barcodeList.add(barcodeID);
                             }
                             listener.onManyBarcodesFetch(barcodeList);
                         } else {
@@ -218,8 +218,12 @@ public class BarcodeManager implements Serializable {
 
     private String extractBarcodeDocument(DocumentSnapshot document) {
         // TODO custom mapping here
-        String barcodeInfo = document.getString("Barcode Info");
-        return barcodeInfo;
+//        String barcodeInfo = document.getString("Barcode Info");
+//        return barcodeInfo;
+//
+        Barcode barcode = document.toObject(Barcode.class);
+        return barcode;
+
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------

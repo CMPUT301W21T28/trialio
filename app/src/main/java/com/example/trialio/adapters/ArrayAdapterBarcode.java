@@ -15,12 +15,15 @@ import androidx.annotation.Nullable;
 import com.example.trialio.R;
 import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.ChangeUsernameCommand;
+import com.example.trialio.controllers.ExperimentManager;
+import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Barcode;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.ExperimentTypeUtility;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
     private ArrayList<String> barcodeList;
     private Experiment experiment;
     private User user;
+
 
     public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList, Experiment experiment, User user) {
         super(context, 0, barcodeList);
@@ -50,9 +54,38 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.content_barcode, parent, false);
         }
 
+        ExperimentManager experimentManager = new ExperimentManager();
+
 
         BarcodeManager barcodeManager = new BarcodeManager(user.getUsername()); // TODO: double check if empty constructor is appropriate for use in this example
-        String barcodeID = barcodeList.get(position);
+        Barcode barcode = barcodeList.get(position);
+
+        String barcodeID = barcode.getBarcodeID();
+        String barcodeExperimentID = barcode.getExperiment().getExperimentID();
+        String barcodeTrialType = experiment.getTrialManager().getType();
+
+
+        if (ExperimentTypeUtility.isBinomial(barcodeTrialType)) {
+
+        }
+        else if (ExperimentTypeUtility.isNonNegative(barcodeTrialType)) {
+
+        }
+        else if (ExperimentTypeUtility.isCount(barcodeTrialType)) {
+
+        }
+        else if (ExperimentTypeUtility.isMeasurement(barcodeTrialType)) {
+
+        }
+
+
+
+
+
+        String barcodeTrialResult = experiment.getTrialManager().get
+
+
+
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
         ImageView barcodeImageView = view.findViewById(R.id.barcodeImageView);

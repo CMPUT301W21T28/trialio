@@ -154,3 +154,4 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
     }
 }
+

@@ -179,7 +179,7 @@ public class QRCountActivity extends AppCompatActivity {
                 // create the popup menu
                 int popupViewID = R.layout.menu_barcode;
                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
-                popup.inflate(popupViewID);
+                popup.inflate(popupViewID);   // TODO: supress lint ? should we add it or not?
                 // listener for menu
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override

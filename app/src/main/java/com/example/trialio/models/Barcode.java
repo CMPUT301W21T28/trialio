@@ -7,13 +7,13 @@ public class Barcode {
 
     private Experiment experiment;
     private Trial trial;
-    private String barcode; // change type later
+    private String barcodeID; // change type later
 
 
-    public Barcode(Experiment experiment, Trial trial, String barcode) {
+    public Barcode(Experiment experiment, Trial trial, String barcodeID) {
         this.experiment = experiment;
         this.trial = trial;
-        this.barcode = barcode;
+        this.barcodeID = barcodeID;
     }
 
     public Experiment getExperiment() {
@@ -28,26 +28,17 @@ public class Barcode {
         return trial;
     }
 
-
-    public String getBarcode() {
-        return barcode;
+    public void setTrial(Trial trial) {
+        this.trial = trial;
     }
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
+    public String getBarcodeID() {
+        return barcodeID;
     }
 
-    /**
-     * Sets the barcode image
-     *
-     * @param barcode the barcode image to be set, given an input barcode string
-     */
-    public void setBarcodeImage(String barcode) {
-
-
-
+    public void setBarcodeID(String barcodeID) {
+        this.barcodeID = barcodeID;
     }
-
 
 
 }
