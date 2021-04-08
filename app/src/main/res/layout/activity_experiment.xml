@@ -263,30 +263,6 @@
                 android:fontFamily="monospace">
             </TextView>
 
-
-            <TextView
-
-                android:id="@+id/txtSubValue"
-                android:text="Subs: "
-                android:textSize="12sp"
-
-                android:layout_gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginVertical="2.5dp"
-
-                android:layout_weight="5"
-                android:background="@color/button_dark_grey"
-                android:padding="3dp"
-
-                android:textColor="@color/white"
-                android:fontFamily="monospace">
-            </TextView>
-
-
-
         </LinearLayout>
 
     </LinearLayout>
