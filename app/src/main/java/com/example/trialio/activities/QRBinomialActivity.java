@@ -1,5 +1,6 @@
 package com.example.trialio.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -224,25 +225,33 @@ public class QRBinomialActivity extends AppCompatActivity {
         });
 
         listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // create the popup menu
                 int popupViewID = R.layout.menu_barcode;
                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
-                popup.inflate(popupViewID);
+                popup.inflate(popupViewID);   // TODO: supress lint ? should we add it or not?
+
                 // listener for menu
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
-                        return true;
+                        if (menuItem.getItemId() == R.id.item_delete_barcode) {
+                            Log.d("TAG", "Delete barcode: " + barcodeList.get(position).getBarcodeID());
+                            // delete question
+                            barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
+                            setBarcodeList();
+                        } else {
+                            Log.d("TAG", "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
                     }
                 });
                 popup.show();
-
-                // return true so that the regular on click does not occur
                 return true;
             }
+
         });
 
         // set the click listener to view the owner profile
