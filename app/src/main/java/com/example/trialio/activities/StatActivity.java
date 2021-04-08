@@ -8,6 +8,7 @@ package com.example.trialio.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -118,7 +119,11 @@ public class StatActivity extends AppCompatActivity {
                 userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
                     @Override
                     public void onUserFetch(User user) {
-                        textOwner.setText(user.getUsername());
+                        if (user != null) {
+                            textOwner.setText(user.getUsername());
+                        } else {
+                            Log.e(TAG, "Failed to load user");
+                        }
                     }
                 });
 

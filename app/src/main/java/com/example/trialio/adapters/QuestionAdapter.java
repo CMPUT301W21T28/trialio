@@ -54,6 +54,9 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         manager.getUserById(question.getUserId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
+                if (user != null) {
+                    
+                }
                 authorID.setText(user.getUsername());
             }
         });

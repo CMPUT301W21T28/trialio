@@ -35,6 +35,7 @@ import java.util.List;
  * This activity provides the interface for creating a Count Trial QR code.
  */
 public class QRCountActivity extends AppCompatActivity {
+    private static final String TAG = "QRCount activity";
     private Button createQR;
     private Experiment experiment;
     private Button showQR;
@@ -191,7 +192,11 @@ public class QRCountActivity extends AppCompatActivity {
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                experimentOwnerTextView.setText(user.getUsername());
+                if (user != null) {
+                    experimentOwnerTextView.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
             }
         });
 

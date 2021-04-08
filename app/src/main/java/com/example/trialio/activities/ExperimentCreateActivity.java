@@ -161,6 +161,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                             @Override
                             public void onUserFetch(User user) {
+
                                 // prepare experiment settings
                                 ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
