@@ -18,6 +18,7 @@ public class NonNegativeTrialTest {
     @Test
     void testCreateNonNegTrial() {
         NonNegativeTrial nonnegative = new NonNegativeTrial();
+
         assertEquals(NonNegativeTrial.class, nonnegative.getClass());
         assertNull(nonnegative.getExperimenterID());
         assertNull(nonnegative.getLocation());
