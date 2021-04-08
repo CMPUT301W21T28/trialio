@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CreateMeasurementTrialCommand;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Location;
@@ -48,21 +49,12 @@ public class MeasurementTrialFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_measurement);
                         Double measurement = Double.parseDouble(tv.getText().toString());
-
-                        Location location = new Location();
-                        if (geoLocationReq) {
-                            location.getCurrentLocation(getContext());
-                        }
-                        Date date = new Date();
-                        String unit = "UNIT";  // TODO: change this
-
-                        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
-                            @Override
-                            public void onUserFetch(User user) {
-                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                                listener.onOkPressed(new MeasurementTrial(user.getId(), location, date, measurement, unit));
-                            }
-                        });
+                        CreateMeasurementTrialCommand command = new CreateMeasurementTrialCommand(
+                                getContext(),
+                                geoLocationReq,
+                                measurement,
+                                trial -> listener.onOkPressed(trial));
+                        command.execute();
                     }
                 }).create();
     }

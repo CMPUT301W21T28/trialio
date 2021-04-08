@@ -13,11 +13,13 @@ Uploader's channel: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
  */
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,11 +29,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.Serializable;
+import java.util.concurrent.Executor;
 
 /**
  * Represents a location with a latitude and a longitude
  */
-public class Location implements Serializable{
+public class Location implements Serializable {
     private static final String TAG = "Location";
     private double latitude;
     private double longitude;
@@ -58,16 +61,11 @@ public class Location implements Serializable{
     }
 
     /**
-        This function requests the wifi or gps of the device to return the current location, and
-        double checks permission for the user location
-     */
-
-    /**
      * This function requests the wifi or GPS of the device to return the current location, and
-     *         double checks permission for the user location
+     * double checks permission for the user location
      *
-     * @param context  the context used by location
-     * @return
+     * @deprecated
+     * @param context the context used by location
      */
     public Task<android.location.Location> getCurrentLocation(Context context) {
         //getting location permission from the user
@@ -95,6 +93,38 @@ public class Location implements Serializable{
         }
 
         return null;
+    }
+
+    /**
+     * Verifies location permissions are enabled and requests the wifi or GPS of the device to
+     * get the current location. If location permissions are enabled, a
+     * Task<android.location.Location> is returned that will resolve to the location information.
+     * If location permissions are not enabled, NULL is returned
+     *
+     * @param context the context used by location
+     * @return If permissions enabled, a Task<android.location.Location> that will resolve to the
+     * location information. If location permissions are not enabled, NULL.
+     */
+    public static Task<android.location.Location> requestLocation(Context context) {
+        // get location permission from the user
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            FusedLocationProviderClient locClient = LocationServices.getFusedLocationProviderClient(context);
+            Task<android.location.Location> locationTask = locClient.getLastLocation();
+            locationTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
+                @Override
+                public void onSuccess(android.location.Location location) {
+                    Log.d(TAG, "Current location get successful");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Failed to get location " + e.getLocalizedMessage());
+                }
+            });
+            return locationTask;
+        } else {
+            return null;
+        }
     }
 
     /**
