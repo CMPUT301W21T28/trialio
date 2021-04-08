@@ -29,12 +29,14 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
     private Context context;
     private ArrayList<String> barcodeList;
     private Experiment experiment;
+    private User user;
 
-    public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList, Experiment experiment) {
+    public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList, Experiment experiment, User user) {
         super(context, 0, barcodeList);
         this.barcodeList = barcodeList;
         this.context = context;
         this.experiment = experiment;
+        this.user = user;
     }
 
 
@@ -49,7 +51,7 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         }
 
 
-        BarcodeManager barcodeManager = new BarcodeManager(experiment.getExperimentID());   // TODO: double check if empty constructor is appropriate for use in this example
+        BarcodeManager barcodeManager = new BarcodeManager(user.getUsername()); // TODO: double check if empty constructor is appropriate for use in this example
         String barcodeID = barcodeList.get(position);
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);

@@ -6,6 +6,7 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,12 +18,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trialio.R;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
+import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.example.trialio.utils.StatisticsUtility;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -45,10 +49,11 @@ import java.util.Date;
  */
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
+    private Context context;
+
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
 
-    UserManager userManager;
     /**
      * the On create the takes in the saved instance from the experiment activity
      * @param savedInstanceState
@@ -57,6 +62,9 @@ public class StatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.experiment_stats);
+
+        // set the context
+        context = this;
 
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
@@ -104,7 +112,15 @@ public class StatActivity extends AppCompatActivity {
                 // set TextViews
                 textDescription.setText("Description: " + experiment.getSettings().getDescription());
                 textType.setText("Type: " + experiment.getTrialManager().getType());
-                textOwner.setText(experiment.getSettings().getOwnerID());
+
+                // get the username of the owner from the usermanager
+                UserManager userManager = new UserManager();
+                userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        textOwner.setText(user.getUsername());
+                    }
+                });
 
                 if ( experiment.getTrialManager().getIsOpen() ) {
                     textStatus.setText("Open");
@@ -159,9 +175,31 @@ public class StatActivity extends AppCompatActivity {
                 });
             }
         });
+
+        // set on click listeners
+        setOnClickListeners();
     }
 
+    /**
+     * This sets the on click listeners for a Stat Activity
+     */
+    public void setOnClickListeners() {
 
+        // set the on click listener for viewing the owner's profile
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        textOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
+    }
 
     /**
      * Displays the histogram

@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
@@ -42,6 +43,7 @@ import com.example.trialio.R;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.example.trialio.utils.StatisticsUtility;
 
 import java.util.ArrayList;
@@ -113,6 +115,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         showQR = (Button) findViewById(R.id.btnQRCode);
         mapView = (ImageButton) findViewById(R.id.btnMap);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -375,24 +380,28 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     Intent intent = new Intent(context, QRBinomialActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("COUNT")) {
                     Intent intent = new Intent(context, QRCountActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
                     Intent intent = new Intent(context, QRNonnegActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
                     Intent intent = new Intent(context, QRMeasurementActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 }
@@ -405,6 +414,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 Intent intent = new Intent(context, ScanningActivity.class);
                 Bundle args = new Bundle();
                 args.putSerializable("user_scan", currentUser);
+                args.putSerializable("experiment", experiment);
+                intent.putExtra("Parent", "ExperimentActivity");
                 intent.putExtras(args);
                 startActivity(intent);
             }
@@ -444,7 +455,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     new AlertDialog.Builder(ExperimentActivity.this)
                             .setMessage("Map view is not available for this experiment")
                             .setCancelable(false)
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.dismiss();
@@ -522,6 +533,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        // set the click listener to view the user profile
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        textOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
     }
 
     /**

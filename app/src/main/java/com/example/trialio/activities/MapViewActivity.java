@@ -13,18 +13,18 @@ Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
 
  */
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 
-
-import com.example.trialio.adapters.TrialAdapter;
-import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -33,6 +33,7 @@ import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
+import com.example.trialio.utils.HomeButtonUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 
 
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback{
+    private Context context;
     private Experiment experiment;
     private UserManager userManager;
     private UiSettings uiSettings;
@@ -57,6 +59,9 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_view);
+
+        // set the context
+        context = this;
 
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
@@ -76,6 +81,30 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
                 textTotalTrials.setText("Total: " + "\n" + trialList.size());
             }
         });
+
+        // set on click listeners
+        setOnClickListeners();
+    }
+
+    /**
+     * This sets the on click listeners for the MapViewActivity
+     */
+    public void setOnClickListeners() {
+
+        // set the click listener to view the owner profile
+        TextView textOwner = findViewById(R.id.settings_text_owner);
+        textOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -94,8 +123,6 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         TextView textOwner = findViewById(R.id.settings_text_owner);
         TextView textType = findViewById(R.id.settings_text_type);
         TextView textStatus = findViewById(R.id.settings_text_status);
-
-
 
         // set the fields
         textDescription.setText("Description: " + "\n" + experiment.getSettings().getDescription());

@@ -3,23 +3,29 @@ package com.example.trialio.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.ReplyAdapter;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.AddReplyFragment;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Reply;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +58,10 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
     private UserManager userManager;
     private ExperimentManager experimentManager;
 
+    private Boolean isUserOwner = false;
+    private Experiment experiment;
+
+
     /**
      * the On create the takes in the saved instance from the question forum activity
      *
@@ -66,9 +76,9 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         selectedQuestion = (Question) bundle.getSerializable("question");
         //TODO: why did this work, and how can it cause additional issues in the future ***TEST ME***
-        associatedExperimentID = bundle.getString("experimentID");
+        experiment = (Experiment) bundle.getSerializable("experiment");
+        associatedExperimentID = experiment.getExperimentID();
         associatedQuestionID = selectedQuestion.getPostID();
-
 
         questionForumManager = new QuestionForumManager(associatedExperimentID);
         replyList = new ArrayList<>();
@@ -97,8 +107,22 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
         ListView questionsListView = findViewById(R.id.replyListView);
         questionsListView.setAdapter(replyAdapter);
 
-        setUpOnClickListeners();
+        // initialize the state of the activity
+        initState();
+    }
 
+    /**
+     * Initialize the state for the Activity
+     */
+    private void initState() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                // determine if user is the owner
+                isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
+                setUpOnClickListeners();
+            }
+        });
     }
 
     @Override
@@ -143,6 +167,52 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
             }
         });
 
+        // set up the listener to view the profile of the user who posted a question in the list view
+        replyListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // get the userID
+                String userID = replyList.get(i).getUserId();
+
+                // set the menu layout
+                int popupViewID = R.layout.menu_view_profile;
+                if (isUserOwner) {
+                    popupViewID = R.layout.menu_replies_owner;
+                }
+
+                // create the popup menu
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_view_profile) {
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
+                        } else if (menuItem.getItemId() == R.id.item_delete_reply) {
+                            Log.d(TAG, "Delete reply: " + replyList.get(i).getPostID() + " from " + associatedQuestionID + " from " + associatedExperimentID);
+
+                            // delete reply
+                            questionForumManager.deleteReply(associatedQuestionID, replyList.get(i).getPostID());
+                            setReplyList();
+                        } else {
+                            Log.d(TAG, "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
+            }
+        });
+
 
         /**
          * Adds new reply
@@ -164,6 +234,21 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
             }
         });
+
+        // sets a listener to view the author profile when their username is clicked
+        TextView authorID = findViewById(R.id.selectedQuestionAuthorID);
+        authorID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, selectedQuestion.getUserId());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**

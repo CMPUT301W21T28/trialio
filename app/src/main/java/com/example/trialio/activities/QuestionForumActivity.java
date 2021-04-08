@@ -1,24 +1,30 @@
 package com.example.trialio.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.adapters.QuestionAdapter;
+import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.AddQuestionFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.User;
+import com.example.trialio.utils.HomeButtonUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +40,7 @@ import java.util.List;
 public class QuestionForumActivity extends AppCompatActivity implements AddQuestionFragment.OnFragmentInteractionListener {
 
     private final String TAG = "QuestionForumActivity";
+    private Context context;
 
     private String associatedExperimentID;
     private Experiment experiment;
@@ -41,16 +48,20 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
     private ArrayList<Question> questionList;
     private QuestionAdapter questionAdapter;
 
+    private Boolean isUserOwner = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_forum_activity);
 
+        // set the context
+        context = this;
+
         // receive experiment info from main -> the question forum belongs to this experiment
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
-        // get id here and pass it into the constructor of the quesitonForumManager
+        // get id here and pass it into the constructor of the questionForumManager
         associatedExperimentID = experiment.getExperimentID();
 
         // Initialize attributes for the activity
@@ -62,9 +73,22 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         ListView questionsListView = findViewById(R.id.questionForumListView);
         questionsListView.setAdapter(questionAdapter);
 
-        // Set up onClick listeners
-        setUpOnClickListeners();
+        // initialize the state of the activity
+        initState();
+    }
 
+    /**
+     * Initialize the state for the Activity
+     */
+    private void initState() {
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                // determine if user is the owner
+                isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
+                setUpOnClickListeners();
+            }
+        });
     }
 
     @Override
@@ -130,7 +154,7 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
                 Question tempQuestion = questionList.get(i);
 
-                args.putString("experimentID", associatedExperimentID);
+                args.putSerializable("experiment", experiment);
                 args.putSerializable("question", tempQuestion);
 
                 Log.w("QUESTION ID: ", tempQuestion.getPostID());
@@ -139,6 +163,52 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
                 intent.putExtras(args);
 
                 startActivity(intent);
+            }
+        });
+
+        // set up the listener to view the profile of the user who posted a question in the list view
+        questionForumListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // get the userID
+                String userID = questionList.get(i).getUserId();
+
+                // set the menu layout
+                int popupViewID = R.layout.menu_view_profile;
+                if (isUserOwner) {
+                    popupViewID = R.layout.menu_questions_owner;
+                }
+
+                // create the popup menu
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.item_view_profile) {
+                            Log.d(TAG, "View profile: " + userID);
+
+                            // create and execute a ViewUserProfileCommand
+                            ViewUserProfileCommand command = new ViewUserProfileCommand(context, userID);
+                            command.execute();
+                        } else if (menuItem.getItemId() == R.id.item_delete_question) {
+                            Log.d(TAG, "Delete question: " + questionList.get(i).getPostID() + " from " + experiment.getExperimentID());
+
+                            // delete question
+                            questionForumManager.deleteQuestion(questionList.get(i).getPostID());
+                            setQuestionList();
+                        } else {
+                            Log.d(TAG, "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
             }
         });
 
@@ -157,6 +227,21 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
 
             }
         });
+
+        // sets a listener to view the owner profile when their username is clicked
+        TextView ownerView = findViewById(R.id.experiment_text_owner);
+        ownerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
 
@@ -171,6 +256,4 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
         questionForumManager.createQuestion(newQuestion);
         setQuestionList();
     }
-
-
 }

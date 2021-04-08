@@ -11,21 +11,20 @@
     android:layout_marginBottom="2.5dp"
     android:background="@color/section_grey">
 
-            <TextView
-                android:id="@+id/text_ignored_user"
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="2.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="2.5dp"
-                android:layout_weight="5"
+    <TextView
+        android:id="@+id/text_ignored_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="2.5dp"
+        android:layout_weight="5"
 
-                android:text="Question title"
-                android:fontFamily="monospace"
+        android:fontFamily="monospace"
+        android:text="Username"
 
-                android:textColor="@color/white">
-            </TextView>
+        android:textColor="@color/white"></TextView>
 
 </LinearLayout>

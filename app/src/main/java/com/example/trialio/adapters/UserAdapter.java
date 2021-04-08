@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.User;
 
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ import java.util.ArrayList;
  */
 public class UserAdapter extends ArrayAdapter<String> {
     private Context context;
-    private ArrayList<String> ignoredList;
+    private ArrayList<String> ignoredIDList;
 
-    public UserAdapter(Context context, ArrayList<String> ignoredList) {
-        super(context, 0, ignoredList);
+    public UserAdapter(Context context, ArrayList<String> ignoredIDList) {
+        super(context, 0, ignoredIDList);
         this.context = context;
 
-        this.ignoredList = ignoredList;
+        this.ignoredIDList = ignoredIDList;
     }
 
     @NonNull
@@ -40,14 +41,22 @@ public class UserAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.content_user, parent,false);
         }
 
-        // get the userID
-        String userID = ignoredList.get(position);
-
         // get the textview
         TextView textUsername = view.findViewById(R.id.text_ignored_user);
 
-        // set the textview
-        textUsername.setText(userID);
+        // get the userID
+        String userID = ignoredIDList.get(position);
+
+        // get the username from a usermanager
+        UserManager userManager = new UserManager();
+        userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
+            @Override
+            public void onUserFetch(User user) {
+
+                // set the textview
+                textUsername.setText(user.getUsername());
+            }
+        });
 
         return view;
     }

@@ -25,6 +25,7 @@
             android:scaleType="fitCenter" />
 
         <ImageButton
+            android:id="@+id/button_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
@@ -226,7 +227,6 @@
         </LinearLayout>
 
     </LinearLayout>
-    //barcode
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -234,17 +234,16 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="1"
+            android:layout_weight="0"
 
             android:fontFamily="monospace"
             android:gravity="center_horizontal"
-            android:text="Barcode"
+            android:text="QR Code"
             android:textColor="@color/special_yellow" />
 
         <ListView
@@ -254,7 +253,7 @@
         <Button
             android:id="@+id/btnQRCount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Create QR Code"
             android:backgroundTint="@color/special_yellow"
             android:textColor="@color/black"/>
