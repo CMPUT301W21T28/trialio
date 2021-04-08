@@ -20,6 +20,8 @@ public class Barcode implements Serializable {
         this.barcodeID = barcodeID;
     }
 
+    public Barcode(){}
+
     public Experiment getExperiment() {
         return experiment;
     }
