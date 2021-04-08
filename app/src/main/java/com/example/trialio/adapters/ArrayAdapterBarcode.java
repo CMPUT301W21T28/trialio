@@ -66,12 +66,8 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
 //        String barcodeTrialResult = barcode.getTrialResult();
 //
 
-
-
-
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
         ImageView barcodeImageView = view.findViewById(R.id.barcodeImageView);
-
 
         // set text view
         barcodeResult.setText(barcodeID);

@@ -203,8 +203,8 @@ public class BarcodeManager implements Serializable {
 
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                 // retrieves all documents (barcodes) within barcodeForum collection
-                                String barcodeID = doc.getString("Barcode Info");
-                                barcodeList.add(barcodeID);
+                                Barcode barcode = extractBarcodeDocument(doc);
+                                barcodeList.add(barcode);
                             }
                             listener.onManyBarcodesFetch(barcodeList);
                         } else {
