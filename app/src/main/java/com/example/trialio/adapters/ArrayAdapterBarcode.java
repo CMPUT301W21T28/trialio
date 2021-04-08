@@ -30,12 +30,12 @@ import java.util.ArrayList;
 public class ArrayAdapterBarcode extends ArrayAdapter {
 
     private Context context;
-    private ArrayList<String> barcodeList;
+    private ArrayList<Barcode> barcodeList;
     private Experiment experiment;
     private User user;
 
 
-    public ArrayAdapterBarcode (Context context, ArrayList<String> barcodeList, Experiment experiment, User user) {
+    public ArrayAdapterBarcode (Context context, ArrayList<Barcode> barcodeList, Experiment experiment, User user) {
         super(context, 0, barcodeList);
         this.barcodeList = barcodeList;
         this.context = context;
@@ -61,28 +61,10 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         Barcode barcode = barcodeList.get(position);
 
         String barcodeID = barcode.getBarcodeID();
-        String barcodeExperimentID = barcode.getExperiment().getExperimentID();
-        String barcodeTrialType = experiment.getTrialManager().getType();
-
-
-        if (ExperimentTypeUtility.isBinomial(barcodeTrialType)) {
-
-        }
-        else if (ExperimentTypeUtility.isNonNegative(barcodeTrialType)) {
-
-        }
-        else if (ExperimentTypeUtility.isCount(barcodeTrialType)) {
-
-        }
-        else if (ExperimentTypeUtility.isMeasurement(barcodeTrialType)) {
-
-        }
-
-
-
-
-
-        String barcodeTrialResult = experiment.getTrialManager().get
+//        String barcodeExperimentID = barcode.getExperiment().getExperimentID();
+//        String barcodeTrialType = experiment.getTrialManager().getType();
+//        String barcodeTrialResult = barcode.getTrialResult();
+//
 
 
 

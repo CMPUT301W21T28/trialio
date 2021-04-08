@@ -82,7 +82,7 @@ public class BarcodeManager implements Serializable {
          *
          * @param barcode the barcode that was fetched from the database
          */
-        void onBarcodeFetch(String barcode);
+        void onBarcodeFetch(Barcode barcode);
     }
 
 
@@ -96,10 +96,9 @@ public class BarcodeManager implements Serializable {
          *
          * @param barcodes all the barcodes that were fetched from the database (belong to the current experiment)
          */
-        void onManyBarcodesFetch(List<String> barcodes);
+        void onManyBarcodesFetch(List<Barcode> barcodes);
     }
 
-    // hey jeff
     public void createBarcode(Barcode newBarcode) {
 //        String [] items = barcodeString.split("\n");
 //        Map<String, Object> newBarcode = new HashMap<>();
@@ -166,7 +165,7 @@ public class BarcodeManager implements Serializable {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        String barcode = extractBarcodeDocument(doc);
+                        Barcode barcode = extractBarcodeDocument(doc);
 
                         listener.onBarcodeFetch(barcode);
                         Log.d(TAG, "Barcode fetched successfully.");
@@ -200,7 +199,7 @@ public class BarcodeManager implements Serializable {
                             Log.d(TAG, message);
 
                             QuerySnapshot qs = task.getResult();
-                            ArrayList<String> barcodeList = new ArrayList<>();
+                            ArrayList<Barcode> barcodeList = new ArrayList<>();
 
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                 // retrieves all documents (barcodes) within barcodeForum collection
@@ -216,7 +215,7 @@ public class BarcodeManager implements Serializable {
                 });
     }
 
-    private String extractBarcodeDocument(DocumentSnapshot document) {
+    private Barcode extractBarcodeDocument(DocumentSnapshot document) {
         // TODO custom mapping here
 //        String barcodeInfo = document.getString("Barcode Info");
 //        return barcodeInfo;
@@ -274,22 +273,8 @@ public class BarcodeManager implements Serializable {
      * @param result
      */
     public void registerBarcode(String input, User user, Experiment experiment, String result) {
-        if (experiment.getTrialManager().getType().equals("BINOMIAL")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-        } else if (experiment.getTrialManager().getType().equals("COUNT")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        }
+        Barcode barcode = new Barcode(experiment, result, input);
+        this.createBarcode(barcode);
     }
 
     public static void readBarcode(String[] input, Location location, User user){
