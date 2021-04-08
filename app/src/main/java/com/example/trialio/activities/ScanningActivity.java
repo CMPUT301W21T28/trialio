@@ -139,7 +139,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                         }
                     });
                 }
-                // if its a Barcode
+            // if its a Barcode
             } else {
                 if (experiment.getSettings().getGeoLocationRequired()) {
                     Task<android.location.Location> locTask = Location.requestLocation(context);
