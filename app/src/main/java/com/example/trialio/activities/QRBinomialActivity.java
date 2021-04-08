@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import com.example.trialio.controllers.QuestionForumManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.QRFragment;
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Question;
 import com.example.trialio.models.Trial;
@@ -60,9 +63,11 @@ public class QRBinomialActivity extends AppCompatActivity {
     private TextView txtMode;
     private Boolean onBarcodeView;
 
-    private ArrayList<String> barcodeList;
+    private ArrayList<Barcode> barcodeList;
     private ArrayAdapterBarcode barcodeAdapter;
     private BarcodeManager barcodeManager;
+
+    private User user;
 
 
     /**
@@ -84,11 +89,12 @@ public class QRBinomialActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
+        user = (User) bundle.getSerializable("user");
 
 
-        barcodeManager = new BarcodeManager(experiment.getExperimentID());
+        barcodeManager = new BarcodeManager(user.getUsername());
         barcodeList = new ArrayList<>();
-        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment, user);
 
         listviewBarcode.setAdapter(barcodeAdapter);
 
@@ -113,7 +119,7 @@ public class QRBinomialActivity extends AppCompatActivity {
     private void setBarcodeList() {
         barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
             @Override
-            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+            public void onManyBarcodesFetch(List<Barcode> barcodes) {  // TODO: why not ArrayList ***
                 Log.w("", "Successfully fetched barcodes");
                 barcodeList.clear();
                 barcodeList.addAll(barcodes);   // TODO: check for errors
@@ -172,6 +178,7 @@ public class QRBinomialActivity extends AppCompatActivity {
                     bundle.putSerializable("experiment", experiment);
                     bundle.putSerializable("result", String.valueOf(isBarcodeSuccess));
                     bundle.putBoolean("isBarcode", isBarcode);
+                    bundle.putSerializable("user_scan", user);
                     intent.putExtra("Parent", "QRActivity");
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -209,10 +216,32 @@ public class QRBinomialActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 Boolean isBarcode = true;
-                bundle.putString("barcode",barcodeList.get(i));
+                bundle.putSerializable("barcode",barcodeList.get(i));
                 bundle.putBoolean("isBarcode", isBarcode);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"barcode");
+            }
+        });
+
+        listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // create the popup menu
+                int popupViewID = R.layout.menu_barcode;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
+                        return true;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
             }
         });
 
