@@ -52,12 +52,7 @@ public class BinomialTrialFragment extends DialogFragment {
                         getContext(),
                         geoLocationReq,
                         isSuccess,
-                        new CreateBinomialTrialCommand.OnResultListener() {
-                            @Override
-                            public void onResult(Trial trial) {
-                                listener.onOkPressed(trial);
-                            }
-                        });
+                        trial -> listener.onOkPressed(trial));
                 command.execute();
             }
         });

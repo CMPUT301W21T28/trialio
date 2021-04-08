@@ -11,53 +11,23 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
 
-public class CreateBinomialTrialCommand {
+public class CreateBinomialTrialCommand extends CreateTrialCommand {
 
-    private final Context context;
-    private final boolean isLocationRequired;
+    /**
+     * The result of a binomial trial
+     */
     private final boolean trialResult;
-    private final Date date;
 
     /**
-     * The receiving listener that indicates the success of the operation.
-     */
-    private final OnResultListener listener;
-
-    /**
-     * Interface which represent the receiver for the invoker when the command finished execution
-     */
-    public interface OnResultListener {
-        public void onResult(Trial trial);
-    }
-
-    /**
-     * Creates a ChangeUsernameCommand object.
+     * Creates a CreateBinomialTrialCommand
      */
     public CreateBinomialTrialCommand(Context context, boolean isLocationRequired, boolean trialResult, OnResultListener listener) {
-        this.context = context;
-        this.isLocationRequired = isLocationRequired;
+        super(context, isLocationRequired, listener);
         this.trialResult = trialResult;
-        this.date = new Date();
-        this.listener = listener;
     }
 
-    /**
-     * Executes the command to create a binomial trial
-     */
-    public void execute() {
-        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
-            @Override
-            public void onUserFetch(User user) {
-                if (isLocationRequired) {
-                    createTrialWithLocation(user, context);
-                } else {
-                    createTrialWithoutLocation(user);
-                }
-            }
-        });
-    }
-
-    private void createTrialWithLocation(User user, Context context) {
+    @Override
+    protected void createTrialWithLocation(User user, Context context) {
         Task<android.location.Location> locTask = Location.requestLocation(context);
         if (locTask != null) {
             locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
@@ -75,7 +45,8 @@ public class CreateBinomialTrialCommand {
         }
     }
 
-    private void createTrialWithoutLocation(User user) {
+    @Override
+    protected void createTrialWithoutLocation(User user) {
         Location location = new Location();
         Trial trial = new BinomialTrial(user.getId(), location, date, trialResult);
         listener.onResult(trial);
