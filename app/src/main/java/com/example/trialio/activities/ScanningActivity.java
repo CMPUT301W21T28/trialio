@@ -132,16 +132,9 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                 }
             // if its a Barcode
             }else{
-                if (experiment.getSettings().getGeoLocationRequired()){
-                    Location location = new Location();
-                    location.getCurrentLocation(context).addOnCompleteListener(new OnCompleteListener<android.location.Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<android.location.Location> task) {
-                            barcodeManager.readBarcode(items, location, currentUser);
-                        }
-                    });
-
-                }
+                Location location=new Location();
+                barcodeManager = new BarcodeManager(currentUser.getUsername());
+                barcodeManager.readBarcode(processed, location, currentUser);
             }
         // if intent is not coming from Experiment Activity i.e. QRActivity
         // this is used for registering new barcode
