@@ -1,5 +1,7 @@
 package com.example.trialio.activities;
 
+//map reference from https://developers.google.com/maps/documentation/android-sdk/start
+
 /*
 Map View markers method from Youtube Video
 
@@ -13,12 +15,28 @@ Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
 
  */
 
+/*
+Custom map markers method from Youtube Video
+
+Video Title: How to add Custom Marker in Google maps in Android
+
+Link to Video: https://youtu.be/26bl4r3VtGQ
+
+Video uploader: Gadgets and Technical field Android Tech
+
+Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
+ */
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.trialio.R;
 
@@ -28,8 +46,10 @@ import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
+import com.example.trialio.models.Location;
 import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
+import com.example.trialio.models.Region;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
@@ -39,6 +59,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -51,6 +73,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     private UserManager userManager;
     private UiSettings uiSettings;
     private GoogleMap trialsMap;
+    private Location experimentRegion;
     private ArrayList<Trial> trialList;
     private String experimentType;
 
@@ -67,6 +90,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
         experimentType = experiment.getTrialManager().getType();
+        experimentRegion = experiment.getSettings().getRegion().getGeoLocation();
 
         // get the managers
         userManager = new UserManager();
@@ -139,6 +163,16 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
+    private BitmapDescriptor iconFromDrawable(Context context, int imgID) {
+        Drawable icon = ContextCompat.getDrawable(context, imgID);
+        icon.setBounds(0, 0, 100, 100);
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        icon.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     private String getTrialResult(Trial trial) {
         if (ExperimentTypeUtility.isBinomial(experimentType)) {
             return ("Result: " + ((BinomialTrial) trial).getIsSuccess());
@@ -161,9 +195,13 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setMapToolbarEnabled(false);
 
+        trialsMap.addMarker(new MarkerOptions().position(new LatLng(experimentRegion.getLatitude(), experimentRegion.getLongitude()))
+                .title("Name: " + experiment.getSettings().getDescription()).icon(iconFromDrawable(context, R.drawable.conical_flask_empty))).showInfoWindow();
+
         if (!trialList.isEmpty()) {
             for (int i=0; i < trialList.size(); i++) {
-                trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude())).title(getTrialResult(trialList.get(i))));
+                trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude()))
+                        .title(getTrialResult(trialList.get(i)))).showInfoWindow();
             }
 
             trialsMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(trialList.get(0).getLocation().getLatitude(), trialList.get(0).getLocation().getLongitude())));
