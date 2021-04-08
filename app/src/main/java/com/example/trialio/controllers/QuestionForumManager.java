@@ -134,8 +134,11 @@ public class QuestionForumManager implements Serializable {
                 });
     }
 
-
     public void deleteQuestion (String questionID) {
+
+        // delete all replies
+        deleteAllReplies(questionID);
+
         Log.d(TAG, "Posting question " + questionID);
         questionForumCollection
                 .document(questionID)
@@ -156,6 +159,49 @@ public class QuestionForumManager implements Serializable {
                 });
     }
 
+    /**
+     * This deletes all of the questions in the collection referenced by the question forum manager.
+     */
+    public void deleteAllQuestions() {
+        questionForumCollection
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // delete all questions in the question collection
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+
+                            // for each question, delete all of its replies
+                            deleteAllReplies(doc.getId());
+
+                            // delete question
+                            doc.getReference().delete();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * This deletes all of the replies of a given question in the collection referenced by the
+     * question forum manager.
+     */
+    public void deleteAllReplies(String questionID) {
+        questionForumCollection
+                .document(questionID)
+                .collection("Replies")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // delete every reply document in the Replies collection of a particular question document
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                            doc.getReference().delete();
+                        }
+                    }
+                });
+    }
 
     public void createReply (String selectedQuestionID, Reply newReply) {
         Log.d( TAG, "Posting reply" );
@@ -370,7 +416,6 @@ public class QuestionForumManager implements Serializable {
 
         return reply;
     }
-
 
 //    /**
 //     * Compresses a User into a Map for storage in a Firestore document.

@@ -234,6 +234,17 @@ public class ExperimentManager {
      * @return Task that indicates when the delete is complete
      */
     public Task<Void> deleteExperiment(String experimentId) {
+
+        // delete all trials
+        TrialManager trialManager = new TrialManager();
+        trialManager.setExperimentID(experimentId);
+        trialManager.deleteAllTrials();
+
+        // delete all questions
+        QuestionForumManager questionForumManager = new QuestionForumManager(experimentId);
+        questionForumManager.deleteAllQuestions();
+
+        // delete experiment
         Log.d(TAG, "Deleting experiment" + experimentId);
         return experimentsCollection
                 .document(experimentId)

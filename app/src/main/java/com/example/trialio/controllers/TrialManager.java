@@ -22,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -365,6 +367,27 @@ public class TrialManager implements Serializable {
 
         // return the trial we extracted
         return trial;
+    }
+
+    /**
+     * This deletes all of the trials in the collection referenced by the trial manager.
+     */
+    public void deleteAllTrials() {
+        FirebaseFirestore.getInstance()
+                .collection(EXPERIMENT_COLLECTION_PATH)
+                .document(experimentID)
+                .collection(TRIALS_COLLECTION_PATH)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // delete all of the trials in the trial collection
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                            doc.getReference().delete();
+                        }
+                    }
+                });
     }
 
     /**

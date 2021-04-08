@@ -186,6 +186,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
                 // start an ExperimentActivity
                 startActivity(intent);
+                finish();
             }
         });
 
