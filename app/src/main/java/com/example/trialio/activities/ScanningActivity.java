@@ -146,7 +146,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         // if intent is not coming from Experiment Activity i.e. QRActivity
         // this is used for registering new barcode
         }else{
-            barcodeManager = new BarcodeManager(experiment.getExperimentID());
+            barcodeManager = new BarcodeManager(currentUser.getUsername());
             barcodeManager.registerBarcode(text, currentUser, experiment, result);
         }
 

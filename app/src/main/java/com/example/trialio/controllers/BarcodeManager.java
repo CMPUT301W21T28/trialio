@@ -47,15 +47,15 @@ public class BarcodeManager implements Serializable {
 
     private static final String TAG = "BarcodeForumManager";
 
-    private static final String EXPERIMENT_PATH = "users-v5";
+    private static final String USERS_PATH = "users-v6";
     private static final String BARCODES_PATH = "barcodes";
 
 
     /**
      * Constructor for QuestionForumManager
      */
-    public BarcodeManager(String associatedExperimentID) {
-        barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(BARCODES_PATH);
+    public BarcodeManager(String userID) {
+        barcodeCollection = FirebaseFirestore.getInstance().collection(USERS_PATH).document(userID).collection(BARCODES_PATH);
     }
 
     public BarcodeManager() {    }
