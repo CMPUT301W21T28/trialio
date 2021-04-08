@@ -1,5 +1,7 @@
 package com.example.trialio.activities;
 
+//map reference from https://developers.google.com/maps/documentation/android-sdk/start
+
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
