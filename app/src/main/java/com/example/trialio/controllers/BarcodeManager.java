@@ -286,17 +286,16 @@ public class BarcodeManager implements Serializable {
                             experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
                         }
                     });
+                }else if (type.equals("BINOMIAL")){
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(barcode.getTrialResult()));
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                        }
+                    });
                 }
-//                if (type.equals("BINOMIAL")){
-//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-//                        @Override
-//                        public void onExperimentFetch(Experiment new_experiment) {
-//                            BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(barcode.getTrialResult()));
-//                            new_experiment.getTrialManager().addTrial(new_trial);
-//                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
-//                        }
-//                    });
-//                }
 //                if (type.equals("NONNEGATIVE")) {
 //                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
 //                        @Override
