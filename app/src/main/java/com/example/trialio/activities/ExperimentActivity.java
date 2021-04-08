@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
@@ -450,7 +451,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     new AlertDialog.Builder(ExperimentActivity.this)
                             .setMessage("Map view is not available for this experiment")
                             .setCancelable(false)
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.dismiss();
@@ -528,6 +529,17 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             }
         });
 
+        // set the click listener to view the user profile
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        textOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
     }
 
     /**

@@ -22,6 +22,7 @@ import com.example.trialio.R;
 import com.example.trialio.adapters.UserAdapter;
 import com.example.trialio.controllers.ExperimentManager;
 import com.example.trialio.controllers.UserManager;
+import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.AddIgnoredFragment;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
@@ -122,9 +123,6 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
 
         // set adapter
         ignoredListView.setAdapter(ignoredAdapter);
-
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     @Override
@@ -233,6 +231,19 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 addIgnored.show(getSupportFragmentManager(), "addIgnored");
             }
         });
+
+        experimentOwnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // create and execute a ViewUserProfileCommand
+                ViewUserProfileCommand command = new ViewUserProfileCommand(context, experiment.getSettings().getOwnerID());
+                command.execute();
+            }
+        });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**
