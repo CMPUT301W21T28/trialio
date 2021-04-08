@@ -20,7 +20,7 @@ public abstract class CreateTrialCommand {
 
     /**
      * Creates a basic (abstract) CreateTrialCommand object
-     * @param context The context fow which the create trial command was invoked
+     * @param context The context from which the create trial command was invoked
      * @param isLocationRequired true is location is to be recorded for the Trial, false otherwise
      * @param listener callback for when the Trial is created
      */

@@ -2,25 +2,27 @@ package com.example.trialio.controllers;
 
 import android.content.Context;
 
-import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Location;
+import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.Date;
+public class CreateNonNegativeTrialCommand extends CreateTrialCommand {
 
-public class CreateCountTrialCommand extends CreateTrialCommand {
+    private final int nonNegCount;
 
     /**
-     * Creates a CreateCountTrialCommand object
+     * Create a CreateNonNegativeTrialCommand cobject
      * @param context The context from which the create trial command was invoked
      * @param isLocationRequired true is location is to be recorded for the Trial, false otherwise
+     * @param nonNegCount the result of the trial to create
      * @param listener callback for when the Trial is created
      */
-    public CreateCountTrialCommand(Context context, boolean isLocationRequired, OnResultListener listener) {
+    public CreateNonNegativeTrialCommand(Context context, boolean isLocationRequired, int nonNegCount, OnResultListener listener) {
         super(context, isLocationRequired, listener);
+        this.nonNegCount = nonNegCount;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class CreateCountTrialCommand extends CreateTrialCommand {
                 @Override
                 public void onSuccess(android.location.Location loc) {
                     Location location = new Location(loc.getLatitude(), loc.getLongitude());
-                    Trial trial = new CountTrial(user.getId(), location, date);
+                    Trial trial = new NonNegativeTrial(user.getId(), location, date, nonNegCount);
                     listener.onResult(trial);
                 }
             });
@@ -42,11 +44,11 @@ public class CreateCountTrialCommand extends CreateTrialCommand {
         }
     }
 
-
     @Override
     protected void createTrialWithoutLocation(User user) {
         Location location = new Location();
-        Trial trial = new CountTrial(user.getId(), location, date);
+        Trial trial = new NonNegativeTrial(user.getId(), location, date, nonNegCount);
         listener.onResult(trial);
+
     }
 }
