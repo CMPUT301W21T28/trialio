@@ -14,12 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CreateBinomialTrialCommand;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
-import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
 
@@ -34,10 +36,10 @@ public class BinomialTrialFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_add_binomial_trial, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setTitle("Add Binomial Trial:");
         builder.setNegativeButton("Cancel", null);
@@ -46,19 +48,17 @@ public class BinomialTrialFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int i) {
                 Switch s = view.findViewById(R.id.switchSuccessIndicator);
                 boolean isSuccess = s.isChecked();
-                Location location = new Location();
-                if (geoLocationReq) {
-                    location.getCurrentLocation(getContext());
-                }
-                Date date = new Date();
-
-                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
-                    @Override
-                    public void onUserFetch(User user) {
-                        //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                        listener.onOkPressed(new BinomialTrial(user.getId(), location, date, isSuccess));
-                    }
-                });
+                CreateBinomialTrialCommand command = new CreateBinomialTrialCommand(
+                        getContext(),
+                        geoLocationReq,
+                        isSuccess,
+                        new CreateBinomialTrialCommand.OnResultListener() {
+                            @Override
+                            public void onResult(Trial trial) {
+                                listener.onOkPressed(trial);
+                            }
+                        });
+                command.execute();
             }
         });
         return builder.create();
@@ -73,7 +73,7 @@ public class BinomialTrialFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof OnFragmentInteractionListener){
+        if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
