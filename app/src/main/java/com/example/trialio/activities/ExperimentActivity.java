@@ -84,6 +84,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private ImageButton mapView;
     private StatisticsUtility statisticsUtility;
     private User currentUser;
+    private boolean geoWarningShown;
 
     /**
      * the On create the takes in the saved instance from the main activity
@@ -116,8 +117,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         mapView = (ImageButton) findViewById(R.id.btnMap);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
 
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
+        // we have not shown the geo warning yet
+        geoWarningShown = false;
     }
 
     @Override
@@ -154,6 +155,33 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 setOnClickListeners();
             }
         });
+
+        // if geo location is enabled, give a warning
+        if (!geoWarningShown && experiment.getSettings().getGeoLocationRequired()) {
+            geoWarningShown = true;
+            showLocationWarning();
+        }
+    }
+
+    /**
+     *
+     */
+    private void showLocationWarning() {
+        new AlertDialog.Builder(ExperimentActivity.this)
+                .setMessage("Warning! This experiment requires Geo-location.")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }})
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -540,6 +568,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 command.execute();
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**
