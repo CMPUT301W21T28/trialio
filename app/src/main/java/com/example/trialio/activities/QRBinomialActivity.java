@@ -222,28 +222,27 @@ public class QRBinomialActivity extends AppCompatActivity {
             }
         });
 
-//        listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                // create the popup menu
-//                int popupViewID = R.layout.menu_barcode;
-//                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
-//                popup.inflate(popupViewID);
-//
-//                // listener for menu
-//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem menuItem) {
-//                        barcodeManager.deleteBarcode(barcodeList.get(position));
-//                        return true;
-//                    }
-//                });
-//                popup.show();
-//
-//                // return true so that the regular on click does not occur
-//                return true;
-//            }
-//        });
+        listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // create the popup menu
+                int popupViewID = R.layout.menu_barcode;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        barcodeManager.deleteBarcode(barcodeList.get(position));
+                        return true;
+                    }
+                });
+                popup.show();
+
+                // return true so that the regular on click does not occur
+                return true;
+            }
+        });
 
         // set the click listener to view the owner profile
         experimentOwnerTextView.setOnClickListener(new View.OnClickListener() {
