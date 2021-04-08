@@ -9,8 +9,15 @@ import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+/**
+ * Command object that creates a NonNegativeTrial object for the current user. This class inherits from
+ * CreateTrialCommand which provides the main execute() function for this command class.
+ */
 public class CreateNonNegativeTrialCommand extends CreateTrialCommand {
 
+    /**
+     * The result of the non-negative trial
+     */
     private final int nonNegCount;
 
     /**

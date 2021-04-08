@@ -11,6 +11,10 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
 
+/**
+ * Command object that creates a CountTrial object for the current user. This class inherits from
+ * CreateTrialCommand which provides the main execute() function for this command class.
+ */
 public class CreateCountTrialCommand extends CreateTrialCommand {
 
     /**

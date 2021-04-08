@@ -9,13 +9,24 @@ import com.example.trialio.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+/**
+ * Command object that creates a MeasurementTrial object for the current user. This class inherits from
+ * CreateTrialCommand which provides the main execute() function for this command class.
+ */
 public class CreateMeasurementTrialCommand extends CreateTrialCommand {
 
+    /**
+     * The measurement result of the trial to create
+     */
     private final double measurement;
+
+    /**
+     * The units of the measurement
+     */
     private final String unit;
 
     /**
-     * Creates a CreateCountTrialCommand object
+     * Creates a CreateMeasurementTrialCommand object
      *
      * @param context            The context from which the create trial command was invoked
      * @param isLocationRequired true is location is to be recorded for the Trial, false otherwise
@@ -52,6 +63,5 @@ public class CreateMeasurementTrialCommand extends CreateTrialCommand {
         Location location = new Location();
         Trial trial = new MeasurementTrial(user.getId(), location, date, measurement, unit);
         listener.onResult(trial);
-
     }
 }

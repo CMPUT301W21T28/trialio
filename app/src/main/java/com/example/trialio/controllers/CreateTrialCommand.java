@@ -7,6 +7,13 @@ import com.example.trialio.models.User;
 
 import java.util.Date;
 
+/**
+ * Command object that creates a Trial object for the current user. This class is inherited to create
+ * a Create Trial command object for a particular kind of Trial. This class and all it's subclasses
+ * follow the template design pattern. Subclasses of CreateTrialCommand must implement both
+ * createTrialWithLocation and createTrialWithoutLocation which specifies how a trial should be
+ * created when location is and isn't required, respectively.
+ */
 public abstract class CreateTrialCommand {
 
     protected final Context context;

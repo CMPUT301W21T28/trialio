@@ -11,6 +11,10 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
 
+/**
+ * Command object that creates a BinomialTrial object for the current user. This class inherits from
+ * CreateTrialCommand which provides the main execute() function for this command class.
+ */
 public class CreateBinomialTrialCommand extends CreateTrialCommand {
 
     /**
@@ -20,6 +24,11 @@ public class CreateBinomialTrialCommand extends CreateTrialCommand {
 
     /**
      * Creates a CreateBinomialTrialCommand
+     *
+     * @param context            the context from which the create trial command was invoked
+     * @param isLocationRequired true is location is to be recorded for the Trial, false otherwise
+     * @param trialResult        the result of the trial to create
+     * @param listener           callback for when the Trial is created
      */
     public CreateBinomialTrialCommand(Context context, boolean isLocationRequired, boolean trialResult, OnResultListener listener) {
         super(context, isLocationRequired, listener);
