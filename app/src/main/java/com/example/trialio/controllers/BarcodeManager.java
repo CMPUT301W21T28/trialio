@@ -103,16 +103,26 @@ public class BarcodeManager implements Serializable {
     public void createBarcode(String barcodeString) {
         String [] items = barcodeString.split("\n");
         Map<String, Object> newBarcode = new HashMap<>();
-        String newBarcodeString = barcodeString.replace(items[0],"");
-
-        newBarcode.put("Barcode Info", newBarcodeString);
+        newBarcode.put("Barcode Info", barcodeString);
 
         Log.d(TAG, "Posting barcode string " + barcodeString);
-        barcodeCollection.document(items[0])
-                .set(newBarcode);
-                //TODO: might be annoying to use the document name with the functions bellow ****
-                //TODO ERROR HERe
-
+        barcodeCollection
+                .document(items[0])
+                .set(newBarcode)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String message = String.format("Experiment %s was added successfully", barcodeString);
+                        Log.d(TAG, message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String message = String.format("Failed to add experiment %s", barcodeString);
+                        Log.d(TAG, message);
+                    }
+                });
     }
 
 
