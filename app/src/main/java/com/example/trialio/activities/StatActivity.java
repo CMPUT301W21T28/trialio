@@ -381,11 +381,11 @@ public class StatActivity extends AppCompatActivity {
                 // important values that app administrator may want to change
                 // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
                 int numPoints = 12; // the desired number of points in the time plot
-                //long max = new Date().getTime();
+                long max = new Date().getTime();
 
                 // the following line can also be used for max, to see time plot up until the most recent data point
                 // instead of the current date/time
-                long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
+                // long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
 
                 // find the cutoffs based on number of points
                 long[] cutoffs = findCutoffs(dates, numPoints, max);
