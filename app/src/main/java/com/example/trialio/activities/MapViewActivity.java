@@ -196,14 +196,13 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         uiSettings.setMapToolbarEnabled(false);
 
         trialsMap.addMarker(new MarkerOptions().position(new LatLng(experimentRegion.getLatitude(), experimentRegion.getLongitude()))
-                .title("Name: " + experiment.getSettings().getDescription()).icon(iconFromDrawable(context, R.drawable.conical_flask_empty))).showInfoWindow();
+                .title("Region: " + experiment.getSettings().getRegion().getRegionText()).icon(iconFromDrawable(context, R.drawable.conical_flask_empty)));
 
         if (!trialList.isEmpty()) {
             for (int i=0; i < trialList.size(); i++) {
                 trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude()))
-                        .title(getTrialResult(trialList.get(i)))).showInfoWindow();
+                        .title(getTrialResult(trialList.get(i))));
             }
-
             trialsMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(trialList.get(0).getLocation().getLatitude(), trialList.get(0).getLocation().getLongitude())));
         }
     }
