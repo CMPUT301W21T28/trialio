@@ -101,24 +101,18 @@ public class BarcodeManager implements Serializable {
 
 
     public void createBarcode(String barcodeString) {
+        String [] items = barcodeString.split("\n");
         Map<String, Object> newBarcode = new HashMap<>();
-        newBarcode.put("Barcode Info", barcodeString);
+        String newBarcodeString = barcodeString.replace(items[0],"");
+
+        newBarcode.put("Barcode Info", newBarcodeString);
 
         Log.d(TAG, "Posting barcode string " + barcodeString);
-        barcodeCollection
-                .add(newBarcode)   //TODO: might be annoying to use the document name with the functions bellow ****
-                //TODO ERROR HERE
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding barcode", e);
-                    }
-                });
+        barcodeCollection.document(items[0])
+                .set(newBarcode);
+                //TODO: might be annoying to use the document name with the functions bellow ****
+                //TODO ERROR HERe
+
     }
 
 

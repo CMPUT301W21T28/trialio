@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -219,6 +221,29 @@ public class QRBinomialActivity extends AppCompatActivity {
                 qrFragment.show(getSupportFragmentManager(),"barcode");
             }
         });
+
+//        listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                // create the popup menu
+//                int popupViewID = R.layout.menu_barcode;
+//                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+//                popup.inflate(popupViewID);
+//
+//                // listener for menu
+//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        barcodeManager.deleteBarcode(barcodeList.get(position));
+//                        return true;
+//                    }
+//                });
+//                popup.show();
+//
+//                // return true so that the regular on click does not occur
+//                return true;
+//            }
+//        });
 
         // set the click listener to view the owner profile
         experimentOwnerTextView.setOnClickListener(new View.OnClickListener() {
