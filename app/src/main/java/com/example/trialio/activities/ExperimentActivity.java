@@ -84,6 +84,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
     private ImageButton mapView;
     private StatisticsUtility statisticsUtility;
     private User currentUser;
+    private boolean geoWarningShown;
 
     /**
      * the On create the takes in the saved instance from the main activity
@@ -116,8 +117,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         mapView = (ImageButton) findViewById(R.id.btnMap);
         scanQR = (ImageButton) findViewById(R.id.btnCamera);
 
-        // set the home button
-        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
+        // we have not shown the geo warning yet
+        geoWarningShown = false;
     }
 
     @Override
@@ -154,6 +155,33 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 setOnClickListeners();
             }
         });
+
+        // if geo location is enabled, give a warning
+        if (!geoWarningShown && experiment.getSettings().getGeoLocationRequired()) {
+            geoWarningShown = true;
+            showLocationWarning();
+        }
+    }
+
+    /**
+     *
+     */
+    private void showLocationWarning() {
+        new AlertDialog.Builder(ExperimentActivity.this)
+                .setMessage("Warning! This experiment requires Geo-location.")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }})
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -380,24 +408,28 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     Intent intent = new Intent(context, QRBinomialActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("COUNT")) {
                     Intent intent = new Intent(context, QRCountActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
                     Intent intent = new Intent(context, QRNonnegActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
                     Intent intent = new Intent(context, QRMeasurementActivity.class);
                     Bundle args = new Bundle();
                     args.putSerializable("experiment_qr", experiment);
+                    args.putSerializable("user", currentUser);
                     intent.putExtras(args);
                     startActivity(intent);
                 }
@@ -501,15 +533,24 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         statsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, StatActivity.class);
 
-                // pass in experiment as an argument
-                Bundle args = new Bundle();
-                args.putSerializable("experiment_stat", experiment);
-                intent.putExtras(args);
+                experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+                    @Override
+                    public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
 
-                // start a StatActivity
-                startActivity(intent);
+                        Intent intent = new Intent(context, StatActivity.class);
+
+                        // pass in experiment as an argument
+                        Bundle args = new Bundle();
+                        args.putSerializable("experiment_stat", experiment);
+                        args.putSerializable("trialList_stat", trialList);
+
+                        intent.putExtras(args);
+
+                        // start a StatActivity
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -540,6 +581,9 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 command.execute();
             }
         });
+
+        // set the home button
+        HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
     /**

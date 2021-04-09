@@ -48,7 +48,7 @@ public class QRFragment extends DialogFragment {
     private Location location;
     private String TAG = "QRF";
     private Boolean isBarcode;
-    private String barcodeInfo;
+    private Barcode barcode;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -56,14 +56,17 @@ public class QRFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_show_qr_code, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
+
         experiment = (Experiment) bundle.getSerializable("experiment");
-        barcodeInfo = bundle.getString("barcode");
+        barcode = (Barcode) bundle.getSerializable("barcode");
+
+
         isBarcode = bundle.getBoolean("isBarcode");
-        result = bundle.getString("result");
         location = (Location)bundle.getSerializable("location");
         if (isBarcode){
+            String barcodeID = barcode.getBarcodeID();
             imgQR = view.findViewById(R.id.imgQRCode);
-            Bitmap barcode = BarcodeManager.generateBarcode(barcodeInfo);
+            Bitmap barcode = BarcodeManager.generateBarcode(barcodeID);
             imgQR.setImageBitmap(barcode);
             builder.setView(view).setTitle("Barcode").setNegativeButton("Close",null);
 

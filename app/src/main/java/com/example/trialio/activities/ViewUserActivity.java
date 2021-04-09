@@ -2,11 +2,13 @@ package com.example.trialio.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.ChangeUsernameCommand;
@@ -26,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class ViewUserActivity extends AppCompatActivity implements ChangeUsernameFragment.OnFragmentInteractionListener, EditContactInfoFragment.OnFragmentInteractionListener {
     private final String TAG = "ViewUserActivity";
+    private Context context;
 
     /**
      * The user data to be displayed
@@ -46,6 +49,9 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user);
+
+        // set the context
+        context = this;
 
         // get the user that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
@@ -163,11 +169,9 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
              */
             if (isSuccess) {
                 setUserDataListener();
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your username has been changed", Snackbar.LENGTH_SHORT);
-                snackbar.show();
+                Toast.makeText(context, "Your username has been changed", Toast.LENGTH_LONG).show();
             } else {
-                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Sorry, that username is unavailable", Snackbar.LENGTH_SHORT);
-                snackbar.show();
+                Toast.makeText(context, "Sorry, that username is unavailable", Toast.LENGTH_LONG).show();
             }
         });
         command.execute();

@@ -148,7 +148,7 @@ public class ExperimentManager {
                             listener.onExperimentFetch(experiment);
                             Log.d(TAG, "Experiment " + experimentId + " fetched successfully.");
                         } catch (Exception e) {
-                            Log.d(TAG, "Error fetching " + experimentId + ".");
+                            Log.d(TAG, "Error fetching " + experimentId + "." + e);
                         }
                     } else {
                         Log.d(TAG, "No experiment found with id " + experimentId);

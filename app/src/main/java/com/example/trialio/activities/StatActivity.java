@@ -53,6 +53,7 @@ public class StatActivity extends AppCompatActivity {
 
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
+    private ArrayList<Trial> trialList;
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -69,110 +70,105 @@ public class StatActivity extends AppCompatActivity {
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_stat");
+        trialList = (ArrayList<Trial>) bundle.getSerializable("trialList_stat");
 
-        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+        // create statistics utility
+        statisticsUtility = new StatisticsUtility();
+
+        // calculate the relevant stats based on experiment type
+        ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), trialList);
+
+        BarChart histogram = findViewById(R.id.histogramView);
+        LineChart timePlot = findViewById(R.id.timePlotView);
+        TextView graphTitle = findViewById(R.id.plotTitle);
+
+        // display summary statistics of results
+        TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
+        statisticsUtility.displaySummaryStats(stats, textStats);
+
+        if(experiment.getTrialManager().getType().equals("COUNT")) {
+            // display time plot by default if count experiment
+            displayTimePlot(stats, timePlot, graphTitle);
+            histogram.setVisibility(View.GONE);
+        } else {
+            // otherwise display histogram by default
+            displayHistogram(stats, histogram, graphTitle);
+            timePlot.setVisibility(View.GONE);
+        }
+
+        // SET VIEWS
+        // TODO: Split me into nice functions when testing
+
+        // TODO: maybe make some adjustments here
+
+        TextView textDescription = findViewById(R.id.experiment_description);
+        TextView textType = findViewById(R.id.experiment_text_type);
+        TextView textOwner = findViewById(R.id.experiment_text_owner);
+        TextView textStatus = findViewById(R.id.experiment_text_status);
+        ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
+
+        // set TextViews
+        textDescription.setText("Description: " + experiment.getSettings().getDescription());
+        textType.setText("Type: " + experiment.getTrialManager().getType());
+
+        // get the username of the owner from the usermanager
+        UserManager userManager = new UserManager();
+        userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
-            public void onAllVisibleTrialsFetch(ArrayList<Trial> trialList) {
-                // create statistics utility
-                statisticsUtility = new StatisticsUtility();
+            public void onUserFetch(User user) {
+                textOwner.setText(user.getUsername());
+            }
+        });
 
-                // calculate the relevant stats based on experiment type
-                ArrayList<Double> stats = statisticsUtility.getExperimentStatistics(experiment.getTrialManager().getType(), trialList);
+        if ( experiment.getTrialManager().getIsOpen() ) {
+            textStatus.setText("Open");
+        } else {
+            textStatus.setText("Closed");
+        }
 
-                BarChart histogram = findViewById(R.id.histogramView);
-                LineChart timePlot = findViewById(R.id.timePlotView);
-                TextView graphTitle = findViewById(R.id.plotTitle);
+        if (!experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        }
 
-                // display summary statistics of results
-                TextView textStats = findViewById(R.id.txtStatsSummaryStatPage);
-                statisticsUtility.displaySummaryStats(stats, textStats);
+        // TODO: make me into a function
 
-                if(experiment.getTrialManager().getType().equals("COUNT")) {
-                    // display time plot by default if count experiment
+        ImageButton previous = findViewById(R.id.btnPreviousGraph);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // will come in handy if we add more time plots
+                if(histogram.getVisibility() == View.VISIBLE) {
+                    // if histogram is visible, create and display time plot of trials
                     displayTimePlot(stats, timePlot, graphTitle);
                     histogram.setVisibility(View.GONE);
+                    timePlot.setVisibility(View.VISIBLE);
                 } else {
-                    // otherwise display histogram by default
+                    // else create and display histogram of trials
                     displayHistogram(stats, histogram, graphTitle);
                     timePlot.setVisibility(View.GONE);
+                    histogram.setVisibility(View.VISIBLE);
                 }
+            }
+        });
 
-                // SET VIEWS
-                // TODO: Split me into nice functions when testing
-
-                // TODO: maybe make some adjustments here
-
-                TextView textDescription = findViewById(R.id.experiment_description);
-                TextView textType = findViewById(R.id.experiment_text_type);
-                TextView textOwner = findViewById(R.id.experiment_text_owner);
-                TextView textStatus = findViewById(R.id.experiment_text_status);
-                ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
-
-
-                // set TextViews
-                textDescription.setText("Description: " + experiment.getSettings().getDescription());
-                textType.setText("Type: " + experiment.getTrialManager().getType());
-
-                // get the username of the owner from the usermanager
-                UserManager userManager = new UserManager();
-                userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
-                    @Override
-                    public void onUserFetch(User user) {
-                        textOwner.setText(user.getUsername());
-                    }
-                });
-
-                if ( experiment.getTrialManager().getIsOpen() ) {
-                    textStatus.setText("Open");
+        ImageButton next = findViewById(R.id.btnNextGraph);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // will come in handy if we add more time plots
+                if(histogram.getVisibility() == View.VISIBLE) {
+                    // if histogram is visible, create and display time plot of trials
+                    displayTimePlot(stats, timePlot, graphTitle);
+                    histogram.setVisibility(View.GONE);
+                    timePlot.setVisibility(View.VISIBLE);
                 } else {
-                    textStatus.setText("Closed");
+                    // else create and display histogram of trials
+                    displayHistogram(stats, histogram, graphTitle);
+                    timePlot.setVisibility(View.GONE);
+                    histogram.setVisibility(View.VISIBLE);
                 }
-
-                if (!experiment.getSettings().getGeoLocationRequired()) {
-                    experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
-                } else {
-                    experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
-                }
-
-                // TODO: make me into a function
-
-                ImageButton previous = findViewById(R.id.btnPreviousGraph);
-                previous.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // will come in handy if we add more time plots
-                        if(histogram.getVisibility() == View.VISIBLE) {
-                            // if histogram is visible, create and display time plot of trials
-                            displayTimePlot(stats, timePlot, graphTitle);
-                            histogram.setVisibility(View.GONE);
-                            timePlot.setVisibility(View.VISIBLE);
-                        } else {
-                            // else create and display histogram of trials
-                            displayHistogram(stats, histogram, graphTitle);
-                            timePlot.setVisibility(View.GONE);
-                            histogram.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-                ImageButton next = findViewById(R.id.btnNextGraph);
-                next.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // will come in handy if we add more time plots
-                        if(histogram.getVisibility() == View.VISIBLE) {
-                            // if histogram is visible, create and display time plot of trials
-                            displayTimePlot(stats, timePlot, graphTitle);
-                            histogram.setVisibility(View.GONE);
-                            timePlot.setVisibility(View.VISIBLE);
-                        } else {
-                            // else create and display histogram of trials
-                            displayHistogram(stats, histogram, graphTitle);
-                            timePlot.setVisibility(View.GONE);
-                            histogram.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
             }
         });
 
@@ -385,11 +381,11 @@ public class StatActivity extends AppCompatActivity {
                 // important values that app administrator may want to change
                 // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
                 int numPoints = 12; // the desired number of points in the time plot
-                //long max = new Date().getTime();
+                long max = new Date().getTime();
 
                 // the following line can also be used for max, to see time plot up until the most recent data point
                 // instead of the current date/time
-                long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
+                // long max = (dates.get(dates.size()-1)).getTime() + 1000; // + 1 second to ensure max is included
 
                 // find the cutoffs based on number of points
                 long[] cutoffs = findCutoffs(dates, numPoints, max);
