@@ -144,7 +144,7 @@ public class StatActivity extends AppCompatActivity {
 
         // if the experiment is open, set the addTrial button as visible
         //if (experiment.getTrialManager().getIsOpen()) {
-            //addTrial.setVisibility(View.VISIBLE);
+        //addTrial.setVisibility(View.VISIBLE);
         //}
 
         ImageButton previous = findViewById(R.id.btnPreviousGraph);
@@ -295,8 +295,15 @@ public class StatActivity extends AppCompatActivity {
                         setupHistogram(measurements, histogramEntries, xTitles);
 
                         // display histogram titles
-                        histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                                "X-axis: Measurement\nY-axis: Frequency");
+                        String unit = experiment.getUnit();
+                        if(unit.equals("")) {
+                            histogramTitle.setText(experiment.getSettings().getDescription() +
+                                    " histogram\n" + "X-axis: Measurement\nY-axis: Frequency");
+                        } else {
+                            histogramTitle.setText(experiment.getSettings().getDescription() +
+                                    " histogram\n" + "X-axis: Measurement(" +
+                                    experiment.getUnit() + ")\nY-axis: Frequency");
+                        }
                 }
 
                 // display the histogram and set certain settings
