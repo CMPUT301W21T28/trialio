@@ -54,6 +54,7 @@ public class StatActivity extends AppCompatActivity {
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
     private ArrayList<Trial> trialList;
+    private int numData = 12; // for histograms and time plots
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -97,10 +98,6 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // SET VIEWS
-        // TODO: Split me into nice functions when testing
-
-        // TODO: maybe make some adjustments here
-
         TextView textDescription = findViewById(R.id.experiment_description);
         TextView textType = findViewById(R.id.experiment_text_type);
         TextView textOwner = findViewById(R.id.experiment_text_owner);
@@ -132,7 +129,14 @@ public class StatActivity extends AppCompatActivity {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
 
-        // TODO: make me into a function
+        // TODO: only owner can view
+        // set the addTrial button to invisible by default
+        //addTrial.setVisibility(View.INVISIBLE);
+
+        // if the experiment is open, set the addTrial button as visible
+        //if (experiment.getTrialManager().getIsOpen()) {
+            //addTrial.setVisibility(View.VISIBLE);
+        //}
 
         ImageButton previous = findViewById(R.id.btnPreviousGraph);
         previous.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +159,25 @@ public class StatActivity extends AppCompatActivity {
 
         ImageButton next = findViewById(R.id.btnNextGraph);
         next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // will come in handy if we add more time plots
+                if(histogram.getVisibility() == View.VISIBLE) {
+                    // if histogram is visible, create and display time plot of trials
+                    displayTimePlot(stats, timePlot, graphTitle);
+                    histogram.setVisibility(View.GONE);
+                    timePlot.setVisibility(View.VISIBLE);
+                } else {
+                    // else create and display histogram of trials
+                    displayHistogram(stats, histogram, graphTitle);
+                    timePlot.setVisibility(View.GONE);
+                    histogram.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ImageButton plotSettings = findViewById(R.id.btnPlotSettings);
+        plotSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // will come in handy if we add more time plots
@@ -300,8 +323,7 @@ public class StatActivity extends AppCompatActivity {
      */
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
-        int numSections = 12; // the desired number of vertical bars in the histogram
+        int numSections = numData; // the desired number of vertical bars in the histogram
         double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
 
         // sort the trial results from min to max
@@ -379,8 +401,7 @@ public class StatActivity extends AppCompatActivity {
                 Collections.sort(dates);
 
                 // important values that app administrator may want to change
-                // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
-                int numPoints = 12; // the desired number of points in the time plot
+                int numPoints = numData; // the desired number of points in the time plot
                 long max = new Date().getTime();
 
                 // the following line can also be used for max, to see time plot up until the most recent data point
