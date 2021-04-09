@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,7 +58,7 @@ import java.util.Date;
  */
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
-    private Context context;
+    public static Context context;
 
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
