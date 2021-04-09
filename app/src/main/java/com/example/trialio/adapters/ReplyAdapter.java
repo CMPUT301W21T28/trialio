@@ -1,6 +1,7 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
  * QuestionRepliesActivity.
  */
 public class ReplyAdapter extends ArrayAdapter<Reply> {
+
+
+    private static final String TAG = "Reply adapter";
 
     private Context context;
     private ArrayList<Reply> replyList;
@@ -53,8 +57,14 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
         manager.getUserById(reply.getUserId(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                TextView replyAuthorID = finalView.findViewById(R.id.replyAuthorID);
-                replyAuthorID.setText(user.getUsername());
+                if (user != null) {
+
+                    TextView replyAuthorID = finalView.findViewById(R.id.replyAuthorID);
+                    replyAuthorID.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to fet user");
+                }
+
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +64,12 @@ public class TrialAdapter extends ArrayAdapter<Trial> {
         userManager.getUserById(trial.getExperimenterID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                String ownerText = "Username: " + user.getUsername();
-                textOwner.setText(ownerText);
+                if (user != null) {
+                    String ownerText = "Username: " + user.getUsername();
+                    textOwner.setText(ownerText);
+                } else {
+                    Log.e(TAG, "Failed to fetch user");
+                }
             }
         });
 

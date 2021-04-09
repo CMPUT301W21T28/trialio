@@ -149,16 +149,20 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
-                experiment = new_experiment;
+                if (new_experiment != null) {
+                    experiment = new_experiment;
 
-                // set the visibility of certain views in this activity
-                setViewVisibility();
+                    // set the visibility of certain views in this activity
+                    setViewVisibility();
 
-                // initialize all of the fields in the activity
-                setFields();
+                    // initialize all of the fields in the activity
+                    setFields();
 
-                // set the onclick listeners for this activity
-                setOnClickListeners();
+                    // set the onclick listeners for this activity
+                    setOnClickListeners();
+                } else {
+                    Log.e(TAG,  "Failed to load experiment");
+                }
             }
         });
 
@@ -282,8 +286,11 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText(user.getUsername());
-
+                if (user != null) {
+                    textOwner.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
             }
         });
 
@@ -304,10 +311,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
-                if (user.isSubscribed(experiment)) {
-                    subBtn.setText(R.string.experiment_action_unsubscribe);
+                if (user != null) {
+                    if (user.isSubscribed(experiment)) {
+                        subBtn.setText(R.string.experiment_action_unsubscribe);
+                    } else {
+                        subBtn.setText(R.string.experiment_action_subscribe);
+                    }
                 } else {
-                    subBtn.setText(R.string.experiment_action_subscribe);
+                    Log.e(TAG, "Failed to load user");
                 }
             }
         });
@@ -334,9 +345,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment updated_experiment) {
-                    experiment = updated_experiment;
-                    experiment.getTrialManager().addTrial(newTrial);
-                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    if (updated_experiment != null) {
+                        experiment = updated_experiment;
+                        experiment.getTrialManager().addTrial(newTrial);
+                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    } else {
+                        Log.e(TAG,  "Failed to update experiments");
+                    }
                 }
             });
         } else if (!experiment.getSettings().getGeoLocationRequired()) {
@@ -344,9 +359,13 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
             experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment updated_experiment) {
-                    experiment = updated_experiment;
-                    experiment.getTrialManager().addTrial(newTrial);
-                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    if (updated_experiment != null) {
+                        experiment = updated_experiment;
+                        experiment.getTrialManager().addTrial(newTrial);
+                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    } else {
+                        Log.e(TAG,  "Failed to update experiments");
+                    }
                 }
             });
         } else if (experiment.getSettings().getGeoLocationRequired() && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -507,14 +526,19 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                 CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
-                        if (user.isSubscribed(experiment)) {
-                            user.removeSubscription(experiment);
-                            subBtn.setText(R.string.experiment_action_subscribe);
+                        if (user != null) {
+                            if (user.isSubscribed(experiment)) {
+                                user.removeSubscription(experiment);
+                                subBtn.setText(R.string.experiment_action_subscribe);
+                            } else {
+                                user.addSubscription(experiment);
+                                subBtn.setText(R.string.experiment_action_unsubscribe);
+                            }
+                            userManager.updateUser(user);
                         } else {
-                            user.addSubscription(experiment);
-                            subBtn.setText(R.string.experiment_action_unsubscribe);
+                            Log.e(TAG, "Failed to load user");
+
                         }
-                        userManager.updateUser(user);
                     }
                 });
             }
@@ -604,11 +628,16 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
-                Log.d(TAG, "currentUser: " + user.getUsername());
-                Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
-                if (user.getId().equals(experiment.getSettings().getOwnerID())) {
-                    settingsButton.setVisibility(View.VISIBLE);
+                if (user != null) {
+                    Log.d(TAG, "currentUser: " + user.getUsername());
+                    Log.d(TAG, "owner: " + experiment.getSettings().getOwnerID());
+                    if (user.getId().equals(experiment.getSettings().getOwnerID())) {
+                        settingsButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    Log.e(TAG, "Failed to load user");
                 }
+
             }
         });
 

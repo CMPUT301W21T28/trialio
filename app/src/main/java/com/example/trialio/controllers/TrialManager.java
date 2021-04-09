@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class TrialManager implements Serializable {
     private final String TAG = "TrialManager";
-    private static String EXPERIMENT_COLLECTION_PATH = "experiments-v6";
+    private static String EXPERIMENT_COLLECTION_PATH = "experiments";
     private static final String TRIALS_COLLECTION_PATH = "trials";
 
     private static final String EXPERIMENTERID_FIELD = "experimenterID";
@@ -85,8 +85,13 @@ public class TrialManager implements Serializable {
     /**
      * This adds a trial to the trial collection.
      * @param trial The candidate trial to add to the trial collection.
+     * @return true if the Trial was added successfully, false otherwise
      */
-    public void addTrial(Trial trial) {
+    public boolean addTrial(Trial trial) {
+        // if experiment is closed, do not add the trial
+        if (!isOpen) {
+            return false;
+        }
 
         CollectionReference trialCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
 
@@ -109,6 +114,8 @@ public class TrialManager implements Serializable {
                         Log.d(TAG, "Failed to add trial " + newTrialID + ".");
                     }
                 });
+
+        return true;
     }
 
     /**
@@ -365,6 +372,27 @@ public class TrialManager implements Serializable {
 
         // return the trial we extracted
         return trial;
+    }
+
+    /**
+     * This deletes all of the trials in the collection referenced by the trial manager.
+     */
+    public void deleteAllTrials() {
+        FirebaseFirestore.getInstance()
+                .collection(EXPERIMENT_COLLECTION_PATH)
+                .document(experimentID)
+                .collection(TRIALS_COLLECTION_PATH)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // delete all of the trials in the trial collection
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                            doc.getReference().delete();
+                        }
+                    }
+                });
     }
 
     /**
