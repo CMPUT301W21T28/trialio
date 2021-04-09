@@ -137,7 +137,7 @@ public class QRNonnegActivity extends AppCompatActivity {
                 }else{
                     QRFragment qrFragment = new QRFragment();
                     Bundle bundle = new Bundle();
-                    Boolean isBarcode = true;
+                    Boolean isBarcode = false;
                     bundle.putBoolean("isBarcode", isBarcode);
                     bundle.putSerializable("experiment",experiment);
                     bundle.putString("result", input.getText().toString());
