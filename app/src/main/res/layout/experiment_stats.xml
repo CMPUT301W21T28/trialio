@@ -324,7 +324,7 @@
 
             android:backgroundTint="@color/special_yellow"
 
-            android:src="@drawable/ic_baseline_settings_24"/>
+            android:src="@drawable/ic_baseline_settings_24_black"/>
     </LinearLayout>
 
 
