@@ -49,6 +49,21 @@ public class QRCodeGenerator extends AppCompatActivity {
     private static User current_user;
     private static Context context;
 
+    public enum Result {
+        SUCCESS,
+        EXPERIMENT_CLOSED,
+        LOCATION_DENIED,
+        INVALID_EXPERIMENT
+    }
+
+
+    /**
+     * Returns the status of the read to the invoker
+     */
+    public interface OnReadResultListener {
+        void onReadResult(Result result);
+    }
+
 
     /**
      * Generates a QR code for a given trial result
@@ -84,15 +99,13 @@ public class QRCodeGenerator extends AppCompatActivity {
         return myBitmap;
     }
 
-    // TODO: Callback for result of scan, enum to represent different statuses
-
     /**
      * readQR takes in the input that is encoded in the code then create a new trial with its info
      *
-     * @param input
-     * @param user
+     * @param context the context in which the QR was scanned
+     * @param input   the raw input that was encoded in the QR code
      */
-    public static void readQR(Context context, String[] input, Location location, User user) {
+    public static void readQR(Context context, String[] input, OnReadResultListener listener) {
         // parse the raw input
         String type = input[0];
         String result = input[1];
@@ -106,6 +119,7 @@ public class QRCodeGenerator extends AppCompatActivity {
                 // input validation: make sure experiment is valid
                 if (experiment == null) {
                     Log.w(TAG, "Experiment for QR code is not valid");
+                    listener.onReadResult(Result.INVALID_EXPERIMENT);
                     return;
                 }
 
@@ -118,28 +132,28 @@ public class QRCodeGenerator extends AppCompatActivity {
                     boolean binomialRes = Boolean.parseBoolean(result);
                     createCommand = new CreateBinomialTrialCommand(
                             context, isLocationReq, binomialRes,
-                            trial -> addTrialToExperiment(trial, experiment)
+                            trial -> addTrialToExperiment(trial, experiment, listener)
                     );
 
                 } else if (type.equals(ExperimentTypeUtility.getCountType())) {
                     // create a count trial
                     createCommand = new CreateCountTrialCommand(
                             context, isLocationReq,
-                            trial -> addTrialToExperiment(trial, experiment)
+                            trial -> addTrialToExperiment(trial, experiment, listener)
                     );
                 } else if (type.equals(ExperimentTypeUtility.getNonNegativeType())) {
                     // create a non-negative trial
                     int nonNegRes = Integer.parseInt(result);
                     createCommand = new CreateNonNegativeTrialCommand(
                             context, isLocationReq, nonNegRes,
-                            trial -> addTrialToExperiment(trial, experiment)
+                            trial -> addTrialToExperiment(trial, experiment, listener)
                     );
                 } else if (type.equals(ExperimentTypeUtility.getMeasurementType())) {
                     // create a measurement trial
                     double measurementRes = Double.parseDouble(result);
                     createCommand = new CreateMeasurementTrialCommand(
                             context, isLocationReq, measurementRes,
-                            trial -> addTrialToExperiment(trial, experiment)
+                            trial -> addTrialToExperiment(trial, experiment, listener)
                     );
                 } else {
                     // error
@@ -149,81 +163,24 @@ public class QRCodeGenerator extends AppCompatActivity {
                 createCommand.execute();
             }
         });
-
-
-//        if (input[0].equals("BINOMIAL")) {
-//            current_user = user;
-//            Date date = new Date();
-//
-//            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
-//                @Override
-//                public void onExperimentFetch(Experiment new_experiment) {
-//                    if (new_experiment != null) {
-//                        BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
-//                        new_experiment.getTrialManager().addTrial(new_trial);
-//                        experimentManager.editExperiment(input[2], new_experiment);
-//                    } else {
-//                        Log.e(TAG, "Failed to load experiments");
-//                    }
-//                }
-//            });
-//
-//        } else if (input[0].equals("COUNT")) {
-//            current_user = user;
-//            Date date = new Date();
-//
-//
-//            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
-//
-//                @Override
-//                public void onExperimentFetch(Experiment new_experiment) {
-//                    if (new_experiment != null) {
-//                        CountTrial new_trial = new CountTrial(current_user.getId(), location, date);
-//                        new_experiment.getTrialManager().addTrial(new_trial);
-//                        experimentManager.editExperiment(input[2], new_experiment);
-//                    } else {
-//                        Log.e(TAG, "Failed to load experiments");
-//                    }
-//                }
-//            });
-//        } else if (input[0].equals("NONNEGATIVE")) {
-//            current_user = user;
-//            Date date = new Date();
-//            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
-//                @Override
-//                public void onExperimentFetch(Experiment new_experiment) {
-//                    if (new_experiment != null) {
-//                        NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getId(), location, date, Integer.parseInt(input[1]));
-//                        new_experiment.getTrialManager().addTrial(new_trial);
-//                        experimentManager.editExperiment(input[2], new_experiment);
-//                    } else {
-//                        Log.e(TAG, "Failed to load experiments");
-//                    }
-//                }
-//            });
-//        } else if (input[0].equals("MEASUREMENT")) {
-//            current_user = user;
-//            Date date = new Date();
-//
-//            experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
-//                @Override
-//                public void onExperimentFetch(Experiment new_experiment) {
-//                    if (new_experiment != null) {
-//                        MeasurementTrial new_trial = new MeasurementTrial(current_user.getId(), location, date, Double.parseDouble(input[1]), input[3]);
-//                        new_experiment.getTrialManager().addTrial(new_trial);
-//                        experimentManager.editExperiment(input[2], new_experiment);
-//                    } else {
-//                        Log.e(TAG, "Failed to load experiments");
-//                    }
-//                }
-//            });
-//        }
-
     }
 
-    private static void addTrialToExperiment(Trial trial, Experiment experiment) {
+    private static void addTrialToExperiment(Trial trial, Experiment experiment, OnReadResultListener listener) {
+        // if no trial was created, location error occurred
+        if (trial == null && experiment.getSettings().getGeoLocationRequired()) {
+            listener.onReadResult(Result.LOCATION_DENIED);
+            return;
+        }
+
+        // add the created trial
         ExperimentManager experimentManager = new ExperimentManager();
-        experiment.getTrialManager().addTrial(trial);
+        boolean addSuccess = experiment.getTrialManager().addTrial(trial);
         experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+
+        if (addSuccess) {
+            listener.onReadResult(Result.SUCCESS);
+        } else {
+            listener.onReadResult(Result.EXPERIMENT_CLOSED);
+        }
     }
 }

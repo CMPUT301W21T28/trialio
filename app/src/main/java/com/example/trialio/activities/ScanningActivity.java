@@ -116,38 +116,41 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         Log.d(TAG, "Process scanned result: isBarcode = " + isBarcode.toString());
         String[] items = text.split("\n");
         Log.d(TAG, "Raw Input: " + Arrays.toString(items));
-        // it reads in from which activity is scanning activity called from
-        // if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
-        // if its not experiment activity it means user is trying to register a barcode
+        /*
+         * reads in from which activity is scanning activity called from
+         * if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
+         * if its not experiment activity it means user is trying to register a barcode
+         */
+
         if (parentActivity.equals("ExperimentActivity")) {
+            // user wants to scan code to record trial
 //            Log.d(TAG, String.valueOf(items.length));
             if (String.valueOf(items.length).equals("3")) {
                 // user is scanning a QR code to add trial
                 Log.d(TAG, "QR Code identified");
-                QRCodeGenerator.readQR(getApplicationContext(), items, null, null);
-//                if (experiment.getSettings().getGeoLocationRequired()) {
-//                    Task<android.location.Location> locTask = Location.requestLocation(context);
-//                    if (locTask == null) {
-//                        displayNoLocationToast();
-//                        return;
-//                    }
-//                    locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-//                        @Override
-//                        public void onSuccess(android.location.Location loc) {
-//                            Location location = new Location();
-//                            location.setLatitude(loc.getLatitude());
-//                            location.setLongitude(loc.getLongitude());
-//                            QRCodeGenerator.readQR(getApplicationContext(), items, location, currentUser);
-//                        }
-//                    });
-//                } else {
-//                    Location location = new Location();
-//                    QRCodeGenerator.readQR(getApplicationContext(), items, location, currentUser);
-//                }
-                // if its a Barcode
+                QRCodeGenerator.readQR(getApplicationContext(), items, new QRCodeGenerator.OnReadResultListener() {
+                    @Override
+                    public void onReadResult(QRCodeGenerator.Result result) {
+                        switch(result) {
+                            case SUCCESS:
+                                displaySuccessToast();
+                                break;
+
+                            case EXPERIMENT_CLOSED:
+                                displayExperimentClosedToast();
+                                break;
+
+                            case LOCATION_DENIED:
+                                displayNoLocationToast();
+                                break;
+                        }
+                    }
+                });
+
             } else {
                 // user is scanning a barcode to add trial
                 Log.d(TAG, "Barcode identified");
+
                 if (experiment.getSettings().getGeoLocationRequired()) {
                     Task<android.location.Location> locTask = Location.requestLocation(context);
                     if (locTask == null) {
