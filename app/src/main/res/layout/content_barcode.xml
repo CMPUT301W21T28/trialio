@@ -17,7 +17,48 @@
         android:layout_weight="5"
         android:background="@color/special_yellow"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtbarcodeInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
+            android:layout_gravity="center"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="6dp"
+
+            android:layout_weight="5"
+            android:background="@color/button_dark_grey"
+            android:fontFamily="monospace"
+
+            android:padding="1dp"
+            android:text="Description"
+            android:textColor="@color/white"
+            android:textSize="11sp">
+        </TextView>
+        <TextView
+            android:id="@+id/txtbarcodeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_gravity="center"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="6dp"
+
+            android:layout_weight="5"
+            android:background="@color/button_dark_grey"
+            android:fontFamily="monospace"
+
+            android:padding="1dp"
+            android:text="Description"
+            android:textColor="@color/white"
+            android:textSize="11sp">
+        </TextView>
         <!-- Review height value for content boxes -->
         <TextView
             android:id="@+id/barcodeResult"

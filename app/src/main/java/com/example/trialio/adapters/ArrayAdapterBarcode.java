@@ -61,16 +61,16 @@ public class ArrayAdapterBarcode extends ArrayAdapter {
         Barcode barcode = barcodeList.get(position);
 
         String barcodeID = barcode.getBarcodeID();
-//        String barcodeExperimentID = barcode.getExperiment().getExperimentID();
-//        String barcodeTrialType = experiment.getTrialManager().getType();
-//        String barcodeTrialResult = barcode.getTrialResult();
-//
 
         TextView barcodeResult = view.findViewById(R.id.barcodeResult);
+        TextView txtbarcodeDescription = view.findViewById(R.id.txtbarcodeDescription);
+        TextView txtbarcodeInfo = view.findViewById(R.id.txtbarcodeInfo);
         ImageView barcodeImageView = view.findViewById(R.id.barcodeImageView);
 
         // set text view
-        barcodeResult.setText(barcodeID);
+        txtbarcodeInfo.setText("Barcode number:" + barcodeID);
+        txtbarcodeDescription.setText("Description:"+barcode.getExperiment().getSettings().getDescription());
+        barcodeResult.setText("Result:"+barcode.getTrialResult());
 
         // generate image
         Bitmap barcodeImage = barcodeManager.generateBarcode(barcodeID);
