@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         mapFragment.getMapAsync(this);
 
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
+        LinearLayout unitLayout = (LinearLayout) findViewById(R.id.unitLayout);
 
         // Adapted from class/division code.
         // DATE:	2021-03-18
@@ -101,6 +103,11 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedType = parent.getItemAtPosition(position).toString();
+                if(selectedType.equals("MEASUREMENT")) {
+                    unitLayout.setVisibility(View.VISIBLE);
+                } else {
+                    unitLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -158,7 +165,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 boolean published = publishedSwitch.isChecked();
 
                 // prepare unit, if experiment is of type measurement
-                unit = null;
+                unit = "";
                 if(selectedType.equals("MEASUREMENT")) {
                     unit = editUnit.getText().toString();
                 }
