@@ -31,11 +31,12 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static String COLLECTION_PATH = "experiments";
+    private static String COLLECTION_PATH = "experimentsUNIT";
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
     private static final String E_ISPUBLISHED_FIELD = "isPublished";
+    private static final String E_UNIT_FIELD = "unit";
     private static final String ES_DESCRIPTION_FIELD = "description";
     private static final String ES_R_REGIONTEXT_FIELD = "regionText";
     private static final String ES_R_L_LONGITUDE_FIELD = "longitude";
@@ -368,6 +369,7 @@ public class ExperimentManager {
         data.put(E_EXPERIMENTID_FIELD, experiment.getExperimentID());
         data.put(E_KEYWORDS_FIELD, experiment.getKeywords());
         data.put(E_ISPUBLISHED_FIELD, experiment.getIsPublished());
+        data.put(E_UNIT_FIELD, experiment.getUnit());
 
         // set ExperimentSettings fields
         data.put(ES_DESCRIPTION_FIELD, experiment.getSettings().getDescription());
@@ -410,6 +412,11 @@ public class ExperimentManager {
         // set isPublished
         boolean isPublished = (boolean) data.get(E_ISPUBLISHED_FIELD);
         experiment.setIsPublished(isPublished);
+
+        // set the unit, if the Experiment Type is not Measurement, this will be "".
+        String unit = (String) data.get(E_UNIT_FIELD);
+        assert unit != null;
+        experiment.setUnit(unit);
 
         // set settings
         experiment.setSettings(new ExperimentSettings());
