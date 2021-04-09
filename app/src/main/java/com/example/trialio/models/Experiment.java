@@ -43,6 +43,11 @@ public class Experiment implements Serializable {
     private boolean isPublished;
 
     /**
+     * Option unit for measurement type experiments.
+     */
+    private String unit;
+
+    /**
      * No-argument constructor for an Experiment
      */
     public Experiment() {
@@ -51,6 +56,7 @@ public class Experiment implements Serializable {
         this.trialManager = new TrialManager();
         this.keywords = new ArrayList<>();
         this.barcodes = new ArrayList<>();
+        this.unit = null;
         parseKeywords();
 
     }
@@ -66,6 +72,7 @@ public class Experiment implements Serializable {
         this.trialManager = new TrialManager(experimentID, type, true, 1);
         this.keywords = new ArrayList<String>();
         this.isPublished = true;
+        this.unit = null;
         parseKeywords();
     }
 
@@ -77,14 +84,17 @@ public class Experiment implements Serializable {
      * @param type           the type for an experiment
      * @param isOpen         the open/close status of an experiment
      * @param minNumOfTrials the minimum number of trials required for an experiment
+     * @param isPublished    the published status of an experiment
+     * @param unit           optional unit in case experiment is of type measurement
      */
-    public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials, boolean isPublished) {
+    public Experiment(String experimentID, ExperimentSettings settings, String type, boolean isOpen, int minNumOfTrials, boolean isPublished, String unit) {
         this.experimentID = experimentID;
         this.settings = settings;
         this.trialManager = new TrialManager(experimentID, type, isOpen, minNumOfTrials);
         this.keywords = new ArrayList<String>();
         this.barcodes = new ArrayList<String>();
         this.isPublished = isPublished;
+        this.unit = unit;
         parseKeywords();
     }
 
@@ -208,6 +218,22 @@ public class Experiment implements Serializable {
     }
 
     /**
+     * This gets the measurement unit if it exists.
+     * @return A string representing the measurement unit.
+     */
+    public String getUnit() {
+        return unit;
+    }
+
+    /**
+     * This sets the measurement unit.
+     * @param u The String to set as unit.
+     */
+    public void setUnit(String u) {
+        unit = u;
+    }
+
+    /**
      * Returns the string representation of the experiment
      *
      * @return string representation of the experiment
@@ -219,6 +245,6 @@ public class Experiment implements Serializable {
                 ", settings=" + settings +
                 ", trialManager=" + trialManager +
                 ", keywords=" + keywords +
-                '}';
+                ", unit=" + unit + '}';
     }
 }
