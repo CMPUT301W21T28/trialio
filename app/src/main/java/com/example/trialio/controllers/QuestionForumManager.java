@@ -33,7 +33,7 @@ public class QuestionForumManager implements Serializable {
 
     private static final String TAG = "QuestionForumManager";
     private static final String QUESTION_FORUM_PATH = "questionForum";
-    private static String EXPERIMENT_PATH = "experiments-v6";
+    private static String EXPERIMENT_PATH = "experiments";
     private static final String REPLY_FORUM_PATH = "Replies";
 
     /**
@@ -134,6 +134,10 @@ public class QuestionForumManager implements Serializable {
                 });
     }
 
+    /**
+     * This deletes a questions from the collection of questions.
+     * @param questionID The questionID of the question to delete from the collection.
+     */
     public void deleteQuestion (String questionID) {
 
         // delete all replies

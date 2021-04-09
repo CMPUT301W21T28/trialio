@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static String COLLECTION_PATH = "experiments-v6";
+    private static String COLLECTION_PATH = "experiments";
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
@@ -228,16 +228,17 @@ public class ExperimentManager {
     }
 
     /**
-     * This deletes an experiment associated with a given experiment ID
-     *
-     * @param experimentId Experiment ID of the candidate experiment to delete
-     * @return Task that indicates when the delete is complete
+     * This deletes an experiment associated with a given experiment ID.
+     * @param experimentId Experiment ID of the candidate experiment to delete.
+     * @param userManager Optional UserManager.
+     * @return Task that indicates when the delete is complete.
      */
-    public Task<Void> deleteExperiment(String experimentId) {
+    public Task<Void> deleteExperiment(String experimentId, UserManager userManager) {
 
         // remove experimentID from the subscribed list of all users.
-        UserManager userManager = new UserManager();
-        userManager.removeExperimentFromSubs(experimentId);
+        if (userManager != null) {
+            userManager.removeExperimentFromSubs(experimentId);
+        }
 
         // delete all trials
         TrialManager trialManager = new TrialManager();

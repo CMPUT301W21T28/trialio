@@ -181,7 +181,7 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                experimentManager.deleteExperiment(experiment.getExperimentID());
+                experimentManager.deleteExperiment(experiment.getExperimentID(), userManager);
                 Intent intent = new Intent(context, MainActivity.class);
 
                 // start an ExperimentActivity
