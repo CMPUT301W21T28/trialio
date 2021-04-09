@@ -160,7 +160,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 try {
                     int numTrials = Integer.parseInt(editNumTrials.getText().toString());
 
-                    if (numTrials < 1) {
+                    if (numTrials < 0) {
                         Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
                     } else {
                         // get owner id
