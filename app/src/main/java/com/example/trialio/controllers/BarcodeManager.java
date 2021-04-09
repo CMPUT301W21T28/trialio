@@ -42,12 +42,11 @@ import static android.graphics.Color.WHITE;
 
 public class BarcodeManager implements Serializable {
 
-    private CollectionReference barcodeCollection;   // does this have to be final ???
-    private static User current_user;
+    private final CollectionReference barcodeCollection;   // does this have to be final ???
 
     private static final String TAG = "BarcodeForumManager";
 
-    private static final String EXPERIMENT_PATH = "experiments";
+    private static final String USERS_PATH = "users";
     private static final String BARCODES_PATH = "barcodes";
 
     /**
@@ -57,7 +56,6 @@ public class BarcodeManager implements Serializable {
         barcodeCollection = FirebaseFirestore.getInstance().collection(USERS_PATH).document(userID).collection(BARCODES_PATH);
     }
 
-    public BarcodeManager() {    }
 
 
     /**
@@ -135,7 +133,7 @@ public class BarcodeManager implements Serializable {
      * Sets a function to be called when a barcode is fetched
      *
      * @param barcodeID the id of the barcode to fetch
-     * @param listener      the function to be called when the experiment is fetched
+     * @param listener  the function to be called when the experiment is fetched
      */
     public void setOnBarcodeFetchListener(String barcodeID, BarcodeManager.OnBarcodeFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
@@ -200,10 +198,6 @@ public class BarcodeManager implements Serializable {
     }
 
     private Barcode extractBarcodeDocument(DocumentSnapshot document) {
-        // TODO custom mapping here
-//        String barcodeInfo = document.getString("Barcode Info");
-//        return barcodeInfo;
-//
         Barcode barcode = document.toObject(Barcode.class);
         return barcode;
 
@@ -222,6 +216,7 @@ public class BarcodeManager implements Serializable {
 
     /**
      * to generateBarcode for qrfragment
+     *
      * @param barcodeID
      * @return
      */
@@ -251,6 +246,7 @@ public class BarcodeManager implements Serializable {
 
     /**
      * for storing barcode to barcode collection
+     *
      * @param barcodeID
      * @param experiment
      * @param result
@@ -262,12 +258,13 @@ public class BarcodeManager implements Serializable {
 
     /**
      * readBarcode reads registered barcode and add a new trial to its responsible experiment
+     *
      * @param input
      * @param location
      * @param user
      */
     //input contains barcode info, use the info to fetch the document from firebase
-    public void readBarcode(String input, Location location, User user){
+    public void readBarcode(String input, Location location, User user) {
         this.setOnBarcodeFetchListener(input, new OnBarcodeFetchListener() {
             @Override
             public void onBarcodeFetch(Barcode barcode) {
@@ -276,7 +273,7 @@ public class BarcodeManager implements Serializable {
                 ExperimentManager experimentManager = new ExperimentManager();
                 Date date = new Date();
 
-                if (type.equals("BINOMIAL")){
+                if (type.equals("BINOMIAL")) {
                     Log.d(TAG, "in Binomial");
                     Log.d(TAG, experiment.getExperimentID());
                     experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
@@ -288,16 +285,16 @@ public class BarcodeManager implements Serializable {
                             new_experiment.getTrialManager().addTrial(new_trial);
                             Log.d(TAG, " Binomial trial added");
 
-                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
                         }
                     });
-                }else if (type.equals("COUNT")){
+                } else if (type.equals("COUNT")) {
                     experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                         @Override
                         public void onExperimentFetch(Experiment new_experiment) {
                             CountTrial new_trial = new CountTrial(user.getId(), location, date);
                             new_experiment.getTrialManager().addTrial(new_trial);
-                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
                         }
                     });
                 } else if (type.equals("NONNEGATIVE")) {
@@ -309,13 +306,13 @@ public class BarcodeManager implements Serializable {
                             experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
                         }
                     });
-                } else if (type.equals("MEASUREMENT")){
+                } else if (type.equals("MEASUREMENT")) {
                     experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                         @Override
                         public void onExperimentFetch(Experiment new_experiment) {
                             MeasurementTrial new_trial = new MeasurementTrial(user.getId(), location, date, Double.parseDouble(barcode.getTrialResult()), "UNIT");
                             new_experiment.getTrialManager().addTrial(new_trial);
-                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
                         }
                     });
                 }
@@ -323,7 +320,6 @@ public class BarcodeManager implements Serializable {
         });
 
     }
-
 
 
 }
