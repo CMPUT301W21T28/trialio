@@ -6,19 +6,27 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
+import com.example.trialio.fragments.PlotSettingsFragment;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -54,7 +62,7 @@ public class StatActivity extends AppCompatActivity {
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
     private ArrayList<Trial> trialList;
-    private int numData = 12; // for histograms and time plots
+    public static int numData = 12; // for histograms and time plots
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -180,18 +188,7 @@ public class StatActivity extends AppCompatActivity {
         plotSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // will come in handy if we add more time plots
-                if(histogram.getVisibility() == View.VISIBLE) {
-                    // if histogram is visible, create and display time plot of trials
-                    displayTimePlot(stats, timePlot, graphTitle);
-                    histogram.setVisibility(View.GONE);
-                    timePlot.setVisibility(View.VISIBLE);
-                } else {
-                    // else create and display histogram of trials
-                    displayHistogram(stats, histogram, graphTitle);
-                    timePlot.setVisibility(View.GONE);
-                    histogram.setVisibility(View.VISIBLE);
-                }
+                new PlotSettingsFragment().show(getSupportFragmentManager(), "FORMAT_PLOT");
             }
         });
 
