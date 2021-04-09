@@ -215,7 +215,11 @@ public class TrialActivity extends AppCompatActivity {
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                experimentOwnerTextView.setText(user.getUsername());
+                if (user != null) {
+                    experimentOwnerTextView.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to get user");
+                }
             }
         });
     }
@@ -234,11 +238,15 @@ public class TrialActivity extends AppCompatActivity {
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
-                experiment = newExperiment;                                                     // update the local experiment
-                experiment.getTrialManager().addIgnoredUser(userId);                            // add the userID to the list of ignored userIDs
-                experimentManager.editExperiment(experiment.getExperimentID(), experiment);     // update the experiment
-                updateExperimentData();
-                updateTrialData();
+                if (newExperiment != null) {
+                    experiment = newExperiment;                                                     // update the local experiment
+                    experiment.getTrialManager().addIgnoredUser(userId);                            // add the userID to the list of ignored userIDs
+                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);     // update the experiment
+                    updateExperimentData();
+                    updateTrialData();
+                } else {
+                    Log.e(TAG, "Failed to load experiment");
+                }
             }
         });
     }
@@ -251,8 +259,12 @@ public class TrialActivity extends AppCompatActivity {
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
-                experiment = new_experiment;        // update local experiment
-                setFields();                        // set views with experiment values
+                if (new_experiment != null) {
+                    experiment = new_experiment;        // update local experiment
+                    setFields();                        // set views with experiment values
+                } else {
+                    Log.e(TAG, "Failed to load experiment");
+                }
             }
         });
     }

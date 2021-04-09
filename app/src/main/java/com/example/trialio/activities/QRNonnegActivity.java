@@ -38,6 +38,7 @@ import java.util.List;
  * This activity provides the interface for creating a NonNegative Trial QR code.
  */
 public class QRNonnegActivity extends AppCompatActivity {
+    private static final String TAG = "QRNonneg activity";
     private Context context = this;
     private Button createQR;
     private EditText input;
@@ -235,7 +236,11 @@ public class QRNonnegActivity extends AppCompatActivity {
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                experimentOwnerTextView.setText(user.getUsername());
+                if (user != null) {
+                    experimentOwnerTextView.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
             }
         });
 

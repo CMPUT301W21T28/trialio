@@ -85,8 +85,13 @@ public class TrialManager implements Serializable {
     /**
      * This adds a trial to the trial collection.
      * @param trial The candidate trial to add to the trial collection.
+     * @return true if the Trial was added successfully, false otherwise
      */
-    public void addTrial(Trial trial) {
+    public boolean addTrial(Trial trial) {
+        // if experiment is closed, do not add the trial
+        if (!isOpen) {
+            return false;
+        }
 
         CollectionReference trialCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
 
@@ -109,6 +114,8 @@ public class TrialManager implements Serializable {
                         Log.d(TAG, "Failed to add trial " + newTrialID + ".");
                     }
                 });
+
+        return true;
     }
 
     /**

@@ -89,9 +89,13 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    if (new_experiment != null) {
+                        BinomialTrial new_trial = new BinomialTrial(current_user.getId(), location, date, Boolean.parseBoolean(input[1]));
+                        new_experiment.getTrialManager().addTrial(new_trial);
+                        experimentManager.editExperiment(input[2],new_experiment);
+                    } else {
+                        Log.e(TAG, "Failed to load experiments");
+                    }
                 }
             });
 
@@ -105,9 +109,13 @@ public class QRCodeGenerator extends AppCompatActivity {
 
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    CountTrial new_trial = new CountTrial(current_user.getId(), location, date);
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    if (new_experiment != null) {
+                        CountTrial new_trial = new CountTrial(current_user.getId(), location, date);
+                        new_experiment.getTrialManager().addTrial(new_trial);
+                        experimentManager.editExperiment(input[2],new_experiment);
+                    } else {
+                        Log.e(TAG, "Failed to load experiments");
+                    }
                 }
             });
         } else if (input[0].equals("NONNEGATIVE")){
@@ -117,9 +125,13 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-                    NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getId(), location, date, Integer.parseInt(input[1]));
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    if (new_experiment != null) {
+                        NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getId(), location, date, Integer.parseInt(input[1]));
+                        new_experiment.getTrialManager().addTrial(new_trial);
+                        experimentManager.editExperiment(input[2],new_experiment);
+                    } else {
+                        Log.e(TAG, "Failed to load experiments");
+                    }
                 }
             });
         } else if (input[0].equals("MEASUREMENT")){
@@ -131,10 +143,13 @@ public class QRCodeGenerator extends AppCompatActivity {
             experimentManager.setOnExperimentFetchListener(input[2], new ExperimentManager.OnExperimentFetchListener() {
                 @Override
                 public void onExperimentFetch(Experiment new_experiment) {
-
-                    MeasurementTrial new_trial = new MeasurementTrial(current_user.getId(), location, date, Double.parseDouble(input[1]), input[3]);
-                    new_experiment.getTrialManager().addTrial(new_trial);
-                    experimentManager.editExperiment(input[2],new_experiment);
+                    if (new_experiment != null) {
+                        MeasurementTrial new_trial = new MeasurementTrial(current_user.getId(), location, date, Double.parseDouble(input[1]), input[3]);
+                        new_experiment.getTrialManager().addTrial(new_trial);
+                        experimentManager.editExperiment(input[2],new_experiment);
+                    } else {
+                        Log.e(TAG, "Failed to load experiments");
+                    }
                 }
             });
         }

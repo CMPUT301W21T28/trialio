@@ -1,5 +1,6 @@
 package com.example.trialio.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -95,9 +96,14 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
         // set views with selectedQuestion details
         userManager.getUserById(selectedQuestion.getUserId(), new UserManager.OnUserFetchListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onUserFetch(User user) {
-                authorID.setText(user.getUsername());
+                if (user != null) {
+                    authorID.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
             }
         });
         selectedQuestionTitle.setText(selectedQuestion.getTitle());
@@ -116,11 +122,16 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
      */
     private void initState() {
         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onUserFetch(User user) {
-                // determine if user is the owner
-                isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
-                setUpOnClickListeners();
+                if (user != null) {
+                    // determine if user is the owner
+                    isUserOwner = user.getId().equals(experiment.getSettings().getOwnerID());
+                    setUpOnClickListeners();
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
             }
         });
     }
@@ -186,6 +197,7 @@ public class QuestionRepliesActivity extends AppCompatActivity implements AddRep
 
                 // listener for menu
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @SuppressLint("LongLogTag")
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.item_view_profile) {

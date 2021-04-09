@@ -105,7 +105,11 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                experimentOwnerTextView.setText(user.getUsername());
+                if (user != null) {
+                    experimentOwnerTextView.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Could not load user");
+                }
             }
         });
 
@@ -153,9 +157,13 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment new_experiment) {
-                        experiment = new_experiment;
-                        experiment.getTrialManager().setIsOpen(b);
-                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                        if (new_experiment != null) {
+                            experiment = new_experiment;
+                            experiment.getTrialManager().setIsOpen(b);
+                            experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                        } else {
+                            Log.e(TAG, "Could not load experiment");
+                        }
                     }
                 });
             }
@@ -169,9 +177,13 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
                 experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment new_experiment) {
-                        experiment = new_experiment;
-                        experiment.setIsPublished(b);
-                        experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                        if (new_experiment != null) {
+                            experiment = new_experiment;
+                            experiment.setIsPublished(b);
+                            experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                        } else {
+                            Log.d(TAG, "Failed to load experiment");
+                        }
                     }
                 });
             }
@@ -257,19 +269,23 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             @Override
             public void onExperimentFetch(Experiment new_experiment) {
 
-                // update experiment
-                experiment = new_experiment;
+                if (new_experiment != null) {
+                    // update experiment
+                    experiment = new_experiment;
 
-                // update ignored listView
-                ignoredIDList.clear();
-                ignoredIDList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
-                ignoredAdapter.notifyDataSetChanged();
+                    // update ignored listView
+                    ignoredIDList.clear();
+                    ignoredIDList.addAll(experiment.getTrialManager().getIgnoredUserIDs());
+                    ignoredAdapter.notifyDataSetChanged();
 
-                // set fields
-                setFields();
+                    // set fields
+                    setFields();
 
-                // set on click listeners
-                setOnClickListeners();
+                    // set on click listeners
+                    setOnClickListeners();
+                } else {
+                    Log.e(TAG, "Failed to fetch experiment");
+                }
             }
         });
     }
@@ -286,15 +302,19 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
 
-                // update experiment
-                experiment = newExperiment;
+                if (newExperiment != null) {
+                    // update experiment
+                    experiment = newExperiment;
 
-                // edit experiment in firebase
-                experiment.getTrialManager().removeIgnoredUsers(userID);
-                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
+                    // edit experiment in firebase
+                    experiment.getTrialManager().removeIgnoredUsers(userID);
+                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
 
-                // update data in activity
-                updateActivityData();
+                    // update data in activity
+                    updateActivityData();
+                } else {
+                    Log.e(TAG, "Failed to fetch experiments");
+                }
             }
         });
     }
@@ -305,16 +325,19 @@ public class ExperimentSettingsActivity extends AppCompatActivity implements Add
         experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
             @Override
             public void onExperimentFetch(Experiment newExperiment) {
+                if (newExperiment !=  null) {
+                    // update experiment
+                    experiment = newExperiment;
 
-                // update experiment
-                experiment = newExperiment;
+                    // edit experiment in firebase
+                    experiment.getTrialManager().addIgnoredUser(userID);
+                    experimentManager.editExperiment(experiment.getExperimentID(), experiment);
 
-                // edit experiment in firebase
-                experiment.getTrialManager().addIgnoredUser(userID);
-                experimentManager.editExperiment(experiment.getExperimentID(), experiment);
-
-                // update data in activity
-                updateActivityData();
+                    // update data in activity
+                    updateActivityData();
+                } else {
+                    Log.e(TAG, "Failed to fetch experiment");
+                }
             }
         });
     }

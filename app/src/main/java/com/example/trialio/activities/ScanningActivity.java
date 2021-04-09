@@ -138,6 +138,9 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             QRCodeGenerator.readQR(items, location, currentUser);
                         }
                     });
+                }else{
+                    Location location = new Location();
+                    QRCodeGenerator.readQR(items, location, currentUser);
                 }
             // if its a Barcode
             } else {
