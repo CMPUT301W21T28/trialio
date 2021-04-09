@@ -102,7 +102,14 @@ public class ExperimentCreateActivityTest {
         // click the create button
         clickCreate();
 
-        // TODO: check that Geo-location is enabled
+        // look for warning
+        assertTrue(solo.waitForText("Warning! This experiment requires Geo-location.", 1, 2000));
+
+        // click on OK in popup
+        solo.clickOnText("OK");
+
+        // look for fields
+        assertTrue(solo.waitForText("1", 1, 2000));
     }
 
     /**

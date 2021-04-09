@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CreateNonNegativeTrialCommand;
+import com.example.trialio.controllers.CreateTrialCommand;
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.models.Location;
@@ -21,6 +23,7 @@ import com.example.trialio.models.Trial;
 import com.example.trialio.models.User;
 
 import java.util.Date;
+
 /**
  * This fragment collects data from a user to upload a non-negative type trial
  * it sends data back to the Experiment activity, which then uploads the trial to the firestore database
@@ -39,28 +42,20 @@ public class NonNegativeTrialFragment extends DialogFragment {
         return builder
                 .setView(view)
                 .setTitle("Add Non-Negative Trial:")
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
                         int nonNegCount = Integer.parseInt(tv.getText().toString());
-                        Location location = new Location();
-                        if (geoLocationReq) {
-                            location.getCurrentLocation(getContext());
-                        }
-                        Date date = new Date();
-
-                        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
-                            @Override
-                            public void onUserFetch(User user) {
-
-                                //to be added:if geo-location is required and location is not updated, do not upload trial, notify user to allow location permission
-                                listener.onOkPressed(new NonNegativeTrial(user.getId(), location, date, nonNegCount));
-
-                            }
-                        });
-                    }}).create();
+                        CreateNonNegativeTrialCommand command = new CreateNonNegativeTrialCommand(
+                                getContext(),
+                                geoLocationReq,
+                                nonNegCount,
+                                trial -> listener.onOkPressed(trial));
+                        command.execute();
+                    }
+                }).create();
     }
 
     public interface OnFragmentInteractionListener {
@@ -71,7 +66,7 @@ public class NonNegativeTrialFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof OnFragmentInteractionListener){
+        if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()

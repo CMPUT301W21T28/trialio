@@ -1,20 +1,26 @@
 package com.example.trialio.models;
 
+import android.text.TextPaint;
+
+import java.io.Serializable;
+
 /**
  * Represents a barcode that a user can scan/register
  */
-public class Barcode {
+public class Barcode implements Serializable {
 
     private Experiment experiment;
-    private Trial trial;
-    private String barcode; // change type later
+    private String trialResult;
+    private String barcodeID; // change type later
 
 
-    public Barcode(Experiment experiment, Trial trial, String barcode) {
+    public Barcode(Experiment experiment, String trialResult, String barcodeID) {
         this.experiment = experiment;
-        this.trial = trial;
-        this.barcode = barcode;
+        this.trialResult = trialResult;
+        this.barcodeID = barcodeID;
     }
+
+    public Barcode(){}
 
     public Experiment getExperiment() {
         return experiment;
@@ -24,29 +30,22 @@ public class Barcode {
         this.experiment = experiment;
     }
 
-    public Trial getTrial() {
-        return trial;
+    public String getTrialResult() {
+        return trialResult;
     }
 
-
-    public String getBarcode() {
-        return barcode;
+    public void setTrialResult(String trialResult) {
+        this.trialResult = trialResult;
     }
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
+    public String getBarcodeID() {
+        return barcodeID;
     }
 
-    /**
-     * Sets the barcode image
-     *
-     * @param barcode the barcode image to be set, given an input barcode string
-     */
-    public void setBarcodeImage(String barcode) {
-
-
-
+    public void setBarcodeID(String barcodeID) {
+        this.barcodeID = barcodeID;
     }
+
 
 
 

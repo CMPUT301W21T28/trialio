@@ -47,30 +47,18 @@ public class BarcodeManager implements Serializable {
 
     private static final String TAG = "BarcodeForumManager";
 
-    private static final String EXPERIMENT_PATH = "experiments-v5";
-    private static final String BARCODES_PATH = "barcodes";
+    private static final String USERS_PATH = "users-v6";
+    private static final String BARCODES_PATH = "barcode";
 
 
     /**
      * Constructor for QuestionForumManager
      */
-    public BarcodeManager(String associatedExperimentID) {
-        barcodeCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_PATH).document(associatedExperimentID).collection(BARCODES_PATH);
+    public BarcodeManager(String userID) {
+        barcodeCollection = FirebaseFirestore.getInstance().collection(USERS_PATH).document(userID).collection(BARCODES_PATH);
     }
 
     public BarcodeManager() {    }
-
-
-//    /**
-//     * Generates a new unique barcode ID
-//     * @return unique ID for a new barcode which is about to be posted
-//     */
-//
-//    public String getNewPostID() { return this.barcodeForumCollection.document().getId(); }
-//
-//    public String getNewReplyID(String barcodeID) {
-//        return this.barcodeForumCollection.document(barcodeID).collection("Replies").document().getId();
-//    }
 
 
     /**
@@ -82,7 +70,7 @@ public class BarcodeManager implements Serializable {
          *
          * @param barcode the barcode that was fetched from the database
          */
-        void onBarcodeFetch(String barcode);
+        void onBarcodeFetch(Barcode barcode);
     }
 
 
@@ -96,48 +84,48 @@ public class BarcodeManager implements Serializable {
          *
          * @param barcodes all the barcodes that were fetched from the database (belong to the current experiment)
          */
-        void onManyBarcodesFetch(List<String> barcodes);
+        void onManyBarcodesFetch(List<Barcode> barcodes);
     }
 
+    public void createBarcode(Barcode newBarcode) {
 
-    public void createBarcode(String barcodeString) {
-        Map<String, Object> newBarcode = new HashMap<>();
-        newBarcode.put("Barcode Info", barcodeString);
-
-        Log.d(TAG, "Posting barcode string " + barcodeString);
+        Log.d(TAG, "Posting barcode string " + newBarcode.getBarcodeID());
         barcodeCollection
-                .add(newBarcode)   //TODO: might be annoying to use the document name with the functions bellow ****
-                //TODO ERROR HERE
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding barcode", e);
-                    }
-                });
-    }
-
-
-    public void deleteBarcode(String barcodeString) {
-        Log.d(TAG, "Deleting barcode " + barcodeString);
-        barcodeCollection
-                .document(barcodeString)
-                .delete()
+                .document(newBarcode.getBarcodeID())
+                .set(newBarcode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        String message = String.format("Experiment %s was deleted successfully", barcodeString);
+                        String message = String.format("Experiment %s was added successfully", newBarcode.getBarcodeID());
                         Log.d(TAG, message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        String message = String.format("Failed to delete experiment %s", barcodeString);
+                        String message = String.format("Failed to add experiment %s", newBarcode.getBarcodeID());
+                        Log.d(TAG, message);
+                    }
+                });
+    }
+
+
+    public void deleteBarcode(String barcodeID) {
+        Log.d(TAG, "Deleting barcode " + barcodeID);
+        barcodeCollection
+                .document(barcodeID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        String message = String.format("Experiment %s was deleted successfully", barcodeID);
+                        Log.d(TAG, message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String message = String.format("Failed to delete experiment %s", barcodeID);
                         Log.d(TAG, message);
                     }
                 });
@@ -147,22 +135,22 @@ public class BarcodeManager implements Serializable {
     /**
      * Sets a function to be called when a barcode is fetched
      *
-     * @param barcodeString the id of the barcode to fetch
+     * @param barcodeID the id of the barcode to fetch
      * @param listener      the function to be called when the experiment is fetched
      */
-    public void setOnBarcodeFetchListener(String barcodeString, BarcodeManager.OnBarcodeFetchListener listener) {
+    public void setOnBarcodeFetchListener(String barcodeID, BarcodeManager.OnBarcodeFetchListener listener) {
         /* Firebase Developer Docs, "Get a document", 2021-03-09, Apache 2.0
          * https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document
          */
         Log.d(TAG, "Fetching barcode");
-        DocumentReference docRef = barcodeCollection.document(barcodeString);
+        DocumentReference docRef = barcodeCollection.document(barcodeID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
-                        String barcode = extractBarcodeDocument(doc);
+                        Barcode barcode = extractBarcodeDocument(doc);
 
                         listener.onBarcodeFetch(barcode);
                         Log.d(TAG, "Barcode fetched successfully.");
@@ -196,12 +184,12 @@ public class BarcodeManager implements Serializable {
                             Log.d(TAG, message);
 
                             QuerySnapshot qs = task.getResult();
-                            ArrayList<String> barcodeList = new ArrayList<>();
+                            ArrayList<Barcode> barcodeList = new ArrayList<>();
 
                             for (DocumentSnapshot doc : qs.getDocuments()) {
                                 // retrieves all documents (barcodes) within barcodeForum collection
-                                String barcodeString = doc.getString("Barcode Info");
-                                barcodeList.add(barcodeString);
+                                Barcode barcode = extractBarcodeDocument(doc);
+                                barcodeList.add(barcode);
                             }
                             listener.onManyBarcodesFetch(barcodeList);
                         } else {
@@ -212,10 +200,14 @@ public class BarcodeManager implements Serializable {
                 });
     }
 
-    private String extractBarcodeDocument(DocumentSnapshot document) {
+    private Barcode extractBarcodeDocument(DocumentSnapshot document) {
         // TODO custom mapping here
-        String barcodeInfo = document.getString("Barcode Info");
-        return barcodeInfo;
+//        String barcodeInfo = document.getString("Barcode Info");
+//        return barcodeInfo;
+//
+        Barcode barcode = document.toObject(Barcode.class);
+        return barcode;
+
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -260,97 +252,76 @@ public class BarcodeManager implements Serializable {
 
     /**
      * for storing barcode to barcode collection
-     * @param input
-     * @param user
+     * @param barcodeID
      * @param experiment
      * @param result
      */
-    public void registerBarcode(String input, User user, Experiment experiment, String result) {
-        if (experiment.getTrialManager().getType().equals("BINOMIAL")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-        } else if (experiment.getTrialManager().getType().equals("COUNT")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        } else if (experiment.getTrialManager().getType().equals("NONNEGATIVE")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        } else if (experiment.getTrialManager().getType().equals("MEASUREMENT")) {
-            String infoResult = input + "\n" + experiment.getTrialManager().getType() + "\n" + result + "\n" + experiment.getExperimentID();
-            this.createBarcode(infoResult);
-
-        }
+    public void registerBarcode(String barcodeID, Experiment experiment, String result) {
+        Barcode barcode = new Barcode(experiment, result, barcodeID);
+        this.createBarcode(barcode);
     }
 
-    public static void readBarcode(String[] input, Location location, User user){
-        if (input[1].equals("BINOMIAL")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    if (new_experiment != null) {
-                        BinomialTrial new_trial = new BinomialTrial(current_user.getUsername(), location, date, Boolean.parseBoolean(input[2]));
-                        new_experiment.getTrialManager().addTrial(new_trial);
-                        experimentManager.editExperiment(input[3],new_experiment);
-                    } else {
-                        Log.e(TAG, "Failed to load experiment");
-                    }
-                }
-            });
+    /**
+     * readBarcode reads registered barcode and add a new trial to its responsible experiment
+     * @param input
+     * @param location
+     * @param user
+     */
+    //input contains barcode info, use the info to fetch the document from firebase
+    public void readBarcode(String input, Location location, User user){
+        this.setOnBarcodeFetchListener(input, new OnBarcodeFetchListener() {
+            @Override
+            public void onBarcodeFetch(Barcode barcode) {
+                Experiment experiment = barcode.getExperiment();
+                String type = barcode.getExperiment().getTrialManager().getType();
+                ExperimentManager experimentManager = new ExperimentManager();
+                Date date = new Date();
 
-        } else if (input[1].equals("COUNT")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    if (new_experiment != null) {
-                        CountTrial new_trial = new CountTrial(current_user.getUsername(), location, date);
-                        new_experiment.getTrialManager().addTrial(new_trial);
-                        experimentManager.editExperiment(input[3],new_experiment);
-                    } else {
-                        Log.e(TAG, "Failed to load experiment");
-                    }
+                if (type.equals("BINOMIAL")){
+                    Log.d(TAG, "in Binomial");
+                    Log.d(TAG, experiment.getExperimentID());
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            Log.d(TAG, new_experiment.getExperimentID());
+                            BinomialTrial new_trial = new BinomialTrial(user.getId(), location, date, Boolean.parseBoolean(barcode.getTrialResult()));
+                            Log.d(TAG, " Binomial trial created");
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            Log.d(TAG, " Binomial trial added");
+
+                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                        }
+                    });
+                }else if (type.equals("COUNT")){
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            CountTrial new_trial = new CountTrial(user.getId(), location, date);
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                        }
+                    });
+                } else if (type.equals("NONNEGATIVE")) {
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            NonNegativeTrial new_trial = new NonNegativeTrial(user.getId(), location, date, Integer.parseInt(barcode.getTrialResult()));
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
+                        }
+                    });
+                } else if (type.equals("MEASUREMENT")){
+                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
+                        @Override
+                        public void onExperimentFetch(Experiment new_experiment) {
+                            MeasurementTrial new_trial = new MeasurementTrial(user.getId(), location, date, Double.parseDouble(barcode.getTrialResult()), "UNIT");
+                            new_experiment.getTrialManager().addTrial(new_trial);
+                            experimentManager.editExperiment(experiment.getExperimentID(),new_experiment);
+                        }
+                    });
                 }
-            });
-        } else if (input[1].equals("NONNEGATIVE")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    if (new_experiment != null) {
-                        NonNegativeTrial new_trial = new NonNegativeTrial(current_user.getUsername(), location, date, Integer.parseInt(input[2]));
-                        new_experiment.getTrialManager().addTrial(new_trial);
-                        experimentManager.editExperiment(input[3],new_experiment);
-                    } else {
-                        Log.e(TAG, "Failed to load experiment");
-                    }
-                }
-            });
-        } else if (input[1].equals("MEASUREMENT")){
-            current_user = user;
-            Date date = new Date();
-            ExperimentManager experimentManager = new ExperimentManager();
-            experimentManager.setOnExperimentFetchListener(input[3], new ExperimentManager.OnExperimentFetchListener() {
-                @Override
-                public void onExperimentFetch(Experiment new_experiment) {
-                    if (new_experiment != null) {
-                        MeasurementTrial new_trial = new MeasurementTrial(current_user.getUsername(), location, date, Double.parseDouble(input[2]), input[3]);
-                        new_experiment.getTrialManager().addTrial(new_trial);
-                        experimentManager.editExperiment(input[3],new_experiment);
-                    } else {
-                        Log.e(TAG, "Failed to load experiment");
-                    }
-                }
-            });
-        }
+            }
+        });
 
     }
 

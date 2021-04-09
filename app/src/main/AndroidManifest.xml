@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.trialio">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Trialio">
-        <activity android:name=".Gallary"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -32,9 +31,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-        <activity android:name=".activities.QRMeasurementActivity" />
-        <activity android:name=".activities.QRNonnegActivity" />
-        <activity android:name=".activities.QRCountActivity" />
+        <activity android:name=".activities.QRMeasurementActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.QRNonnegActivity"
+
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.QRCountActivity"/>
         <activity
             android:name=".activities.ScanningActivity"
             android:parentActivityName=".activities.ExperimentActivity">
@@ -85,7 +87,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.QRBinomialActivity" />
+        <activity android:name=".activities.QRBinomialActivity"/>
     </application>
 
 </manifest>

@@ -3,17 +3,20 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.trialio.R;
@@ -22,6 +25,7 @@ import com.example.trialio.controllers.BarcodeManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.QRFragment;
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.HomeButtonUtility;
@@ -35,23 +39,26 @@ import java.util.List;
  * This activity provides the interface for creating a Count Trial QR code.
  */
 public class QRCountActivity extends AppCompatActivity {
-    private static final String TAG = "QRCount activity";
+
     private Button createQR;
     private Experiment experiment;
     private Button showQR;
     private Button showBarcode;
     private Context context = this;
+
     private TextView experimentDescriptionTextView;
     private ImageView experimentLocationImageView ;
     private TextView experimentTypeTextView;
     private TextView experimentOwnerTextView;
     private TextView experimentStatusTextView;
     private TextView txtMode;
-    private ArrayList<String> barcodeList;
+
+    private ArrayList<Barcode> barcodeList;
     private ArrayAdapterBarcode barcodeAdapter;
     private BarcodeManager barcodeManager;
     private ListView listviewBarcode;
     private Boolean onBarcodeView;
+    private User user;
 
 
     @Override
@@ -68,11 +75,11 @@ public class QRCountActivity extends AppCompatActivity {
         // get the experiment that was passed in
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment_qr");
+        user = (User) bundle.getSerializable("user");
 
-
-        barcodeManager = new BarcodeManager(experiment.getExperimentID());
-        barcodeList = new ArrayList<>();
-        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment);
+        barcodeManager = new BarcodeManager(user.getUsername());
+        barcodeList = new ArrayList<Barcode>();
+        barcodeAdapter = new ArrayAdapterBarcode(this, barcodeList, experiment, user);
 
         listviewBarcode.setAdapter(barcodeAdapter);
 
@@ -97,7 +104,7 @@ public class QRCountActivity extends AppCompatActivity {
     private void setBarcodeList() {
         barcodeManager.setOnAllBarcodesFetchCallback(new BarcodeManager.OnManyBarcodesFetchListener() {
             @Override
-            public void onManyBarcodesFetch(List<String> barcodes) {  // TODO: why not ArrayList ***
+            public void onManyBarcodesFetch(List<Barcode> barcodes) {  // TODO: why not ArrayList ***
                 Log.w("", "Successfully fetched barcodes");
                 barcodeList.clear();
                 barcodeList.addAll(barcodes);   // TODO: check for errors
@@ -118,6 +125,7 @@ public class QRCountActivity extends AppCompatActivity {
                     bundle.putSerializable("experiment", experiment);
                     bundle.putSerializable("result", String.valueOf(1));
                     bundle.putBoolean("isBarcode", isBarcode);
+                    bundle.putSerializable("user_scan", user);
                     intent.putExtra("Parent", "QRActivity");
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -163,11 +171,41 @@ public class QRCountActivity extends AppCompatActivity {
                 QRFragment qrFragment = new QRFragment();
                 Bundle bundle = new Bundle();
                 Boolean isBarcode = true;
-                bundle.putString("barcode",barcodeList.get(i));
+                bundle.putSerializable("barcode",barcodeList.get(i));
                 bundle.putBoolean("isBarcode", isBarcode);
                 qrFragment.setArguments(bundle);
                 qrFragment.show(getSupportFragmentManager(),"barcode");
             }
+        });
+
+        listviewBarcode.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // create the popup menu
+                int popupViewID = R.layout.menu_barcode;
+                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                popup.inflate(popupViewID);   // TODO: supress lint ? should we add it or not?
+
+                // listener for menu
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                       if (menuItem.getItemId() == R.id.item_delete_barcode) {
+                            Log.d("TAG", "Delete barcode: " + barcodeList.get(position).getBarcodeID());
+                            // delete question
+                            barcodeManager.deleteBarcode(barcodeList.get(position).getBarcodeID());
+                            setBarcodeList();
+                        } else {
+                            Log.d("TAG", "onMenuItemClick: Invalid item.");
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+                return true;
+            }
+
         });
 
         // set the home button
@@ -192,11 +230,7 @@ public class QRCountActivity extends AppCompatActivity {
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                if (user != null) {
-                    experimentOwnerTextView.setText(user.getUsername());
-                } else {
-                    Log.e(TAG, "Failed to load user");
-                }
+                experimentOwnerTextView.setText(user.getUsername());
             }
         });
 
@@ -213,7 +247,7 @@ public class QRCountActivity extends AppCompatActivity {
         }
     }
 
-    private void setBarcodeView (){
+    private void setBarcodeView () {
         toggleListButton(R.id.btnshowBarcode);
         listviewBarcode.setVisibility(View.VISIBLE);
         createQR.setText("Register Barcode: ");
@@ -221,7 +255,7 @@ public class QRCountActivity extends AppCompatActivity {
         onBarcodeView = true;
     }
 
-    private void setQRView(){
+    private void setQRView() {
         listviewBarcode.setVisibility(View.INVISIBLE);
         toggleListButton(R.id.btnshowQR);
         createQR.setText("Create QR: ");
@@ -253,3 +287,4 @@ public class QRCountActivity extends AppCompatActivity {
     }
 
 }
+
