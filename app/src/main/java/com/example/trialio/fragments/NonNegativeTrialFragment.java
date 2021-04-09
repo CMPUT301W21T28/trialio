@@ -14,15 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.CreateNonNegativeTrialCommand;
-import com.example.trialio.controllers.CreateTrialCommand;
-import com.example.trialio.controllers.CurrentUserHandler;
-import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.Location;
-import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
-
-import java.util.Date;
 
 /**
  * This fragment collects data from a user to upload a non-negative type trial

@@ -49,7 +49,7 @@ public class BarcodeManager implements Serializable {
 
     private static final String TAG = "BarcodeForumManager";
 
-    private static final String USERS_PATH = "users";
+    private static final String USERS_PATH = "usersUNIT";
     private static final String BARCODES_PATH = "barcodes";
 
     public enum Result {
@@ -333,7 +333,7 @@ public class BarcodeManager implements Serializable {
                             // create a measurement trial
                             double measurementRes = Double.parseDouble(barcode.getTrialResult());
                             createCommand = new CreateMeasurementTrialCommand(
-                                    context, isLocationReq, measurementRes,
+                                    context, isLocationReq, measurementRes, experiment.getUnit(),
                                     trial -> addTrialToExperiment(trial, experiment, listener)
                             );
                         } else {

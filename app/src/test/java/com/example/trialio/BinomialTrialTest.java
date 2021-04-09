@@ -23,7 +23,7 @@ public class BinomialTrialTest {
         assertNull(binomial.getExperimenterID());
         assertNull(binomial.getLocation());
         assertNull(binomial.getDate());
-        assertNull(binomial.getIsSuccess());
+        assertFalse(binomial.getIsSuccess());
 
         Location loc = new Location();
         Date date = new Date();

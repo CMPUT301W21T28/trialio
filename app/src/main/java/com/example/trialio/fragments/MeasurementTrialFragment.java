@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,14 +14,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.CreateMeasurementTrialCommand;
-import com.example.trialio.controllers.CurrentUserHandler;
-import com.example.trialio.controllers.UserManager;
-import com.example.trialio.models.Location;
-import com.example.trialio.models.MeasurementTrial;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
-
-import java.util.Date;
 
 /**
  * This fragment collects data from a user to upload a measurement type trial
@@ -31,6 +24,7 @@ import java.util.Date;
 public class MeasurementTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private boolean geoLocationReq;
+    private Experiment experiment;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -38,11 +32,19 @@ public class MeasurementTrialFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
+        experiment = (Experiment) bundle.getSerializable("experiment");
 
-        Switch s = view.findViewById(R.id.switchSuccessIndicator);
+        // determine whether or not unit exists, and should be displayed
+        String unit = experiment.getUnit();
+        if (unit == null || "".equals(unit)) {
+            unit = "";
+        } else {
+            unit = "(" + unit + ")";
+        }
+
         return builder
                 .setView(view)
-                .setTitle("Add Measurement Trial:")
+                .setTitle("Add Measurement Trial: " + unit)
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
@@ -53,6 +55,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                                 getContext(),
                                 geoLocationReq,
                                 measurement,
+                                experiment.getUnit(),
                                 trial -> listener.onOkPressed(trial));
                         command.execute();
                     }

@@ -248,6 +248,9 @@ public class StatisticsUtility {
      * @param textStats the TextView to place the summary statistics
      */
     public void displaySummaryStats(ArrayList<Double> stats, TextView textStats) {
+        String firstQuartile = "At least 4 trials required";
+        String thirdQuartile = "At least 4 trials required";
+
         // Took rounding code.
         // DATE:	2021-03-19
         // LICENSE:	CC BY-SA 2.5 [https://creativecommons.org/licenses/by-sa/2.5/]
@@ -264,8 +267,6 @@ public class StatisticsUtility {
                         Math.round(stats.get(4) * 10000d) / 10000d);
                 break;
             case 3:
-                String firstQuartile = "At least 4 trials required";
-                String thirdQuartile = "At least 4 trials required";
                 if(stats.get(6) != -1) {
                     firstQuartile = "" + Math.round(stats.get(6) * 10000d) / 10000d;
                     thirdQuartile = "" + Math.round(stats.get(7) * 10000d) / 10000d;
@@ -277,20 +278,24 @@ public class StatisticsUtility {
                 }
 
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                        "\nMean: " + stats.get(2) + "\nMedian: " +
+                        "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
                         Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                         Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                         Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
                         firstQuartile + "\nThird quartile: " + thirdQuartile + "\nMode(s): " + modes);
                 break;
             case 4:
+                if(stats.get(6) != -1) {
+                    firstQuartile = "" + Math.round(stats.get(6) * 10000d) / 10000d;
+                    thirdQuartile = "" + Math.round(stats.get(7) * 10000d) / 10000d;
+                }
+
                 textStats.setText("Stats Summary:\nTotal Trials: " + stats.get(1).intValue() +
-                        "\nMean: " + stats.get(2) + "\nMedian: " +
+                        "\nMean: " + Math.round(stats.get(2) * 10000d) / 10000d + "\nMedian: " +
                         Math.round(stats.get(3) * 10000d) / 10000d + "\nStandard deviation: " +
                         Math.round(stats.get(4) * 10000d) / 10000d + "\nVariance: " +
                         Math.round(stats.get(5) * 10000d) / 10000d + "\nFirst quartile: " +
-                        Math.round(stats.get(6) * 10000d) / 10000d + "\nThird quartile: " +
-                        Math.round(stats.get(7) * 10000d) / 10000d);
+                        firstQuartile + "\nThird quartile: " + thirdQuartile);
         }
     }
 
