@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.trialio.models.Barcode;
 import com.example.trialio.models.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -325,7 +326,11 @@ public class UserManager {
                     user.setUsername(newUsername);
                     Map<String, Object> compressUser = compressUser(user);
                     transaction.set(newUserDocRef, compressUser);
+
+                    // delete the old user
                     transaction.delete(oldUserDocRef);
+
+                    // delete barcodes
                 } else {
                     // Requested username already exists in the system
                     throw new FirebaseFirestoreException("Requested username is unavailable",
@@ -339,6 +344,9 @@ public class UserManager {
             public void onSuccess(Void aVoid) {
                 String message = String.format("User transfer successful from %s to %s", oldUsername, newUsername);
                 Log.d(TAG, message);
+                BarcodeManager oldBm = new BarcodeManager(oldUsername);
+                BarcodeManager newBm = new BarcodeManager(newUsername);
+                oldBm.transferTo(newBm, true);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -359,6 +367,12 @@ public class UserManager {
      */
     public Task<Void> deleteUser(User user) {
         String username = user.getUsername();
+
+        // delete all registered barcode for user
+        BarcodeManager barcodeManager = new BarcodeManager(user.getUsername());
+        barcodeManager.deleteAllBarcodes();
+
+        // delete the user itself
         return userCollection.document(username)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

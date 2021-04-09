@@ -144,6 +144,45 @@ public class BarcodeManager implements Serializable {
                 });
     }
 
+    /**
+     * Deletes all barcodes, effectively deleting the barcode collection
+     */
+    public void deleteAllBarcodes() {
+        Log.d(TAG, "Deleting all barcodes");
+        barcodeCollection
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // delete all of the trials in the trial collection
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                            doc.getReference().delete();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Copies all barcodes to a new BarcodeManager.
+     *
+     * @param newManager the BarcodeManager to copy over to
+     * @param clearAfter indicates if current BarcodeManager should be cleared after the transfer
+     */
+    public void transferTo(BarcodeManager newManager, boolean clearAfter) {
+        setOnAllBarcodesFetchCallback(new OnManyBarcodesFetchListener() {
+            @Override
+            public void onManyBarcodesFetch(List<Barcode> barcodes) {
+                for (Barcode b : barcodes) {
+                    newManager.createBarcode(b);
+                }
+                if (clearAfter) {
+                    deleteAllBarcodes();
+                }
+            }
+        });
+    }
+
 
     /**
      * Sets a function to be called when a barcode is fetched
