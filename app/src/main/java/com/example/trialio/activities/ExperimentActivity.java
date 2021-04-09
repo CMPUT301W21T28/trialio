@@ -100,7 +100,8 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
-        currentUser = (User) bundle.getSerializable("user_exp");
+
+        // get the current user
         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
             @Override
             public void onUserFetch(User user) {
