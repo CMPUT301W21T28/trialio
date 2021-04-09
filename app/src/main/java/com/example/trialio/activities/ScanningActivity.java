@@ -167,6 +167,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
         } else {
+            // if user try to register a QR Code
             if (String.valueOf(items.length).equals("3")){
                 Context context = getApplicationContext();
                 CharSequence toastMessage = "Please do not register a QRCode as a barcode.";
@@ -174,6 +175,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
 
                 Toast toast = Toast.makeText(context, toastMessage, duration);
                 toast.show();
+            // register barcode
             }else{
                 barcodeManager = new BarcodeManager(currentUser.getUsername());
                 barcodeManager.registerBarcode(text, experiment, result);
