@@ -32,6 +32,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 
 
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback{
+    private static final String TAG = "Map view activity";
     private Context context;
     private Experiment experiment;
     private UserManager userManager;
@@ -157,7 +159,12 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                textOwner.setText("Owner: " + "\n" + user.getUsername());
+                if (user != null) {
+                    textOwner.setText("Owner: " + "\n" + user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
+
             }
         });
 

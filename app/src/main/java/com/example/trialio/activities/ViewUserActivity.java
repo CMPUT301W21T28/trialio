@@ -83,10 +83,14 @@ public class ViewUserActivity extends AppCompatActivity implements ChangeUsernam
         userManager.addUserUpdateListener(user.getUsername(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User newUser) {
-                user = newUser;         // update the user
-                setFields();            // set fields
-                setVisibility();        // set visibility
-                setOnClickListeners();  // set listeners
+                if (newUser != null) {
+                    user = newUser;         // update the user
+                    setFields();            // set fields
+                    setVisibility();        // set visibility
+                    setOnClickListeners();  // set listeners
+                } else {
+                    Log.e(TAG, "Failed to get user");
+                }
             }
         });
     }

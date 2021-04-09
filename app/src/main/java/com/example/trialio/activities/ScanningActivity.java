@@ -138,8 +138,11 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             QRCodeGenerator.readQR(items, location, currentUser);
                         }
                     });
+                }else{
+                    Location location = new Location();
+                    QRCodeGenerator.readQR(items, location, currentUser);
                 }
-                // if its a Barcode
+            // if its a Barcode
             } else {
                 if (experiment.getSettings().getGeoLocationRequired()) {
                     Task<android.location.Location> locTask = Location.requestLocation(context);
@@ -152,18 +155,24 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             Location location = new Location();
                             location.setLatitude(loc.getLatitude());
                             location.setLongitude(loc.getLongitude());
-                             barcodeManager.readBarcode(items, location, currentUser);
+                            barcodeManager = new BarcodeManager(currentUser.getUsername());
+                            barcodeManager.readBarcode(processed, location, currentUser);
                         }
                     });
+                }else {
+                    Location location = new Location();
+                    barcodeManager = new BarcodeManager(currentUser.getUsername());
+                    barcodeManager.readBarcode(processed, location, currentUser);
                 }
             }
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
         } else {
-            barcodeManager = new BarcodeManager(experiment.getExperimentID());
-            barcodeManager.registerBarcode(text, currentUser, experiment, result);
+            barcodeManager = new BarcodeManager(currentUser.getUsername());
+            barcodeManager.registerBarcode(text, experiment, result);
         }
 
 
     }
 }
+

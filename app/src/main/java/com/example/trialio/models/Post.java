@@ -52,6 +52,7 @@ public abstract class Post implements Serializable {
      * Creates a Post
      */
     protected Post() {
+
     }
 
     /**

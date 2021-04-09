@@ -3,6 +3,7 @@ package com.example.trialio.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set up the listener to view the profile of the owner of an experiment in the list view
         experimentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -185,10 +187,14 @@ public class MainActivity extends AppCompatActivity {
                 CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
                     @Override
                     public void onUserFetch(User user) {
-                        currentUser = user;
-                        Intent intent = new Intent(context, ViewUserActivity.class);
-                        intent.putExtra("user", currentUser);
-                        startActivity(intent);
+                        if (user != null) {
+                            currentUser = user;
+                            Intent intent = new Intent(context, ViewUserActivity.class);
+                            intent.putExtra("user", currentUser);
+                            startActivity(intent);
+                        } else {
+                            Log.e(TAG, "Failed to fetch user");
+                        }
                     }
                 });
             }
@@ -263,9 +269,13 @@ public class MainActivity extends AppCompatActivity {
                     experimentManager.searchByKeyword(keywords, new ExperimentManager.OnManyExperimentsFetchListener() {
                         @Override
                         public void onManyExperimentsFetch(List<Experiment> experiments) {
-                            experimentList.clear();
-                            experimentList.addAll(experiments);
-                            experimentAdapter.notifyDataSetChanged();
+                            if (experiments != null) {
+                                experimentList.clear();
+                                experimentList.addAll(experiments);
+                                experimentAdapter.notifyDataSetChanged();
+                            } else {
+                                Log.e(TAG, "Failed to load experiments");
+                            }
                         }
                     });
                     Log.d(TAG, "Search for " + text);
@@ -321,8 +331,12 @@ public class MainActivity extends AppCompatActivity {
         experimentManager.setOnAllPublishedExperimentsFetchCallback(new ExperimentManager.OnManyExperimentsFetchListener() {
             @Override
             public void onManyExperimentsFetch(List<Experiment> experiments) {
-                experimentList.addAll(experiments);
-                experimentAdapter.notifyDataSetChanged();
+                if (experiments != null) {
+                    experimentList.addAll(experiments);
+                    experimentAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e(TAG,  "Failed to load experiments");
+                }
             }
         });
     }
@@ -338,8 +352,12 @@ public class MainActivity extends AppCompatActivity {
             experimentManager.getOwnedExperiments(currentUser, new ExperimentManager.OnManyExperimentsFetchListener() {
                 @Override
                 public void onManyExperimentsFetch(List<Experiment> experiments) {
-                    experimentList.addAll(experiments);
-                    experimentAdapter.notifyDataSetChanged();
+                    if (experiments != null) {
+                        experimentList.addAll(experiments);
+                        experimentAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.e(TAG, "Failed to load experiments");
+                    }
                 }
             });
         }
@@ -358,11 +376,18 @@ public class MainActivity extends AppCompatActivity {
                 experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
+                      
                         // if the experiment is published and the user is subscribed, add it to the list to display
-                        if (experiment.getIsPublished()) {
-                            experimentList.add(experiment);
-                            experimentAdapter.notifyDataSetChanged();
+                        if (experiment != null) {
+                            if (experiment.getIsPublished()) {
+                                experimentList.add(experiment);
+                                experimentAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            Log.e(TAG, "Failed to load experiment");
                         }
+                        // if the experiment is published and the user is subscribed, add it to the list to display
+
                     }
                 });
             }
