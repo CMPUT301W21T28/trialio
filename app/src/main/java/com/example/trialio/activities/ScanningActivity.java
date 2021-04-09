@@ -169,6 +169,9 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
         } else {
             // if user try to register a QR Code
             if (String.valueOf(items.length).equals("3")){
+                //Source:
+                //Toast Overview from Android Documentations
+                //https://developer.android.com/guide/topics/ui/notifiers/toasts
                 Context context = getApplicationContext();
                 CharSequence toastMessage = "Please do not register a QRCode as a barcode.";
                 int duration = Toast.LENGTH_SHORT;
