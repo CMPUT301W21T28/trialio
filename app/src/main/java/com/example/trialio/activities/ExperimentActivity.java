@@ -101,6 +101,12 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
         currentUser = (User) bundle.getSerializable("user_exp");
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                currentUser = user;
+            }
+        });
 
         // create managers important to this activity
         experimentManager = new ExperimentManager();
