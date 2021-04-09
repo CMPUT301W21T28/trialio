@@ -49,6 +49,7 @@ public class BarcodeManager implements Serializable {
 
     private static final String EXPERIMENT_PATH = "experiments";
     private static final String BARCODES_PATH = "barcodes";
+    private static final String USERS_PATH = "users";
 
     /**
      * Constructor for QuestionForumManager
