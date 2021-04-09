@@ -46,7 +46,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     private String parentActivity;
     private Context context = this;
 
-    private final String TAG = "scanningactivity";
+    private final String TAG = "ScanningActivity";
 
 
     /**
@@ -111,16 +111,14 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      * @param text
      */
     private void processResult(String text) {
-        Log.d(TAG, "in ProcessResult");
-        Log.d(TAG, String.valueOf(isBarcode));
-        String processed = text;
-        String[] items = processed.split("\n");
+        Log.d(TAG, "Process scanned result: isBarcode = " + isBarcode.toString());
+        String[] items = text.split("\n");
+        Log.d(TAG, "Raw Input: " + items);
         // it reads in from which activity is scanning activity called from
         // if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
         // if its not experiment activity it means user is trying to register a barcode
         if (parentActivity.equals("ExperimentActivity")) {
             Log.d(TAG, String.valueOf(items.length));
-            Log.d(TAG, processed);
             // if its a QRCode the length is 3
             if (String.valueOf(items.length).equals("3")) {
                 if (experiment.getSettings().getGeoLocationRequired()) {
@@ -135,12 +133,12 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             Location location = new Location();
                             location.setLatitude(loc.getLatitude());
                             location.setLongitude(loc.getLongitude());
-                            QRCodeGenerator.readQR(items, location, currentUser);
+                            QRCodeGenerator.readQR(getApplicationContext(), items, location, currentUser);
                         }
                     });
                 } else {
                     Location location = new Location();
-                    QRCodeGenerator.readQR(items, location, currentUser);
+                    QRCodeGenerator.readQR(getApplicationContext(), items, location, currentUser);
                 }
                 // if its a Barcode
             } else {
@@ -157,13 +155,13 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             location.setLatitude(loc.getLatitude());
                             location.setLongitude(loc.getLongitude());
                             barcodeManager = new BarcodeManager(currentUser.getUsername());
-                            barcodeManager.readBarcode(processed, location, currentUser);
+                            barcodeManager.readBarcode(text, location, currentUser);
                         }
                     });
                 } else {
                     Location location = new Location();
                     barcodeManager = new BarcodeManager(currentUser.getUsername());
-                    barcodeManager.readBarcode(processed, location, currentUser);
+                    barcodeManager.readBarcode(text, location, currentUser);
                 }
             }
             // if intent is not coming from Experiment Activity i.e. QRActivity
@@ -197,6 +195,16 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      */
     private void displayNoLocationToast() {
         String message = "Unable to add trial: Please enable location permissions";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays error message to the user that trial could not be added because location services
+     * are not enabled
+     */
+    private void displayExperimentClosedToast() {
+        String message = "Unable to add trial: This experiment is closed to new trials";
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
