@@ -59,6 +59,7 @@ public class QRFragment extends DialogFragment {
 
         experiment = (Experiment) bundle.getSerializable("experiment");
         barcode = (Barcode) bundle.getSerializable("barcode");
+        result = bundle.getString("result");
 
 
         isBarcode = bundle.getBoolean("isBarcode");
