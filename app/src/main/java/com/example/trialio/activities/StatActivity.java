@@ -296,12 +296,12 @@ public class StatActivity extends AppCompatActivity {
 
                         // display histogram titles
                         String unit = experiment.getUnit();
-                        if(unit == null) {
+                        if(unit == null || "".equals(unit)) {
                             histogramTitle.setText(experiment.getSettings().getDescription() +
                                     " histogram\n" + "X-axis: Measurement\nY-axis: Frequency");
                         } else {
                             histogramTitle.setText(experiment.getSettings().getDescription() +
-                                    " histogram\n" + "X-axis: Measurement(" +
+                                    " histogram\n" + "X-axis: Measurement (" +
                                     unit + ")\nY-axis: Frequency");
                         }
                 }
@@ -458,8 +458,15 @@ public class StatActivity extends AppCompatActivity {
                         pointHeight = setupMeasurementTimePlot(trials, cutoffs, numPoints);
 
                         // display time plot titles
-                        timePlotTitle.setText(experiment.getSettings().getDescription() +
-                                " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
+                        String unit = experiment.getUnit();
+                        if(unit == null || "".equals(unit)) {
+                            timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                    " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
+                        } else {
+                            timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                    " average measurement over time\nX-axis: Time\n" +
+                                    "Y-axis: Mean measurement (" + unit + ")");
+                        }
                 }
 
                 // add the calculated heights into the time plot

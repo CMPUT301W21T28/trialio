@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.CreateMeasurementTrialCommand;
+import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
 
 /**
@@ -23,6 +24,7 @@ import com.example.trialio.models.Trial;
 public class MeasurementTrialFragment extends DialogFragment {
     private OnFragmentInteractionListener listener;
     private boolean geoLocationReq;
+    private Experiment experiment;
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -30,10 +32,19 @@ public class MeasurementTrialFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         Bundle bundle = getArguments();
         geoLocationReq = (Boolean) bundle.getBoolean("GeoLocationRequired");
+        experiment = (Experiment) bundle.getSerializable("experiment");
+
+        // determine whether or not unit exists, and should be displayed
+        String unit = experiment.getUnit();
+        if (unit == null || "".equals(unit)) {
+            unit = "";
+        } else {
+            unit = "(" + unit + ")";
+        }
 
         return builder
                 .setView(view)
-                .setTitle("Add Measurement Trial:")
+                .setTitle("Add Measurement Trial: " + unit)
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override

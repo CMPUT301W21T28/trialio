@@ -415,6 +415,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
+                    args.putSerializable("experiment", experiment);
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {
