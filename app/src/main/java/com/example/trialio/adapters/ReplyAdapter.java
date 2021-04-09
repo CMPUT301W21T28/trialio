@@ -25,11 +25,9 @@ import java.util.ArrayList;
  */
 public class ReplyAdapter extends ArrayAdapter<Reply> {
 
-<<<<<<< Updated upstream
-    private static final String TAG = "reply Adapter";
-=======
+
     private static final String TAG = "Reply adapter";
->>>>>>> Stashed changes
+
     private Context context;
     private ArrayList<Reply> replyList;
 
@@ -60,20 +58,13 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
             @Override
             public void onUserFetch(User user) {
                 if (user != null) {
-<<<<<<< Updated upstream
 
-                } else {
-                    Log.e(TAG, "Failed to fetch user");
-                }
-                TextView replyAuthorID = finalView.findViewById(R.id.replyAuthorID);
-                replyAuthorID.setText(user.getUsername());
-=======
                     TextView replyAuthorID = finalView.findViewById(R.id.replyAuthorID);
                     replyAuthorID.setText(user.getUsername());
                 } else {
                     Log.e(TAG, "Failed to fet user");
                 }
->>>>>>> Stashed changes
+
             }
         });
 
