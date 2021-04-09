@@ -1,6 +1,7 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
  * ExperimentSettingsActivity
  */
 public class UserAdapter extends ArrayAdapter<String> {
+    private static final String TAG = "User Adapter";
     private Context context;
     private ArrayList<String> ignoredIDList;
 
@@ -52,9 +54,12 @@ public class UserAdapter extends ArrayAdapter<String> {
         userManager.getUserById(userID, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-
-                // set the textview
-                textUsername.setText(user.getUsername());
+                if (user != null) {
+                    // set the textview
+                    textUsername.setText(user.getUsername());
+                } else {
+                    Log.e(TAG, "Failed to get user");
+                }
             }
         });
 

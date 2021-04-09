@@ -165,8 +165,13 @@ public class CurrentUserHandler {
         manager.addUserUpdateListener(username, new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                currentUser = user;
-                Log.d(TAG, "Current user updated");
+                if (user != null) {
+                    currentUser = user;
+                    Log.d(TAG, "Current user updated");
+                } else {
+                    Log.e(TAG, "Failed to load user");
+                }
+
             }
         });
     }

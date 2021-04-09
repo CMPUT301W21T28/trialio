@@ -1,6 +1,7 @@
 package com.example.trialio.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
  * ListView item to be displayed on the app screen. This ArrayAdapter is referenced in MainActivity.
  */
 public class ExperimentAdapter extends ArrayAdapter<Experiment>{
+
+
+    private static final String TAG = "Experiment  Adapter";
 
     private final int MAX_USERNAME_LENGTH = 15;
     private Context context;
@@ -63,9 +67,14 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment>{
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
-                String displayUsername = user.getUsername();
-                displayUsername = displayUsername.length() > MAX_USERNAME_LENGTH ? displayUsername.substring(0, MAX_USERNAME_LENGTH) + "..." : displayUsername;
-                textOwner.setText(displayUsername);
+
+                if (user != null) {
+                    String displayUsername = user.getUsername();
+                    displayUsername = displayUsername.length() > MAX_USERNAME_LENGTH ? displayUsername.substring(0, MAX_USERNAME_LENGTH) + "..." : displayUsername;
+                    textOwner.setText(displayUsername);
+                } else {
+                    Log.e(TAG, "Failed to get user");
+                }
             }
         });
 

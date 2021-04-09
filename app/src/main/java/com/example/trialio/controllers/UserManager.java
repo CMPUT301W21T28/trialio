@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class UserManager {
     private static final String TAG = "UserManager";
-    private static String COLLECTION_PATH = "users-v6";
+    private static String COLLECTION_PATH = "users";
     private final CollectionReference userCollection;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
