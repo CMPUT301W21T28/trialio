@@ -275,12 +275,12 @@ public class BarcodeManager implements Serializable {
     /**
      * readBarcode reads registered barcode and add a new trial to its responsible experiment
      *
-     * @param input
-     * @param location
-     * @param user
+     * @param context  the context in which the barcode was scanned
+     * @param input    the raw input of the scanned barcode
+     * @param listener the listener callback to pass the result of the read
      */
     //input contains barcode info, use the info to fetch the document from firebase
-    public void readBarcode(Context context, String input, Location location, User user, OnReadResultListener listener) {
+    public void readBarcode(Context context, String input, OnReadResultListener listener) {
         setOnBarcodeFetchListener(input, new OnBarcodeFetchListener() {
             @Override
             public void onBarcodeFetch(Barcode barcode) {
@@ -345,59 +345,22 @@ public class BarcodeManager implements Serializable {
 
                     }
                 });
-//
-//                Date date = new Date();
-//                if (type.equals("BINOMIAL")) {
-//                    Log.d(TAG, "in Binomial");
-//                    Log.d(TAG, experiment.getExperimentID());
-//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-//                        @Override
-//                        public void onExperimentFetch(Experiment new_experiment) {
-//                            Log.d(TAG, new_experiment.getExperimentID());
-//                            BinomialTrial new_trial = new BinomialTrial(user.getId(), location, date, Boolean.parseBoolean(barcode.getTrialResult()));
-//                            Log.d(TAG, " Binomial trial created");
-//                            new_experiment.getTrialManager().addTrial(new_trial);
-//                            Log.d(TAG, " Binomial trial added");
-//
-//                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
-//                        }
-//                    });
-//                } else if (type.equals("COUNT")) {
-//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-//                        @Override
-//                        public void onExperimentFetch(Experiment new_experiment) {
-//                            CountTrial new_trial = new CountTrial(user.getId(), location, date);
-//                            new_experiment.getTrialManager().addTrial(new_trial);
-//                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
-//                        }
-//                    });
-//                } else if (type.equals("NONNEGATIVE")) {
-//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-//                        @Override
-//                        public void onExperimentFetch(Experiment new_experiment) {
-//                            NonNegativeTrial new_trial = new NonNegativeTrial(user.getId(), location, date, Integer.parseInt(barcode.getTrialResult()));
-//                            new_experiment.getTrialManager().addTrial(new_trial);
-//                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
-//                        }
-//                    });
-//                } else if (type.equals("MEASUREMENT")) {
-//                    experimentManager.setOnExperimentFetchListener(experiment.getExperimentID(), new ExperimentManager.OnExperimentFetchListener() {
-//                        @Override
-//                        public void onExperimentFetch(Experiment new_experiment) {
-//                            MeasurementTrial new_trial = new MeasurementTrial(user.getId(), location, date, Double.parseDouble(barcode.getTrialResult()), "UNIT");
-//                            new_experiment.getTrialManager().addTrial(new_trial);
-//                            experimentManager.editExperiment(experiment.getExperimentID(), new_experiment);
-//                        }
-//                    });
-//                }
             }
         });
 
     }
 
+    /**
+     * Adds a created trial to the experiment. Used as a common callback between all the create trial
+     * commands.
+     *
+     * @param trial      the trial to add
+     * @param experiment the experiment to add to
+     * @param listener   the listener callback to pass the result of the operation
+     */
     private void addTrialToExperiment(Trial trial, Experiment experiment, OnReadResultListener listener) {
         // if no trial was created, location error occurred
-        if (trial == null && experiment.getSettings().getGeoLocationRequired()) {
+        if (trial == null /*&& experiment.getSettings().getGeoLocationRequired()*/) {
             listener.onReadResult(Result.LOCATION_DENIED);
             return;
         }
@@ -413,6 +376,4 @@ public class BarcodeManager implements Serializable {
             listener.onReadResult(Result.EXPERIMENT_CLOSED);
         }
     }
-
-
 }

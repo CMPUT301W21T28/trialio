@@ -102,8 +102,9 @@ public class QRCodeGenerator extends AppCompatActivity {
     /**
      * readQR takes in the input that is encoded in the code then create a new trial with its info
      *
-     * @param context the context in which the QR was scanned
-     * @param input   the raw input that was encoded in the QR code
+     * @param context  the context in which the QR was scanned
+     * @param input    the raw input that was encoded in the QR code
+     * @param listener the listener callback to pass the result of the read
      */
     public static void readQR(Context context, String[] input, OnReadResultListener listener) {
         // parse the raw input
@@ -165,9 +166,18 @@ public class QRCodeGenerator extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Adds a created trial to the experiment. Used as a common callback between all the create trial
+     * commands.
+     *
+     * @param trial      the trial to add
+     * @param experiment the experiment to add to
+     * @param listener   the listener callback to pass the result of the operation
+     */
     private static void addTrialToExperiment(Trial trial, Experiment experiment, OnReadResultListener listener) {
         // if no trial was created, location error occurred
-        if (trial == null && experiment.getSettings().getGeoLocationRequired()) {
+        if (trial == null /*&& experiment.getSettings().getGeoLocationRequired()*/) {
             listener.onReadResult(Result.LOCATION_DENIED);
             return;
         }

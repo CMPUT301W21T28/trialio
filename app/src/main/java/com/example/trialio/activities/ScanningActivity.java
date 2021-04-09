@@ -121,11 +121,12 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
          * if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
          * if its not experiment activity it means user is trying to register a barcode
          */
+        boolean isQR = String.valueOf(items.length).equals("3"); // otherwise it's barcode
+        boolean isAddTrial = parentActivity.equals("ExperimentActivity"); // otherwise it's register (barcode)
 
-        if (parentActivity.equals("ExperimentActivity")) {
+        if (isAddTrial) {
             // user wants to scan code to record trial
-//            Log.d(TAG, String.valueOf(items.length));
-            if (String.valueOf(items.length).equals("3")) {
+            if (isQR) {
                 // user is scanning a QR code to add trial
                 Log.d(TAG, "QR Code identified");
                 QRCodeGenerator.readQR(getApplicationContext(), items, new QRCodeGenerator.OnReadResultListener() {
@@ -155,7 +156,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                 // user is scanning a barcode to add trial
                 Log.d(TAG, "Barcode identified");
                 barcodeManager = new BarcodeManager(currentUser.getUsername());
-                barcodeManager.readBarcode(getApplicationContext(), text, null, null, new BarcodeManager.OnReadResultListener() {
+                barcodeManager.readBarcode(getApplicationContext(), text, new BarcodeManager.OnReadResultListener() {
                     @Override
                     public void onReadResult(BarcodeManager.Result result) {
                         switch (result) {
@@ -181,33 +182,11 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                         }
                     }
                 });
-
-//                if (experiment.getSettings().getGeoLocationRequired()) {
-//                    Task<android.location.Location> locTask = Location.requestLocation(context);
-//                    if (locTask == null) {
-//                        displayNoLocationToast();
-//                        return;
-//                    }
-//                    locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-//                        @Override
-//                        public void onSuccess(android.location.Location loc) {
-//                            Location location = new Location();
-//                            location.setLatitude(loc.getLatitude());
-//                            location.setLongitude(loc.getLongitude());
-//                            barcodeManager = new BarcodeManager(currentUser.getUsername());
-////                            barcodeManager.readBarcode(text, location, currentUser);
-//                        }
-//                    });
-//                } else {
-//                    Location location = new Location();
-//                    barcodeManager = new BarcodeManager(currentUser.getUsername());
-////                    barcodeManager.readBarcode(text, location, currentUser);
-//                }
             }
+        } else {
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
-        } else {
-            if (String.valueOf(items.length).equals("3")) {
+            if (isQR) {
                 // user tried to register a QR Code
                 displayRegisterQRCodeAsBarcodeToast();
             } else {
