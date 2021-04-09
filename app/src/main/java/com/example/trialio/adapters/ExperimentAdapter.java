@@ -25,7 +25,11 @@ import java.util.ArrayList;
  */
 public class ExperimentAdapter extends ArrayAdapter<Experiment>{
 
+<<<<<<< Updated upstream
     private static final String TAG = "Adapter";
+=======
+    private static final String TAG = "Experiment  Adapter";
+>>>>>>> Stashed changes
     private final int MAX_USERNAME_LENGTH = 15;
     private Context context;
     private ArrayList<Experiment> experimentList;
@@ -65,6 +69,7 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment>{
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
             @Override
             public void onUserFetch(User user) {
+<<<<<<< Updated upstream
                 if (user !=  null) {
 
                 } else {
@@ -73,6 +78,15 @@ public class ExperimentAdapter extends ArrayAdapter<Experiment>{
                 String displayUsername = user.getUsername();
                 displayUsername = displayUsername.length() > MAX_USERNAME_LENGTH ? displayUsername.substring(0, MAX_USERNAME_LENGTH) + "..." : displayUsername;
                 textOwner.setText(displayUsername);
+=======
+                if (user != null) {
+                    String displayUsername = user.getUsername();
+                    displayUsername = displayUsername.length() > MAX_USERNAME_LENGTH ? displayUsername.substring(0, MAX_USERNAME_LENGTH) + "..." : displayUsername;
+                    textOwner.setText(displayUsername);
+                } else {
+                    Log.e(TAG, "Failed to get user");
+                }
+>>>>>>> Stashed changes
             }
         });
 
