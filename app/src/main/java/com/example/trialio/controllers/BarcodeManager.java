@@ -333,7 +333,7 @@ public class BarcodeManager implements Serializable {
                             // create a measurement trial
                             double measurementRes = Double.parseDouble(barcode.getTrialResult());
                             createCommand = new CreateMeasurementTrialCommand(
-                                    context, isLocationReq, measurementRes,
+                                    context, isLocationReq, measurementRes, experiment.getUnit(),
                                     trial -> addTrialToExperiment(trial, experiment, listener)
                             );
                         } else {

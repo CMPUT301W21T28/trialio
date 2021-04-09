@@ -33,10 +33,10 @@ public class CreateMeasurementTrialCommand extends CreateTrialCommand {
      * @param measurement        the result of the trial to create
      * @param listener           callback for when the Trial is created
      */
-    public CreateMeasurementTrialCommand(Context context, boolean isLocationRequired, double measurement, OnResultListener listener) {
+    public CreateMeasurementTrialCommand(Context context, boolean isLocationRequired, double measurement, String unit, OnResultListener listener) {
         super(context, isLocationRequired, listener);
         this.measurement = measurement;
-        this.unit = "unit";
+        this.unit = unit;
     }
 
     @Override

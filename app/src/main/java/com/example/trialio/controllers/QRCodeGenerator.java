@@ -153,7 +153,7 @@ public class QRCodeGenerator extends AppCompatActivity {
                     // create a measurement trial
                     double measurementRes = Double.parseDouble(result);
                     createCommand = new CreateMeasurementTrialCommand(
-                            context, isLocationReq, measurementRes,
+                            context, isLocationReq, measurementRes, experiment.getUnit(),
                             trial -> addTrialToExperiment(trial, experiment, listener)
                     );
                 } else {

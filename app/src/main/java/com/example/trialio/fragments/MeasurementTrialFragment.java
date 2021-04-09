@@ -55,6 +55,7 @@ public class MeasurementTrialFragment extends DialogFragment {
                                 getContext(),
                                 geoLocationReq,
                                 measurement,
+                                experiment.getUnit(),
                                 trial -> listener.onOkPressed(trial));
                         command.execute();
                     }
