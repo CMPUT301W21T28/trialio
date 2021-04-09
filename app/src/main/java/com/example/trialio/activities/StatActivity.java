@@ -315,6 +315,7 @@ public class StatActivity extends AppCompatActivity {
                 histogram.setDescription(null);
                 histogram.getAxisLeft().setAxisMinValue(0);
                 histogram.getAxisRight().setAxisMinValue(0);
+                histogram.invalidate();
             }
         });
     }
@@ -479,6 +480,7 @@ public class StatActivity extends AppCompatActivity {
                 timePlot.setDragEnabled(true);
                 timePlot.setScaleEnabled(true);
                 timePlot.setDescription(null);
+                timePlot.invalidate();
             }
         });
     }
