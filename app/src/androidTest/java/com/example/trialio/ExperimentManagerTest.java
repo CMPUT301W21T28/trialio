@@ -399,7 +399,7 @@ public class ExperimentManagerTest {
 
         // Delete the experiment
         CountDownLatch deleteLock = new CountDownLatch(1);
-        em.deleteExperiment(id).addOnCompleteListener(task -> deleteLock.countDown());
+        em.deleteExperiment(id, null).addOnCompleteListener(task -> deleteLock.countDown());
         deleteLock.await(ASYNC_DELAY, TimeUnit.SECONDS);
 
         // Fetch the deleted experiment and make sure it was deleted

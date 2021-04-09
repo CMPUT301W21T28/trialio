@@ -228,12 +228,28 @@ public class ExperimentManager {
     }
 
     /**
-     * This deletes an experiment associated with a given experiment ID
-     *
-     * @param experimentId Experiment ID of the candidate experiment to delete
-     * @return Task that indicates when the delete is complete
+     * This deletes an experiment associated with a given experiment ID.
+     * @param experimentId Experiment ID of the candidate experiment to delete.
+     * @param userManager Optional UserManager.
+     * @return Task that indicates when the delete is complete.
      */
-    public Task<Void> deleteExperiment(String experimentId) {
+    public Task<Void> deleteExperiment(String experimentId, UserManager userManager) {
+
+        // remove experimentID from the subscribed list of all users.
+        if (userManager != null) {
+            userManager.removeExperimentFromSubs(experimentId);
+        }
+
+        // delete all trials
+        TrialManager trialManager = new TrialManager();
+        trialManager.setExperimentID(experimentId);
+        trialManager.deleteAllTrials();
+
+        // delete all questions
+        QuestionForumManager questionForumManager = new QuestionForumManager(experimentId);
+        questionForumManager.deleteAllQuestions();
+
+        // delete experiment
         Log.d(TAG, "Deleting experiment" + experimentId);
         return experimentsCollection
                 .document(experimentId)

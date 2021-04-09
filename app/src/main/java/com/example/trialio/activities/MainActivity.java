@@ -376,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
                 experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
+                      
+                        // if the experiment is published and the user is subscribed, add it to the list to display
                         if (experiment != null) {
                             if (experiment.getIsPublished()) {
                                 experimentList.add(experiment);

@@ -444,6 +444,34 @@ public class UserManager {
     }
 
     /**
+     * This removes a given experimentID from the subscribed list of every user in the collection.
+     * @param experimentID String of the candidate experimentID to remove from list of subscribed
+     *                     experiments.
+     */
+    public void removeExperimentFromSubs(String experimentID) {
+        userCollection
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        // for each user in the collection
+                        for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+
+                            // get the list of subscribed experiments
+                            ArrayList<String> subs = (ArrayList<String>) doc.get(SUBBED_EXPERIMENTS_FIELD);
+
+                            // remove experiment from list if it is there
+                            subs.remove(experimentID);
+
+                            // update the new list of subscribed experiments
+                            userCollection.document(doc.getId()).update(SUBBED_EXPERIMENTS_FIELD, subs);
+                        }
+                    }
+                });
+    }
+
+    /**
      * Sets the collection path of all UserManagers. Used for injection during testing.
      * @param newPath String of the new collection path.
      */
