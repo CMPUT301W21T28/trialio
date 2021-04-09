@@ -126,6 +126,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                 if (experiment.getSettings().getGeoLocationRequired()) {
                     Task<android.location.Location> locTask = Location.requestLocation(context);
                     if (locTask == null) {
+                        displayNoLocationToast();
                         return;
                     }
                     locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
@@ -137,15 +138,16 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             QRCodeGenerator.readQR(items, location, currentUser);
                         }
                     });
-                }else{
+                } else {
                     Location location = new Location();
                     QRCodeGenerator.readQR(items, location, currentUser);
                 }
-            // if its a Barcode
+                // if its a Barcode
             } else {
                 if (experiment.getSettings().getGeoLocationRequired()) {
                     Task<android.location.Location> locTask = Location.requestLocation(context);
                     if (locTask == null) {
+                        displayNoLocationToast();
                         return;
                     }
                     locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
@@ -158,7 +160,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
                             barcodeManager.readBarcode(processed, location, currentUser);
                         }
                     });
-                }else {
+                } else {
                     Location location = new Location();
                     barcodeManager = new BarcodeManager(currentUser.getUsername());
                     barcodeManager.readBarcode(processed, location, currentUser);
@@ -167,25 +169,45 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
         } else {
-            // if user try to register a QR Code
-            if (String.valueOf(items.length).equals("3")){
-                //Source:
-                //Toast Overview from Android Documentations
-                //https://developer.android.com/guide/topics/ui/notifiers/toasts
-                Context context = getApplicationContext();
-                CharSequence toastMessage = "Please do not register a QRCode as a barcode.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, toastMessage, duration);
-                toast.show();
-            // register barcode
-            }else{
+            if (String.valueOf(items.length).equals("3")) {
+                // user tried to register a QR Code
+                displayRegisterQRCodeAsBarcodeToast();
+            } else {
+                // register the barcode
                 barcodeManager = new BarcodeManager(currentUser.getUsername());
                 barcodeManager.registerBarcode(text, experiment, result);
             }
         }
 
 
+    }
+
+    /**
+     * Displays error message to the user cannot register a QR Code as a custom barcode
+     */
+    private void displayRegisterQRCodeAsBarcodeToast() {
+        String message = "Please do not register a QR code as a barcode";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays error message to the user that trial could not be added because location services
+     * are not enabled
+     */
+    private void displayNoLocationToast() {
+        String message = "Unable to add trial: Please enable location permissions";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays message to user when trial was added successfully.
+     */
+    private void displaySuccessToast() {
+        String message = "Trial added successfully";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }
 
