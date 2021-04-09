@@ -113,13 +113,12 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     private void processResult(String text) {
         Log.d(TAG, "in ProcessResult");
         Log.d(TAG, String.valueOf(isBarcode));
-
+        String processed = text;
+        String[] items = processed.split("\n");
         // it reads in from which activity is scanning activity called from
         // if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
         // if its not experiment activity it means user is trying to register a barcode
         if (parentActivity.equals("ExperimentActivity")) {
-            String processed = text;
-            String[] items = processed.split("\n");
             Log.d(TAG, String.valueOf(items.length));
             Log.d(TAG, processed);
             // if its a QRCode the length is 3
@@ -168,8 +167,17 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
         } else {
-            barcodeManager = new BarcodeManager(currentUser.getUsername());
-            barcodeManager.registerBarcode(text, experiment, result);
+            if (String.valueOf(items.length).equals("3")){
+                Context context = getApplicationContext();
+                CharSequence toastMessage = "Please do not register a QRCode as a barcode.";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, toastMessage, duration);
+                toast.show();
+            }else{
+                barcodeManager = new BarcodeManager(currentUser.getUsername());
+                barcodeManager.registerBarcode(text, experiment, result);
+            }
         }
 
 
