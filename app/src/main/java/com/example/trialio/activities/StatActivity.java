@@ -296,13 +296,13 @@ public class StatActivity extends AppCompatActivity {
 
                         // display histogram titles
                         String unit = experiment.getUnit();
-                        if(unit.equals("")) {
+                        if(unit == null) {
                             histogramTitle.setText(experiment.getSettings().getDescription() +
                                     " histogram\n" + "X-axis: Measurement\nY-axis: Frequency");
                         } else {
                             histogramTitle.setText(experiment.getSettings().getDescription() +
                                     " histogram\n" + "X-axis: Measurement(" +
-                                    experiment.getUnit() + ")\nY-axis: Frequency");
+                                    unit + ")\nY-axis: Frequency");
                         }
                 }
 
