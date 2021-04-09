@@ -130,8 +130,10 @@ public class QRCountActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
+                    Boolean isBarcode = false;
                     QRFragment qrFragment = new QRFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putBoolean("isBarcode", isBarcode);
                     bundle.putSerializable("experiment",experiment);
                     bundle.putString("result", String.valueOf(1));
                     qrFragment.setArguments(bundle);
