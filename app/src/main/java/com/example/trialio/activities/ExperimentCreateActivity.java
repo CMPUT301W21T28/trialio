@@ -4,6 +4,9 @@ package com.example.trialio.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.trialio.controllers.CurrentUserHandler;
 import com.example.trialio.controllers.ExperimentManager;
@@ -34,6 +38,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -198,6 +204,16 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
+    private BitmapDescriptor iconFromDrawable(Context context, int imgID) {
+        Drawable icon = ContextCompat.getDrawable(context, imgID);
+        icon.setBounds(0, 0, 100, 100);
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        icon.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         regionMap = googleMap;
@@ -215,7 +231,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             @Override
             public void onMapClick(LatLng latLng) {
                 regionMap.clear();
-                regionMap.addMarker(new MarkerOptions().position(latLng));
+                regionMap.addMarker(new MarkerOptions().position(latLng).icon(iconFromDrawable(context, R.drawable.conical_flask_empty)));
                 regionLocation.setLatitude(latLng.latitude);
                 regionLocation.setLongitude(latLng.longitude);
 

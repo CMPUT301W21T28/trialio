@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ExperimentManager {
     private static final String TAG = "ExperimentManager";
-    private static String COLLECTION_PATH = "experiments-v6";
+    private static String COLLECTION_PATH = "experiments";
 
     private static final String E_EXPERIMENTID_FIELD = "experimentID";
     private static final String E_KEYWORDS_FIELD = "keywords";
