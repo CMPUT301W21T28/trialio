@@ -46,8 +46,8 @@ public class CreateNonNegativeTrialCommand extends CreateTrialCommand {
             });
         } else {
             // Failed to get Location
-            // TODO: do not upload trial, send message to UI
-            createTrialWithoutLocation(user);
+            // Signal that trial could not be created
+            listener.onResult(null);
         }
     }
 

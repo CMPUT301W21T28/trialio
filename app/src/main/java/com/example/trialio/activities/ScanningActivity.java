@@ -30,6 +30,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.Arrays;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 
@@ -46,7 +48,7 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
     private String parentActivity;
     private Context context = this;
 
-    private final String TAG = "scanningactivity";
+    private final String TAG = "ScanningActivity";
 
 
     /**
@@ -111,81 +113,146 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
      * @param text
      */
     private void processResult(String text) {
-        Log.d(TAG, "in ProcessResult");
-        Log.d(TAG, String.valueOf(isBarcode));
-        String processed = text;
-        String[] items = processed.split("\n");
-        // it reads in from which activity is scanning activity called from
-        // if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
-        // if its not experiment activity it means user is trying to register a barcode
-        if (parentActivity.equals("ExperimentActivity")) {
-            Log.d(TAG, String.valueOf(items.length));
-            Log.d(TAG, processed);
-            // if its a QRCode the length is 3
-            if (String.valueOf(items.length).equals("3")) {
-                if (experiment.getSettings().getGeoLocationRequired()) {
-                    Task<android.location.Location> locTask = Location.requestLocation(context);
-                    if (locTask == null) {
-                        return;
-                    }
-                    locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                        @Override
-                        public void onSuccess(android.location.Location loc) {
-                            Location location = new Location();
-                            location.setLatitude(loc.getLatitude());
-                            location.setLongitude(loc.getLongitude());
-                            QRCodeGenerator.readQR(items, location, currentUser);
+        Log.d(TAG, "Process scanned result: isBarcode = " + isBarcode.toString());
+        String[] items = text.split("\n");
+        Log.d(TAG, "Raw Input: " + Arrays.toString(items));
+        /*
+         * reads in from which activity is scanning activity called from
+         * if ExperimentActivity is calling Scanning activity, it means user wants to scan a QR or a barcode
+         * if its not experiment activity it means user is trying to register a barcode
+         */
+        boolean isQR = String.valueOf(items.length).equals("3"); // otherwise it's barcode
+        boolean isAddTrial = parentActivity.equals("ExperimentActivity"); // otherwise it's register (barcode)
+
+        if (isAddTrial) {
+            // user wants to scan code to record trial
+            if (isQR) {
+                // user is scanning a QR code to add trial
+                Log.d(TAG, "QR Code identified");
+                QRCodeGenerator.readQR(getApplicationContext(), items, new QRCodeGenerator.OnReadResultListener() {
+                    @Override
+                    public void onReadResult(QRCodeGenerator.Result result) {
+                        switch (result) {
+                            case SUCCESS:
+                                displaySuccessToast();
+                                break;
+
+                            case EXPERIMENT_CLOSED:
+                                displayExperimentClosedToast();
+                                break;
+
+                            case LOCATION_DENIED:
+                                displayNoLocationToast();
+                                break;
+
+                            case INVALID_EXPERIMENT:
+                                displayInvalidExperimentToast();
+                                break;
                         }
-                    });
-                }else{
-                    Location location = new Location();
-                    QRCodeGenerator.readQR(items, location, currentUser);
-                }
-            // if its a Barcode
+                    }
+                });
+
             } else {
-                if (experiment.getSettings().getGeoLocationRequired()) {
-                    Task<android.location.Location> locTask = Location.requestLocation(context);
-                    if (locTask == null) {
-                        return;
-                    }
-                    locTask.addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                        @Override
-                        public void onSuccess(android.location.Location loc) {
-                            Location location = new Location();
-                            location.setLatitude(loc.getLatitude());
-                            location.setLongitude(loc.getLongitude());
-                            barcodeManager = new BarcodeManager(currentUser.getUsername());
-                            barcodeManager.readBarcode(processed, location, currentUser);
+                // user is scanning a barcode to add trial
+                Log.d(TAG, "Barcode identified");
+                barcodeManager = new BarcodeManager(currentUser.getUsername());
+                barcodeManager.readBarcode(getApplicationContext(), text, new BarcodeManager.OnReadResultListener() {
+                    @Override
+                    public void onReadResult(BarcodeManager.Result result) {
+                        switch (result) {
+                            case SUCCESS:
+                                displaySuccessToast();
+                                break;
+
+                            case EXPERIMENT_CLOSED:
+                                displayExperimentClosedToast();
+                                break;
+
+                            case LOCATION_DENIED:
+                                displayNoLocationToast();
+                                break;
+
+                            case INVALID_EXPERIMENT:
+                                displayInvalidExperimentToast();
+                                break;
+
+                            case UNREGISTERED_BARCODE:
+                                displayUnRegBarcodeToast();
+                                break;
                         }
-                    });
-                }else {
-                    Location location = new Location();
-                    barcodeManager = new BarcodeManager(currentUser.getUsername());
-                    barcodeManager.readBarcode(processed, location, currentUser);
-                }
+                    }
+                });
             }
+        } else {
             // if intent is not coming from Experiment Activity i.e. QRActivity
             // this is used for registering new barcode
-        } else {
-            // if user try to register a QR Code
-            if (String.valueOf(items.length).equals("3")){
-                //Source:
-                //Toast Overview from Android Documentations
-                //https://developer.android.com/guide/topics/ui/notifiers/toasts
-                Context context = getApplicationContext();
-                CharSequence toastMessage = "Please do not register a QRCode as a barcode.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, toastMessage, duration);
-                toast.show();
-            // register barcode
-            }else{
+            if (isQR) {
+                // user tried to register a QR Code
+                displayRegisterQRCodeAsBarcodeToast();
+            } else {
+                // register the barcode
                 barcodeManager = new BarcodeManager(currentUser.getUsername());
                 barcodeManager.registerBarcode(text, experiment, result);
             }
         }
 
 
+    }
+
+    /**
+     * Displays error message to the user cannot register a QR Code as a custom barcode
+     */
+    private void displayRegisterQRCodeAsBarcodeToast() {
+        String message = "Please do not register a QR code as a barcode";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays error message to the user that trial could not be added because location services
+     * are not enabled
+     */
+    private void displayNoLocationToast() {
+        String message = "Unable to add trial: Please enable location permissions";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays error message to the user that trial could not be added because location services
+     * are not enabled
+     */
+    private void displayExperimentClosedToast() {
+        String message = "Unable to add trial: This experiment is closed to new trials";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays message to user when trial was added successfully.
+     */
+    private void displaySuccessToast() {
+        String message = "Trial added successfully";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays message when invalid experiment was provided and no trial could be added
+     */
+    private void displayInvalidExperimentToast() {
+        String message = "Unable to add trial: This experiment does not exist";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Displays a message when the user scans an unregistered barcode
+     */
+    private void displayUnRegBarcodeToast() {
+        String message = "Unable to add trial: This barcode has not been registered";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }
 
