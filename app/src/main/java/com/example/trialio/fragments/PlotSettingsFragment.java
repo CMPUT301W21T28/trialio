@@ -50,9 +50,17 @@ public class PlotSettingsFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.number_of_sections);
-                        int sections = Integer.parseInt(tv.getText().toString());
-                        StatActivity.numData = sections;
-                        Toast.makeText(StatActivity.context, "Please refresh page to see changes", Toast.LENGTH_LONG).show();
+                        try {
+                            int sections = Integer.parseInt(tv.getText().toString());
+                            if(sections < 50) {
+                                StatActivity.numData = sections;
+                                Toast.makeText(getActivity(), "Please refresh page to see changes", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Number must be less than 50", Toast.LENGTH_LONG).show();
+                            }
+                        } catch(Exception e) {
+                            Toast.makeText(getActivity(), "Number must be less than 50", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }).create();
     }
