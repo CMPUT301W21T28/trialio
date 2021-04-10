@@ -122,7 +122,8 @@ public class ScanningActivity extends AppCompatActivity implements ZXingScannerV
          * if its not experiment activity it means user is trying to register a barcode
          */
         boolean isQR = String.valueOf(items.length).equals("3"); // otherwise it's barcode
-        boolean isAddTrial = parentActivity.equals("ExperimentActivity"); // otherwise it's register (barcode)
+        boolean isAddTrial = parentActivity.equals("ExperimentActivity")
+                || parentActivity.equals("MainActivity"); // otherwise it's register (barcode)
 
         if (isAddTrial) {
             // user wants to scan code to record trial

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private User currentUser;
 
     private enum listMode {ALL, OWNED, SUBS}  // enum used to specify which experiment list to show
+
     private listMode mode;  // specify which list to show at a given time
 
     @Override
@@ -191,6 +192,30 @@ public class MainActivity extends AppCompatActivity {
                             currentUser = user;
                             Intent intent = new Intent(context, ViewUserActivity.class);
                             intent.putExtra("user", currentUser);
+                            startActivity(intent);
+                        } else {
+                            Log.e(TAG, "Failed to fetch user");
+                        }
+                    }
+                });
+            }
+        });
+
+        // Called when the user taps the camera icon on the top right of main activity
+        ImageButton cameraButton = (ImageButton) findViewById(R.id.scanCodeBtn);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // get the current user and go to scanning activity
+                CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+                    @Override
+                    public void onUserFetch(User user) {
+                        if (user != null) {
+                            Intent intent = new Intent(context, ScanningActivity.class);
+                            Bundle args = new Bundle();
+                            args.putSerializable("user_scan", currentUser);
+                            intent.putExtra("Parent", "MainActivity");
+                            intent.putExtras(args);
                             startActivity(intent);
                         } else {
                             Log.e(TAG, "Failed to fetch user");
@@ -335,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                     experimentList.addAll(experiments);
                     experimentAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e(TAG,  "Failed to load experiments");
+                    Log.e(TAG, "Failed to load experiments");
                 }
             }
         });
@@ -376,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
                 experimentManager.setOnExperimentFetchListener(id, new ExperimentManager.OnExperimentFetchListener() {
                     @Override
                     public void onExperimentFetch(Experiment experiment) {
-                      
+
                         // if the experiment is published and the user is subscribed, add it to the list to display
                         if (experiment != null) {
                             if (experiment.getIsPublished()) {
