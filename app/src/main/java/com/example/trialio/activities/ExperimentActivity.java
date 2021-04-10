@@ -36,6 +36,7 @@ import com.example.trialio.controllers.ViewUserProfileCommand;
 import com.example.trialio.fragments.BinomialTrialFragment;
 import com.example.trialio.fragments.CountTrialFragment;
 import com.example.trialio.fragments.MeasurementTrialFragment;
+import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.User;
 import com.example.trialio.utils.ExperimentTypeUtility;
 import com.example.trialio.fragments.NonNegativeTrialFragment;
