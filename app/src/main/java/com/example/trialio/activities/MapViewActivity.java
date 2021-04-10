@@ -27,6 +27,8 @@ Video uploader: Gadgets and Technical field Android Tech
 Uploader's channel: https://www.youtube.com/channel/UCBXE_skWN_eFn0eat7658rA
  */
 
+
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
