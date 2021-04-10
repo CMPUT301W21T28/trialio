@@ -138,7 +138,8 @@ public class ExperimentManagerTest {
                     ExperimentTypeUtility.getCountType(),
                     true,
                     1,
-                    true
+                    true,
+                    "km"
             );
             experimentManager.publishExperiment(experiment);
         }
@@ -175,7 +176,8 @@ public class ExperimentManagerTest {
                 ExperimentTypeUtility.getBinomialType(),
                 true,
                 1,
-                true
+                true,
+                "cm"
         );
     }
 
@@ -200,7 +202,8 @@ public class ExperimentManagerTest {
                 ExperimentTypeUtility.getMeasurementType(),
                 false,
                 1,
-                true
+                true,
+                "nm"
         );
     }
 
@@ -225,7 +228,8 @@ public class ExperimentManagerTest {
                 type,
                 true,
                 1,
-                true
+                true,
+                "m"
         );
 
         // Publish experiment
