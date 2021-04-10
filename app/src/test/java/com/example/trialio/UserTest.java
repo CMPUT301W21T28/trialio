@@ -26,13 +26,13 @@ public class UserTest {
     Experiment mockExperiment1() {
         String type = ExperimentTypeUtility.getBinomialType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp1", settings, type, true, 10, true);
+        return new Experiment("exp1", settings, type, true, 10, true, "kg");
     }
 
     Experiment mockExperiment2() {
         String type = ExperimentTypeUtility.getCountType();
         ExperimentSettings settings = new ExperimentSettings();
-        return new Experiment("exp2", settings, type, true, 12, true);
+        return new Experiment("exp2", settings, type, true, 12, true, "km");
     }
 
     /**
