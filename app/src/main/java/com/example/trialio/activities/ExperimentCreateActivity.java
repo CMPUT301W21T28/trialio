@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -68,6 +69,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
     private Location regionLocation;
     private String regionName;
     private UiSettings uiSettings;
+    private String unit;
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
@@ -90,6 +92,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         mapFragment.getMapAsync(this);
 
         Spinner selectType = (Spinner) findViewById(R.id.typeDropdown);
+        LinearLayout unitLayout = (LinearLayout) findViewById(R.id.unitLayout);
 
         // Adapted from class/division code.
         // DATE:	2021-03-18
@@ -100,6 +103,11 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedType = parent.getItemAtPosition(position).toString();
+                if(selectedType.equals("MEASUREMENT")) {
+                    unitLayout.setVisibility(View.VISIBLE);
+                } else {
+                    unitLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -116,6 +124,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 Intent intent = new Intent(context, ExperimentActivity.class);
 
                 EditText editDescription = (EditText) findViewById(R.id.descriptionEditText);
+                EditText editUnit = (EditText) findViewById(R.id.unitEditText);
                 EditText editRegion = (EditText) findViewById(R.id.regionEditText);
                 EditText editNumTrials = (EditText) findViewById(R.id.numTrialsEditText);
 
@@ -155,12 +164,18 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 // prepare published
                 boolean published = publishedSwitch.isChecked();
 
+                // prepare unit, if experiment is of type measurement
+                unit = "";
+                if(selectedType.equals("MEASUREMENT")) {
+                    unit = editUnit.getText().toString();
+                }
+
                 // prepare minimum number of trials
                 String int_popup = "Please enter a positive integer for minimum number of trials";
                 try {
                     int numTrials = Integer.parseInt(editNumTrials.getText().toString());
 
-                    if (numTrials < 1) {
+                    if (numTrials < 0) {
                         Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
                     } else {
                         // get owner id
@@ -172,7 +187,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                                 ExperimentSettings settings = new ExperimentSettings(description, region, user.getId(), geo);
 
                                 // create Experiment object
-                                experiment = new Experiment(newID, settings, type, open, numTrials, published);
+                                experiment = new Experiment(newID, settings, type, open, numTrials, published, unit);
                                 experimentManager.publishExperiment(experiment);
 
                                 Bundle args = new Bundle();

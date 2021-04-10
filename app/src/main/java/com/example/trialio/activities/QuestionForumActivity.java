@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -118,12 +119,20 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
      * Sets the fields of the TextViews of the activity
      */
     private void setFields() {
+
+        // set the descriptions
+        TextView descriptionView = findViewById(R.id.experiment_description);
+        descriptionView.setText(experiment.getSettings().getDescription());
+
+        // set the type
         TextView experimentTypeView = findViewById(R.id.experiment_text_type);
         experimentTypeView.setText(experiment.getTrialManager().getType());
 
+        // set the status
         TextView statusView = findViewById(R.id.experiment_text_status);
         statusView.setText(experiment.getTrialManager().getIsOpen() ? R.string.experiment_status_open : R.string.experiment_status_closed);
 
+        // set the owner username
         TextView ownerView = findViewById(R.id.experiment_text_owner);
         UserManager userManager = new UserManager();
         userManager.getUserById(experiment.getSettings().getOwnerID(), new UserManager.OnUserFetchListener() {
@@ -133,6 +142,13 @@ public class QuestionForumActivity extends AppCompatActivity implements AddQuest
             }
         });
 
+        // set geolocation requirement indicator
+        ImageView experimentLocationImageView = findViewById(R.id.experiment_location);
+        if (experiment.getSettings().getGeoLocationRequired()) {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
+        } else {
+            experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_off_24);
+        }
     }
 
     /**

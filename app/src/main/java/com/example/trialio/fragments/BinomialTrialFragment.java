@@ -15,15 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.CreateBinomialTrialCommand;
-import com.example.trialio.controllers.CurrentUserHandler;
-import com.example.trialio.models.BinomialTrial;
-import com.example.trialio.models.Location;
 import com.example.trialio.models.Trial;
-import com.example.trialio.models.User;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.Date;
 
 /**
  * This fragment collects data from a user to upload a binomial type trial

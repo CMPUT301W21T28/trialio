@@ -6,19 +6,28 @@ package com.example.trialio.activities;
 // SOURCE: 	MPAndroidChart Github repository [https://github.com/PhilJay/MPAndroidChart]
 // AUTHOR: 	Philipp Jahoda
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trialio.R;
 import com.example.trialio.controllers.TrialManager;
 import com.example.trialio.controllers.UserManager;
 import com.example.trialio.controllers.ViewUserProfileCommand;
+import com.example.trialio.fragments.PlotSettingsFragment;
 import com.example.trialio.models.BinomialTrial;
 import com.example.trialio.models.CountTrial;
 import com.example.trialio.models.Experiment;
@@ -49,11 +58,12 @@ import java.util.Date;
  */
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
-    private Context context;
+    public static Context context;
 
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;
     private ArrayList<Trial> trialList;
+    public static int numData = 12; // for histograms and time plots
 
     /**
      * the On create the takes in the saved instance from the experiment activity
@@ -97,10 +107,6 @@ public class StatActivity extends AppCompatActivity {
         }
 
         // SET VIEWS
-        // TODO: Split me into nice functions when testing
-
-        // TODO: maybe make some adjustments here
-
         TextView textDescription = findViewById(R.id.experiment_description);
         TextView textType = findViewById(R.id.experiment_text_type);
         TextView textOwner = findViewById(R.id.experiment_text_owner);
@@ -132,7 +138,14 @@ public class StatActivity extends AppCompatActivity {
             experimentLocationImageView.setImageResource(R.drawable.ic_baseline_location_on_24);
         }
 
-        // TODO: make me into a function
+        // TODO: only owner can view
+        // set the addTrial button to invisible by default
+        //addTrial.setVisibility(View.INVISIBLE);
+
+        // if the experiment is open, set the addTrial button as visible
+        //if (experiment.getTrialManager().getIsOpen()) {
+        //addTrial.setVisibility(View.VISIBLE);
+        //}
 
         ImageButton previous = findViewById(R.id.btnPreviousGraph);
         previous.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +182,14 @@ public class StatActivity extends AppCompatActivity {
                     timePlot.setVisibility(View.GONE);
                     histogram.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        ImageButton plotSettings = findViewById(R.id.btnPlotSettings);
+        plotSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new PlotSettingsFragment().show(getSupportFragmentManager(), "FORMAT_PLOT");
             }
         });
 
@@ -274,8 +295,15 @@ public class StatActivity extends AppCompatActivity {
                         setupHistogram(measurements, histogramEntries, xTitles);
 
                         // display histogram titles
-                        histogramTitle.setText(experiment.getSettings().getDescription() + " histogram\n" +
-                                "X-axis: Measurement\nY-axis: Frequency");
+                        String unit = experiment.getUnit();
+                        if(unit == null || "".equals(unit)) {
+                            histogramTitle.setText(experiment.getSettings().getDescription() +
+                                    " histogram\n" + "X-axis: Measurement\nY-axis: Frequency");
+                        } else {
+                            histogramTitle.setText(experiment.getSettings().getDescription() +
+                                    " histogram\n" + "X-axis: Measurement (" +
+                                    unit + ")\nY-axis: Frequency");
+                        }
                 }
 
                 // display the histogram and set certain settings
@@ -287,6 +315,7 @@ public class StatActivity extends AppCompatActivity {
                 histogram.setDescription(null);
                 histogram.getAxisLeft().setAxisMinValue(0);
                 histogram.getAxisRight().setAxisMinValue(0);
+                histogram.invalidate();
             }
         });
     }
@@ -300,8 +329,7 @@ public class StatActivity extends AppCompatActivity {
      */
     public void setupHistogram(ArrayList<Double> results, ArrayList<BarEntry> histogramEntries, ArrayList<String> xTitles) {
         // important values that app administrator may want to change
-        // TODO: an extra thing would be to allow the experiment owner to set numSections? That would be cool
-        int numSections = 12; // the desired number of vertical bars in the histogram
+        int numSections = numData; // the desired number of vertical bars in the histogram
         double maxBuffer = 1.10; // extra space to the right of maximum result, histogram edge = max * maxBuffer
 
         // sort the trial results from min to max
@@ -379,8 +407,7 @@ public class StatActivity extends AppCompatActivity {
                 Collections.sort(dates);
 
                 // important values that app administrator may want to change
-                // TODO: an extra thing would be to allow the experiment owner to set numPoints and max? That would be cool
-                int numPoints = 12; // the desired number of points in the time plot
+                int numPoints = numData; // the desired number of points in the time plot
                 long max = new Date().getTime();
 
                 // the following line can also be used for max, to see time plot up until the most recent data point
@@ -431,8 +458,15 @@ public class StatActivity extends AppCompatActivity {
                         pointHeight = setupMeasurementTimePlot(trials, cutoffs, numPoints);
 
                         // display time plot titles
-                        timePlotTitle.setText(experiment.getSettings().getDescription() +
-                                " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
+                        String unit = experiment.getUnit();
+                        if(unit == null || "".equals(unit)) {
+                            timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                    " average measurement over time\nX-axis: Time\nY-axis: Mean measurement");
+                        } else {
+                            timePlotTitle.setText(experiment.getSettings().getDescription() +
+                                    " average measurement over time\nX-axis: Time\n" +
+                                    "Y-axis: Mean measurement (" + unit + ")");
+                        }
                 }
 
                 // add the calculated heights into the time plot
@@ -453,6 +487,7 @@ public class StatActivity extends AppCompatActivity {
                 timePlot.setDragEnabled(true);
                 timePlot.setScaleEnabled(true);
                 timePlot.setDescription(null);
+                timePlot.invalidate();
             }
         });
     }

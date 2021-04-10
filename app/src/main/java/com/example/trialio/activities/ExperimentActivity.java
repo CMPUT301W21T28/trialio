@@ -100,7 +100,14 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
         // get the experiment that was passed in as an argument
         Bundle bundle = getIntent().getExtras();
         experiment = (Experiment) bundle.getSerializable("experiment");
-        currentUser = (User) bundle.getSerializable("user_exp");
+
+        // get the current user
+        CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
+            @Override
+            public void onUserFetch(User user) {
+                currentUser = user;
+            }
+        });
 
         // create managers important to this activity
         experimentManager = new ExperimentManager();
@@ -408,6 +415,7 @@ public class ExperimentActivity extends AppCompatActivity implements NonNegative
                     MeasurementTrialFragment newTrial = new MeasurementTrialFragment();
                     Bundle args = new Bundle();
                     args.putBoolean("GeoLocationRequired", experiment.getSettings().getGeoLocationRequired());
+                    args.putSerializable("experiment", experiment);
                     newTrial.setArguments(args);
                     newTrial.show(getSupportFragmentManager(), "addMeasurementTrial");
                 } else {

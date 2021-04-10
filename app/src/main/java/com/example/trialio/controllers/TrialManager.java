@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class TrialManager implements Serializable {
     private final String TAG = "TrialManager";
-    private static String EXPERIMENT_COLLECTION_PATH = "experiments";
+    private static String EXPERIMENT_COLLECTION_PATH = "experimentsUNIT";
     private static final String TRIALS_COLLECTION_PATH = "trials";
 
     private static final String EXPERIMENTERID_FIELD = "experimenterID";
