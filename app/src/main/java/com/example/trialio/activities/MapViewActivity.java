@@ -109,18 +109,15 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         userManager = new UserManager();
         trialList = new ArrayList<>();
 
-        //get a list of all trials in this experiment
-        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
-            @Override
-            public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
-                trialList.addAll(newTrialList);
-                TextView textTotalTrials = findViewById(R.id.numTrials);
-                textTotalTrials.setText("Total: " + "\n" + trialList.size());
-            }
-        });
+
+
 
         // set on click listeners
         setOnClickListeners();
+    }
+
+    public void setTrialList(ArrayList<Trial> trialList) {
+        this.trialList = trialList;
     }
 
     /**
@@ -148,7 +145,9 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onStart() {
         super.onStart();
 
+        //get a list of all trials in this experiment
         setFields();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.trialsMap);
         mapFragment.getMapAsync(this);
     }
@@ -239,12 +238,25 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         trialsMap.addMarker(new MarkerOptions().position(new LatLng(experimentRegion.getLatitude(), experimentRegion.getLongitude()))
                 .title("Region: " + experiment.getSettings().getRegion().getRegionText()).icon(iconFromDrawable(context, R.drawable.conical_flask_empty)));
 
-        if (!trialList.isEmpty()) {
-            for (int i=0; i < trialList.size(); i++) {
-                trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude()))
-                        .title(getTrialResult(trialList.get(i))));
+        //get a list of all trials in this experiment
+        experiment.getTrialManager().setAllVisibleTrialsFetchListener(new TrialManager.OnAllVisibleTrialsFetchListener() {
+            @Override
+            public void onAllVisibleTrialsFetch(ArrayList<Trial> newTrialList) {
+                setTrialList(newTrialList);
+                Log.d(TAG, "Trials list size: " + trialList.size());
+                TextView textTotalTrials = findViewById(R.id.numTrials);
+                textTotalTrials.setText("Total: " + "\n" + trialList.size());
+                if (!trialList.isEmpty()) {
+                    for (int i=0; i < trialList.size(); i++) {
+                        trialsMap.addMarker(new MarkerOptions().position(new LatLng(trialList.get(i).getLocation().getLatitude(), trialList.get(i).getLocation().getLongitude()))
+                                .title(getTrialResult(trialList.get(i))));
+                    }
+                    trialsMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(trialList.get(0).getLocation().getLatitude(), trialList.get(0).getLocation().getLongitude())));
+                }
             }
-            trialsMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(trialList.get(0).getLocation().getLatitude(), trialList.get(0).getLocation().getLongitude())));
-        }
+        });
+
+
+
     }
 }
