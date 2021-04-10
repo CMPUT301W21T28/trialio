@@ -12,8 +12,10 @@ import com.example.trialio.models.MeasurementTrial;
 import com.example.trialio.models.NonNegativeTrial;
 import com.example.trialio.models.Trial;
 import com.example.trialio.utils.ExperimentTypeUtility;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -193,30 +195,35 @@ public class TrialManager implements Serializable {
     public void setAllVisibleTrialsFetchListener(TrialManager.OnAllVisibleTrialsFetchListener listener) {
         CollectionReference trialCollection = FirebaseFirestore.getInstance().collection(EXPERIMENT_COLLECTION_PATH).document(experimentID).collection(TRIALS_COLLECTION_PATH);
 
-        trialCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        trialCollection
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                // initialize a list of trials
-                ArrayList<Trial> trialList = new ArrayList<Trial>();
+                        // get the documents
+                        ArrayList<DocumentSnapshot> docs = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
 
-                // extract all trial documents in  the collection
-                for (DocumentSnapshot doc : value.getDocuments()) {
-                    try {
-                        Trial trial = extractTrial(doc);
-                        if (!ignoredUserIDs.contains(trial.getExperimenterID())) {
-                            trialList.add(trial);
+                        // initialize a list of trials
+                        ArrayList<Trial> trialList = new ArrayList<Trial>();
+
+                        // extract all trial documents in  the collection
+                        for (DocumentSnapshot doc : docs) {
+                            try {
+                                Trial trial = extractTrial(doc);
+                                if (!ignoredUserIDs.contains(trial.getExperimenterID())) {
+                                    trialList.add(trial);
+                                }
+                                Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
+                            } catch (Exception e) {
+                                Log.d(TAG, "Error fetching " + doc.getId() + ".");
+                            }
                         }
-                        Log.d(TAG, "Trial " + doc.getId() + " fetched successfully.");
-                    } catch (Exception e) {
-                        Log.d(TAG, "Error fetching " + doc.getId() + ".");
-                    }
-                }
 
-                // pass the trialList to the listener
-                listener.onAllVisibleTrialsFetch(trialList);
-            }
-        });
+                        // pass the trialList to the listener
+                        listener.onAllVisibleTrialsFetch(trialList);
+                    }
+                });
     }
 
     /**
