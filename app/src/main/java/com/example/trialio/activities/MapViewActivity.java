@@ -67,6 +67,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * This activity is used to view the locations of trials uploaded for an experiment on a map. This
+ * activity is only enabled for experiments that have location enabled. A conical flask is used to
+ * show the region og an experiment.
+ *
+ *  This activity navigates to:
+ *  * <ul>
+ *  *  <li>ExperimentActivity</li>
+ *  * </ul>
+ */
+
 
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback{
     private static final String TAG = "Map view activity";
@@ -142,6 +153,9 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * This sets the text views on the activity to their appropriate values
+     */
     public void setFields() {
 
         // get the fields
@@ -170,6 +184,13 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
+    /**
+     * This function generates and returns a bitmap descriptor for use as a map marker
+     * @param context The context of the activity
+     * @param imgID A string resource indicating the location of an image file
+     * @return A BitmapDescriptor object is returned, based on the Image given as a parameter
+     */
+
     private BitmapDescriptor iconFromDrawable(Context context, int imgID) {
         Drawable icon = ContextCompat.getDrawable(context, imgID);
         icon.setBounds(0, 0, 100, 100);
@@ -179,6 +200,13 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+    /**
+     * This function returns a string with the word "Result" and the result of a trial, for use as
+     * a title for a map marker.
+     * @param trial A trial from the experiment this map view is based off
+     * @return String
+     */
 
     private String getTrialResult(Trial trial) {
         if (ExperimentTypeUtility.isBinomial(experimentType)) {
@@ -192,6 +220,12 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         }
         return "null";
     }
+
+    /**
+     * This function sets up and displays the map, complete with all the trials uploaded for an
+     * experiment as well as the experiment region
+     * @param googleMap
+     */
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

@@ -219,6 +219,12 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
         HomeButtonUtility.setHomeButtonListener(findViewById(R.id.button_home));
     }
 
+    /**
+     * This function generates and returns a bitmap descriptor for use as a map marker
+     * @param context The context of the activity
+     * @param imgID A string resource indicating the location of an image file
+     * @return A BitmapDescriptor object is returned, based on the Image given as a parameter
+     */
     private BitmapDescriptor iconFromDrawable(Context context, int imgID) {
         Drawable icon = ContextCompat.getDrawable(context, imgID);
         icon.setBounds(0, 0, 100, 100);
@@ -228,6 +234,13 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
 
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+    /**
+     * This function sets up and displays the map, a user can click on the map to select a region for
+     * the experiment. A Geocoder is used to return the name of the region, but a user may change
+     * the returned name if they wish to.
+     * @param googleMap
+     */
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
