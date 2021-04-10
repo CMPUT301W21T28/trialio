@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.activities.StatActivity;
 import com.example.trialio.controllers.CreateMeasurementTrialCommand;
 import com.example.trialio.models.Experiment;
 import com.example.trialio.models.Trial;
@@ -50,14 +52,18 @@ public class MeasurementTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_measurement);
-                        Double measurement = Double.parseDouble(tv.getText().toString());
-                        CreateMeasurementTrialCommand command = new CreateMeasurementTrialCommand(
-                                getContext(),
-                                geoLocationReq,
-                                measurement,
-                                experiment.getUnit(),
-                                trial -> listener.onOkPressed(trial));
-                        command.execute();
+                        try {
+                            Double measurement = Double.parseDouble(tv.getText().toString());
+                            CreateMeasurementTrialCommand command = new CreateMeasurementTrialCommand(
+                                    getContext(),
+                                    geoLocationReq,
+                                    measurement,
+                                    experiment.getUnit(),
+                                    trial -> listener.onOkPressed(trial));
+                            command.execute();
+                        } catch(Exception e) {
+                            Toast.makeText(getActivity(), "Measurement must be less than " + Double.MAX_VALUE, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }).create();
     }

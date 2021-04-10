@@ -120,7 +120,6 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
 
             @Override
             public void onClick(View v) {
-                // TODO: testing that this actually works
                 Intent intent = new Intent(context, ExperimentActivity.class);
 
                 EditText editDescription = (EditText) findViewById(R.id.descriptionEditText);
@@ -171,12 +170,11 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                 }
 
                 // prepare minimum number of trials
-                String int_popup = "Please enter a positive integer for minimum number of trials";
                 try {
                     int numTrials = Integer.parseInt(editNumTrials.getText().toString());
 
                     if (numTrials < 0) {
-                        Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Please enter a positive integer for minimum number of trials", Toast.LENGTH_LONG).show();
                     } else {
                         // get owner id
                         CurrentUserHandler.getInstance().getCurrentUser(new CurrentUserHandler.OnUserFetchCallback() {
@@ -202,7 +200,7 @@ public class ExperimentCreateActivity extends AppCompatActivity implements OnMap
                         });
                     }
                 } catch (Exception e) {
-                    Toast.makeText(context, int_popup, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Minimum number of trials must be less than 2,147,483,648", Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -58,7 +58,7 @@ import java.util.Date;
  */
 public class StatActivity extends AppCompatActivity {
     private final String TAG = "StatActivity";
-    public static Context context;
+    private Context context;
 
     private Experiment experiment;
     private StatisticsUtility statisticsUtility;

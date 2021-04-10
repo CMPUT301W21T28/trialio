@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.trialio.R;
+import com.example.trialio.controllers.CreateMeasurementTrialCommand;
 import com.example.trialio.controllers.CreateNonNegativeTrialCommand;
 import com.example.trialio.models.Trial;
 
@@ -39,13 +41,18 @@ public class NonNegativeTrialFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         TextView tv = view.findViewById(R.id.edit_nonNegativeCount);
-                        int nonNegCount = Integer.parseInt(tv.getText().toString());
-                        CreateNonNegativeTrialCommand command = new CreateNonNegativeTrialCommand(
-                                getContext(),
-                                geoLocationReq,
-                                nonNegCount,
-                                trial -> listener.onOkPressed(trial));
-                        command.execute();
+
+                        try {
+                            int nonNegCount = Integer.parseInt(tv.getText().toString());
+                            CreateNonNegativeTrialCommand command = new CreateNonNegativeTrialCommand(
+                                    getContext(),
+                                    geoLocationReq,
+                                    nonNegCount,
+                                    trial -> listener.onOkPressed(trial));
+                            command.execute();
+                        } catch(Exception e) {
+                            Toast.makeText(getActivity(), "Integer must be less than 2,147,483,648", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }).create();
     }
