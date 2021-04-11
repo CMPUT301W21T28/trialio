@@ -1,21 +1,21 @@
 What we need before demo:
 •	Populated with many experiments (enough to scroll)
-o	Ideally of a variety of types, owners, open/closed, and geo-location enabled/disabled
-o	Awesome if 2-3 experiments contain a predetermined keyword, that is used to demonstrate search functionality in demo
+    o	Ideally of a variety of types, owners, open/closed, and geo-location enabled/disabled
+    o	Awesome if 2-3 experiments contain a predetermined keyword, that is used to demonstrate search functionality in demo
 •	1 specially prepared (non-negative?) experiment, experiment must:
-	Be owned by a user different than the user demoing
-	Have geo-location enabled to demonstrate map functionality and geo-location warning
-	Have 20+ trials with results and times that create interesting and informative histogram / time plot, and locations that are cool when shown on a map
-	Have a Q&A that already contains some questions and replies
-	Be either measurement or non-negative so histogram is more interesting. Probably non-negative since measurement experiment will be created?
+    o	Be owned by a user different than the user demoing
+    o	Have geo-location enabled to demonstrate map functionality and geo-location warning
+    o	Have 20+ trials with results and times that create interesting and informative histogram / time plot, and locations that are cool when shown on a map
+    o	Have a Q&A that already contains some questions and replies
+    o	Be either measurement or non-negative so histogram is more interesting. Probably non-negative since measurement experiment will be created?
 
 Demo step-by-step
 1.	Create an experiment (geo-location disabled, measurement, open, published)
-a.	Measurement trial to show that unit field pops up and later displays the unit
-b.	Open and published to start off
+    a.	Measurement trial to show that unit field pops up and later displays the unit
+    b.	Open and published to start off
 2.	Add 2 trials to the experiment
 3.	Click on trials button to view the trials, then return to experiment
-a.	The benefit of this is it hides the fact that the trials do not show up in the summary stats until user navigates back to experiment page
+    a.	The benefit of this is it hides the fact that the trials do not show up in the summary stats until user navigates back to experiment page
 4.	Click on QR code button, generate a QR code and scan it
 5.	Go back to experiment page, click on trials button again to see result
 6.	Click on QR code button again, register a bar code
@@ -31,22 +31,22 @@ a.	The benefit of this is it hides the fact that the trials do not show up in th
 16.	Click on trials button to view the trials
 17.	Click on stats button to show graphs and review summary stats
 18.	Click on map to show geo-locations of trials
-a.	Demonstrate that clicking on the trial pin shows the associated result
+    a.	Demonstrate that clicking on the trial pin shows the associated result
 19.	Click on Q&A button to see questions, add a new question then reply to someone else’s question
 20.	Long click username on a question and view their profile
 21.	Navigate to main page through the Trial.io home button
 22.	Click on profile button, add phone/email and change username
 23.	Navigate to main page through the Trial.io home button
 24.	Click on owned and subs tabs
-a.	Make note of how username has been updated on owned experiment
+    a.	Make note of how username has been updated on owned experiment
 25.	Demonstrate search functionality on All tab
 26.	Return to experiment created at the beginning
 27.	Click on owner settings, close and unpublish the experiment
 28.	Return to experiment activity page, demonstrate how trials can no longer be added
 29.	Navigate to main page through the Trial.io home button, demonstrate how experiment only shows up under Owned tab
 30.	Return to owner settings and add (existing) user to blocked user
-a.	Explain how the user’s trials are ignored and do not display in trials, stats or map
-b.	Should we demonstrate this or is explaining enough?
+    a.	Explain how the user’s trials are ignored and do not display in trials, stats or map
+    b.	Should we demonstrate this or is explaining enough?
 31.	Unignore user
 32.	Delete experiment
 33.	Navigate to main page through the Trial.io home button, show how experiment is gone
