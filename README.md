@@ -7,12 +7,13 @@ Trial<span>.</span>IO is a easy-to-use mobile application that allows crowd-sour
 A new user profile will be generated the first time that a user launches the app on a new device. With their profile, the user can create and publish new experiments, browse experiments created by other users, execute and upload trials to existing experiments, and much more.
 
 For a complete list of features, please check out the full project problem description in the wiki.
-
-<img src="./img/main.png" alt="main user interface" height ="550" width="250"/>
-<img src="./img/experiment.png" alt="main user interface" height ="550" width="250"/>
-<img src="./img/trial.png" alt="main user interface" height ="550" width="250"/>
-<img src="./img/profile.png" alt="main user interface" height ="550" width="250"/>
-<img src="./img/qr.png" alt="main user interface" height ="550" width="250"/>
-<img src="./img/question.png" alt="main user interface" height ="550" width="250"/>
+<p float="left">
+    <img src="./img/main.png" alt="main user interface" height ="550" width="250"/>
+    <img src="./img/experiment.png" alt="main user interface" height ="550" width="250"/>
+    <img src="./img/trial.png" alt="main user interface" height ="550" width="250"/>
+    <img src="./img/profile.png" alt="main user interface" height ="550" width="250"/>
+    <img src="./img/qr.png" alt="main user interface" height ="550" width="250"/>
+    <img src="./img/question.png" alt="main user interface" height ="550" width="250"/>
+</p>
 
 This app was built using Java, Android and Firebase. This was a group project completed for CMPUT 301 Winter 2021 at the University of Alberta.
